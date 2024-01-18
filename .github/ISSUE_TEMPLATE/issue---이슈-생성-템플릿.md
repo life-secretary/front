@@ -8,15 +8,15 @@ assignees: ''
 ---
 
 ### ISSUE
-- Group:  `Front`
-- Type: `Task` / `Feature` / `Bug` / `Refact`
-- Detail: 이슈 설명 자세하게 적어주세요.
+- Group :  `Front`
+- Type : `Task` / `Feature` / `Bug` / `Refact`
+- Detail : 이슈 설명 자세하게 적어주세요.
 
 ### TODO
 1. [x] 내용 1
 2. [ ] 내용 2
 
-### Labels
-- Estimated time: `0.25md`
-- Sprint: ``
-- Urgency: `Low`
+### LABELS
+- Estimated time : `0.25md`
+- Sprint : ``
+- Urgency : `Low`
