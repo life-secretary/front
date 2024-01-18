@@ -9,7 +9,7 @@ assignees: ''
 
 ### ISSUE
 - Group:  `Client`
-- Type: `Feature` / `Bug` / `Refact` [택 1]
+- Type: `Task` / `Feature` / `Bug` / `Refact`
 - Detail: 이슈 설명 자세하게 적어주세요.
 
 ### TODO
