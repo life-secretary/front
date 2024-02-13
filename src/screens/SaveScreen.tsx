@@ -1,10 +1,11 @@
 import * as React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {AppText} from '../components/ui/AppText';
 
-export function SaveScreen() {
+export function SaveScreen(): React.JSX.Element {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Save Screen</Text>
+      <AppText style={styles.text}>Save Screen</AppText>
     </View>
   );
 }
@@ -16,5 +17,6 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
+    fontWeight: '300',
   },
 });

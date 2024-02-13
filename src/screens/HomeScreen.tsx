@@ -1,10 +1,11 @@
 import * as React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {AppText} from '../components/ui/AppText';
 
-export function HomeScreen() {
+export function HomeScreen(): React.JSX.Element {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Home Screen</Text>
+      <AppText style={styles.text}>Home Screen</AppText>
     </View>
   );
 }
@@ -15,7 +16,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    fontFamily: 'Pretendard-Bold',
     textAlign: 'center',
+    fontWeight: '700',
   },
 });
