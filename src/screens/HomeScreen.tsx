@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
+    fontFamily: 'Pretendard-Bold',
     textAlign: 'center',
   },
 });
