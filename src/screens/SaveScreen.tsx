@@ -1,12 +1,17 @@
 import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {AppText} from '../components/ui/AppText';
+import {AppLayout} from '../components/common/AppLayout';
+import {AppHeader} from '../components/common/AppHeader';
+import {AppText} from '../components/common/AppText';
 
 export function SaveScreen(): React.JSX.Element {
   return (
-    <View style={styles.container}>
-      <AppText style={styles.text}>Save Screen</AppText>
-    </View>
+    <AppLayout>
+      <AppHeader />
+      <View style={styles.container}>
+        <AppText style={styles.text}>Save Screen</AppText>
+      </View>
+    </AppLayout>
   );
 }
 
