@@ -1,11 +1,17 @@
 import * as React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {AppLayout} from '../components/common/AppLayout';
+import {AppHeader} from '../components/common/AppHeader';
+import {AppText} from '../components/common/AppText';
 
-export function TodoScreen() {
+export function TodoScreen(): React.JSX.Element {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Todo Screen</Text>
-    </View>
+    <AppLayout>
+      <AppHeader />
+      <View style={styles.container}>
+        <AppText style={styles.text}>Todo Screen</AppText>
+      </View>
+    </AppLayout>
   );
 }
 
@@ -16,5 +22,6 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
+    fontWeight: '500',
   },
 });
