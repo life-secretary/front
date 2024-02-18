@@ -5,14 +5,14 @@ import type { ModalProps } from 'react-native-modal';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
-type AppModalProps = Partial<ModalProps> & {
-    /* [Required] Show the modal */
+export type AppModalProps = Partial<ModalProps> & {
+    /** [Required] Show the modal */
     isVisible: boolean,
     
-    /* The backdrop background color */
+    /** The backdrop background color */
     backdropColor: string,
 
-    /* The backdrop opacity when the modal is visible */
+    /** The backdrop opacity when the modal is visible */
     backdropOpacity: number,
 };
 

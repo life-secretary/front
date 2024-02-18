@@ -9,6 +9,8 @@ import {HomeScreen} from './src/screens/HomeScreen';
 import {TodoScreen} from './src/screens/TodoScreen';
 import {SaveScreen} from './src/screens/SaveScreen';
 
+import ContentModal from './src/components/ui/modal/ContentModal';
+
 // const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -23,6 +25,7 @@ function App(): React.JSX.Element {
             <Tab.Screen name="Save" component={SaveScreen} />
           </Tab.Navigator>
         </NavigationContainer>
+        <ContentModal isVisible={true} />
       </SafeAreaProvider>
     </RecoilRoot>
   );
