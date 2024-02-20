@@ -12,18 +12,21 @@ export function ViewMoreButton(): React.JSX.Element {
       onPress={() => {
         console.log('pressed!');
       }}>
-      <AppText style={styles.buttonText}>View More Button</AppText>
+      <AppText style={styles.buttonText}>더보기</AppText>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
+    marginTop: 36,
     paddingVertical: 15,
-    borderWidth: 1,
     borderRadius: 6,
+    backgroundColor: '#F2F4F7',
   },
   buttonText: {
+    fontSize: 15,
+    fontWeight: '600',
     textAlign: 'center',
   },
 });

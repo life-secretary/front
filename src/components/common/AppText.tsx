@@ -1,11 +1,24 @@
 import * as React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleProp, StyleSheet, Text, TextStyle} from 'react-native';
 
-export function AppText({style, children}: any): React.JSX.Element {
+type AppTextProps = {
+  children: React.ReactNode;
+  style?: StyleProp<TextStyle>;
+  isEllipsizeMode?: boolean;
+};
+
+export function AppText({
+  children,
+  style,
+  isEllipsizeMode,
+}: AppTextProps): React.JSX.Element {
   return (
-    <View>
-      <Text style={[styles.text, style]}>{children}</Text>
-    </View>
+    <Text
+      style={[styles.text, style]}
+      ellipsizeMode={isEllipsizeMode ? 'tail' : null}
+      numberOfLines={isEllipsizeMode ? 1 : null}>
+      {children}
+    </Text>
   );
 }
 

@@ -3,8 +3,9 @@ import {StyleSheet, ScrollView, View} from 'react-native';
 import {AppLayout} from '../components/common/AppLayout';
 import {AppHeader} from '../components/common/AppHeader';
 import {HomeCategoryList} from '../components/home/HomeCategoryList';
+import {HomeContentsListWithFilter} from '../components/home/homeContents/HomeContentsListWithFilter';
 import {HomeImageCarousel} from '../components/home/HomeImageCarousel';
-import {HomeContentsList} from '../components/home/HomeContentsList';
+import {HomeContentsList} from '../components/home/homeContents/HomeContentsList';
 import {SendQuestionButton} from '../components/home/SendQuestionButton';
 import {HomeTitle} from '../components/home/HomeTitle';
 
@@ -13,16 +14,16 @@ export function HomeScreen(): React.JSX.Element {
     <AppLayout>
       <ScrollView showsVerticalScrollIndicator={false}>
         <AppHeader>
-          <HomeTitle text="2024. 01. 14" style={styles.dateText} />
+          <HomeTitle text="2024년 01월 14일" style={styles.dateText} />
         </AppHeader>
         <HomeCategoryList />
         <HomeImageCarousel />
-        <HomeContentsList />
-        <HomeContentsList />
-        <HomeContentsList />
+        <HomeContentsList titleText={'유사한 사용자가 읽고 있어요'} />
+        <HomeContentsListWithFilter titleText={'인기 많은 콘텐츠'} />
+        <HomeContentsList titleText={'최근 업데이트 되었어요'} />
         <View style={styles.sendQuestioncontainer}>
           <HomeTitle
-            text="Please send a question to the team"
+            text="인생비서 팀에게 자유롭게 얘기해주세요"
             style={styles.sendQuestionText}
           />
           <SendQuestionButton />
@@ -38,14 +39,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 34,
     borderWidth: 1,
+    gap: 18,
   },
   dateText: {
     fontSize: 18,
     fontWeight: '700',
+    color: '#526070',
   },
   sendQuestionText: {
-    marginBottom: 18,
+    textAlign: 'center',
     fontSize: 15,
     fontWeight: '600',
+    color: '#A1ACB9',
   },
 });
