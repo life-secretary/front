@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, useWindowDimensions} from 'react-native';
+import { StyleSheet, useWindowDimensions, Platform } from 'react-native';
 import Modal from 'react-native-modal';
 import type {ModalProps} from 'react-native-modal';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -38,12 +38,17 @@ const AppModal = ({
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 28,
-  },
-});
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 5,
+        ...Platform.select({
+            ios: {
+                marginTop: 25
+            }
+        })
+    },
+})
 
 export default AppModal;
