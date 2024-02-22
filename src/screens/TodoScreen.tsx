@@ -7,6 +7,7 @@ import {CompletedTodoList} from '../components/todo/CompletedTodoList';
 import {TodoTabBar} from '../components/todo/TodoTabBar';
 import {TodoTitle} from '../components/todo/TodoTitle';
 import {TodoForm} from '../components/todoDetail/TodoForm';
+import {AppText} from '../components/common/AppText';
 
 export function TodoScreen({navigation}: any): React.JSX.Element {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
@@ -17,19 +18,18 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
   return (
     <AppLayout>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <AppHeader>
-          <TodoTitle text="To Do" style={styles.title}>
-        <Pressable
-          style={styles.buttonContainer}
-          onPress={() =>
-            navigation.navigate('Form', {
-              form: <TodoForm />,
-              headerTitle: '할 일 생성하기',
-            })
-          }>
-          <AppText style={styles.addButton}>+</AppText>
-        </Pressable>
-      </AppHeader>
+        <AppHeader style={styles.header}>
+          <TodoTitle text="To Do" style={styles.title} />
+          <Pressable
+            style={styles.buttonContainer}
+            onPress={() =>
+              navigation.navigate('Form', {
+                form: <TodoForm />,
+                headerTitle: '할 일 생성하기',
+              })
+            }>
+            <AppText style={styles.addButton}>+</AppText>
+          </Pressable>
         </AppHeader>
         <View style={styles.container}>
           <TodoTabBar
@@ -40,10 +40,10 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
           {selectedIndex === 0 && <OngoingTodoList />}
           {selectedIndex === 1 && <CompletedTodoList />}
           <Button
-          onPress={() => navigation.navigate('Modal')}
-          title="Todo Detail Modal"
-        />
-      </View>
+            onPress={() => navigation.navigate('Modal')}
+            title="Todo Detail Modal"
+          />
+        </View>
       </ScrollView>
     </AppLayout>
   );
@@ -53,17 +53,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   title: {
     fontSize: 20,
     fontWeight: '700',
     textAlign: 'center',
-  },
-  buttonContainer: {
-    padding: 10,
-  },
-  addButton: {
-    fontSize: 20,
-    fontWeight: '700',
   },
   buttonContainer: {
     padding: 10,
