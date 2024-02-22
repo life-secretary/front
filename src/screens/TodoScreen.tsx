@@ -1,13 +1,14 @@
 import * as React from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
+import {Button, Pressable, StyleSheet, View, ScrollView} from 'react-native';
 import {AppLayout} from '../components/common/AppLayout';
 import {AppHeader} from '../components/common/AppHeader';
 import {OngoingTodoList} from '../components/todo/OngoingTodoList';
 import {CompletedTodoList} from '../components/todo/CompletedTodoList';
 import {TodoTabBar} from '../components/todo/TodoTabBar';
 import {TodoTitle} from '../components/todo/TodoTitle';
+import {TodoForm} from '../components/todoDetail/TodoForm';
 
-export function TodoScreen(): React.JSX.Element {
+export function TodoScreen({navigation}: any): React.JSX.Element {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const handleIndexChange = (index: number) => {
     setSelectedIndex(index);
@@ -17,7 +18,18 @@ export function TodoScreen(): React.JSX.Element {
     <AppLayout>
       <ScrollView showsVerticalScrollIndicator={false}>
         <AppHeader>
-          <TodoTitle text="To Do" style={styles.title} />
+          <TodoTitle text="To Do" style={styles.title}>
+        <Pressable
+          style={styles.buttonContainer}
+          onPress={() =>
+            navigation.navigate('Form', {
+              form: <TodoForm />,
+              headerTitle: '할 일 생성하기',
+            })
+          }>
+          <AppText style={styles.addButton}>+</AppText>
+        </Pressable>
+      </AppHeader>
         </AppHeader>
         <View style={styles.container}>
           <TodoTabBar
@@ -27,7 +39,11 @@ export function TodoScreen(): React.JSX.Element {
           />
           {selectedIndex === 0 && <OngoingTodoList />}
           {selectedIndex === 1 && <CompletedTodoList />}
-        </View>
+          <Button
+          onPress={() => navigation.navigate('Modal')}
+          title="Todo Detail Modal"
+        />
+      </View>
       </ScrollView>
     </AppLayout>
   );
@@ -41,5 +57,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     textAlign: 'center',
+  },
+  buttonContainer: {
+    padding: 10,
+  },
+  addButton: {
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  buttonContainer: {
+    padding: 10,
+  },
+  addButton: {
+    fontSize: 20,
+    fontWeight: '700',
   },
 });
