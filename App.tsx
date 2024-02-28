@@ -30,17 +30,19 @@ function HomeTabs() {
 function RootStack() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Home" component={HomeTabs} />
-      <Stack.Screen
-        options={{presentation: 'fullScreenModal'}}
-        name="Modal"
-        component={TodoDetailModalScreen}
-      />
-      <Stack.Screen
-        options={{presentation: 'fullScreenModal'}}
-        name="Form"
-        component={TodoFormModalScreen}
-      />
+      <Stack.Group>
+        <Stack.Screen name="Home" component={HomeTabs} />
+      </Stack.Group>
+      <Stack.Group screenOptions={{presentation: 'fullScreenModal'}}>
+        <Stack.Screen
+          name="Modal"
+          component={TodoDetailModalScreen}
+        />
+        <Stack.Screen
+          name="Form"
+          component={TodoFormModalScreen}
+        />
+      </Stack.Group>
     </Stack.Navigator>
   );
 }
