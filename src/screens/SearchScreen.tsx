@@ -35,6 +35,8 @@ const SearchScreen = () => {
         { id: 7, title: '연말정산' },
     ]);
 
+    const [searchText, setSearchText] = useState('');
+
     const popularSearchData = [
         { id: 11, title: '4대보험' },
         { id: 12, title: '전세 자금 대출' },
@@ -51,6 +53,15 @@ const SearchScreen = () => {
     const constants = {
         recentSearchInitialCount: 4,
     };
+
+    // 검색 기능
+    const search = () => {
+        // code
+    };
+
+    const changeSearchText = (text) => {
+        setSearchText(text);
+    }
 
     // 최근 검색어 아이템 개별 [x] 제거 기능
     const removeRecentSearchItem = (id) => {
@@ -155,10 +166,14 @@ const SearchScreen = () => {
                     onPress={Keyboard.dismiss}
                 >
                     <View style={styles.searchTextInputContainer}>
-                        <TextInput 
+                        <TextInput
+                            editable
                             placeholder='키워드를 입력해보세요' 
                             style={styles.searchTextInput} 
                             placeholderTextColor={'#CBD3DC'}
+                            value={searchText}
+                            onChangeText={changeSearchText}
+                            underlineColorAndroid='transparent'
                         />
                         <View style={styles.searchIconWrapper}>
                             <AppIcon 
@@ -285,10 +300,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     searchTextInput: {
+        height: 40,
         borderRadius: 10,
-        paddingVertical: 20,
-        paddingLeft: 8,
-        paddingRight: 18,
         backgroundColor: '#F2F4F7',
     },
     searchIconWrapper: {
