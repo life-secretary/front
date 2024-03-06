@@ -13,7 +13,7 @@ import {
 import { AppLayout } from '../components/common/AppLayout';
 import { AppHeader } from '../components/common/AppHeader';
 import { AppText } from '../components/common/AppText';
-import Icon from 'react-native-vector-icons/Feather';
+import AppIcon from '../components/common/AppIcon';
 
 const SearchScreen = () => {
 
@@ -157,8 +157,14 @@ const SearchScreen = () => {
                             style={styles.searchTextInput} 
                             placeholderTextColor={'#CBD3DC'}
                         />
-                        {/** 커스텀 아이콘으로 교체 */}
-                        <Icon name='search' size={25} color={'#0B2A4F'} style={styles.searchTextIcon} />
+                        <View style={styles.searchIconWrapper}>
+                            <AppIcon 
+                                type='stroke'
+                                name='search'
+                                width={36}
+                                height={36}
+                            />
+                        </View>
                     </View>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
@@ -186,8 +192,13 @@ const SearchScreen = () => {
                                         style={styles.recentSearchItemContainer}
                                     >
                                         <AppText style={styles.recentSearchText}>{item.title}</AppText>
-                                        {/** 커스텀 아이콘으로 교체 */}
-                                        <Icon name='x' size={15} color={'#A1ACB9'} onPress={() => removeRecentSearchItem(item.id)} />
+                                        <AppIcon 
+                                            type='stroke'
+                                            name='closeLight'
+                                            width={36}
+                                            height={36}
+                                            onPress={() => removeRecentSearchItem(item.id)}
+                                        />
                                     </View>
                                 );
                             })}
@@ -196,9 +207,14 @@ const SearchScreen = () => {
                             recentSearchesData.length > constants.recentSearchInitialCount ? 
                             <View style={styles.moreRecentSearchListButtonContainer}>
                                 {/** TODO AppPressableText 로 변경 */}
-                                <Button title='리스트 더보기' onPress={handleRecentSearchList} />
-                                {/** TODO 더보기 아이콘 위, 아래 모두 필요 */}
-                               <Icon name='chevron-down' size={20} color={'#000E24'} />
+                                <Button title={`리스트 ${isRecentSearchListOpen ? '접기' : '더보기'}`} onPress={handleRecentSearchList} />
+                               <AppIcon 
+                                    type='stroke'
+                                    name={isRecentSearchListOpen ? 'arrowUpDark' : 'arrowDownDark'}
+                                    width={36}
+                                    height={36}
+                                    onPress={handleRecentSearchList}
+                               />
                             </View>
                             : null
                         }
@@ -252,10 +268,10 @@ const styles = StyleSheet.create({
         paddingRight: 18,
         backgroundColor: '#F2F4F7',
     },
-    searchTextIcon: {
+    searchIconWrapper: {
         position: 'absolute',
         alignSelf: 'flex-end',
-        paddingRight: 15,
+        paddingRight: 8,
     },
 
     searchContainer: {
