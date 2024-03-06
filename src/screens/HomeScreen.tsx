@@ -1,4 +1,6 @@
 import * as React from 'react';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+
 import {StyleSheet, ScrollView, View} from 'react-native';
 import {AppLayout} from '../components/common/AppLayout';
 import {AppHeader} from '../components/common/AppHeader';
@@ -17,7 +19,9 @@ export function HomeScreen(): React.JSX.Element {
           <HomeTitle text="2024년 01월 14일" style={styles.dateText} />
         </AppHeader>
         <HomeCategoryList />
-        <HomeImageCarousel />
+        <GestureHandlerRootView style={{flex: 1}}>
+          <HomeImageCarousel />
+        </GestureHandlerRootView>
         <HomeContentsList titleText={'유사한 사용자가 읽고 있어요'} />
         <HomeContentsListWithFilter titleText={'인기 많은 콘텐츠'} />
         <HomeContentsList titleText={'최근 업데이트 되었어요'} />
