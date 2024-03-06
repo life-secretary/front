@@ -1,26 +1,19 @@
 import * as React from 'react';
-import {Pressable, StyleSheet, TextInput, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import {AppText} from '../common/AppText';
+import {AppInput} from '../common/AppInput';
 
 export function TodoForm() {
   return (
     <>
       <View style={styles.form}>
-        <View style={styles.inputContainer}>
-          <AppText style={[styles.label, styles.fieldLabel]}>분야</AppText>
-          <AppText style={styles.fieldText}>금융</AppText>
-        </View>
-        <View style={styles.inputContainer}>
-          <AppText style={[styles.label, styles.titleLabel]}>
-            할 일 제목
-          </AppText>
-          <TextInput
-            style={styles.input}
-            placeholder="최대 22자 내로 입력 가능해요"
-            placeholderTextColor={'#CBD3DC'}
-            maxLength={22}
-          />
-        </View>
+        <AppInput hasLabel={true} labelText="분야" />
+        <AppInput
+          hasLabel={true}
+          labelText="할 일 제목"
+          placeholder="최대 22자 내로 입력 가능해요"
+          maxLength={22}
+        />
       </View>
       <View style={styles.buttonContainer}>
         <Pressable style={styles.button}>

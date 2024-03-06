@@ -244,32 +244,6 @@
 			name = Fonts;
 			sourceTree = "<group>";
 		};
-		A66FD1D22B843224003AF4EF /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				A66FD1E72B843346003AF4EF /* AntDesign.ttf */,
-				A66FD1E12B843346003AF4EF /* Entypo.ttf */,
-				A66FD1E92B843346003AF4EF /* EvilIcons.ttf */,
-				A66FD1E42B843346003AF4EF /* Feather.ttf */,
-				A66FD1EB2B843347003AF4EF /* FontAwesome.ttf */,
-				A66FD1EF2B843347003AF4EF /* FontAwesome5_Brands.ttf */,
-				A66FD1EE2B843347003AF4EF /* FontAwesome5_Regular.ttf */,
-				A66FD1E22B843346003AF4EF /* FontAwesome5_Solid.ttf */,
-				A66FD1ED2B843347003AF4EF /* FontAwesome6_Brands.ttf */,
-				A66FD1E52B843346003AF4EF /* FontAwesome6_Regular.ttf */,
-				A66FD1EC2B843347003AF4EF /* FontAwesome6_Solid.ttf */,
-				A66FD1EA2B843347003AF4EF /* Fontisto.ttf */,
-				A66FD1F02B843347003AF4EF /* Foundation.ttf */,
-				A66FD1E62B843346003AF4EF /* Ionicons.ttf */,
-				A66FD1E02B843346003AF4EF /* MaterialCommunityIcons.ttf */,
-				A66FD1E82B843346003AF4EF /* MaterialIcons.ttf */,
-				A66FD1F12B843347003AF4EF /* Octicons.ttf */,
-				A66FD1DF2B843346003AF4EF /* SimpleLineIcons.ttf */,
-				A66FD1E32B843346003AF4EF /* Zocial.ttf */,
-			);
-			name = Fonts;
-			sourceTree = "<group>";
-		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -769,10 +743,6 @@
 					"$(inherited)",
 					" ",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -841,10 +811,6 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
-				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
