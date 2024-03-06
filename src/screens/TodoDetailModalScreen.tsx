@@ -26,7 +26,7 @@ export function TodoDetailModalScreen({navigation}: any) {
           <Button
             onPress={() => navigation.goBack()}
             color="#FFFFFF"
-            title="<-"
+            title="<"
           />
         </Pressable>
         <View style={styles.buttonContainer}>
