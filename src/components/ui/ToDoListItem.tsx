@@ -3,7 +3,7 @@ import { StyleSheet, View, TouchableHighlight } from 'react-native';
 
 import { AppText } from '../common/AppText';
 import { getFontSize } from '../../utils/font';
-import Icon from 'react-native-vector-icons/Feather';
+import AppIcon from '../common/AppIcon';
 
 export type ToDoListItemProps = {
     /** 아이템 내 카테고리 존재 여부 */
@@ -40,10 +40,11 @@ const ToDoListItem = ({ hasMainCategory = true, item }: any): React.JSX.Element 
                     style={styles.todoListItemButtonHighlight}
                     onPress={() => {}}
                 >
-                    <Icon 
-                        name="plus-circle" 
-                        size={18} // TODO 상수로 관리
-                        color={'#526070'} // TODO 상수로 관리
+                    <AppIcon 
+                        type='stroke'
+                        name='addCircle'
+                        width={42}
+                        height={42}
                     />
                 </TouchableHighlight>
             </View>
