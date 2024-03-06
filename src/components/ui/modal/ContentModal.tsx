@@ -4,9 +4,10 @@ import Modal from '../../common/AppModal';
 import type {AppModalProps} from '../../common/AppModal';
 
 import { AppText } from '../../common/AppText';
+import AppIcon from '../../common/AppIcon';
+// TODO 커스텀 텍스트 버튼 만든 후 제거
 import AppPressable from '../../common/AppPressableText';
 import ToDoListItem from '../ToDoListItem';
-import Icon from 'react-native-vector-icons/Feather';
 import Markdown from 'react-native-markdown-display';
 import { getFontSize } from '../../../utils/font';
 
@@ -115,11 +116,32 @@ const ContentModal = ({
          * 데이터 관리 방법 생각
          */
         return data[0];
-    }
+    };
     
     const getItemCount = (_data: any) => {
         return data.length;
+    };
+
+    // bookMarkButton [Content]
+    const [isContentBookMarked, setIsContentBookMarked] = useState(false);
+
+    const onPressContentBookMarkButton = () => {
+        setIsContentBookMarked(previousValue => !previousValue);
+    };
+
+    // bookMarkButton [RelatedContent]
+    const customRelatedContent = data[0].contents.map((item) => Object.assign(item, { isBookMarked : false }));
+    const [isRelatedContent, setIsRelatedContent] = useState(customRelatedContent);
+
+    const onPressRelatedContentBookMarkButton = (index: number) => {
+        setIsRelatedContent((previousValue) => {
+            const previousBookMarkStatus = previousValue[index].isBookMarked;
+            previousValue[index].isBookMarked = !previousBookMarkStatus;
+
+            return previousValue.slice();
+        })
     }
+
 
     return (
         <Modal
@@ -129,28 +151,28 @@ const ContentModal = ({
         >
             <View style={styles.container}>
                 <View style={styles.header}>
-                    {/** TODO 커스텀 아이콘으로 변경 필요 */}
                     <View>
-                        <Icon 
-                            name="arrow-left" 
-                            size={constants.MODAL_ICON_SIZE} 
-                            color={constants.MODAL_ICON_COLOR} 
-                            onPress={() => {}} 
+                        <AppIcon 
+                            type='stroke'
+                            name='back'
+                            width={36}
+                            height={36}
                         />
-                    </View>   
+                    </View>
                     <View style={styles.headerRight}>
-                        <Icon 
-                            name="upload" 
-                            size={constants.MODAL_ICON_SIZE} 
-                            color={constants.MODAL_ICON_COLOR} 
-                            onPress={() => {}} 
-                            style={{ marginRight: 20 }} 
+                        <AppIcon 
+                            type='stroke'
+                            name='upload'
+                            width={36}
+                            height={36}
                         />
-                        <Icon 
-                            name="bookmark" 
-                            size={constants.MODAL_ICON_SIZE} 
-                            color={constants.MODAL_ICON_COLOR} 
-                            onPress={() => {}} 
+                        <AppIcon 
+                            type='fill'
+                            name='bookmarkDark'
+                            width={36}
+                            height={36}
+                            onPress={onPressContentBookMarkButton}
+                            styles={isContentBookMarked ? { fill: '#000' } : {}}
                         />
                     </View>
                 </View>
@@ -228,14 +250,15 @@ const ContentModal = ({
                                         <View style={styles.basicTitleWrapper}>
                                             <AppText style={styles.basicTitle}>연관 콘텐츠 추천</AppText>
                                         </View>
-                                        {data[0].contents.map((item, index, data) => {
+                                        {/** 가공된 데이터 사용 */}
+                                        {isRelatedContent.map((item, index, data) => {
                                             return (
                                                 <View key={`content${index}`} style={[
                                                     styles.contentWrapper,
                                                     {
                                                         borderBottomWidth : (index === data.length - 1) ? 0 : 1,
                                                         marginBottom: (index === data.length - 1) ? 0 : 10,
-                                                        paddingBottom: (index === data.length - 1) ? 5 : 18,
+                                                        paddingBottom: (index === data.length - 1) ? 5 : 8,
 
                                                     }
                                                 ]}>
@@ -243,11 +266,13 @@ const ContentModal = ({
                                                         <AppText style={styles.contentTitle}>{item.title}</AppText>
                                                     </View>
                                                     <View style={styles.contentSaveButtonWrapper}>
-                                                        <Icon 
-                                                            name="bookmark" 
-                                                            size={constants.CONTENT_ICON_SIZE} 
-                                                            color={constants.CONTENT_ICON_COLOR} 
-                                                            onPress={() => {}} 
+                                                        <AppIcon 
+                                                            type='fill'
+                                                            name='bookmarkLight'
+                                                            width={42}
+                                                            height={42}
+                                                            onPress={() => onPressRelatedContentBookMarkButton(index)}
+                                                            styles={item.isBookMarked ? { fill: '#A1ACB9' } : {}}
                                                         />
                                                     </View>
                                                 </View>
@@ -315,10 +340,10 @@ const styles = StyleSheet.create({
     headerRight: {
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
     },
     body: {
-        flex: 10 // 📌
+        flex: 11 // 📌 비율 말고 높이를 맞춰야 하는가 ?
     },
 
     // TODO font style 상수로 관리
@@ -403,9 +428,6 @@ const styles = StyleSheet.create({
 
         borderBottomWidth: 1,
         borderBottomColor: '#F2F4F7',
-        marginBottom: 10, // 📌 TODO FlatList 로 변경시 없어도 되는 부분 (정리 필요)
-        paddingTop: 8,
-        paddingBottom: 18,
     },
     contentTitleWrapper: {
         flex: 7,
