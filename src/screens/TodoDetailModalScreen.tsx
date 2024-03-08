@@ -2,8 +2,8 @@ import * as React from 'react';
 import {Button, Pressable, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppText} from '../components/common/AppText';
-import {TodoDetail} from '../components/todoDetail/TodoDetail';
-import {SubTodoList} from '../components/todoDetail/SubTodoList';
+import {TodoDetail} from '../components/todo/detail/TodoDetail';
+import {SubTodoList} from '../components/todo/detail/SubTodoList';
 
 const DUMMY_DATA = {
   id: '1',

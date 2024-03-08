@@ -4,10 +4,10 @@ import {
   Platform,
   Pressable,
   StyleSheet,
+  TextInput,
   View,
 } from 'react-native';
-import {AppText} from '../common/AppText';
-import {AppInput} from '../common/AppInput';
+import {AppText} from '../../../common/AppText';
 
 export function SubTodoForm() {
   return (
@@ -15,13 +15,21 @@ export function SubTodoForm() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
       <View style={styles.form}>
-        <AppInput hasLabel={true} labelText="할 일 제목" disabled={true} />
-        <AppInput
-          hasLabel={true}
-          labelText="항목 명"
-          placeholder="최대 18자 내로 입력 가능해요"
-          maxLength={18}
-        />
+        <View style={[styles.inputContainer, styles.disabledInput]}>
+          <AppText style={[styles.label, styles.titleLabel]}>
+            할 일 제목
+          </AppText>
+          <AppText style={styles.titleText}>금융</AppText>
+        </View>
+        <View style={styles.inputContainer}>
+          <AppText style={[styles.label, styles.itemLabel]}>항목 명</AppText>
+          <TextInput
+            style={styles.input}
+            placeholder="최대 18자 내로 입력 가능해요"
+            placeholderTextColor={'#CBD3DC'}
+            maxLength={22}
+          />
+        </View>
       </View>
       <View style={styles.buttonContainer}>
         <Pressable style={styles.button}>
@@ -41,10 +49,29 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: 20,
   },
+  inputContainer: {
+    borderWidth: 1,
+    borderRadius: 12,
+    borderColor: '#526070',
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    gap: 10,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  titleLabel: {
+    color: '#A1ACB9',
+  },
   titleText: {
     fontWeight: '600',
     color: '#000E24',
   },
+  itemLabel: {
+    color: '#526070',
+  },
+  input: {},
   buttonContainer: {
     justifyContent: 'center',
     marginBottom: 20,
