@@ -17,7 +17,7 @@ export function TodoFormModalScreen({route, navigation}: any) {
     <AppLayout>
       <AppHeader style={styles.header}>
         <View style={styles.titleContainer}>
-          <AppText>{headerTitle}</AppText>
+          <AppText style={styles.headerTitle}>{headerTitle}</AppText>
         </View>
         <Pressable
           style={styles.buttonContainer}
@@ -42,16 +42,18 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 20,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#000E24',
   },
   container: {
     flex: 1,
   },
-  titleContainer: {
-    borderWidth: 1,
-  },
+  titleContainer: {},
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',

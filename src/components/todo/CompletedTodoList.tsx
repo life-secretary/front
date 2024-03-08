@@ -3,21 +3,7 @@ import {StyleSheet, View, FlatList} from 'react-native';
 import {TodoCard} from './TodoCard';
 import {AppText} from '../common/AppText';
 
-const DUMMY_TODO = [
-  {
-    id: '1',
-    title: '나의 미래 준비, 어떻게 시작할까요?',
-    tags: ['완료', '경제'],
-    subTodoList: [
-      {id: '11', title: '노후 예상 비용 계산하기', completed: false},
-      {id: '12', title: '월 저축액 계획하기', completed: false},
-    ],
-    createdDate: '2024.01.01',
-  },
-];
-
-// const DUMMY_TODO: ArrayLike<any> | null | undefined = [];
-
+// TODO: 별도의 컴포넌트로 분리
 const EmptyList = () => {
   return (
     <View style={styles.emptyListContainer}>
@@ -26,11 +12,15 @@ const EmptyList = () => {
   );
 };
 
-export function CompletedTodoList(): React.JSX.Element {
+type TodoListProps = {
+  data: object[];
+};
+
+export function CompletedTodoList({data}: TodoListProps): React.JSX.Element {
   return (
     <View style={styles.container}>
       <FlatList
-        data={DUMMY_TODO}
+        data={data}
         renderItem={({item}) => (
           <TodoCard
             title={item.title}
