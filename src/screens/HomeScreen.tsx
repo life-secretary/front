@@ -18,9 +18,12 @@ export function HomeScreen(): React.JSX.Element {
         </AppHeader>
         <HomeCategoryList />
         <HomeImageCarousel />
-        <HomeContentsList titleText={'유사한 사용자가 읽고 있어요'} />
-        <HomeContentsListWithFilter titleText={'인기 많은 콘텐츠'} />
-        <HomeContentsList titleText={'최근 업데이트 되었어요'} />
+        <HomeContentsList
+          isUsernameUsed={true}
+          title={'유사한 사용자가 읽고 있어요'}
+        />
+        <HomeContentsListWithFilter title={'인기 많은 콘텐츠'} />
+        <HomeContentsList title={'최근 업데이트 되었어요'} />
         <View style={styles.sendQuestioncontainer}>
           <HomeTitle
             text="인생비서 팀에게 자유롭게 얘기해주세요"

@@ -14,7 +14,7 @@ export function AppLayout({children}: any): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 24,
   },
 });
