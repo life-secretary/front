@@ -141,8 +141,7 @@ const ContentModal = ({
             return previousValue.slice();
         })
     }
-
-
+        
     return (
         <Modal
             isVisible={isVisible}
@@ -259,7 +258,6 @@ const ContentModal = ({
                                                         borderBottomWidth : (index === data.length - 1) ? 0 : 1,
                                                         marginBottom: (index === data.length - 1) ? 0 : 10,
                                                         paddingBottom: (index === data.length - 1) ? 5 : 8,
-
                                                     }
                                                 ]}>
                                                     <View style={styles.contentTitleWrapper}>
