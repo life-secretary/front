@@ -5,14 +5,13 @@ import type {AppModalProps} from '../common/modal/AppModal';
 
 import { AppText } from '../common/AppText';
 import AppIcon from '../common/AppIcon';
-// TODO 커스텀 텍스트 버튼 만든 후 제거
-import AppPressable from '../common/AppPressableText';
+import AppButton from '../common/AppButton';
 import ToDoListItem from './ToDoListItem';
 import Markdown from 'react-native-markdown-display';
 import { getFontSize } from '../../utils/font';
 
 const ContentModal = ({ 
-    isVisible=true,
+    isVisible=false,
 }: Partial<AppModalProps>): React.JSX.Element => {
 
     const constants = {
@@ -185,7 +184,7 @@ const ContentModal = ({
                                 <View>
                                     {/** Header */}
                                     <View style={styles.mainCategoryWrapper}>
-                                        <AppPressable 
+                                        <AppButton 
                                             isDisabled={true}
                                             text={'부동산'}
                                             defaultTextStyle={styles.mainCategory}
@@ -199,7 +198,7 @@ const ContentModal = ({
                                     <View style={styles.hashTagWrapper}>
                                         {data[0].hashTags.map((item, index) => {
                                             return (
-                                            <AppPressable 
+                                            <AppButton 
                                                 key={`hashTag${index}`}
                                                 text={`#${item}`}
                                                 defaultTextStyle={styles.hashTag}
@@ -221,7 +220,7 @@ const ContentModal = ({
                                             return (
                                                 <View style={styles.basicTitleWrapper}>
                                                     <AppText style={styles.basicTitle}>연관된 할 일 추가하기</AppText>
-                                                    <AppPressable 
+                                                    <AppButton 
                                                         text={'전체추가하기'}
                                                         defaultTextStyle={styles.todoListAddAllButton}
                                                         defaultPressableStyle={{}}
@@ -285,7 +284,7 @@ const ContentModal = ({
                                         <AppText style={styles.askButtonTitle}>이번 콘텐츠는 어떠신가요?</AppText>
                                         <AppText style={styles.askButtonSubTitle}>더 나은 콘텐츠를 제작하는데 큰 도움이 됩니다</AppText>
                                         <View style={styles.askButtonWrapper}>
-                                            <AppPressable 
+                                            <AppButton 
                                                 text={'문의 및 의견 보내기'}
                                                 // 📌 임시
                                                 defaultTextStyle={styles.askButtonText}
