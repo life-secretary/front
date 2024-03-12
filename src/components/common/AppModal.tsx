@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet, useWindowDimensions, Platform } from 'react-native';
+import { StyleSheet, useWindowDimensions, Platform, View } from 'react-native';
 import Modal from 'react-native-modal';
 import type {ModalProps} from 'react-native-modal';
-import {SafeAreaView} from 'react-native-safe-area-context';
 
 export type AppModalProps = Partial<ModalProps> & {
   /** [Required] Show the modal */
@@ -32,7 +31,7 @@ const AppModal = ({
       backdropOpacity={backdropOpacity}
       onModalShow={() => {}} // Modal 이 완전히 띄워졌을 때 실행되는 callback 함수 (props로 전달)
     >
-      <SafeAreaView style={styles.modalContainer}>{children}</SafeAreaView>
+      <View style={styles.modalContainer}>{children}</View>
     </Modal>
   );
 };
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
         margin: 5,
         ...Platform.select({
             ios: {
-                marginTop: 25
+                marginTop: 15
             }
         })
     },
