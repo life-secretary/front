@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, FlatList, VirtualizedList } from 'react-native';
-import Modal from '../../common/AppModal';
-import type {AppModalProps} from '../../common/AppModal';
+import Modal from '../common/modal/AppModal';
+import type {AppModalProps} from '../common/modal/AppModal';
 
-import { AppText } from '../../common/AppText';
-import AppIcon from '../../common/AppIcon';
+import { AppText } from '../common/AppText';
+import AppIcon from '../common/AppIcon';
 // TODO 커스텀 텍스트 버튼 만든 후 제거
-import AppPressable from '../../common/AppPressableText';
-import ToDoListItem from '../ToDoListItem';
+import AppPressable from '../common/AppPressableText';
+import ToDoListItem from './ToDoListItem';
 import Markdown from 'react-native-markdown-display';
-import { getFontSize } from '../../../utils/font';
+import { getFontSize } from '../../utils/font';
 
 const ContentModal = ({ 
-    isVisible=false,
+    isVisible=true,
 }: Partial<AppModalProps>): React.JSX.Element => {
 
     const constants = {

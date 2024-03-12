@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, useWindowDimensions, Platform, View } from 'react-native';
 import Modal from 'react-native-modal';
-import type {ModalProps} from 'react-native-modal';
+import type { ModalProps } from 'react-native-modal';
 
 export type AppModalProps = Partial<ModalProps> & {
   /** [Required] Show the modal */
