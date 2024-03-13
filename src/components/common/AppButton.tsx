@@ -4,50 +4,53 @@ import type { PressableProps } from 'react-native';
 
 import { AppText } from './AppText';
 
-export type AppPressableProps = Partial<PressableProps> & {
-    /** Whether the press behavior is disabled */
-    isDisabled?: boolean,
-
-    /** Pressable 내부 텍스트 */
+export type ButtonProps = {
+    /** [Required] Button text */
     text: string,
 
-    /** Pressable 내부 텍스트 스타일 */
-    defaultTextStyle: any,
+    /** [Required] Button text style */
+    textStyle: object, // TODO StyleSheet 관련 타입으로 변경
 
-    /** Pressable 기본 스타일 */
-    defaultPressableStyle: any,
+    /** [Required] Button style */
+    buttonStyle: object, // TODO StyleSheet 관련 타입으로 변경
 
-    /** Pressable 눌렀을 때 색상  */
+    /** Button background color when pressed */
     pressedBackgroundColor?: string,
 
-    onPressHandler?: Function,
+    /** Button press event handler */
+    onPressButton?: Function,
 };
 
-const AppPressable = ({ 
+export type AppButtonProps = Partial<PressableProps> & ButtonProps & {
+    /** Whether the press behavior is disabled */
+    isDisabled?: boolean,
+};
+
+const AppButton = ({ 
     isDisabled = false,
     text, 
-    defaultTextStyle,
-    defaultPressableStyle,
+    textStyle,
+    buttonStyle,
     pressedBackgroundColor = '',  
-    onPressHandler = () => {},
-}: AppPressableProps): React.JSX.Element => {
+    onPressButton = () => {},
+}: AppButtonProps): React.JSX.Element => {
 
     return (
         <Pressable
             disabled={isDisabled}
             style={({ pressed }) => {
                 return [
-                    defaultPressableStyle,
+                    buttonStyle,
                     {
-                        backgroundColor: pressed ? pressedBackgroundColor : defaultPressableStyle.backgroundColor
+                        backgroundColor: pressed ? pressedBackgroundColor : buttonStyle.backgroundColor
                     }
                 ]
             }}
-            onPress={() => onPressHandler}
+            onPress={() => onPressButton}
         >
-            <AppText style={defaultTextStyle}>{text}</AppText>
+            <AppText style={textStyle}>{text}</AppText>
         </Pressable>
     );
 }
 
-export default AppPressable;
+export default AppButton;

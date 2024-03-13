@@ -14,6 +14,9 @@ import { AppLayout } from '../components/common/AppLayout';
 import { AppHeader } from '../components/common/AppHeader';
 import { AppText } from '../components/common/AppText';
 import AppIcon from '../components/common/AppIcon';
+import AppConfirmModal from '../components/common/modal/AppConfirmModal';
+
+import { getFontSize } from '../utils/font';
 
 const SearchScreen = () => {
 
@@ -236,6 +239,26 @@ const SearchScreen = () => {
                     })}
                 </View>
             </ScrollView>
+            {/** TODO (일단 검색탭에 컨펌모달 추가) 다른페이지에서 공통으로 사용가능한 방법 모색 */}
+            <AppConfirmModal
+                isVisible={true}
+                title='추가 완료'
+                description='할 일 목록에서 확인할 수 있어요'
+                button={{
+                    first: {
+                        text: '목록 바로가기',
+                        textStyle: styles.modalTextStyleFirst,
+                        buttonStyle: styles.modalButtonStyleFirst,
+                        onPressButton: () => {}
+                    },
+                    second: {
+                        text: '계속 둘러보기', 
+                        textStyle: styles.modalTextStyleSecond,
+                        buttonStyle: styles.modalButtonStyleSecond,
+                        onPressButton: () => {}
+                    }
+                }}
+            />
         </AppLayout>
     );
 };
@@ -282,14 +305,14 @@ const styles = StyleSheet.create({
     },
     searchMainTitle: {
         fontWeight: '700',
-        fontSize: 15, // TODO getFontSize() 함수 적용하기
+        fontSize: getFontSize(15),
         lineHeight: 18,
         color: '#000E24'
     },
     // 추후 적용
     searchSubTitle: {
         fontWeight: '500',
-        fontSize: 13, // TODO getFontSize() 함수 적용하기
+        fontSize: getFontSize(13),
         lineHeight: 16,
         color: '#A1ACB9'
     },
@@ -308,7 +331,7 @@ const styles = StyleSheet.create({
     },
     recentSearchText: {
         fontWeight: '500',
-        fontSize: 15, // TODO getFontSize() 함수 적용하기
+        fontSize: getFontSize(15),
         lineHeight: 18,
         color: '#526070',
     },
@@ -326,14 +349,14 @@ const styles = StyleSheet.create({
     popularSearchIndexText: {
         flex: 1,
         fontWeight: '600',
-        fontSize: 16, // TODO getFontSize() 함수 적용하기
+        fontSize: getFontSize(16),
         lineHeight: 20,
         color: '#000E24',
     },  
     popularSearchTitleText: {
         flex: 10,
         fontWeight: '500',
-        fontSize: 15, // TODO getFontSize() 함수 적용하기
+        fontSize: getFontSize(15),
         lineHeight: 18,
         color: '#526070'
     },
@@ -342,6 +365,35 @@ const styles = StyleSheet.create({
         marginVertical: 17,
         borderWidth: 1,
         borderColor: '#F2F4F7'
+    },
+
+    /** Modal */
+    modalTextStyleFirst: {
+        alignSelf: 'center',
+        fontWeight: '600',
+        fontSize: getFontSize(15),
+        lineHeight: 18,
+        color: '#FFFFFF'
+    },
+    modalTextStyleSecond: {
+        alignSelf: 'center',
+        fontWeight: '600',
+        fontSize: getFontSize(15),
+        lineHeight: 18,
+        color: '#000E24'
+    },
+    
+    modalButtonStyleFirst: {
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        backgroundColor: '#0B2A4F',
+    },
+    modalButtonStyleSecond: {
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        backgroundColor: '#FFFFFF',
     }
 });
 
