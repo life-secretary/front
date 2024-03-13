@@ -187,8 +187,8 @@ const ContentModal = ({
                                         <AppButton 
                                             isDisabled={true}
                                             text={'부동산'}
-                                            defaultTextStyle={styles.mainCategory}
-                                            defaultPressableStyle={styles.mainCategoryPressable}
+                                            textStyle={styles.mainCategory}
+                                            buttonStyle={styles.mainCategoryPressable}
                                         />
                                     </View>
                                     <AppText style={styles.title}>{'2월에 신청하는 새로운 청약통장'}</AppText>
@@ -201,11 +201,11 @@ const ContentModal = ({
                                             <AppButton 
                                                 key={`hashTag${index}`}
                                                 text={`#${item}`}
-                                                defaultTextStyle={styles.hashTag}
-                                                defaultPressableStyle={styles.hashTagPressable}
+                                                textStyle={styles.hashTag}
+                                                buttonStyle={styles.hashTagPressable}
                                                 // TODO pressedColor 통일되면 props 제거 가능
                                                 pressedBackgroundColor={`#11111166`}
-                                                onPressHandler={() => {}}
+                                                onPressButton={() => {}}
                                             />
                                             );
                                         })}
@@ -222,9 +222,9 @@ const ContentModal = ({
                                                     <AppText style={styles.basicTitle}>연관된 할 일 추가하기</AppText>
                                                     <AppButton 
                                                         text={'전체추가하기'}
-                                                        defaultTextStyle={styles.todoListAddAllButton}
-                                                        defaultPressableStyle={{}}
-                                                        onPressHandler={() => {}}
+                                                        textStyle={styles.todoListAddAllButton}
+                                                        buttonStyle={{}}
+                                                        onPressButton={() => {}}
                                                     />
                                                 </View>
                                             );
@@ -287,11 +287,11 @@ const ContentModal = ({
                                             <AppButton 
                                                 text={'문의 및 의견 보내기'}
                                                 // 📌 임시
-                                                defaultTextStyle={styles.askButtonText}
-                                                defaultPressableStyle={styles.askButton}
+                                                textStyle={styles.askButtonText}
+                                                buttonStyle={styles.askButton}
                                                 // TODO pressedColor 통일되면 props 제거 가능
                                                 pressedBackgroundColor={`#11111166`}
-                                                onPressHandler={() => {}}
+                                                onPressButton={() => {}}
                                             />
                                         </View>
                                     </View>
