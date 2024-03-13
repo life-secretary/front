@@ -1113,9 +1113,8 @@ PODS:
     - React-jsi (= 0.73.3)
     - React-logger (= 0.73.3)
     - React-perflogger (= 0.73.3)
-  - RNGestureHandler (2.15.0):
-    - glog
-    - RCT-Folly (= 2022.05.16.00)
+  - RNCCheckbox (0.5.17):
+    - BEMCheckBox (~> 1.4)
     - React-Core
   - RNReanimated (3.8.0):
     - glog

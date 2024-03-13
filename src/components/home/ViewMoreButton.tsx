@@ -1,19 +1,18 @@
 import * as React from 'react';
-import {Pressable, StyleSheet} from 'react-native';
-import {AppText} from '../common/AppText';
+import {StyleSheet} from 'react-native';
+import {AppButton} from '../common/button/AppButton';
 
 export function ViewMoreButton(): React.JSX.Element {
+  const iconPath = require('@/assets/images/sampleIcon.png');
+
   return (
-    <Pressable
-      style={({pressed}) => [
-        {backgroundColor: pressed ? 'skyblue' : null},
-        styles.button,
-      ]}
-      onPress={() => {
-        console.log('pressed!');
-      }}>
-      <AppText style={styles.buttonText}>더보기</AppText>
-    </Pressable>
+    <AppButton
+      // type="contained"
+      textStyle={styles.buttonText}
+      buttonStyle={styles.button}
+      endIcon={iconPath}>
+      더보기
+    </AppButton>
   );
 }
 
@@ -27,6 +26,5 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 15,
     fontWeight: '600',
-    textAlign: 'center',
   },
 });
