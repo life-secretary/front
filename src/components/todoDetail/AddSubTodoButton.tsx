@@ -1,33 +1,37 @@
 import * as React from 'react';
-import {Pressable, StyleSheet} from 'react-native';
-import {AppText} from '../common/AppText';
+import {StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {SubTodoForm} from './SubTodoForm';
+import {AppButton} from '../common/button/AppButton';
 
 export function AddSubTodoButton(): React.JSX.Element {
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
+  const iconPath = require('@/assets/images/sampleIcon.png');
+
+  const handlePress = () =>
+    navigation.navigate('Form', {
+      form: <SubTodoForm />,
+      headerTitle: '항목 추가하기',
+    });
 
   return (
-    <Pressable
-      style={styles.buttonContainer}
-      onPress={() =>
-        navigation.navigate('Form', {
-          form: <SubTodoForm />,
-          headerTitle: '항목 추가하기',
-        })
-      }>
-      <AppText style={styles.buttonText}>항목 추가하기</AppText>
-    </Pressable>
+    <AppButton
+      // type="contained"
+      textStyle={styles.buttonText}
+      buttonStyle={styles.button}
+      endIcon={iconPath}
+      onPress={handlePress}>
+      항목 추가하기
+    </AppButton>
   );
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    // flexDirection: 'row',
+  button: {
     paddingVertical: 14,
     paddingHorizontal: 20,
-    backgroundColor: '#E7EDF3',
     borderRadius: 24,
+    backgroundColor: '#E7EDF3',
   },
   buttonText: {
     fontSize: 14,
