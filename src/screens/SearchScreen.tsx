@@ -14,6 +14,7 @@ import { AppLayout } from '../components/common/AppLayout';
 import { AppHeader } from '../components/common/AppHeader';
 import { AppText } from '../components/common/AppText';
 import AppIcon from '../components/common/AppIcon';
+import AppButton from '../components/common/AppButton';
 import AppConfirmModal from '../components/common/modal/AppConfirmModal';
 
 import { getFontSize } from '../utils/font';
@@ -84,13 +85,7 @@ const SearchScreen = () => {
             const currentDataLength = currentData.length;
             const recentSearchListHeight = recentSearchItemHeight * currentDataLength; 
 
-            // 최근 검색어 높이 고정 x
-            // if (isRecentSearchListOpen === true || ((isRecentSearchListOpen === false) && (currentDataLength <= constants.recentSearchInitialCount))) {
-            //     setRecentSearchListHeight(recentSearchListHeight);
-            // }
-
-            // 최근 검색어 높이 고정 o
-            if ((isRecentSearchListOpen === true) && (currentDataLength >= constants.recentSearchInitialCount)) {
+            if (isRecentSearchListOpen === true || ((isRecentSearchListOpen === false) && (currentDataLength <= constants.recentSearchInitialCount))) {
                 setRecentSearchListHeight(recentSearchListHeight);
             }
 
@@ -101,6 +96,7 @@ const SearchScreen = () => {
 
     // 최근 검색어 아이템 전체 [모두 지우기] 제거 기능
     const removeAllRecentSearchItems = () => {
+        console.log('press 모두 지우기');
         setRecentSearchesData([]);
 
         // NOTE
@@ -191,9 +187,15 @@ const SearchScreen = () => {
                 <View>
                     <View style={styles.searchContainer}>
                         <AppText style={styles.searchMainTitle}>최근 검색어</AppText>
-                        {/** TODO AppPressableText 로 변경 */}
                         {
-                            recentSearchesData.length ? <Button title='모두 지우기' onPress={removeAllRecentSearchItems}></Button> : null
+                            recentSearchesData.length ? 
+                            <AppButton 
+                                text='모두 지우기'
+                                textStyle={styles.searchSubTitle}
+                                onPressButton={removeAllRecentSearchItems}
+                            /> 
+                            : 
+                            null
                         }
                     </View>
                     <View>
@@ -224,8 +226,11 @@ const SearchScreen = () => {
                         {
                             recentSearchesData.length > constants.recentSearchInitialCount ? 
                             <View style={styles.moreRecentSearchListButtonContainer}>
-                                {/** TODO AppPressableText 로 변경 */}
-                                <Button title={`리스트 ${isRecentSearchListOpen ? '접기' : '더보기'}`} onPress={handleRecentSearchList} />
+                                <AppButton 
+                                    text={`리스트 ${isRecentSearchListOpen ? '접기' : '더보기'}`}
+                                    textStyle={styles.moreRecentSearchListButtonText}
+                                    onPressButton={handleRecentSearchList}
+                                />
                                <AppIcon 
                                     type='stroke'
                                     name={isRecentSearchListOpen ? 'arrowUpDark' : 'arrowDownDark'}
@@ -241,7 +246,7 @@ const SearchScreen = () => {
                 <View style={styles.separator}></View>
                 <View>
                     <View style={styles.searchContainer}>
-                        <AppText style={styles.searchMainTitle}>{'인기 검색어'}</AppText>
+                        <AppText style={styles.searchMainTitle}>인기 검색어</AppText>
                         <AppText style={styles.searchSubTitle}>{'01월 14일 02:00 기준'}</AppText>
                     </View>
                     {popularSearchData.map((item, index) => {
@@ -301,6 +306,8 @@ const styles = StyleSheet.create({
     },
     searchTextInput: {
         height: 40,
+        paddingLeft: 18,
+        paddingRight: 48,
         borderRadius: 10,
         backgroundColor: '#F2F4F7',
     },
@@ -322,7 +329,6 @@ const styles = StyleSheet.create({
         lineHeight: 18,
         color: '#000E24'
     },
-    // 추후 적용
     searchSubTitle: {
         fontWeight: '500',
         fontSize: getFontSize(13),
@@ -330,7 +336,7 @@ const styles = StyleSheet.create({
         color: '#A1ACB9'
     },
 
-
+    // 최근 검색어
     recentSearchItemList: {
         overflow: 'hidden',
     },
@@ -349,12 +355,20 @@ const styles = StyleSheet.create({
         color: '#526070',
     },
 
+    // 리스트 더보기 버튼
     moreRecentSearchListButtonContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: 'center',
     },
+    moreRecentSearchListButtonText: {
+        fontWeight: '500',
+        fontSize: getFontSize(15),
+        lineHeight: 18,
+        color: '#40474F'
+    },
 
+    // 인기 검색어
     popularSearchContainer: {
         flexDirection: 'row',
         paddingVertical: 10,
