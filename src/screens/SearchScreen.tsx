@@ -6,11 +6,10 @@ import {
     TextInput,
     StyleSheet, 
     View, 
-    Button,
-    Keyboard 
+    Keyboard,
+    Platform
 } from 'react-native';
 
-import { AppLayout } from '../components/common/AppLayout';
 import { AppHeader } from '../components/common/AppHeader';
 import { AppText } from '../components/common/AppText';
 import AppIcon from '../components/common/AppIcon';
@@ -57,7 +56,8 @@ const SearchScreen = () => {
 
     // 검색 기능
     const search = () => {
-        // code
+        console.log(searchText);
+        // TODO 검색과 동시에 UI 변경
     };
 
     const changeSearchText = (text) => {
@@ -148,10 +148,15 @@ const SearchScreen = () => {
     }, []);
 
     return (
-        <AppLayout>
-            <AppHeader>
+        <View style={styles.container}>
+            <AppHeader style={styles.header}>
                 <View style={styles.basicContainer}>
-                    <AppText style={styles.searchTitle}>인생 비서</AppText>
+                    <AppIcon 
+                        type='stroke'
+                        name='logo'
+                        width={70}
+                        height={20}
+                    />
                 </View>
             </AppHeader>
             <KeyboardAvoidingView
@@ -177,6 +182,7 @@ const SearchScreen = () => {
                                 name='search'
                                 width={36}
                                 height={36}
+                                onPress={search}
                             />
                         </View>
                     </View>
@@ -184,7 +190,7 @@ const SearchScreen = () => {
             </KeyboardAvoidingView>
             <View style={styles.separator}></View>
             <ScrollView>
-                <View>
+                <View style={styles.recentSearchContainer}>
                     <View style={styles.searchContainer}>
                         <AppText style={styles.searchMainTitle}>최근 검색어</AppText>
                         {
@@ -244,14 +250,14 @@ const SearchScreen = () => {
                     </View>
                 </View>
                 <View style={styles.separator}></View>
-                <View>
+                <View style={styles.popularSearchContainer}>
                     <View style={styles.searchContainer}>
                         <AppText style={styles.searchMainTitle}>인기 검색어</AppText>
                         <AppText style={styles.searchSubTitle}>{'01월 14일 02:00 기준'}</AppText>
                     </View>
                     {popularSearchData.map((item, index) => {
                         return (
-                            <View key={`popularSearch${index}`} style={styles.popularSearchContainer}>
+                            <View key={`popularSearch${index}`} style={styles.popularSearchTextContainer}>
                                 <AppText style={styles.popularSearchIndexText}>{index + 1}</AppText>
                                 <AppText style={styles.popularSearchTitleText}>{item.title}</AppText>
                             </View>
@@ -260,7 +266,7 @@ const SearchScreen = () => {
                 </View>
             </ScrollView>
             {/** TODO (일단 검색탭에 컨펌모달 추가) 다른페이지에서 공통으로 사용가능한 방법 모색 */}
-            <AppConfirmModal
+            {/* <AppConfirmModal
                 isVisible={true}
                 title='추가 완료'
                 description='할 일 목록에서 확인할 수 있어요'
@@ -278,25 +284,40 @@ const SearchScreen = () => {
                         onPressButton: () => {}
                     }
                 }}
-            />
-        </AppLayout>
+            /> */}
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        paddingTop: 24,
+        ...Platform.select({
+            android: {
+                paddingTop: 5,
+            }
+        }),
+        paddingBottom: 130,
+        backgroundColor: '#FFFFFF',
+    },
+    header: {
+        borderColor: 'transparent',
+        paddingTop: 10,
+        paddingBottom: 5,
+        paddingHorizontal: 24,
+    },
+
     basicContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-    },
-    searchTitle: {
-        // TODO logo title
     },
 
     keyBoardView: {
         flex: 1,
         marginTop: 25,
         marginBottom: 15,
+        paddingHorizontal: 24,
     },
 
     searchTextInputContainer: {
@@ -337,6 +358,9 @@ const styles = StyleSheet.create({
     },
 
     // 최근 검색어
+    recentSearchContainer: {
+        paddingHorizontal: 24,
+    },
     recentSearchItemList: {
         overflow: 'hidden',
     },
@@ -370,6 +394,10 @@ const styles = StyleSheet.create({
 
     // 인기 검색어
     popularSearchContainer: {
+        paddingHorizontal: 24,
+        paddingBottom: 24,
+    },
+    popularSearchTextContainer: {
         flexDirection: 'row',
         paddingVertical: 10,
     },
@@ -389,9 +417,9 @@ const styles = StyleSheet.create({
     },
 
     separator: {
-        marginVertical: 17,
+        marginVertical: 17, // 이렇게 관리하는 게 맞나!
         borderWidth: 1,
-        borderColor: '#F2F4F7'
+        borderColor: '#F2F4F7',
     },
 
     /** Modal */

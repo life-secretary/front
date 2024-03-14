@@ -21,6 +21,7 @@ export { default as closeFillLight } from './icon_close_fill_light.svg';
 export { default as closeLight } from './icon_close_light.svg';
 export { default as edit } from './icon_edit.svg';
 export { default as hamburger } from './icon_hamburger.svg';
+export { default as logo } from './icon_logo.svg';
 export { default as meatball } from './icon_meatball.svg';
 export { default as notificationOff } from './icon_notification_off.svg';
 export { default as notificationOn } from './icon_notification_on.svg';
