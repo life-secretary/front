@@ -9,10 +9,10 @@ export type ButtonProps = {
     text: string,
 
     /** [Required] Button text style */
-    textStyle: object, // TODO StyleSheet 관련 타입으로 변경
+    textStyle: object | Array<object>, // TODO StyleSheet 관련 타입으로 변경
 
     /** [Required] Button style */
-    buttonStyle?: object, // TODO StyleSheet 관련 타입으로 변경
+    buttonStyle?: object | Array<object>, // TODO StyleSheet 관련 타입으로 변경
 
     /** Button background color when pressed */
     pressedBackgroundColor?: string,
@@ -29,23 +29,26 @@ export type AppButtonProps = Partial<PressableProps> & ButtonProps & {
 const AppButton = ({ 
     isDisabled = false,
     text = '', 
-    textStyle = {},
-    buttonStyle = {},
+    textStyle = {} || [],
+    buttonStyle = {} || [],
     pressedBackgroundColor = '',  
     onPressButton = () => {},
 }: AppButtonProps): React.JSX.Element => {
 
+    const pressableStyle = ( pressed ) => {
+        const defaultStyle = Array.isArray(buttonStyle) === true ? buttonStyle : [buttonStyle];
+        const backgroundColor = pressed ? pressedBackgroundColor : defaultStyle[0].backgroundColor;
+
+        return [
+            ...defaultStyle,
+            { backgroundColor },
+        ];
+    };
+
     return (
         <Pressable
             disabled={isDisabled}
-            style={({ pressed }) => {
-                return [
-                    buttonStyle,
-                    {
-                        backgroundColor: pressed ? pressedBackgroundColor : buttonStyle.backgroundColor
-                    }
-                ]
-            }}
+            style={({ pressed }) => pressableStyle(pressed)}
             onPress={() => onPressButton()}
         >
             <AppText style={textStyle}>{text}</AppText>
