@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, Platform, View } from 'react-native';
 import Modal from 'react-native-modal';
 import type { ModalProps } from 'react-native-modal';
 
@@ -47,6 +47,11 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       marginTop: 15,
+      ...Platform.select({
+        ios: {
+          marginTop: 30,
+        }
+      })
   },
 })
 
