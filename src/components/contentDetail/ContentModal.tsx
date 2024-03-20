@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, FlatList, VirtualizedList } from 'react-native';
 import type { AppModalProps } from '../common/modal/AppModal';
 
+import { AppHeader } from '../common/AppHeader';
 import { AppText } from '../common/AppText';
 import AppIcon from '../common/AppIcon';
 import AppButton from '../common/AppButton';
@@ -62,7 +63,8 @@ const ContentModal = ({
 
     const markdownStyle = {
         body: {
-            marginBottom: 18
+            paddingHorizontal: 24,
+            marginBottom: 18,
         },
         image: {
             marginBottom: 18
@@ -72,15 +74,15 @@ const ContentModal = ({
             fontSize: getFontSize(18),
             lineHeight: 21,
             color: '#000E24',
-            marginBottom: 18
+            marginBottom: 18,
         },
         heading4: {
             fontWeight: '400',
             fontSize: getFontSize(17),
             lineHeight: 26,
             color: '#40474F',
-            marginBottom: 18
-        }
+            marginBottom: 18,
+        },
     };
 
     const data = [{
@@ -105,11 +107,6 @@ const ContentModal = ({
             { id: 11, title: '테스트 문구 추가해서 ui 검토 테스트 문구 추가해서 ui 검토 테스트 문구 추가해서 ui 검토 테스트 문구 추가해서 ui 검토' }
         ]
     }];
-
-    const [layout, setLayout] = useState({
-        width: 0,
-        height: 0,
-    });
     
     const getItem = (_data: any, index: number) => {
         /**
@@ -165,180 +162,190 @@ const ContentModal = ({
             backdropOpacity={constants.MODAL_BACKDROP_OPACITY}
         >
             <View style={styles.container}>
-                <View style={styles.header}>
-                    <View>
-                        <AppIcon 
-                            type='stroke'
-                            name='back'
-                            width={36}
-                            height={36}
-                        />
+                <AppHeader style={{
+                    borderColor: 'transparent',
+                    marginVertical: 0,
+                    paddingBottom: 10,
+                }}>
+                    <View style={{
+                        flexDirection: 'row',
+                        paddingHorizontal: 24,
+                    }}>
+                        <View>
+                            <AppIcon 
+                                type='stroke'
+                                name='back'
+                                width={36}
+                                height={36}
+                            />
+                        </View>
+                        <View style={styles.headerRight}>
+                            <AppIcon 
+                                type='stroke'
+                                name='upload'
+                                width={36}
+                                height={36}
+                            />
+                            <AppIcon 
+                                type='fill'
+                                name='bookmarkDark'
+                                width={36}
+                                height={36}
+                                onPress={onPressContentBookMarkButton}
+                                styles={isContentBookMarked ? { fill: '#000' } : {}}
+                            />
+                        </View>
                     </View>
-                    <View style={styles.headerRight}>
-                        <AppIcon 
-                            type='stroke'
-                            name='upload'
-                            width={36}
-                            height={36}
-                        />
-                        <AppIcon 
-                            type='fill'
-                            name='bookmarkDark'
-                            width={36}
-                            height={36}
-                            onPress={onPressContentBookMarkButton}
-                            styles={isContentBookMarked ? { fill: '#000' } : {}}
-                        />
-                    </View>
-                </View>
-                <View style={styles.body} onLayout={(event) => { setLayout(event.nativeEvent.layout) }}>
-                    <VirtualizedList
-                        getItem={getItem}
-                        getItemCount={getItemCount}
-                        renderItem={({ item, index }) => {
-                            return (
-                                <View>
-                                    {/** Header */}
-                                    <View style={styles.mainCategoryWrapper}>
+                </AppHeader>
+                <VirtualizedList
+                    getItem={getItem}
+                    getItemCount={getItemCount}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <View>
+                                {/** Header */}
+                                <View style={styles.mainCategoryWrapper}>
+                                    <AppButton 
+                                        isDisabled={true}
+                                        text={'부동산'}
+                                        textStyle={styles.mainCategory}
+                                        buttonStyle={styles.mainCategoryPressable}
+                                    />
+                                </View>
+                                <AppText style={styles.title}>{'2월에 신청하는 새로운 청약통장'}</AppText>
+                                <AppText style={styles.date}>{'2024.01.08'}</AppText>
+                                {/** Article */}
+                                <Markdown style={markdownStyle}>{ item.markdown }</Markdown>
+                                {/** HashTag */}
+                                <View style={styles.hashTagWrapper}>
+                                    {data[0].hashTags.map((item, index) => {
+                                        return (
                                         <AppButton 
-                                            isDisabled={true}
-                                            text={'부동산'}
-                                            textStyle={styles.mainCategory}
-                                            buttonStyle={styles.mainCategoryPressable}
+                                            key={`hashTag${index}`}
+                                            text={`#${item}`}
+                                            textStyle={styles.hashTag}
+                                            buttonStyle={styles.hashTagPressable}
+                                            // TODO pressedColor 통일되면 props 제거 가능
+                                            pressedBackgroundColor={`#11111166`}
+                                            onPressButton={() => onPressHashTag(index)}
                                         />
-                                    </View>
-                                    <AppText style={styles.title}>{'2월에 신청하는 새로운 청약통장'}</AppText>
-                                    <AppText style={styles.date}>{'2024.01.08'}</AppText>
-                                    {/** Article */}
-                                    <Markdown style={markdownStyle}>{ item.markdown }</Markdown>
-                                    {/** HashTag */}
-                                    <View style={styles.hashTagWrapper}>
-                                        {data[0].hashTags.map((item, index) => {
-                                            return (
-                                            <AppButton 
-                                                key={`hashTag${index}`}
-                                                text={`#${item}`}
-                                                textStyle={styles.hashTag}
-                                                buttonStyle={styles.hashTagPressable}
-                                                // TODO pressedColor 통일되면 props 제거 가능
-                                                pressedBackgroundColor={`#11111166`}
-                                                onPressButton={() => onPressHashTag(index)}
+                                        );
+                                    })}
+                                </View>
+                                <View style={styles.separator}/>
+                                {/** Section1 : 연관된 할 일 추가하기 */}
+                                <FlatList 
+                                    data={data[0].todolist}
+                                    keyExtractor={(item) => { return String(item.id) }}
+                                    initialNumToRender={8}
+                                    ListHeaderComponent={() => {
+                                        return (
+                                            <View style={styles.basicTitleWrapper}>
+                                                <AppText style={styles.basicTitle}>연관된 할 일 추가하기</AppText>
+                                                <AppButton 
+                                                    text={'전체추가하기'}
+                                                    textStyle={styles.todoListAddAllButton}
+                                                    buttonStyle={{}}
+                                                    onPressButton={() => {}}
+                                                />
+                                            </View>
+                                        );
+                                    }}
+                                    renderItem={({ item, index, separators }) => {
+                                        return (
+                                            <ToDoListItem 
+                                                hasMainCategory={false}
+                                                item={item}
                                             />
-                                            );
-                                        })}
+                                        );
+                                    }}
+                                    ItemSeparatorComponent={() => {
+                                        return (
+                                            <View style={{ paddingBottom: 14 }} />
+                                        );
+                                    }}
+                                    style={{
+                                        paddingHorizontal: 24,
+                                    }}
+                                />
+                                <View style={styles.separator}/>
+                                {/** Section2 : 연관 콘텐츠 추천 */}
+                                <View style={{
+                                    paddingHorizontal: 24,
+                                }}>
+                                    <View style={styles.basicTitleWrapper}>
+                                        <AppText style={styles.basicTitle}>연관 콘텐츠 추천</AppText>
                                     </View>
-                                    <View style={styles.separator}/>
-                                    {/** Section1 : 연관된 할 일 추가하기 */}
-                                    <FlatList 
-                                        data={data[0].todolist}
-                                        keyExtractor={(item) => { return String(item.id) }}
-                                        initialNumToRender={8}
-                                        ListHeaderComponent={() => {
-                                            return (
-                                                <View style={styles.basicTitleWrapper}>
-                                                    <AppText style={styles.basicTitle}>연관된 할 일 추가하기</AppText>
-                                                    <AppButton 
-                                                        text={'전체추가하기'}
-                                                        textStyle={styles.todoListAddAllButton}
-                                                        buttonStyle={{}}
-                                                        onPressButton={() => {}}
+                                    {/** 가공된 데이터 사용 */}
+                                    {isRelatedContent.map((item, index, data) => {
+                                        return (
+                                            <View key={`content${index}`} style={[
+                                                styles.contentWrapper,
+                                                {
+                                                    borderBottomWidth : (index === data.length - 1) ? 0 : 1,
+                                                    marginBottom: (index === data.length - 1) ? 0 : 10,
+                                                    paddingBottom: (index === data.length - 1) ? 5 : 8,
+
+                                                }
+                                            ]}>
+                                                <View style={styles.contentTitleWrapper}>
+                                                    <AppText style={styles.contentTitle}>{item.title}</AppText>
+                                                </View>
+                                                <View style={styles.contentSaveButtonWrapper}>
+                                                    <AppIcon 
+                                                        type='fill'
+                                                        name='bookmarkLight'
+                                                        width={42}
+                                                        height={42}
+                                                        onPress={() => onPressRelatedContentBookMarkButton(index)}
+                                                        styles={item.isBookMarked ? { fill: '#A1ACB9' } : {}}
                                                     />
                                                 </View>
-                                            );
-                                        }}
-                                        renderItem={({ item, index, separators }) => {
-                                            return (
-                                                <ToDoListItem 
-                                                    hasMainCategory={false}
-                                                    item={item}
-                                                />
-                                            );
-                                        }}
-                                        ItemSeparatorComponent={() => {
-                                            return (
-                                                <View style={{ paddingBottom: 14 }} />
-                                            );
-                                        }}
-                                    />
-                                    <View style={styles.separator}/>
-                                    {/** Section2 : 연관 콘텐츠 추천 */}
-                                    <View style={styles.basicWrapper}>
-                                        <View style={styles.basicTitleWrapper}>
-                                            <AppText style={styles.basicTitle}>연관 콘텐츠 추천</AppText>
-                                        </View>
-                                        {/** 가공된 데이터 사용 */}
-                                        {isRelatedContent.map((item, index, data) => {
-                                            return (
-                                                <View key={`content${index}`} style={[
-                                                    styles.contentWrapper,
-                                                    {
-                                                        borderBottomWidth : (index === data.length - 1) ? 0 : 1,
-                                                        marginBottom: (index === data.length - 1) ? 0 : 10,
-                                                        paddingBottom: (index === data.length - 1) ? 5 : 8,
-
-                                                    }
-                                                ]}>
-                                                    <View style={styles.contentTitleWrapper}>
-                                                        <AppText style={styles.contentTitle}>{item.title}</AppText>
-                                                    </View>
-                                                    <View style={styles.contentSaveButtonWrapper}>
-                                                        <AppIcon 
-                                                            type='fill'
-                                                            name='bookmarkLight'
-                                                            width={42}
-                                                            height={42}
-                                                            onPress={() => onPressRelatedContentBookMarkButton(index)}
-                                                            styles={item.isBookMarked ? { fill: '#A1ACB9' } : {}}
-                                                        />
-                                                    </View>
-                                                </View>
-                                            );
-                                        })}
-                                    </View>
-                                    <View style={styles.separator}/>
-                                    {/** Section3 : 문의 및 의견 보내기 */}
-                                    <View style={styles.basicWrapper}>
-                                        <AppText style={styles.askButtonTitle}>이번 콘텐츠는 어떠신가요?</AppText>
-                                        <AppText style={styles.askButtonSubTitle}>더 나은 콘텐츠를 제작하는데 큰 도움이 됩니다</AppText>
-                                        <View style={styles.askButtonWrapper}>
-                                            <AppButton 
-                                                text={'문의 및 의견 보내기'}
-                                                // 📌 임시
-                                                textStyle={styles.askButtonText}
-                                                buttonStyle={styles.askButton}
-                                                // TODO pressedColor 통일되면 props 제거 가능
-                                                pressedBackgroundColor={`#11111166`}
-                                                onPressButton={() => {}}
-                                            />
-                                        </View>
-                                    </View>
-                                    {/** Section4 : 안내 사항 */}
-                                    <View style={styles.notificationWrapper}>
-                                        <FlatList 
-                                            data={data[0].notification}
-                                            renderItem={({ item, index }) => {
-                                                return (
-                                                    <AppText 
-                                                        style={styles.notificationText}
-                                                    >
-                                                        &#183; {item.title}
-                                                    </AppText>
-                                                );
-                                            }}
-                                            // 🤔 왜 string 은 되고 number 는 안되지 ?
-                                            keyExtractor={( item ) => { return String(item.id) }}
-                                            initialNumToRender={2} // 임시 (공지사항 개수)
+                                            </View>
+                                        );
+                                    })}
+                                </View>
+                                <View style={styles.separator}/>
+                                {/** Section3 : 문의 및 의견 보내기 */}
+                                <View style={{
+                                    paddingHorizontal: 24,
+                                    paddingBottom: 40,
+                                }}>
+                                    <AppText style={styles.askButtonTitle}>이번 콘텐츠는 어떠신가요?</AppText>
+                                    <AppText style={styles.askButtonSubTitle}>더 나은 콘텐츠를 제작하는데 큰 도움이 됩니다</AppText>
+                                    <View style={styles.askButtonWrapper}>
+                                        <AppButton 
+                                            text={'문의 및 의견 보내기'}
+                                            // 📌 임시
+                                            textStyle={styles.askButtonText}
+                                            buttonStyle={styles.askButton}
+                                            // TODO pressedColor 통일되면 props 제거 가능
+                                            pressedBackgroundColor={`#11111166`}
+                                            onPressButton={() => {}}
                                         />
                                     </View>
                                 </View>
-                                );
-                        }}
-                        // 🤔 여기는 number 가능
-                        keyExtractor={( item ) => { return item.id }}
-                        initialNumToRender={1}
-                    ></VirtualizedList>
+                                {/** Section4 : 안내 사항 */}
+                                <View style={styles.notificationWrapper}>
+                                    {
+                                        data[0].notification.map((item, index) => {
+                                            return (
+                                                <AppText 
+                                                    key={`notification${index}`}
+                                                    style={styles.notificationText}
+                                                >&#183; {item.title}</AppText>
+                                            )
+                                        })
+                                    }
+                                </View>
+                            </View>
+                            );
+                    }}
+                    // 🤔 여기는 number 가능
+                    keyExtractor={( item ) => { return item.id }}
+                    initialNumToRender={1}
+                ></VirtualizedList>
                 </View>
-            </View>
             {/** HashTagModal */}
             <SearchHashTagModal 
                 isVisible={isHashTagModalVisible}
@@ -353,25 +360,24 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         flex: 1,
-        paddingHorizontal: 24,
+        // paddingHorizontal: 24,
     },
     header: {
-        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        backgroundColor: 'red', // for test
     },
     headerRight: {
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-end',
     },
-    body: {
-        flex: 11 // 📌 비율 말고 높이를 맞춰야 하는가 ?
-    },
 
     // TODO font style 상수로 관리
     mainCategoryWrapper: {
         flexDirection: 'row',
+        paddingTop: 5,
+        paddingHorizontal: 24,
     },
     mainCategoryPressable: {
         overflow: 'hidden',
@@ -393,6 +399,7 @@ const styles = StyleSheet.create({
         fontSize: getFontSize(26),
         lineHeight: 36,
         color: '#000E24',
+        paddingHorizontal: 24,
         marginBottom: 8,
     },
 
@@ -401,20 +408,21 @@ const styles = StyleSheet.create({
         fontSize: getFontSize(14),
         lineHeight: 17,
         color: '#A1ACB9',
+        paddingHorizontal: 24,
         marginBottom: 18,
     },
 
     hashTagWrapper: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginBottom: 30,
+        paddingHorizontal: 24,
     },
     hashTagPressable: {
         borderRadius: 6,
         paddingHorizontal: 12,
         paddingVertical: 8,
+        marginTop: 10,
         marginRight: 10,
-        marginBottom: 10,
         backgroundColor: '#F2F4F7',
     },
     hashTag: {
@@ -424,9 +432,6 @@ const styles = StyleSheet.create({
         color: '#526070',
     },
 
-    basicWrapper: {
-        marginVertical: 30,
-    },
     basicTitleWrapper: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -501,17 +506,22 @@ const styles = StyleSheet.create({
     },
 
     notificationWrapper: {
+        gap: 10,
+        paddingTop: 34,
+        paddingHorizontal: 24,
+        paddingBottom: 56,
         backgroundColor: '#F2F4F7'
     },
     notificationText: {
         fontWeight: '500',
         fontSize: getFontSize(13),
         lineHeight: 19,
-        color: '#A1ACB9'
+        color: '#A1ACB9',
     },
 
     separator: {
-        height: 3,
+        height: 8,
+        marginVertical: 40,
         backgroundColor: '#F2F4F7'
     }
 })
