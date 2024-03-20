@@ -33,7 +33,7 @@ const SearchCondition = ({ data }) => {
         setIsSelected((previousValue) => {
             previousValue[0] = true;
 
-            return previousValue;
+            return previousValue.slice();
         })
     }, [])
 

@@ -1,13 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-    KeyboardAvoidingView,
-    TouchableWithoutFeedback,
-    TextInput,
     StyleSheet, 
     View, 
-    Keyboard,
     Platform,
-    Pressable,
 } from 'react-native';
 
 import { AppHeader } from '../components/common/AppHeader';
@@ -15,6 +10,9 @@ import { AppText } from '../components/common/AppText';
 import AppIcon from '../components/common/AppIcon';
 import AppConfirmModal from '../components/common/modal/AppConfirmModal';
 
+import SearchTextInput from '../components/search/SearchTextInput';
+import SearchCondition from '../components/search/SearchCondition';
+import SearchTab from '../components/search/SearchTab';
 import SearchWordView from '../components/search/SearchWordView';
 import SearchContentView from '../components/search/SearchContentView';
 import SearchToDoView from '../components/search/SearchToDoView';
@@ -37,8 +35,6 @@ const SearchScreen = () => {
         { id: 6, title: '전세 자금 대출' },
         { id: 7, title: '연말정산' },
     ]);
-
-    const [searchText, setSearchText] = useState('');
 
     const [popularSearchData, setPopularSearchData] = useState([
         { id: 11, title: '4대보험' },
@@ -129,12 +125,14 @@ const SearchScreen = () => {
     };
 
     const pressRemoveSearchTextButton = () => {
-        setSearchText('');
         setIsSearchResultPage(false);
     };
 
     const changeSearchText = (text) => {
-        setSearchText(text);
+        // 검색창에 텍스트가 없을시 검색어 화면으로 돌아오기
+        if (text.length === 0) {
+            setIsSearchResultPage(false);
+        }
     };
 
     const submitSearchText = ({ nativeEvent: {text, eventCount, target} }) => {
@@ -144,15 +142,86 @@ const SearchScreen = () => {
     };
 
     // Tab
-    const tabs = [{ name: '콘텐츠' }, { name: '할 일' }];
-    const [isFirstTab, setIsFirstTab] = useState(true);
+    const pressTab = (number) => {
+        setTabData((previousValue) => {
+            return previousValue.map((item, index) => {
+                if (index === number) {
+                    item.isPressed = true;
+                } else {
+                    item.isPressed = false;
+                }
 
-    const pressContentTab = () => {
-        setIsFirstTab(true);
+                return item;
+            })
+        });
     };
 
-    const pressToDoTab = () => {
-        setIsFirstTab(false);
+    const headerComponent = (data, searchData) => {
+        return (
+            <View style={styles.searchConditionContainer}>
+                <AppText style={styles.searchConditionText}>검색 결과 {data.length}건</AppText>
+                <SearchCondition data={searchData} />
+            </View>
+        );
+    };
+
+    const onPressContentByViewButton = () => {
+        console.log('조회순 버튼 클릭');
+        // fetch data code
+    };
+
+    const onPressContentBySaveButton = () => {
+        console.log('저장순 버튼 클릭');
+        // fetch data code
+    };
+
+    const onPressContentByRecentButton = () => {
+        console.log('최신순 버튼 클릭');
+        // fetch data code
+    };
+
+    const onPressToDoByViewButton = () => {
+        console.log('조회순 버튼 클릭');
+        // fetch data code
+    };
+
+    const onPressToDoByRecentButton = () => {
+        console.log('최신순 버튼 클릭');
+        // fetch data code
+    };
+
+    const searchConditionContentData = [
+        { text: '조회순', handler: onPressContentByViewButton, },
+        { text: '저장순', handler: onPressContentBySaveButton, },
+        { text: '최신순', handler: onPressContentByRecentButton, },
+    ];
+
+    const searchConditionToDoData = [
+        { text: '조회순', handler: onPressToDoByViewButton, },
+        { text: '최신순', handler: onPressToDoByRecentButton, },
+    ];
+
+    const [tabData, setTabData] = useState([
+        { 
+            id: 1, 
+            text: '콘텐츠', 
+            isPressed: true, 
+            handler: pressTab, 
+            component: <SearchContentView data={contentData} headerComponent={headerComponent(contentData, searchConditionContentData)} />,
+        }, 
+        { 
+            id: 2, 
+            text: '할 일', 
+            isPressed: false, 
+            handler: pressTab, 
+            component: <SearchToDoView data={toDoData} headerComponent={headerComponent(toDoData, searchConditionToDoData)} />,
+        },
+    ]);
+
+    const currentData = () => {
+        const current = tabData.find((item) => item.isPressed === true);
+
+        return current;
     };
 
     // 최근 검색어 아이템 개별 [x] 제거 기능
@@ -250,64 +319,20 @@ const SearchScreen = () => {
                         />
                     </View>
                     :
-                    null
-                }       
-                <KeyboardAvoidingView behavior={'padding'}>
-                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                        <View style={styles.searchTextInputContainer}>
-                            <View style={styles.searchTextInputWrapper}>
-                                <TextInput
-                                    editable
-                                    placeholder='키워드를 입력해보세요' 
-                                    style={[styles.searchTextInput, isSearchResultPage ? styles.searchTextResultInput : {}]} 
-                                    placeholderTextColor={'#CBD3DC'}
-                                    value={searchText}
-                                    onChangeText={changeSearchText}
-                                    onSubmitEditing={submitSearchText}
-                                    returnKeyType='search'
-                                    underlineColorAndroid='transparent'
-                                />
-                            </View>
-                            <View style={styles.searchIconWrapper}>
-                                {
-                                    isSearchResultPage ? 
-                                    <AppIcon 
-                                        type='fill'
-                                        name='closeFillLight'
-                                        width={36}
-                                        height={36}
-                                        onPress={pressRemoveSearchTextButton}
-                                    />
-                                    :
-                                    null
-                                }
-                                <AppIcon 
-                                    type='stroke'
-                                    name='search'
-                                    width={36}
-                                    height={36}
-                                    onPress={pressSearchButton}
-                                />
-                            </View>
-                        </View>
-                    </TouchableWithoutFeedback>
-                </KeyboardAvoidingView>
+                    <></>
+                }
+                <SearchTextInput 
+                    isSearchResultPage={isSearchResultPage}
+                    changeSearchText={changeSearchText}
+                    submitSearchText={submitSearchText}
+                    pressRemoveSearchTextButton={pressRemoveSearchTextButton}
+                    pressSearchButton={pressSearchButton}
+                />
                 {
-                    isSearchResultPage ? 
-                    <View style={styles.tabContainer}>
-                        <Pressable style={styles.tabButtonContainer} onPress={pressContentTab}>
-                            <View style={[styles.tabButtonTextContainer, isFirstTab ? {} : styles.tabButtonTextContainerDisplay]}>
-                                <AppText style={styles.tabButtonText}>콘텐츠</AppText>
-                            </View>
-                        </Pressable>
-                        <Pressable style={styles.tabButtonContainer} onPress={pressToDoTab}>
-                            <View style={[styles.tabButtonTextContainer, isFirstTab ? styles.tabButtonTextContainerDisplay : {}]}>
-                                <AppText style={styles.tabButtonText}>할 일</AppText>
-                            </View>
-                        </Pressable>
-                    </View>
+                    !isSearchResultPage ? 
+                    <></>
                     :
-                    null
+                    <SearchTab tabData={tabData} />
                 }
             </AppHeader>
             {
@@ -324,12 +349,7 @@ const SearchScreen = () => {
                     height={recentSearchListHeight}
                 />
                 :
-                isFirstTab ? 
-                // 컨텐츠 
-                <SearchContentView data={contentData} />
-                :
-                // 할 일
-                <SearchToDoView data={toDoData} />
+                currentData()?.component
             }
             {/** TODO (일단 검색탭에 컨펌모달 추가) 다른페이지에서 공통으로 사용가능한 방법 모색 */}
             {/* <AppConfirmModal
@@ -383,134 +403,6 @@ const styles = StyleSheet.create({
         paddingTop: 22,
     },
 
-    keyBoardView: {
-        flex: 1,
-        marginTop: 25,
-        marginBottom: 22,
-    },
-
-    searchTextInputContainer: {
-        justifyContent: 'center',
-    },
-    searchTextInputWrapper: {
-        paddingVertical: 22,
-    },
-    searchTextInput: {
-        height: 48,
-        paddingLeft: 18,
-        paddingRight: 48,
-        borderRadius: 10,
-        backgroundColor: '#F2F4F7',
-    },
-    searchTextResultInput: {
-        height: 36,
-    },
-    searchIconWrapper: {
-        position: 'absolute',
-        flexDirection: 'row',
-        alignSelf: 'flex-end',
-        gap: 4,
-        paddingRight: 4,
-    },
-
-    searchContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 15,
-    },
-    searchMainTitle: {
-        fontWeight: '700',
-        fontSize: getFontSize(15),
-        lineHeight: 18,
-        color: '#000E24'
-    },
-    searchSubTitle: {
-        fontWeight: '500',
-        fontSize: getFontSize(13),
-        lineHeight: 16,
-        color: '#A1ACB9'
-    },
-
-    // 최근 검색어
-    recentSearchContainer: {
-        paddingTop: 22,
-        paddingHorizontal: 24,
-    },
-    recentSearchItemList: {
-        overflow: 'hidden',
-    },
-    recentSearchItemContainer: {
-        height: 38, // 방어 코드
-
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 10,
-    },
-    recentSearchText: {
-        fontWeight: '500',
-        fontSize: getFontSize(15),
-        lineHeight: 18,
-        color: '#526070',
-    },
-
-    // 리스트 더보기 버튼
-    moreRecentSearchListButtonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-    },
-    moreRecentSearchListButtonText: {
-        fontWeight: '500',
-        fontSize: getFontSize(15),
-        lineHeight: 18,
-        color: '#40474F'
-    },
-
-    // 인기 검색어
-    popularSearchContainer: {
-        paddingHorizontal: 24,
-        paddingBottom: 24,
-    },
-    popularSearchTextContainer: {
-        flexDirection: 'row',
-        paddingVertical: 10,
-    },
-    popularSearchIndexText: {
-        flex: 1,
-        fontWeight: '600',
-        fontSize: getFontSize(16),
-        lineHeight: 20,
-        color: '#000E24',
-    },  
-    popularSearchTitleText: {
-        flex: 10,
-        fontWeight: '500',
-        fontSize: getFontSize(15),
-        lineHeight: 18,
-        color: '#526070'
-    },
-
-    // 구분선
-    separator: {
-        marginVertical: 22, // 이렇게 관리하는 게 맞나!
-        borderWidth: 0.5,
-        borderColor: '#F2F4F7',
-    },
-    separatorToDo: {
-        marginVertical: 10,
-    },
-
-    // 할 일
-    toDoContainer: {
-        paddingHorizontal: 24,
-    },
-    toDoFooter: {
-        height: 60,
-    },
-
-    // 검색 조건
     searchConditionContainer: {
         height: 52, 
         flexDirection: 'row', 
@@ -518,43 +410,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 10,
     },
-    searchConditionButtonContainer: {
-        flexDirection: 'row', 
-        justifyContent: 'flex-end',
-        gap: 14,
-    },
     searchConditionText: {
         fontWeight: '500',
         fontSize: getFontSize(14),
         lineHeight: 17,
         color: '#A1ACB9',
-    },
-
-    // 탭
-    tabContainer : {
-        height: 42,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    tabButtonContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    tabButtonTextContainer: {
-        flex: 1,
-        paddingHorizontal: 15,
-        justifyContent: 'center',
-        borderBottomWidth: 1.5,
-        borderBottomColor: 'black'
-    },
-    tabButtonTextContainerDisplay: {
-        borderBottomColor: 'transparent'
-    },
-    tabButtonText: {
-        fontWeight: '600',
-        fontSize: getFontSize(15),
-        lineHeight: 18,
     },
 
     /** Modal */
