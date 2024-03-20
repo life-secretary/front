@@ -1,17 +1,14 @@
 import React from 'react';
 import { VirtualizedList, View, StyleSheet } from 'react-native';
 
-import { AppText } from '../../components/common/AppText';
-
 import { HomeContentsItem } from '../../components/home/homeContents/HomeContentsItem';
-import SearchCondition from '../../components/search/SearchCondition';
 
-import { getFontSize } from '../../utils/font';
-
-const SearchContentView = ({ data }) => {
+const SearchContentView = ({ 
+    data,
+    headerComponent,
+}) => {
 
     const getContentTabItem = (_data, index) => {
-        console.log(data[index]);
         return data[index];
     };
 
@@ -24,27 +21,6 @@ const SearchContentView = ({ data }) => {
         
         return keyName;
     };
-
-    const onPressByViewButton = () => {
-        console.log('조회순 버튼 클릭');
-        // fetch data code
-    };
-
-    const onPressBySaveButton = () => {
-        console.log('저장순 버튼 클릭');
-        // fetch data code
-    };
-
-    const onPressByRecentButton = () => {
-        console.log('최신순 버튼 클릭');
-        // fetch data code
-    };
-
-    const searchConditionData = [
-        { text: '조회순', handler: onPressByViewButton, },
-        { text: '저장순', handler: onPressBySaveButton, },
-        { text: '최신순', handler: onPressByRecentButton, },
-    ];
 
     return (
         <VirtualizedList
@@ -62,36 +38,15 @@ const SearchContentView = ({ data }) => {
             keyExtractor={getContentTabKeyExtractor}
             getItemCount={getContentTabItemCount}
             getItem={getContentTabItem}
-            ItemSeparatorComponent={() => <View style={styles.separatorContent} />}
-            ListHeaderComponent={() => {
-                return (
-                    <View style={styles.searchConditionContainer}>
-                        <AppText style={styles.searchConditionText}>검색 결과 {data.length}건</AppText>
-                        <SearchCondition data={searchConditionData} />
-                    </View>
-                );
-            }}
+            ListHeaderComponent={() => headerComponent}
             ListFooterComponent={() => <View style={styles.contentFooter} />}
+            ItemSeparatorComponent={() => <View style={styles.separatorContent} />}
             style={styles.contentContainer}
-            />
+        />
     );
 };
 
 const styles = StyleSheet.create({
-    searchConditionContainer: {
-        height: 52, 
-        flexDirection: 'row', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    searchConditionText: {
-        fontWeight: '500',
-        fontSize: getFontSize(14),
-        lineHeight: 17,
-        color: '#A1ACB9',
-    },
-
     contentContainer: {
         paddingHorizontal: 24,
     },

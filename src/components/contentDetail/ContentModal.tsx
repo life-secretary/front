@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, FlatList, VirtualizedList } from 'react-native';
-import Modal from '../common/modal/AppModal';
-import type {AppModalProps} from '../common/modal/AppModal';
+import type { AppModalProps } from '../common/modal/AppModal';
 
 import { AppText } from '../common/AppText';
 import AppIcon from '../common/AppIcon';
 import AppButton from '../common/AppButton';
-import ToDoListItem from './ToDoListItem';
+import AppModal from '../common/modal/AppModal';
+
+import ToDoListItem from '../search/ToDoListItem';
+import SearchHashTagModal from '../search/SearchHashTagModal';
+
 import Markdown from 'react-native-markdown-display';
 import { getFontSize } from '../../utils/font';
 
@@ -128,6 +131,20 @@ const ContentModal = ({
         setIsContentBookMarked(previousValue => !previousValue);
     };
 
+    // hashTag [Content]
+    const [isHashTagModalVisible, setIsHashTagModalVisible] = useState(false);
+    const [pressedHashTag, setPressedHashTag] = useState('');
+
+    const onPressHashTag = (index) => {
+        setPressedHashTag(data[0].hashTags[index]);
+        setIsHashTagModalVisible(true);
+    };
+
+    const onPressHashTagModalBackButton = () => {
+        setPressedHashTag('');
+        setIsHashTagModalVisible(false);
+    };
+
     // bookMarkButton [RelatedContent]
     const customRelatedContent = data[0].contents.map((item) => Object.assign(item, { isBookMarked : false }));
     const [isRelatedContent, setIsRelatedContent] = useState(customRelatedContent);
@@ -139,11 +156,10 @@ const ContentModal = ({
 
             return previousValue.slice();
         })
-    }
-
+    };
 
     return (
-        <Modal
+        <AppModal
             isVisible={isVisible}
             backdropColor={constants.MODAL_BACKDROP_COLOR}
             backdropOpacity={constants.MODAL_BACKDROP_OPACITY}
@@ -195,6 +211,7 @@ const ContentModal = ({
                                     <AppText style={styles.date}>{'2024.01.08'}</AppText>
                                     {/** Article */}
                                     <Markdown style={markdownStyle}>{ item.markdown }</Markdown>
+                                    {/** HashTag */}
                                     <View style={styles.hashTagWrapper}>
                                         {data[0].hashTags.map((item, index) => {
                                             return (
@@ -205,7 +222,7 @@ const ContentModal = ({
                                                 buttonStyle={styles.hashTagPressable}
                                                 // TODO pressedColor 통일되면 props 제거 가능
                                                 pressedBackgroundColor={`#11111166`}
-                                                onPressButton={() => {}}
+                                                onPressButton={() => onPressHashTag(index)}
                                             />
                                             );
                                         })}
@@ -322,7 +339,13 @@ const ContentModal = ({
                     ></VirtualizedList>
                 </View>
             </View>
-        </Modal>
+            {/** HashTagModal */}
+            <SearchHashTagModal 
+                isVisible={isHashTagModalVisible}
+                hashTag={pressedHashTag}
+                pressBackButton={onPressHashTagModalBackButton}
+            />
+        </AppModal>
     );
 };
 
@@ -330,6 +353,7 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         flex: 1,
+        paddingHorizontal: 24,
     },
     header: {
         flex: 1,
