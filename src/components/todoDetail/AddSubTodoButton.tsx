@@ -2,11 +2,11 @@ import * as React from 'react';
 import {StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {SubTodoForm} from './SubTodoForm';
-import {AppButton} from '../common/button/AppButton';
+import AppButton from '../common/AppButton';
 
 export function AddSubTodoButton(): React.JSX.Element {
   const navigation: any = useNavigation();
-  const iconPath = require('@/assets/images/sampleIcon.png');
+  const iconPath = require('@/assets/icon/icon_add_dark.svg');
 
   const handlePress = () =>
     navigation.navigate('Form', {
@@ -16,7 +16,7 @@ export function AddSubTodoButton(): React.JSX.Element {
 
   return (
     <AppButton
-      // type="contained"
+      text="항목 추가하기"
       textStyle={styles.buttonText}
       buttonStyle={styles.button}
       endIcon={iconPath}

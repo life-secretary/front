@@ -1,18 +1,16 @@
 import * as React from 'react';
 import {StyleSheet} from 'react-native';
-import {AppButton} from '../common/button/AppButton';
+import AppButton from '../common/AppButton';
+import {arrowRightDark} from '@/assets/icon';
 
 export function ViewMoreButton(): React.JSX.Element {
-  const iconPath = require('@/assets/images/sampleIcon.png');
-
   return (
     <AppButton
-      // type="contained"
+      text="더보기"
       textStyle={styles.buttonText}
       buttonStyle={styles.button}
-      endIcon={iconPath}>
-      더보기
-    </AppButton>
+      endIcon={arrowRightDark}
+    />
   );
 }
 
@@ -26,5 +24,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 15,
     fontWeight: '600',
+    textAlign: 'center',
   },
 });
