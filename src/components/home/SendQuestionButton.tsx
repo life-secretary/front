@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {StyleSheet} from 'react-native';
-import {AppButton} from '../common/button/AppButton';
+import AppButton from '../common/AppButton';
 
 export function SendQuestionButton(): React.JSX.Element {
   const handlePress = () => {};
 
   return (
     <AppButton
-      // type="contained"
+      text="문의 및 의견 보내기"
       textStyle={styles.buttonText}
       buttonStyle={styles.button}
       onPress={handlePress}>
@@ -26,5 +26,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: '#FFFFFF',
+    textAlign: 'center',
   },
 });

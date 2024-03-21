@@ -18,25 +18,25 @@ const DUMMY_CAROUSEL_DATA = [
     id: 'c1',
     tag: '경제',
     title: '2024년 달라지는 것들\n알아보기',
-    thumbnail: require('../assets/images/thumbnailPlaceholder.jpg'),
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
   },
   {
     id: 'c2',
     tag: '부동산',
     title: '2024년 달라지는 것들\n알아보기',
-    thumbnail: require('../assets/images/thumbnailPlaceholder.jpg'),
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
   },
   {
     id: 'c3',
     tag: '건강',
     title: '2024년 달라지는 것들\n알아보기',
-    thumbnail: require('../assets/images/thumbnailPlaceholder.jpg'),
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
   },
   {
     id: 'c4',
     tag: '기타',
     title: '2024년 달라지는 것들\n알아보기',
-    thumbnail: require('../assets/images/thumbnailPlaceholder.jpg'),
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
   },
 ];
 
