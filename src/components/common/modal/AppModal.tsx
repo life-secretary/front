@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, useWindowDimensions, Platform, View } from 'react-native';
+import {StyleSheet, useWindowDimensions, Platform, View} from 'react-native';
 import Modal from 'react-native-modal';
-import type { ModalProps } from 'react-native-modal';
+import type {ModalProps} from 'react-native-modal';
 
 export type AppModalProps = Partial<ModalProps> & {
   /** [Required] Show the modal */
@@ -38,8 +38,7 @@ const AppModal = ({
       backdropColor={backdropColor}
       backdropOpacity={backdropOpacity}
       onModalShow={() => {}} // Modal 이 완전히 띄워졌을 때 실행되는 callback 함수 (props로 전달)
-      style={styles.modal}
-    >
+      style={styles.modal}>
       <View style={styles.modalContainer}>{children}</View>
     </Modal>
   );
@@ -47,20 +46,20 @@ const AppModal = ({
 
 const styles = StyleSheet.create({
   modal: {
-    width: '100%', 
+    width: '100%',
     margin: 0,
   },
   modalContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 15,
-      ...Platform.select({
-        ios: {
-          marginTop: 30,
-        }
-      })
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 15,
+    ...Platform.select({
+      ios: {
+        marginTop: 30,
+      },
+    }),
   },
-})
+});
 
 export default AppModal;
