@@ -11,6 +11,8 @@ import {HomeContentsList} from '../components/home/homeContents/HomeContentsList
 import {SendQuestionButton} from '../components/home/SendQuestionButton';
 import {HomeTitle} from '../components/home/HomeTitle';
 
+import SearchCategoryModal from '../components/search/SearchCategoryModal';
+
 const DUMMY_CAROUSEL_DATA = [
   {
     id: 'c1',
@@ -60,6 +62,7 @@ export function HomeScreen(): React.JSX.Element {
           <SendQuestionButton />
         </View>
       </ScrollView>
+      <SearchCategoryModal isVisible={false} />
     </AppLayout>
   );
 }

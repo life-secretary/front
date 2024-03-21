@@ -19,6 +19,15 @@ import SearchToDoView from '../components/search/SearchToDoView';
 
 import { getFontSize } from '../utils/font';
 
+const HeaderSearchResult = ({ data, searchData }) => {
+    return (
+        <View style={styles.searchResultHeader}>
+            <AppText style={styles.searchResultText}>검색 결과 {data.length}건</AppText>
+            <SearchCondition data={searchData} /> 
+        </View>
+    );
+};
+
 const SearchScreen = () => {
 
     const recentSearchItemRef = useRef(null);
@@ -156,15 +165,6 @@ const SearchScreen = () => {
         });
     };
 
-    const headerComponent = (data, searchData) => {
-        return (
-            <View style={styles.searchConditionContainer}>
-                <AppText style={styles.searchConditionText}>검색 결과 {data.length}건</AppText>
-                <SearchCondition data={searchData} />
-            </View>
-        );
-    };
-
     const onPressContentByViewButton = () => {
         console.log('조회순 버튼 클릭');
         // fetch data code
@@ -207,14 +207,12 @@ const SearchScreen = () => {
             text: '콘텐츠', 
             isPressed: true, 
             handler: pressTab, 
-            component: <SearchContentView data={contentData} headerComponent={headerComponent(contentData, searchConditionContentData)} />,
         }, 
         { 
             id: 2, 
             text: '할 일', 
             isPressed: false, 
             handler: pressTab, 
-            component: <SearchToDoView data={toDoData} headerComponent={headerComponent(toDoData, searchConditionToDoData)} />,
         },
     ]);
 
@@ -222,6 +220,36 @@ const SearchScreen = () => {
         const current = tabData.find((item) => item.isPressed === true);
 
         return current;
+    };
+
+    const getSearchResultView = () => {
+        const currentTab = currentData()?.id;
+        const headerContent = <HeaderSearchResult data={contentData} searchData={searchConditionContentData} />;
+        const headerToDo = <HeaderSearchResult data={toDoData} searchData={searchConditionToDoData} />;
+
+        switch(currentTab) {
+            case 1:
+                return (
+                    <SearchContentView 
+                        data={contentData}
+                        headerComponent={headerContent}
+                    />
+                );
+            case 2:
+                return (
+                    <SearchToDoView 
+                        data={toDoData}
+                        headerComponent={headerToDo}
+                    />
+                );
+            default: 
+                return (
+                    <SearchContentView 
+                        data={contentData}
+                        headerComponent={headerContent}
+                    />
+                );
+        }
     };
 
     // 최근 검색어 아이템 개별 [x] 제거 기능
@@ -349,7 +377,7 @@ const SearchScreen = () => {
                     height={recentSearchListHeight}
                 />
                 :
-                currentData()?.component
+                getSearchResultView()
             }
             {/** TODO (일단 검색탭에 컨펌모달 추가) 다른페이지에서 공통으로 사용가능한 방법 모색 */}
             {/* <AppConfirmModal
@@ -403,14 +431,14 @@ const styles = StyleSheet.create({
         paddingTop: 22,
     },
 
-    searchConditionContainer: {
+    searchResultHeader: {
         height: 52, 
         flexDirection: 'row', 
         justifyContent: 'space-between', 
         alignItems: 'center',
         marginBottom: 10,
     },
-    searchConditionText: {
+    searchResultText: {
         fontWeight: '500',
         fontSize: getFontSize(14),
         lineHeight: 17,
