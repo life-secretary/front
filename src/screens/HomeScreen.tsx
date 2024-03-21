@@ -42,28 +42,28 @@ const DUMMY_CAROUSEL_DATA = [
 
 export function HomeScreen(): React.JSX.Element {
   return (
-    <AppLayout>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <AppHeader>
-          <HomeTitle text="2024년 01월 14일" style={styles.dateText} />
-        </AppHeader>
-        <HomeCategoryList />
-        <GestureHandlerRootView style={{flex: 1}}>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <AppLayout>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <AppHeader>
+            <HomeTitle text="2024년 01월 14일" style={styles.dateText} />
+          </AppHeader>
+          <HomeCategoryList />
           <HomeImageCarousel data={DUMMY_CAROUSEL_DATA} />
-        </GestureHandlerRootView>
-        <HomeContentsList titleText={'유사한 사용자가 읽고 있어요'} />
-        <HomeContentsListWithFilter titleText={'인기 많은 콘텐츠'} />
-        <HomeContentsList titleText={'최근 업데이트 되었어요'} />
-        <View style={styles.sendQuestioncontainer}>
-          <HomeTitle
-            text="인생비서 팀에게 자유롭게 얘기해주세요"
-            style={styles.sendQuestionText}
-          />
-          <SendQuestionButton />
-        </View>
-      </ScrollView>
-      <SearchCategoryModal isVisible={false} />
-    </AppLayout>
+          <HomeContentsList titleText={'유사한 사용자가 읽고 있어요'} />
+          <HomeContentsListWithFilter titleText={'인기 많은 콘텐츠'} />
+          <HomeContentsList titleText={'최근 업데이트 되었어요'} />
+          <View style={styles.sendQuestioncontainer}>
+            <HomeTitle
+              text="인생비서 팀에게 자유롭게 얘기해주세요"
+              style={styles.sendQuestionText}
+            />
+            <SendQuestionButton />
+          </View>
+        </ScrollView>
+        <SearchCategoryModal isVisible={false} />
+      </AppLayout>
+    </GestureHandlerRootView>
   );
 }
 
