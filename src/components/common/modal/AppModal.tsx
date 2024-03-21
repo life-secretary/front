@@ -7,6 +7,10 @@ export type AppModalProps = Partial<ModalProps> & {
   /** [Required] Show the modal */
   isVisible: boolean;
 
+  animationIn?: string | object;
+
+  animationOut?: string | object;
+
   /** The backdrop background color */
   backdropColor?: string;
 
@@ -17,6 +21,8 @@ export type AppModalProps = Partial<ModalProps> & {
 const AppModal = ({
   children,
   isVisible,
+  animationIn,
+  animationOut,
   backdropColor = '#FFFFFF',
   backdropOpacity = 1,
 }: AppModalProps): React.JSX.Element => {
@@ -27,6 +33,8 @@ const AppModal = ({
       isVisible={isVisible}
       deviceWidth={width}
       deviceHeight={height}
+      animationIn={animationIn}
+      animationOut={animationOut}
       backdropColor={backdropColor}
       backdropOpacity={backdropOpacity}
       onModalShow={() => {}} // Modal 이 완전히 띄워졌을 때 실행되는 callback 함수 (props로 전달)

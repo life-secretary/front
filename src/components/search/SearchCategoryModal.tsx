@@ -1,36 +1,38 @@
 import React, { useState } from 'react';
-import {
+import { 
     View,
     StyleSheet,
 } from 'react-native';
 
-import { AppText } from '../common/AppText';
 import { AppHeader } from '../common/AppHeader';
+import AppButton from '../common/AppButton';
 import AppIcon from '../common/AppIcon';
 import AppModal from '../common/modal/AppModal';
 
-import SearchTextInput from '../../components/search/SearchTextInput';
+import SearchCondition from '../../components/search/SearchCondition';
 import SearchTab from '../../components/search/SearchTab';
 import SearchContentView from '../../components/search/SearchContentView';
 import SearchToDoView from '../../components/search/SearchToDoView';
 
 import { getFontSize } from '../../utils/font';
 
-const HashTagResultHeader = ({ data, hashTag }) => {
-
+const HeaderCategoryResult = ({ searchData }) => {
+    
     return (
-        <View style={styles.searchResultHeader}>
-            <AppText style={styles.searchText}>'{hashTag}'</AppText>
-            <AppText style={styles.searchResultText}>검색 결과 {data.length}건</AppText>
+        <View style={styles.searchConditionContainer}>
+            <SearchCondition data={searchData} /> 
         </View>
     );
 };
 
-const SearchHashTagModal = ({
-    isVisible,
-    hashTag,
-    pressBackButton,
+const SearchCategoryModal = ({
+    isVisible
 }) => {
+
+    const constants = {
+        MODAL_BACKDROP_COLOR: '#FFFFFF',
+        MODAL_BACKDROP_OPACITY: 1,
+    }; // TODO 상수로 관리
 
     const contentData = [
         { id: 21, title: '이곳은 콘텐츠의 제목 영역으로 최대 24자로', category: '부동산', date: '2024.03.15', thumbnail: require('../../assets/images/thumbnailPlaceholder.jpg') },
@@ -89,16 +91,6 @@ const SearchHashTagModal = ({
         { id: 4, title: '할 일의 제목 입력은 41자 제한으로 둠', category: '부동산', },
     ];
 
-    const constants = {
-        MODAL_BACKDROP_COLOR: '#FFFFFF',
-        MODAL_BACKDROP_OPACITY: 1,
-    }; // TODO 상수로 관리
-
-    const changeSearchText = () => {};
-    const submitSearchText = () => {};
-    const pressRemoveSearchTextButton = () => {};
-    const pressSearchButton = () => {};
-
     // Tab
     const pressTab = (number) => {
         setTabData((previousValue) => {
@@ -113,6 +105,42 @@ const SearchHashTagModal = ({
             })
         })
     };
+
+    const onPressContentByViewButton = () => {
+        console.log('조회순 버튼 클릭');
+        // fetch data code
+    };
+
+    const onPressContentBySaveButton = () => {
+        console.log('저장순 버튼 클릭');
+        // fetch data code
+    };
+
+    const onPressContentByRecentButton = () => {
+        console.log('최신순 버튼 클릭');
+        // fetch data code
+    };
+
+    const onPressToDoByViewButton = () => {
+        console.log('조회순 버튼 클릭');
+        // fetch data code
+    };
+
+    const onPressToDoByRecentButton = () => {
+        console.log('최신순 버튼 클릭');
+        // fetch data code
+    };
+
+    const searchConditionContentData = [
+        { text: '조회순', handler: onPressContentByViewButton, },
+        { text: '저장순', handler: onPressContentBySaveButton, },
+        { text: '최신순', handler: onPressContentByRecentButton, },
+    ];
+
+    const searchConditionToDoData = [
+        { text: '조회순', handler: onPressToDoByViewButton, },
+        { text: '최신순', handler: onPressToDoByRecentButton, },
+    ];
 
     const [tabData, setTabData] = useState([
         { 
@@ -135,34 +163,64 @@ const SearchHashTagModal = ({
         return current;
     };
 
-    const getSearchResultView = () => {
+    const getSearchHeader = () => {
         const currentTab = currentData()?.id;
-        const headerContent = <HeaderHashTagResult data={contentData} hashTag={hashTag} />;
-        const headerToDo = <HeaderHashTagResult data={toDoData} hashTag={hashTag} />;
+
+        switch(currentTab) {
+            case 1:
+                return (
+                    <HeaderCategoryResult 
+                        searchData={searchConditionContentData}
+                    />
+                );
+            case 2:
+                return (
+                    <HeaderCategoryResult 
+                        searchData={searchConditionToDoData}
+                    />
+                );
+            default:
+                return (
+                    <HeaderCategoryResult 
+                        searchData={searchConditionContentData}
+                    />
+                );
+        }
+    };
+
+    const getSearchView  = () => {
+        const currentTab = currentData()?.id;
 
         switch(currentTab) {
             case 1:
                 return (
                     <SearchContentView 
                         data={contentData} 
-                        headerComponent={headerContent} 
+                        headerComponent={<></>} 
                     />
                 );
             case 2:
                 return (
                     <SearchToDoView 
                         data={toDoData} 
-                        headerComponent={headerToDo} 
+                        headerComponent={<></>}
                     />
                 );
             default:
                 return (
                     <SearchContentView 
                         data={contentData} 
-                        headerComponent={headerContent} 
+                        headerComponent={<></>} 
                     />
                 );
         }
+    };
+
+    const [isCategoryDownModalVisible, setIsCategoryDownModalVisible] = useState(false);
+
+    const onPressCategoryButton = () => {
+        console.log('press 전체 버튼');
+        setIsCategoryDownModalVisible((previousValue) => !previousValue);
     };
 
     return (
@@ -180,23 +238,30 @@ const SearchHashTagModal = ({
                                 name='back'
                                 width={36}
                                 height={36}
-                                onPress={pressBackButton}
+                                onPress={() => {}}
                             />
                         </View>
-                        <View style={styles.textInputWrapper}>
-                            <SearchTextInput 
-                                isSearchResultPage={true}
-                                defaultValue={hashTag}
-                                changeSearchText={changeSearchText}
-                                submitSearchText={submitSearchText}
-                                pressRemoveSearchTextButton={pressRemoveSearchTextButton}
-                                pressSearchButton={pressSearchButton}
-                            />
+                        <View style={styles.selectBoxWrapper}>
+                            <View style={styles.selectBoxButtonContainer}>
+                                <AppButton 
+                                    text={'전체'} // variable 처리
+                                    textStyle={styles.categoryText}
+                                    onPressButton={onPressCategoryButton}
+                                />
+                                <AppIcon 
+                                    type='fill'
+                                    name='angleDown'
+                                    width={42}
+                                    height={42}
+                                    onPress={onPressCategoryButton}
+                                />
+                            </View>
                         </View>
                     </View>
                     <SearchTab tabData={tabData} />
                 </AppHeader>
-                {getSearchResultView()}
+                {getSearchHeader()}
+                {getSearchView()}
             </View>
         </AppModal>
     );
@@ -216,36 +281,36 @@ const styles = StyleSheet.create({
         marginVertical: 0,
     },
     wrapper: {
+        width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
     },
 
     backIconWrapper: {
-        flex: 2,
+        flex: 1,
     },
-    textInputWrapper: {
-        flex: 15,
+    selectBoxWrapper: {
+        flex: 8,
+        alignItems: 'center',
+    },
+    selectBoxButtonContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 
-    searchResultHeader: {
+    searchConditionContainer: {
         height: 52, 
         flexDirection: 'row', 
+        justifyContent: 'space-between', 
         alignItems: 'center',
-        marginBottom: 10,
-        gap: 8,
+        paddingHorizontal: 24,
     },
-    searchText: {
-        fontWeight: '700',
-        fontSize: getFontSize(13),
-        lineHeight: 16,
-        color: '#40474F',
+    
+    categoryText: {
+        fontWeight: '600',
+        fontSize: getFontSize(20),
+        lineHeight: 24,
     },
-    searchResultText: {
-        fontWeight: '500',
-        fontSize: getFontSize(14),
-        lineHeight: 17,
-        color: '#A1ACB9',
-    },
-})
+});
 
-export default SearchHashTagModal;
+export default SearchCategoryModal;
