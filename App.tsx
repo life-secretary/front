@@ -12,6 +12,7 @@ import {TodoDetailModalScreen} from './src/screens/TodoDetailModalScreen';
 import {TodoFormModalScreen} from './src/screens/TodoFormModalScreen';
 
 import SearchScreen from './src/screens/SearchScreen';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -34,14 +35,8 @@ function RootStack() {
         <Stack.Screen name="Home" component={HomeTabs} />
       </Stack.Group>
       <Stack.Group screenOptions={{presentation: 'fullScreenModal'}}>
-        <Stack.Screen
-          name="Modal"
-          component={TodoDetailModalScreen}
-        />
-        <Stack.Screen
-          name="Form"
-          component={TodoFormModalScreen}
-        />
+        <Stack.Screen name="Modal" component={TodoDetailModalScreen} />
+        <Stack.Screen name="Form" component={TodoFormModalScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -50,11 +45,13 @@ function RootStack() {
 function App(): React.JSX.Element {
   return (
     <RecoilRoot>
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <RootStack />
-        </NavigationContainer>
-      </SafeAreaProvider>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <RootStack />
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
     </RecoilRoot>
   );
 }

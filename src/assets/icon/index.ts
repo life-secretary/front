@@ -29,3 +29,4 @@ export {default as search} from './icon_search.svg';
 export {default as setting} from './icon_setting.svg';
 export {default as trash} from './icon_trash.svg';
 export {default as upload} from './icon_upload.svg';
+export {default as logo} from './icon_logo.svg';

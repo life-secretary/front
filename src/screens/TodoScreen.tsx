@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useRecoilValue} from 'recoil';
-import todoListState from '../store/todoListState';
+import {todoListState} from '../store/todoState';
 
 import {Button, Pressable, StyleSheet, View, ScrollView} from 'react-native';
 import {AppLayout} from '../components/common/AppLayout';
@@ -9,7 +9,6 @@ import {OngoingTodoList} from '../components/todo/OngoingTodoList';
 import {CompletedTodoList} from '../components/todo/CompletedTodoList';
 import {TodoTabBar} from '../components/todo/TodoTabBar';
 import {TodoTitle} from '../components/todo/TodoTitle';
-import {TodoForm} from '../components/todo/detail/form/TodoForm';
 import {AppText} from '../components/common/AppText';
 
 export function TodoScreen({navigation}: any): React.JSX.Element {
@@ -28,7 +27,7 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
             style={styles.buttonContainer}
             onPress={() =>
               navigation.navigate('Form', {
-                form: <TodoForm />,
+                form: 'TODO',
                 headerTitle: '할 일 생성하기',
               })
             }>
@@ -67,7 +66,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   title: {
