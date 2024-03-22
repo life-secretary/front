@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   cardTagContainer: {
-    borderWidth: 1,
     borderRadius: 4,
     paddingVertical: 3,
     paddingHorizontal: 6,
@@ -62,9 +61,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   },
-  cardTitleRow: {
-    borderWidth: 1,
-  },
+  cardTitleRow: {},
   cardTitle: {
     fontWeight: '600',
   },
@@ -73,7 +70,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2F4F7',
   },
   cardInfoRow: {
-    borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

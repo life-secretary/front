@@ -15,31 +15,35 @@ type AppInputProps = {
   focused?: boolean;
   /** TextInput placeholder text value */
   placeholder?: string;
+  /** TextInput text value */
+  text: string;
   /** input error 발생 여부 */
   error?: boolean;
   /** error message text value */
   errorMsg?: string;
   /** TextInput maxLength number value */
   maxLength?: number;
+  /** onChangeText Handler */
+  onChangeText: Function;
 };
 
 // TODO: 추가 개발 필요
 export function AppInput({
+  text,
   placeholder,
   hasLabel,
   labelText,
   maxLength,
   disabled = false,
+  onChangeText,
 }: AppInputProps): React.JSX.Element {
-  const [text, setText] = React.useState('');
-
   return (
     <View style={styles.container}>
       {hasLabel && <AppText style={styles.label}>{labelText}</AppText>}
       <TextInput
         placeholder={placeholder}
         defaultValue={text}
-        onChangeText={newText => setText(newText)}
+        onChangeText={newText => onChangeText(newText)}
         maxLength={maxLength}
         editable={!disabled}
       />

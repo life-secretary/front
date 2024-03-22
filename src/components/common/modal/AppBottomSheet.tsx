@@ -1,5 +1,5 @@
-import React, {useCallback, useMemo, useRef} from 'react';
-import {Text, StyleSheet, Button} from 'react-native';
+import React, {ReactNode, useCallback, useEffect, useMemo, useRef} from 'react';
+import {StyleSheet} from 'react-native';
 import {
   BottomSheetModal,
   BottomSheetView,
@@ -8,15 +8,28 @@ import {
 } from '@gorhom/bottom-sheet';
 import {BottomSheetDefaultBackdropProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 
-const App = () => {
+type AppBottomSheetProps = {
+  isVisible: boolean;
+  children?: ReactNode;
+  handleBottomSheetVisible: Function;
+};
+
+const AppBottomSheet = ({
+  isVisible,
+  children,
+  handleBottomSheetVisible,
+}: AppBottomSheetProps) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   // TODO: dynamic value로 변경
-  const snapPoints = useMemo(() => ['25%'], []);
+  const snapPoints = useMemo(() => ['70%'], []);
 
-  const handleModalVisible = useCallback(() => {
+  const openBottomSheet = () => {
     bottomSheetModalRef.current?.present();
-  }, []);
-  // const handleModalClose = () => bottomSheetModalRef.current?.close();
+  };
+
+  const closeBottomSheet = () => {
+    bottomSheetModalRef.current?.close();
+  };
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
@@ -31,19 +44,18 @@ const App = () => {
         enableTouchThrough={true}
         appearsOnIndex={0}
         disappearsOnIndex={-1}
-        pressBehavior="close"
+        onPress={handleBottomSheetVisible(false)}
       />
     ),
-    [],
+    [handleBottomSheetVisible],
   );
+
+  useEffect(() => {
+    isVisible ? openBottomSheet() : closeBottomSheet();
+  }, [isVisible]);
 
   return (
     <BottomSheetModalProvider>
-      <Button
-        onPress={handleModalVisible}
-        title="Present Modal"
-        color="black"
-      />
       <BottomSheetModal
         ref={bottomSheetModalRef}
         index={0}
@@ -51,8 +63,7 @@ const App = () => {
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}>
         <BottomSheetView style={styles.contentContainer}>
-          {/* TODO: props로 받은 component 렌더링 */}
-          <Text>Contents</Text>
+          {children}
         </BottomSheetView>
       </BottomSheetModal>
     </BottomSheetModalProvider>
@@ -60,15 +71,9 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'gray',
-  },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
   },
 });
 
-export default App;
+export default AppBottomSheet;

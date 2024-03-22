@@ -3,9 +3,7 @@ import * as React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
 import {TodoCard} from './TodoCard';
 import {AppText} from '../common/AppText';
-import {TodoSection} from './TodoSection';
-
-// const DUMMY_TODO: ArrayLike<any> | null | undefined = [];
+import {TodoCount} from './TodoCount';
 
 // TODO: 별도의 컴포넌트로 분리
 const EmptyList = () => {
@@ -25,7 +23,7 @@ type TodoListProps = {
 export function OngoingTodoList({data}: TodoListProps): React.JSX.Element {
   return (
     <View style={styles.container}>
-      <TodoSection todoCount={data.length} />
+      <TodoCount todoCount={data.length} />
       <FlatList
         data={data}
         renderItem={({item}) => (
@@ -47,7 +45,6 @@ export function OngoingTodoList({data}: TodoListProps): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderWidth: 1,
   },
   listContainer: {
     flex: 1,

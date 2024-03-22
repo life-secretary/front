@@ -1,8 +1,9 @@
+import {generateRandomId} from '@/utils';
 import {atom} from 'recoil';
 
 const DUMMY_TODO = [
   {
-    id: '1',
+    id: generateRandomId(),
     title: '나의 미래 준비, 어떻게 시작할까요?',
     tags: ['경제'],
     subTodoList: [
@@ -13,7 +14,7 @@ const DUMMY_TODO = [
     isCompleted: false,
   },
   {
-    id: '2',
+    id: generateRandomId(),
     title: '사용자가 입력한 할 일 제목 1',
     tags: ['나의 할 일', '건강'],
     subTodoList: [{id: '21', title: '2024 건강검진 하기', isCompleted: false}],
@@ -21,7 +22,7 @@ const DUMMY_TODO = [
     isCompleted: false,
   },
   {
-    id: '3',
+    id: generateRandomId(),
     title: '사용자가 입력한 할 일 제목 2',
     tags: ['나의 할 일', '자기계발'],
     subTodoList: [
@@ -31,11 +32,17 @@ const DUMMY_TODO = [
     createdDate: '2024.01.01',
     isCompleted: true,
   },
+  {
+    id: generateRandomId(),
+    title: '사용자가 입력한 할 일 제목 3',
+    tags: ['나의 할 일', '자기계발'],
+    subTodoList: [],
+    createdDate: '2024.01.31',
+    isCompleted: false,
+  },
 ];
 
-const todoListState = atom({
+export const todoListState = atom({
   key: 'todoListState',
   default: DUMMY_TODO,
 });
-
-export default todoListState;

@@ -40,7 +40,6 @@ export function CompletedTodoList({data}: TodoListProps): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderWidth: 1,
   },
   listContainer: {
     flex: 1,
