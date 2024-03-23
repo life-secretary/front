@@ -2,10 +2,10 @@ import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRecoilState} from 'recoil';
-import {todoListState} from '@/store/todoState';
+import {todoListState} from '../store/todoState';
 
-import {TodoDetail} from '../components/todo/detail/TodoDetail';
-import {SubTodoList} from '../components/todo/detail/SubTodoList';
+import {TodoDetail} from '@/components/todo/detail/TodoDetail';
+import {SubTodoList} from '@/components/todo/detail/SubTodoList';
 import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
 import {AppHeader} from '@/components/common/AppHeader';
