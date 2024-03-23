@@ -1,30 +1,56 @@
 import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useRecoilState} from 'recoil';
+import {todoListState} from '@/store/todoState';
+
 import {TodoDetail} from '../components/todo/detail/TodoDetail';
 import {SubTodoList} from '../components/todo/detail/SubTodoList';
 import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
 import {AppHeader} from '@/components/common/AppHeader';
 import AppBottomSheet from '@/components/common/modal/AppBottomSheet';
+import AppConfirmModal from '@/components/common/modal/AppConfirmModal';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;
   const [isVisible, setIsVisible] = React.useState(false);
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [todoList, setTodoList] = useRecoilState(todoListState);
+
+  const itemIndex = todoList.findIndex(
+    (item: object) => item.id === todoItem?.id,
+  );
 
   const handleBottomSheetVisible = React.useCallback((arg: boolean) => {
     setIsVisible(arg);
   }, []);
 
+  const handleModalVisible = (arg: boolean) => {
+    setIsModalVisible(arg);
+  };
+
   const handleEditButtonPress = () => {
-    handleBottomSheetVisible(false);
     navigation.navigate('TodoForm', {
       form: 'TODO',
       isEditMode: true,
       headerTitle: '할 일 수정',
       todoItem,
     });
+    handleBottomSheetVisible(false);
   };
+
+  // TODO: DELETE TODO 호출 위치 고민
+  const handleDeleteButtonPress = () => {
+    const newList = removeItemAtIndex(todoList, itemIndex);
+
+    setTodoList(newList);
+    navigation.navigate('Todo');
+  };
+
+  function removeItemAtIndex(arr: any[], index: number) {
+    return [...arr.slice(0, index), ...arr.slice(index + 1)];
+  }
 
   return (
     <SafeAreaView style={styles.layout}>
@@ -66,6 +92,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             text="삭제하기"
             buttonStyle={styles.bottomSheetButton}
             textStyle={styles.bottomSheetButtonText}
+            onPressButton={() => handleModalVisible(true)}
           />
           <AppButton
             text="수정하기"
@@ -75,6 +102,44 @@ export function TodoDetailModalScreen({navigation, route}: any) {
           />
         </View>
       </AppBottomSheet>
+      <AppConfirmModal
+        isVisible={isModalVisible}
+        type="row"
+        title="삭제할까요?"
+        description="삭제한 항목은 되돌릴 수 없어요"
+        button={{
+          first: {
+            text: '취소',
+            textStyle: {fontWeight: '600', textAlign: 'center'},
+            buttonStyle: {
+              flex: 1,
+              backgroundColor: '#E7EDF3',
+              borderRadius: 10,
+              paddingVertical: 16,
+            },
+            onPressButton: () => {
+              handleModalVisible(false);
+            },
+          },
+          second: {
+            text: '삭제하기',
+            textStyle: {
+              fontWeight: '600',
+              textAlign: 'center',
+              color: '#FFFFFF',
+            },
+            buttonStyle: {
+              flex: 1,
+              backgroundColor: '#0B2A4F',
+              borderRadius: 10,
+              paddingVertical: 16,
+            },
+            onPressButton: () => {
+              handleDeleteButtonPress();
+            },
+          },
+        }}
+      />
     </SafeAreaView>
   );
 }
