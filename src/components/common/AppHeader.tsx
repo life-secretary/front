@@ -7,6 +7,7 @@ export function AppHeader({children, style}: any): React.JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
     marginVertical: 10,
   },
 });

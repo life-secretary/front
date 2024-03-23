@@ -1,47 +1,80 @@
 import * as React from 'react';
-import {Button, Pressable, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppText} from '../components/common/AppText';
 import {TodoDetail} from '../components/todo/detail/TodoDetail';
 import {SubTodoList} from '../components/todo/detail/SubTodoList';
+import AppIcon from '@/components/common/AppIcon';
+import AppButton from '@/components/common/AppButton';
+import {AppHeader} from '@/components/common/AppHeader';
+import AppBottomSheet from '@/components/common/modal/AppBottomSheet';
 
-const DUMMY_DATA = {
-  id: '1',
-  category: '경제',
-  title: '나의 미래 준비, 어떻게 시작할까요?',
-  subTodoList: [
-    {id: '1', title: '노후 예상 비용 계산하기', isChecked: false},
-    {id: '2', title: '월 저축액 계획하기', isChecked: false},
-    {id: '3', title: 'ISA 계좌 만들기', isChecked: false},
-    {id: '4', title: '국가 지원 정책 알아보기', isChecked: false},
-  ],
-  createdDate: '2024. 01. 01',
-};
+export function TodoDetailModalScreen({navigation, route}: any) {
+  const {todoItem} = route.params;
+  const [isVisible, setIsVisible] = React.useState(false);
 
-export function TodoDetailModalScreen({navigation}: any) {
+  const handleBottomSheetVisible = React.useCallback((arg: boolean) => {
+    setIsVisible(arg);
+  }, []);
+
+  const handleEditButtonPress = () => {
+    handleBottomSheetVisible(false);
+    navigation.navigate('TodoForm', {
+      form: 'TODO',
+      isEditMode: true,
+      headerTitle: '할 일 수정',
+      todoItem,
+    });
+  };
+
   return (
     <SafeAreaView style={styles.layout}>
-      <View style={styles.header}>
-        <Pressable style={styles.button}>
-          <Button
+      <AppHeader>
+        <View style={styles.headerContainer}>
+          <AppIcon
+            type="fill"
+            name="backLight"
+            width={42}
+            height={42}
             onPress={() => navigation.goBack()}
-            color="#FFFFFF"
-            title="<"
           />
-        </Pressable>
-        <View style={styles.buttonContainer}>
-          <Pressable style={styles.button}>
-            <AppText style={styles.buttonText}>완료</AppText>
-          </Pressable>
-          <Pressable style={styles.button}>
-            <AppText style={styles.buttonText}>{'...'}</AppText>
-          </Pressable>
+          <View style={styles.headerButtonContainer}>
+            <AppButton
+              text="완료"
+              buttonStyle={styles.completeButton}
+              textStyle={styles.completeButtonText}
+            />
+            <AppIcon
+              type="stroke"
+              name="hamburger"
+              width={42}
+              height={42}
+              onPress={() => handleBottomSheetVisible(true)}
+            />
+          </View>
         </View>
-      </View>
+      </AppHeader>
       <View style={styles.container}>
-        <TodoDetail {...DUMMY_DATA} />
-        <SubTodoList subTodoList={DUMMY_DATA.subTodoList} />
+        <TodoDetail {...todoItem} />
+        <SubTodoList subTodoList={todoItem.subTodoList} />
       </View>
+      <AppBottomSheet
+        isVisible={isVisible}
+        handleBottomSheetVisible={handleBottomSheetVisible}
+        contentsStyle={styles.bottomSheetContainer}>
+        <View style={styles.buttonContainer}>
+          <AppButton
+            text="삭제하기"
+            buttonStyle={styles.bottomSheetButton}
+            textStyle={styles.bottomSheetButtonText}
+          />
+          <AppButton
+            text="수정하기"
+            buttonStyle={styles.bottomSheetButton}
+            textStyle={styles.bottomSheetButtonText}
+            onPressButton={() => handleEditButtonPress()}
+          />
+        </View>
+      </AppBottomSheet>
     </SafeAreaView>
   );
 }
@@ -51,30 +84,49 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000E24',
   },
-  header: {
+  headerContainer: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderWidth: 1,
+    alignItems: 'center',
     paddingHorizontal: 24,
+    marginBottom: 20,
+  },
+  headerButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
   },
   container: {
     flex: 1,
-    borderWidth: 1,
+  },
+  completeButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+  },
+  completeButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#4681F6',
+  },
+  bottomSheetContainer: {
+    paddingTop: 23,
+    paddingHorizontal: 24,
   },
   buttonContainer: {
     flexDirection: 'row',
-    gap: 8,
+    justifyContent: 'space-between',
+    gap: 12,
   },
-  button: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    width: 42,
-    height: 42,
+  bottomSheetButton: {
+    flex: 1,
+    backgroundColor: '#F2F4F7',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 10,
   },
-  buttonText: {
-    fontSize: 15,
+  bottomSheetButtonText: {
     fontWeight: '500',
-    color: '#FFFFFF',
+    textAlign: 'center',
   },
 });

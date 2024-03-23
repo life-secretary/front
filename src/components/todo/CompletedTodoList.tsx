@@ -21,14 +21,7 @@ export function CompletedTodoList({data}: TodoListProps): React.JSX.Element {
     <View style={styles.container}>
       <FlatList
         data={data}
-        renderItem={({item}) => (
-          <TodoCard
-            title={item.title}
-            tags={item.tags}
-            subTodoList={item.subTodoList}
-            createdDate={item.createdDate}
-          />
-        )}
+        renderItem={({item}) => <TodoCard {...item} />}
         keyExtractor={item => item.id}
         ListEmptyComponent={<EmptyList />}
         contentContainerStyle={styles.listContainer}

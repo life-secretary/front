@@ -5,14 +5,14 @@ import {AppText} from '../../common/AppText';
 type todoDetailProps = {
   id: string;
   title: string;
-  category: string;
+  tags: string[];
   subTodoList: object[];
   createdDate: string;
 };
 
 export function TodoDetail({
   title,
-  category,
+  tags,
   subTodoList,
   createdDate,
 }: todoDetailProps): React.JSX.Element {
@@ -20,9 +20,12 @@ export function TodoDetail({
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <View style={styles.tagRow}>
-          <View style={styles.tagContainer}>
-            <AppText style={styles.tagText}>{category}</AppText>
-          </View>
+          {tags &&
+            tags.map(tag => (
+              <View style={styles.tagContainer}>
+                <AppText style={styles.tagText}>{tag}</AppText>
+              </View>
+            ))}
         </View>
         <AppText style={styles.titleText}>{title}</AppText>
       </View>
@@ -48,6 +51,7 @@ const styles = StyleSheet.create({
   },
   tagRow: {
     flexDirection: 'row',
+    gap: 10,
   },
   tagContainer: {
     paddingVertical: 4,
