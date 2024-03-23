@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useRecoilValue} from 'recoil';
 import {todoListState} from '../store/todoState';
 
-import {Button, Pressable, StyleSheet, View, ScrollView} from 'react-native';
+import {Pressable, StyleSheet, View, ScrollView} from 'react-native';
 import {AppLayout} from '../components/common/AppLayout';
 import {AppHeader} from '../components/common/AppHeader';
 import {OngoingTodoList} from '../components/todo/OngoingTodoList';
@@ -50,10 +50,6 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
               data={todoList.filter(todo => todo.isCompleted === true)}
             />
           )}
-          <Button
-            onPress={() => navigation.navigate('Modal')}
-            title="Todo Detail Modal"
-          />
         </View>
       </ScrollView>
     </AppLayout>

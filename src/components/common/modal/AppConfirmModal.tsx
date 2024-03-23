@@ -27,7 +27,7 @@ export type AppConfirmModal = Partial<AppModalProps> & {
 };
 
 const AppConfirmModal = ({
-  isVisible = true,
+  isVisible = false,
   type = 'column',
   title = '',
   description = '',
