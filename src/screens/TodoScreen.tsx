@@ -26,7 +26,7 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
           <Pressable
             style={styles.buttonContainer}
             onPress={() =>
-              navigation.navigate('Form', {
+              navigation.navigate('TodoForm', {
                 form: 'TODO',
                 headerTitle: '할 일 생성하기',
               })

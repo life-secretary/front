@@ -1,14 +1,16 @@
 import * as React from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {useSetRecoilState} from 'recoil';
-import {todoListState} from '../../../../store/todoState';
-
 import {Pressable, StyleSheet, View} from 'react-native';
-import {AppText} from '../../../common/AppText';
-import {AppInput} from '@/components/common/AppInput';
+import {useNavigation} from '@react-navigation/native';
+import {useRecoilState} from 'recoil';
+import {todoListState} from '../../../../store/todoState';
 import {getFormattedDate, generateRandomId} from '@/utils';
 
+import {AppText} from '../../../common/AppText';
+import {AppInput} from '@/components/common/AppInput';
+
 type TodoFormProps = {
+  isEditMode?: boolean;
+  todoItem?: object;
   selectedField: object;
   handleBottomSheetVisible: Function;
   handleSelectField: Function;
@@ -16,17 +18,28 @@ type TodoFormProps = {
 };
 
 export function TodoForm({
+  isEditMode = false,
+  todoItem,
   selectedField,
   handleBottomSheetVisible,
   handleSelectField,
-  isVisible,
 }: TodoFormProps) {
   // const [isValid, setIsValid] = React.useState(true);
   const [isEmpty, setIsEmpty] = React.useState(false);
-  const [title, setTitle] = React.useState('');
-  const setTodoList = useSetRecoilState(todoListState);
+  const [title, setTitle] = React.useState(todoItem?.title);
+  const [todoList, setTodoList] = useRecoilState(todoListState);
   const navigation = useNavigation();
 
+  const itemIndex = todoList.findIndex(
+    (item: object) => item.id === todoItem?.id,
+  );
+
+  const resetForm = () => {
+    setTitle('');
+    handleSelectField({});
+  };
+
+  // ADD TODO
   const addTodo = () => {
     setTodoList(oldTodoList => [
       ...oldTodoList,
@@ -34,13 +47,34 @@ export function TodoForm({
       {
         id: generateRandomId(),
         title: title,
+        field: selectedField,
         tags: ['나의 할 일', `${selectedField.text}`],
         isCompleted: false,
         createdDate: getFormattedDate(new Date()),
         subTodoList: [],
       },
     ]);
-    setTitle('');
+
+    resetForm();
+    navigation.navigate('Todo');
+  };
+
+  function replaceItemAtIndex(arr: any[], index: number, newValue: object) {
+    return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
+  }
+
+  // EDIT TODO
+  const editTodo = () => {
+    console.log(selectedField);
+    const newList = replaceItemAtIndex(todoList, itemIndex, {
+      ...todoItem,
+      title,
+      field: selectedField,
+    });
+
+    setTodoList(newList);
+
+    resetForm();
     navigation.navigate('Todo');
   };
 
@@ -64,14 +98,20 @@ export function TodoForm({
     <>
       <View style={styles.container}>
         <View style={styles.form}>
-          {isVisible}
+          {/* TODO: 분야가 제대로 수정되지 않는 버그 */}
           <Pressable onPress={() => handleBottomSheetVisible(true)}>
             <AppInput
               hasLabel={true}
               labelText="분야"
               text={selectedField.text}
-              onChangeText={() => handleSelectField}
-              disabled={selectedField.key !== 'USER'}
+              onChangeText={(newText: string) =>
+                handleSelectField({key: 'USER', text: newText})
+              }
+              disabled={
+                isEditMode
+                  ? todoItem?.field?.key !== 'USER'
+                  : selectedField.key !== 'USER'
+              }
             />
           </Pressable>
           <AppInput
@@ -87,7 +127,7 @@ export function TodoForm({
           <Pressable
             style={[styles.button, isEmpty && styles.disabled]}
             disabled={isEmpty}
-            onPress={addTodo}>
+            onPress={isEditMode ? editTodo : addTodo}>
             <AppText style={styles.buttonText}>완료</AppText>
           </Pressable>
         </View>

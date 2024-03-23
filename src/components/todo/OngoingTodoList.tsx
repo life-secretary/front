@@ -26,14 +26,7 @@ export function OngoingTodoList({data}: TodoListProps): React.JSX.Element {
       <TodoCount todoCount={data.length} />
       <FlatList
         data={data}
-        renderItem={({item}) => (
-          <TodoCard
-            title={item.title}
-            tags={item.tags}
-            subTodoList={item.subTodoList}
-            createdDate={item.createdDate}
-          />
-        )}
+        renderItem={({item}) => <TodoCard {...item} />}
         ListEmptyComponent={<EmptyList />}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContainer}

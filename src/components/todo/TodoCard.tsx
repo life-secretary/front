@@ -1,43 +1,66 @@
 import * as React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import {AppText} from '../common/AppText';
+import {useNavigation} from '@react-navigation/native';
 
-type Props = {
+type TodoCardProps = {
+  id: string;
   title: string;
+  field: object;
   tags: string[];
-  subTodoList: object[];
+  isCompleted: boolean;
   createdDate: string;
+  subTodoList: object[];
 };
 
 export function TodoCard({
+  id,
   title,
+  field,
   tags,
-  subTodoList,
+  isCompleted,
   createdDate,
-}: Props): React.JSX.Element {
+  subTodoList,
+}: TodoCardProps): React.JSX.Element {
+  const navigation = useNavigation();
+  const todoItem = {
+    id,
+    title,
+    field,
+    tags,
+    isCompleted,
+    createdDate,
+    subTodoList,
+  };
+  const onPressFn = () => {
+    navigation.navigate('TodoDetailModal', {todoItem});
+  };
+
   return (
-    <View style={styles.cardContainer}>
-      <View style={styles.cardTagsRow}>
-        {tags &&
-          tags.map(tag => (
-            <View style={styles.cardTagContainer}>
-              <AppText style={styles.cardTag}>{tag}</AppText>
-            </View>
-          ))}
+    <Pressable onPress={onPressFn}>
+      <View style={styles.cardContainer}>
+        <View style={styles.cardTagsRow}>
+          {tags &&
+            tags.map(tag => (
+              <View style={styles.cardTagContainer}>
+                <AppText style={styles.cardTag}>{tag}</AppText>
+              </View>
+            ))}
+        </View>
+        <View style={styles.cardTitleRow}>
+          <AppText style={styles.cardTitle}>{title}</AppText>
+        </View>
+        <View style={styles.divider} />
+        <View style={styles.cardInfoRow}>
+          <AppText style={[styles.cardInfoText, styles.cardSubTodo]}>
+            할일 {subTodoList && subTodoList.length}개
+          </AppText>
+          <AppText style={[styles.cardInfoText, styles.cardDate]}>
+            생성 {createdDate}
+          </AppText>
+        </View>
       </View>
-      <View style={styles.cardTitleRow}>
-        <AppText style={styles.cardTitle}>{title}</AppText>
-      </View>
-      <View style={styles.divider} />
-      <View style={styles.cardInfoRow}>
-        <AppText style={[styles.cardInfoText, styles.cardSubTodo]}>
-          할일 {subTodoList && subTodoList.length}개
-        </AppText>
-        <AppText style={[styles.cardInfoText, styles.cardDate]}>
-          생성 {createdDate}
-        </AppText>
-      </View>
-    </View>
+    </Pressable>
   );
 }
 

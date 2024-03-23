@@ -10,6 +10,7 @@ export {default as arrowRightDark} from './icon_arrow_right_dark.svg';
 export {default as arrowRightLight} from './icon_arrow_right_light.svg';
 export {default as arrowUpDark} from './icon_arrow_up_dark.svg';
 export {default as back} from './icon_back.svg';
+export {default as backLight} from './icon_back_light.svg';
 export {default as balancer} from './icon_balancer.svg';
 export {default as bookmarkDark} from './icon_bookmark_dark.svg';
 export {default as bookmarkLight} from './icon_bookmark_light.svg';

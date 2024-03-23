@@ -35,8 +35,11 @@ function RootStack() {
         <Stack.Screen name="Home" component={HomeTabs} />
       </Stack.Group>
       <Stack.Group screenOptions={{presentation: 'fullScreenModal'}}>
-        <Stack.Screen name="Modal" component={TodoDetailModalScreen} />
-        <Stack.Screen name="Form" component={TodoFormModalScreen} />
+        <Stack.Screen
+          name="TodoDetailModal"
+          component={TodoDetailModalScreen}
+        />
+        <Stack.Screen name="TodoForm" component={TodoFormModalScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );

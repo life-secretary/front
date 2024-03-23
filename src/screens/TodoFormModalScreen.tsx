@@ -15,12 +15,13 @@ import {SubTodoForm} from '@/components/todo/detail/form/SubTodoForm';
 import {TodoFieldSelect} from '@/components/todo/TodoFieldSelect';
 
 export function TodoFormModalScreen({route, navigation}: any) {
-  const {headerTitle, form} = route.params;
+  const {headerTitle, form, todoItem, isEditMode} = route.params;
+  const defaultField = isEditMode
+    ? todoItem?.field
+    : {key: 'NONE', text: '선택안함'};
+
   const [isVisible, setIsVisible] = React.useState(false);
-  const [selectedField, setSelectedField] = React.useState({
-    key: 'NONE',
-    text: '선택안함',
-  });
+  const [selectedField, setSelectedField] = React.useState(defaultField);
 
   const handleBottomSheetVisible = (arg: boolean) => {
     setIsVisible(arg);
@@ -47,6 +48,8 @@ export function TodoFormModalScreen({route, navigation}: any) {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           {form === 'TODO' ? (
             <TodoForm
+              isEditMode={isEditMode}
+              todoItem={todoItem}
               handleBottomSheetVisible={handleBottomSheetVisible}
               handleSelectField={(arg: object) => setSelectedField(arg)}
               selectedField={selectedField}

@@ -1,5 +1,5 @@
 import React, {ReactNode, useCallback, useEffect, useMemo, useRef} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ViewStyle} from 'react-native';
 import {
   BottomSheetModal,
   BottomSheetView,
@@ -11,12 +11,14 @@ import {BottomSheetDefaultBackdropProps} from '@gorhom/bottom-sheet/lib/typescri
 type AppBottomSheetProps = {
   isVisible: boolean;
   children?: ReactNode;
+  contentsStyle?: ViewStyle;
   handleBottomSheetVisible: Function;
 };
 
 const AppBottomSheet = ({
   isVisible,
   children,
+  contentsStyle,
   handleBottomSheetVisible,
 }: AppBottomSheetProps) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -31,9 +33,7 @@ const AppBottomSheet = ({
     bottomSheetModalRef.current?.close();
   };
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
-  }, []);
+  const handleSheetChanges = useCallback((index: number) => {}, []);
 
   const renderBackdrop = useCallback(
     (
@@ -62,7 +62,7 @@ const AppBottomSheet = ({
         snapPoints={snapPoints}
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}>
-        <BottomSheetView style={styles.contentContainer}>
+        <BottomSheetView style={[styles.contentContainer, contentsStyle]}>
           {children}
         </BottomSheetView>
       </BottomSheetModal>
