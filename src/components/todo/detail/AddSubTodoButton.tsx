@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {Pressable, StyleSheet} from 'react-native';
-import {AppText} from '@/components/common/AppText';
+import {AppText} from '../../common/AppText';
 import {useNavigation} from '@react-navigation/native';
-import {SubTodoForm} from '@/components/todo/detail/form/SubTodoForm';
+import {SubTodoForm} from '../detail/form/SubTodoForm';
 
 export function AddSubTodoButton(): React.JSX.Element {
   const navigation = useNavigation();

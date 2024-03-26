@@ -1,4 +1,4 @@
-import {generateRandomId} from '@/utils';
+import {generateRandomId} from '../utils';
 import {atom} from 'recoil';
 
 const DUMMY_TODO = [

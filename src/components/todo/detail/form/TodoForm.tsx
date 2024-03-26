@@ -3,10 +3,10 @@ import {Pressable, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
 import {todoListState} from '../../../../store/todoState';
-import {getFormattedDate, generateRandomId} from '@/utils';
+import {getFormattedDate, generateRandomId} from '../../../../utils';
 
 import {AppText} from '../../../common/AppText';
-import {AppInput} from '@/components/common/AppInput';
+import {AppInput} from '../../../common/AppInput';
 
 type TodoFormProps = {
   isEditMode?: boolean;

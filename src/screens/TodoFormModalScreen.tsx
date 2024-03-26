@@ -9,10 +9,10 @@ import {
 import {AppText} from '../components/common/AppText';
 import {AppHeader} from '../components/common/AppHeader';
 import {AppLayout} from '../components/common/AppLayout';
-import AppBottomSheet from '@/components/common/modal/AppBottomSheet';
-import {TodoForm} from '@/components/todo/detail/form/TodoForm';
-import {SubTodoForm} from '@/components/todo/detail/form/SubTodoForm';
-import {TodoFieldSelect} from '@/components/todo/TodoFieldSelect';
+import AppBottomSheet from '../components/common/modal/AppBottomSheet';
+import {TodoForm} from '../components/todo/detail/form/TodoForm';
+import {SubTodoForm} from '../components/todo/detail/form/SubTodoForm';
+import {TodoFieldSelect} from '../components/todo/TodoFieldSelect';
 
 export function TodoFormModalScreen({route, navigation}: any) {
   const {headerTitle, form, todoItem, isEditMode} = route.params;
