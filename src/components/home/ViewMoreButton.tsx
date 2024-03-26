@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {StyleSheet} from 'react-native';
 import AppButton from '../common/AppButton';
-import {arrowRightDark} from '@/assets/icon';
+import {arrowRightDark} from '../../assets/icon';
 
 export function ViewMoreButton(): React.JSX.Element {
   return (
