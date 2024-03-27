@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {StyleSheet, View, FlatList} from 'react-native';
+import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {HomeContentsItem} from './HomeContentsItem';
 import {AppText} from '../../common/AppText';
 import {ViewMoreButton} from '../ViewMoreButton';
@@ -42,14 +42,23 @@ const DUMMY_DATA = [
   },
 ];
 
-type Props = {
-  titleText: string;
+type HomeContentsProps = {
+  isUsernameUsed?: boolean;
+  title: string;
 };
 
-export function HomeContentsList({titleText}: Props): React.JSX.Element {
+export function HomeContentsList({
+  isUsernameUsed = false,
+  title,
+}: HomeContentsProps): React.JSX.Element {
   return (
     <View style={styles.container}>
-      <AppText style={styles.listTitle}>{titleText}</AppText>
+      <View style={styles.titleContainer}>
+        {isUsernameUsed && (
+          <AppText style={styles.username}>$username님과</AppText>
+        )}
+        <AppText style={styles.title}>{title}</AppText>
+      </View>
       <FlatList
         data={DUMMY_DATA}
         renderItem={({item}) => (
@@ -61,7 +70,6 @@ export function HomeContentsList({titleText}: Props): React.JSX.Element {
           />
         )}
         ItemSeparatorComponent={() => <View style={styles.divider} />}
-        contentContainerStyle={styles.listContainer}
       />
       <ViewMoreButton />
     </View>
@@ -70,19 +78,37 @@ export function HomeContentsList({titleText}: Props): React.JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     marginVertical: 10,
     paddingHorizontal: 26,
     paddingVertical: 34,
-    borderWidth: 1,
+    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#CBD3DC80',
+        shadowOpacity: 0.5,
+        shadowRadius: 20,
+        shadowOffset: {width: 0, height: 0},
+      },
+      android: {
+        shadowColor: '#CBD3DC80',
+        elevation: 1,
+      },
+    }),
   },
-  listContainer: {
-    borderWidth: 1,
+  titleContainer: {
+    gap: 8,
   },
-  listTitle: {
+  title: {
     marginBottom: 28,
     fontSize: 20,
     fontWeight: '700',
     color: '#000E24',
+  },
+  username: {
+    fontWeight: '600',
+    color: '#4681F6',
   },
   divider: {
     backgroundColor: '#F2F4F7',

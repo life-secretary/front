@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {StyleSheet, View, FlatList} from 'react-native';
+import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {AppText} from '../../common/AppText';
 import {ViewMoreButton} from '../ViewMoreButton';
 import {HomeContentsCategoryList} from './HomeContentsCategoryList';
@@ -42,16 +42,17 @@ const DUMMY_DATA = [
   },
 ];
 
-type Props = {
-  titleText: string;
+type ContentsListProps = {
+  title: string;
+  data?: object[];
 };
 
 export function HomeContentsListWithFilter({
-  titleText,
-}: Props): React.JSX.Element {
+  title,
+}: ContentsListProps): React.JSX.Element {
   return (
     <View style={styles.container}>
-      <AppText style={styles.listTitle}>{titleText}</AppText>
+      <AppText style={styles.listTitle}>{title}</AppText>
       <HomeContentsCategoryList />
       <FlatList
         data={DUMMY_DATA}
@@ -75,10 +76,22 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 26,
     paddingVertical: 34,
-    borderWidth: 1,
+    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#CBD3DC80',
+        shadowOpacity: 0.5,
+        shadowRadius: 20,
+        shadowOffset: {width: 0, height: 0},
+      },
+      android: {
+        shadowColor: '#CBD3DC80',
+        elevation: 1,
+      },
+    }),
   },
   listContainer: {
-    borderWidth: 1,
     gap: 20,
   },
   listTitle: {
