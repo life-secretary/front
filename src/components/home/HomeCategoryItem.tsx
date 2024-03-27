@@ -1,17 +1,11 @@
 import * as React from 'react';
-import {
-  StyleSheet,
-  View,
-  Image,
-  ImageSourcePropType,
-  Pressable,
-} from 'react-native';
+import {StyleSheet, Pressable} from 'react-native';
 import {AppText} from '../common/AppText';
+import AppIcon from '../common/AppIcon';
 
 type ItemProps = {
   category: string;
   title: string;
-  thumbnail: ImageSourcePropType;
 };
 
 const handlePress: any = (item: string) => {
@@ -21,13 +15,10 @@ const handlePress: any = (item: string) => {
 export function HomeCategoryItem({
   category,
   title,
-  thumbnail,
 }: ItemProps): React.JSX.Element {
   return (
     <Pressable style={styles.container} onPress={handlePress(category)}>
-      <View style={styles.imageContainer}>
-        <Image style={styles.image} source={thumbnail} />
-      </View>
+      <AppIcon type="stroke" name={category} width={44} height={44} />
       <AppText style={styles.text}>{title}</AppText>
     </Pressable>
   );

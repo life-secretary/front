@@ -3,6 +3,7 @@ import {Pressable} from 'react-native';
 import type {PressableProps} from 'react-native';
 
 import {AppText} from './AppText';
+import AppIcon from './AppIcon';
 
 export type ButtonProps = {
   /** [Required] Button text */
@@ -25,7 +26,9 @@ export type AppButtonProps = Partial<PressableProps> &
   ButtonProps & {
     /** Whether the press behavior is disabled */
     isDisabled?: boolean;
+    /** Icon in front of the button text */
     startIcon?: any;
+    /** Icon behind the button text */
     endIcon?: any;
   };
 
@@ -35,6 +38,8 @@ const AppButton = ({
   textStyle = {} || [],
   buttonStyle = {} || [],
   pressedBackgroundColor = '',
+  startIcon,
+  endIcon,
   onPressButton = () => {},
 }: AppButtonProps): React.JSX.Element => {
   const pressableStyle = pressed => {
@@ -52,7 +57,23 @@ const AppButton = ({
       disabled={isDisabled}
       style={({pressed}) => pressableStyle(pressed)}
       onPress={() => onPressButton()}>
+      {startIcon && (
+        <AppIcon
+          type={startIcon.type}
+          name={startIcon.name}
+          width={startIcon.width}
+          height={startIcon.height}
+        />
+      )}
       <AppText style={textStyle}>{text}</AppText>
+      {endIcon && (
+        <AppIcon
+          type={endIcon.type}
+          name={endIcon.name}
+          width={endIcon.width}
+          height={endIcon.height}
+        />
+      )}
     </Pressable>
   );
 };

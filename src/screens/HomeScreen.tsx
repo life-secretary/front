@@ -8,7 +8,7 @@ import {HomeContentsListWithFilter} from '../components/home/homeContents/HomeCo
 import {HomeImageCarousel} from '../components/home/HomeImageCarousel';
 import {HomeContentsList} from '../components/home/homeContents/HomeContentsList';
 import {SendQuestionButton} from '../components/home/SendQuestionButton';
-import {HomeTitle} from '../components/home/HomeTitle';
+import {AppTitle} from '../components/common/AppTitle';
 
 // 유사한 사용자가 조회한 콘텐츠 리스트 데이터
 
@@ -17,6 +17,8 @@ import {HomeTitle} from '../components/home/HomeTitle';
 // 최근 업데이트된 콘텐츠 리스트 데이터
 
 import SearchCategoryModal from '../components/search/SearchCategoryModal';
+import AppIcon from '@/components/common/AppIcon';
+import {getFormattedDate} from '@/utils';
 
 const DUMMY_CAROUSEL_DATA = [
   {
@@ -49,18 +51,33 @@ export function HomeScreen(): React.JSX.Element {
   return (
     <AppLayout>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <AppHeader>
-          <HomeTitle text="2024년 01월 14일" style={styles.dateText} />
+        <AppHeader style={styles.header}>
+          <AppTitle
+            text={getFormattedDate(new Date(), 'kor')}
+            style={styles.headerTitle}
+          />
+          <View style={styles.headerIconContainer}>
+            <AppIcon
+              type="stroke"
+              name="notificationOn"
+              width={42}
+              height={42}
+            />
+            <AppIcon type="stroke" name="balancer" width={42} height={42} />
+          </View>
         </AppHeader>
         <HomeCategoryList />
         <HomeImageCarousel data={DUMMY_CAROUSEL_DATA} />
-        <HomeContentsList titleText={'유사한 사용자가 읽고 있어요'} />
-        <HomeContentsListWithFilter titleText={'인기 많은 콘텐츠'} />
-        <HomeContentsList titleText={'최근 업데이트 되었어요'} />
-        <View style={styles.sendQuestioncontainer}>
-          <HomeTitle
+        <HomeContentsList
+          isUsernameUsed={true}
+          title={'유사한 사용자가 읽고 있어요'}
+        />
+        <HomeContentsListWithFilter title={'인기 많은 콘텐츠'} />
+        <HomeContentsList title={'최근 업데이트 되었어요'} />
+        <View style={styles.footer}>
+          <AppTitle
             text="인생비서 팀에게 자유롭게 얘기해주세요"
-            style={styles.sendQuestionText}
+            style={styles.footerText}
           />
           <SendQuestionButton />
         </View>
@@ -71,19 +88,26 @@ export function HomeScreen(): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  sendQuestioncontainer: {
+  header: {
+    justifyContent: 'space-between',
+  },
+  headerIconContainer: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  footer: {
     flex: 1,
     alignItems: 'center',
     marginVertical: 34,
-    borderWidth: 1,
     gap: 18,
   },
-  dateText: {
+  headerTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#526070',
+    lineHeight: 21.48,
   },
-  sendQuestionText: {
+  footerText: {
     textAlign: 'center',
     fontSize: 15,
     fontWeight: '600',

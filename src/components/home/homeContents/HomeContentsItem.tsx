@@ -17,11 +17,11 @@ export function HomeContentsItem({
 }: ItemProps): React.JSX.Element {
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image source={thumbnail} style={styles.image} />
+      <View style={styles.thumbnailContainer}>
+        <Image source={thumbnail} style={styles.thumbnail} />
       </View>
       <View style={styles.infoContainer}>
-        <View style={styles.titleContainer}>
+        <View>
           <AppText style={styles.title} isEllipsizeMode={true}>
             {title}
           </AppText>
@@ -47,11 +47,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 4,
   },
-  imageContainer: {
+  thumbnailContainer: {
     width: 70,
     height: 50,
   },
-  image: {
+  thumbnail: {
     width: '100%',
     height: '100%',
     borderRadius: 6,
@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingVertical: 4,
   },
-  titleContainer: {},
   title: {
     fontSize: 15,
     fontWeight: '500',

@@ -38,6 +38,8 @@ const AppIcon = ({
 
   const IconSvg = Icon[name];
 
+  console.log(name);
+
   // console.log(styles);
 
   // 아이콘 press 시 색상 변경값 통일 (확정 x)
