@@ -3,7 +3,7 @@ import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {HomeCategoryItem} from './HomeCategoryItem';
 import color from '@/styles/color';
 
-const DUMMY_CATEGORY = [
+export const DUMMY_CATEGORY = [
   {
     id: '1',
     category: 'all',
