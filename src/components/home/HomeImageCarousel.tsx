@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import {AppText} from '../common/AppText';
 import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
+import color from '@/styles/color';
 
 // TODO: type 재정의 필요
 type SlideType = {
@@ -115,17 +116,17 @@ const styles = StyleSheet.create({
   tag: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#0B2A4F',
+    color: color.primary,
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 6,
-    backgroundColor: '#F2F4F7',
+    backgroundColor: color.grey100,
     overflow: 'hidden',
   },
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: color.white,
   },
   slideIndicator: {
     flexDirection: 'row',
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
   },
   slideIndex: {
     alignItems: 'center',
-    color: '#FFFFFF',
+    color: color.white,
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 6,

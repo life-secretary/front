@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {StyleSheet, View, Image, ImageSourcePropType} from 'react-native';
 import {AppText} from '../../common/AppText';
+import color from '@/styles/color';
 
 type ItemProps = {
   title: string;
@@ -64,11 +65,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#000E24',
+    color: color.grey700,
   },
   subTitle: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#A1ACB9',
+    color: color.grey400,
   },
 });

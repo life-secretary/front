@@ -1,6 +1,6 @@
 type ColorPalette = Record<string, string>;
 
-const colors: ColorPalette = {
+const color: ColorPalette = {
   // Main Colors
   black: '#000000',
   white: '#FFFFFF',
@@ -20,8 +20,11 @@ const colors: ColorPalette = {
   notice: '#44A554',
   error: '#E44848',
 
+  // Shadow Colors
+  shadow: '#CBD3DC80',
+
   // Dimmed Color
   dimmed: '#11111166',
 };
 
-export default colors;
+export default color;

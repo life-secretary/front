@@ -3,6 +3,7 @@ import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {HomeContentsItem} from './HomeContentsItem';
 import {AppText} from '../../common/AppText';
 import {ViewMoreButton} from '../ViewMoreButton';
+import color from '@/styles/color';
 
 const DUMMY_DATA = [
   {
@@ -83,16 +84,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 26,
     paddingVertical: 34,
     borderRadius: 14,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: color.white,
     ...Platform.select({
       ios: {
-        shadowColor: '#CBD3DC80',
+        shadowColor: color.shadow,
         shadowOpacity: 0.5,
         shadowRadius: 20,
         shadowOffset: {width: 0, height: 0},
       },
       android: {
-        shadowColor: '#CBD3DC80',
+        shadowColor: color.shadow,
         elevation: 1,
       },
     }),
@@ -104,14 +105,14 @@ const styles = StyleSheet.create({
     marginBottom: 28,
     fontSize: 20,
     fontWeight: '700',
-    color: '#000E24',
+    color: color.grey700,
   },
   username: {
     fontWeight: '600',
-    color: '#4681F6',
+    color: color.secondary,
   },
   divider: {
-    backgroundColor: '#F2F4F7',
+    backgroundColor: color.grey100,
     height: 1,
     marginVertical: 16,
   },
