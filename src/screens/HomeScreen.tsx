@@ -19,6 +19,7 @@ import {AppTitle} from '../components/common/AppTitle';
 import SearchCategoryModal from '../components/search/SearchCategoryModal';
 import AppIcon from '@/components/common/AppIcon';
 import {getFormattedDate} from '@/utils';
+import color from '@/styles/color';
 
 const DUMMY_CAROUSEL_DATA = [
   {
@@ -104,13 +105,13 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#526070',
+    color: color.grey500,
     lineHeight: 21.48,
   },
   footerText: {
     textAlign: 'center',
     fontSize: 15,
     fontWeight: '600',
-    color: '#A1ACB9',
+    color: color.grey400,
   },
 });

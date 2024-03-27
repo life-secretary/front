@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {HomeCategoryItem} from './HomeCategoryItem';
+import color from '@/styles/color';
 
 const DUMMY_CATEGORY = [
   {
@@ -70,16 +71,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 14,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: color.white,
     ...Platform.select({
       ios: {
-        shadowColor: '#CBD3DC80',
+        shadowColor: color.shadow,
         shadowOpacity: 0.5,
         shadowRadius: 20,
         shadowOffset: {width: 0, height: 0},
       },
       android: {
-        shadowColor: '#CBD3DC80',
+        shadowColor: color.shadow,
         elevation: 1,
       },
     }),

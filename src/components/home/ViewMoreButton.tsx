@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {StyleSheet} from 'react-native';
 import AppButton from '../common/AppButton';
+import color from '@/styles/color';
 
 export function ViewMoreButton(): React.JSX.Element {
   const handlePress = () => {};
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
     marginTop: 36,
     paddingVertical: 15,
     borderRadius: 6,
-    backgroundColor: '#F2F4F7',
+    backgroundColor: color.grey100,
   },
   buttonText: {
     fontSize: 15,

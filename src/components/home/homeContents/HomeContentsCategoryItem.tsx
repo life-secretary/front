@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {StyleSheet, Pressable} from 'react-native';
 import {AppText} from '../../common/AppText';
+import color from '@/styles/color';
 
 type ItemProps = {
   category: string;
@@ -44,10 +45,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   defaultButton: {
-    backgroundColor: '#F2F4F7',
+    backgroundColor: color.grey100,
   },
   pressedButton: {
-    backgroundColor: '#0B2A4F',
+    backgroundColor: color.primary,
   },
   text: {
     fontSize: 15,
@@ -55,10 +56,10 @@ const styles = StyleSheet.create({
   },
   defaultText: {
     fontWeight: '500',
-    color: '#526070',
+    color: color.grey500,
   },
   pressedText: {
     fontWeight: '600',
-    color: '#FFFFFF',
+    color: color.white,
   },
 });

@@ -3,6 +3,7 @@ import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {AppText} from '../../common/AppText';
 import {ViewMoreButton} from '../ViewMoreButton';
 import {HomeContentsCategoryList} from './HomeContentsCategoryList';
+import color from '@/styles/color';
 
 const DUMMY_DATA = [
   {
@@ -77,16 +78,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 26,
     paddingVertical: 34,
     borderRadius: 14,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: color.white,
     ...Platform.select({
       ios: {
-        shadowColor: '#CBD3DC80',
+        shadowColor: color.shadow,
         shadowOpacity: 0.5,
         shadowRadius: 20,
         shadowOffset: {width: 0, height: 0},
       },
       android: {
-        shadowColor: '#CBD3DC80',
+        shadowColor: color.shadow,
         elevation: 1,
       },
     }),
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     fontSize: 20,
     fontWeight: '700',
-    color: '#000E24',
+    color: color.grey700,
   },
   contents: {
     flexDirection: 'row',
@@ -110,12 +111,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '600',
-    color: '#CBD3DC',
+    color: color.grey300,
   },
   contentsTitle: {
     flex: 1,
     fontSize: 15,
     fontWeight: '500',
-    color: '#000E24',
+    color: color.grey700,
   },
 });

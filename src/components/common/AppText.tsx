@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {StyleProp, StyleSheet, Text, TextStyle} from 'react-native';
-import { getFontSize } from '../../utils/font';
+import {getFontSize} from '../../utils/font';
+import color from '@/styles/color';
 
 type AppTextProps = {
   children: React.ReactNode;
@@ -27,6 +28,6 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Pretendard Variable',
     fontSize: getFontSize(16),
-    color: 'black',
+    color: color.black,
   },
 });
