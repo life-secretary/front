@@ -3,7 +3,7 @@ import {Pressable, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
 import {todoListState} from '../../../../store/todoState';
-import {getFormattedDate, generateRandomId} from '@/utils';
+import {getFormattedDate, generateRandomId, replaceItemAtIndex} from '@/utils';
 
 import {AppText} from '../../../common/AppText';
 import {AppInput} from '@/components/common/AppInput';
@@ -58,10 +58,6 @@ export function TodoForm({
     resetForm();
     navigation.navigate('Todo');
   };
-
-  function replaceItemAtIndex(arr: any[], index: number, newValue: object) {
-    return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
-  }
 
   // EDIT TODO
   const editTodo = () => {
