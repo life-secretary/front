@@ -11,6 +11,7 @@ import AppButton from '@/components/common/AppButton';
 import {AppHeader} from '@/components/common/AppHeader';
 import AppBottomSheet from '@/components/common/modal/AppBottomSheet';
 import AppConfirmModal from '@/components/common/modal/AppConfirmModal';
+import {removeItemAtIndex} from '@/utils';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;
@@ -47,10 +48,6 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     setTodoList(newList);
     navigation.navigate('Todo');
   };
-
-  function removeItemAtIndex(arr: any[], index: number) {
-    return [...arr.slice(0, index), ...arr.slice(index + 1)];
-  }
 
   return (
     <SafeAreaView style={styles.layout}>

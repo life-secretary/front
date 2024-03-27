@@ -2,6 +2,9 @@ import * as React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
 import {SaveContentsItem} from './SaveContentsItem';
 import {AppText} from '../common/AppText';
+import color from '@/styles/color';
+import {SendQuestionButton} from '../home/SendQuestionButton';
+import {removeItemAtIndex} from '@/utils';
 
 const EmptyList = () => {
   return (
@@ -12,22 +15,60 @@ const EmptyList = () => {
           찾는 콘텐츠가 없다면 의견을 보내주세요
         </AppText>
       </View>
-      <View style={styles.buttonContainer}>
-        <AppText style={styles.button}>문의 및 의견 보내기</AppText>
-      </View>
+      <SendQuestionButton />
     </View>
   );
 };
-export function SaveContentsList({list, isEditMode}: any): React.JSX.Element {
+export function SaveContentsList({
+  list,
+  isEditMode,
+  changeButtonText,
+  handleTotalCheckedCount,
+}: any): React.JSX.Element {
+  const [checkedContentsList, setCheckedContentsList] = React.useState<
+    object[]
+  >([]);
+
+  const addCheckedContentsList = (contents: object) => {
+    setCheckedContentsList([...checkedContentsList, contents]);
+  };
+
+  const deleteCheckedContentsList = (contents: object) => {
+    const itemIndex = checkedContentsList.findIndex(
+      item => item.id === contents.id,
+    );
+    const filteredList = removeItemAtIndex(checkedContentsList, itemIndex);
+    setCheckedContentsList(filteredList);
+  };
+
+  const handleCheckedContentsList = (contents: object, mode: string) => {
+    switch (mode) {
+      case 'ADD':
+        addCheckedContentsList(contents);
+        break;
+      case 'DELETE':
+        deleteCheckedContentsList(contents);
+        break;
+      default:
+        return;
+    }
+  };
+
+  React.useEffect(() => {
+    const totalCount = checkedContentsList.length;
+    handleTotalCheckedCount(totalCount);
+  }, [checkedContentsList, handleTotalCheckedCount]);
+
   return (
     <View style={styles.container}>
       <FlatList
         data={list}
         renderItem={({item}) => (
           <SaveContentsItem
-            title={item.title}
-            category={item.category}
+            item={{...item}}
             isEditMode={isEditMode}
+            changeButtonText={changeButtonText}
+            handleCheckedContentsList={handleCheckedContentsList}
           />
         )}
         ItemSeparatorComponent={() => <View style={styles.divider} />}
@@ -41,14 +82,12 @@ export function SaveContentsList({list, isEditMode}: any): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderWidth: 1,
   },
   listContainer: {
     flex: 1,
-    borderWidth: 1,
   },
   divider: {
-    backgroundColor: '#F2F4F7',
+    backgroundColor: color.grey100,
     height: 1,
     marginVertical: 16,
   },
@@ -66,12 +105,12 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#000E24',
+    color: color.grey700,
   },
   subText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#526070',
+    color: color.grey500,
   },
   buttonContainer: {
     borderWidth: 1,
