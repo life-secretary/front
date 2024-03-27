@@ -2,7 +2,7 @@ import * as React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
 import {HomeCategoryItem} from './HomeCategoryItem';
 
-const DUMMY_CATEGORY = [
+export const DUMMY_CATEGORY = [
   {
     id: '1',
     category: 'all',

@@ -591,6 +591,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   header: {
+    flexDirection: 'column',
     paddingHorizontal: 24,
     borderTopColor: 'transparent',
     borderLeftColor: 'transparent',

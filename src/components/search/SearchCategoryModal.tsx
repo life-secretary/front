@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { 
     View,
     StyleSheet,
+    TouchableOpacity,
 } from 'react-native';
 
 import { AppHeader } from '../common/AppHeader';
@@ -16,12 +17,41 @@ import SearchToDoView from '../../components/search/SearchToDoView';
 
 import { getFontSize } from '../../utils/font';
 
+import { DUMMY_CATEGORY } from '../../components/home/HomeCategoryList'; // 임시 참고
+
 const HeaderCategoryResult = ({ searchData }) => {
     
     return (
         <View style={styles.searchConditionContainer}>
             <SearchCondition data={searchData} /> 
         </View>
+    );
+};
+
+const DropDownCategory = ({
+    onPressListItemButton,
+    onPressDimmedSpace,
+}) => {
+    return (
+        <>
+            <View style={styles.dropDownDivider} />
+            <View style={styles.dropDownContainer}>
+                    {
+                        DUMMY_CATEGORY.map((item) => {
+                            return (
+                                <AppButton 
+                                    text={item.title}
+                                    textStyle={styles.categoryListText}
+                                    onPressButton={() => onPressListItemButton({ id: item.id, title: item.title })}
+                                />
+                            )
+                        })
+                    }
+                <TouchableOpacity onPress={onPressDimmedSpace}>
+                    <View style={styles.dropDownRestDimmed} />
+                </TouchableOpacity>
+            </View>
+        </>
     );
 };
 
@@ -217,10 +247,22 @@ const SearchCategoryModal = ({
     };
 
     const [isCategoryDownModalVisible, setIsCategoryDownModalVisible] = useState(false);
+    // 카테고리의 이름과 아이디 모두 필요할 듯하여.
+    const [currentCategory, setCurrentCategory] = useState({ id: '1', title: '전체' });
 
-    const onPressCategoryButton = () => {
-        console.log('press 전체 버튼');
+    const onToggleCategoryButton = () => {
         setIsCategoryDownModalVisible((previousValue) => !previousValue);
+    };
+
+    const onPressCategoryNameButton = (currentCategory) => {
+        /**
+         * 카테고리 이름을 표기할 때 api 조회 파라미터에 있는 id값을 참조해서 표기하면 되는건가..?
+         * 부모 컴포넌트가 모든 카테고리에 대한 데이터를 가지고 있지 않아도 되는가 ?
+         */
+        console.log(currentCategory);
+        setCurrentCategory(currentCategory);
+        // todo code: api get request
+        setIsCategoryDownModalVisible(false);
     };
 
     return (
@@ -232,34 +274,48 @@ const SearchCategoryModal = ({
             <View style={styles.container}>
                 <AppHeader style={styles.header}>
                     <View style={styles.wrapper}>
-                        <View style={styles.backIconWrapper}>
-                            <AppIcon 
-                                type='stroke'
-                                name='back'
-                                width={36}
-                                height={36}
-                                onPress={() => {}}
-                            />
-                        </View>
+                        {/** isCategoryDownModalVisible 뒤로가기 버튼 숨기기 */}
+                        {
+                            !isCategoryDownModalVisible &&
+                                <View style={styles.backIconWrapper}>
+                                    <AppIcon 
+                                        type='stroke'
+                                        name='back'
+                                        width={36}
+                                        height={36}
+                                        onPress={() => {}}
+                                    />
+                                </View>
+                        }
                         <View style={styles.selectBoxWrapper}>
+                            <AppButton 
+                                text={currentCategory.title} // variable 처리
+                                textStyle={styles.categoryText}
+                                onPressButton={onToggleCategoryButton}
+                            />
                             <View style={styles.selectBoxButtonContainer}>
-                                <AppButton 
-                                    text={'전체'} // variable 처리
-                                    textStyle={styles.categoryText}
-                                    onPressButton={onPressCategoryButton}
-                                />
-                                <AppIcon 
-                                    type='fill'
-                                    name='angleDown'
-                                    width={42}
-                                    height={42}
-                                    onPress={onPressCategoryButton}
-                                />
+                                <View style={styles.selectBoxButtonWrapper}>
+                                    <AppIcon 
+                                        type='fill'
+                                        name='angleDown'
+                                        width={42}
+                                        height={42}
+                                        onPress={onToggleCategoryButton}
+                                    />
+                                </View>
                             </View>
                         </View>
                     </View>
                     <SearchTab tabData={tabData} />
                 </AppHeader>
+                {/** 야매 DropDown */}
+                {
+                    isCategoryDownModalVisible && 
+                    <DropDownCategory 
+                        onPressListItemButton={onPressCategoryNameButton} 
+                        onPressDimmedSpace={onToggleCategoryButton}
+                    />
+                }
                 {getSearchHeader()}
                 {getSearchView()}
             </View>
@@ -273,6 +329,7 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     header: {
+        flexDirection: 'column',
         paddingHorizontal: 24,
         borderTopColor: 'transparent',
         borderLeftColor: 'transparent',
@@ -284,18 +341,25 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
+        marginBottom: 10,
     },
 
     backIconWrapper: {
-        flex: 1,
+        position: 'absolute',
     },
     selectBoxWrapper: {
-        flex: 8,
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
         alignItems: 'center',
+        height: 42,
     },
     selectBoxButtonContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        position: 'relative',
+        height: 42,
+    },
+    selectBoxButtonWrapper: {
+        position: 'absolute',
     },
 
     searchConditionContainer: {
@@ -310,6 +374,38 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: getFontSize(20),
         lineHeight: 24,
+        alignSelf: 'center',
+    },
+    categoryListText: {
+        fontWeight: '600',
+        fontSize: getFontSize(18),
+        lineHeight: 22,
+        color: '#526070',
+        paddingVertical: 8,
+        alignSelf: 'center',
+    },
+
+    dropDownDivider: {
+        position: 'absolute',
+        top: 51,
+        width: '100%',
+        zIndex: 2,
+        borderColor: '#F2F4F7',
+        borderWidth: 0.5,
+    },
+    dropDownContainer: {
+        position: 'absolute',
+        top: 42,
+        width: '100%',
+        zIndex: 1,
+        backgroundColor: '#FFFFFF',
+        gap: 10,
+        paddingTop: 25,
+    },
+    dropDownRestDimmed: {
+        height: '100%',
+        backgroundColor: '#111111',
+        opacity: 0.4,
     },
 });
 
