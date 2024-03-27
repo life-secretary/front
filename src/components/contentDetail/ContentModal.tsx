@@ -163,6 +163,7 @@ const ContentModal = ({
         >
             <View style={styles.container}>
                 <AppHeader style={{
+                    flexDirection: 'column',
                     borderColor: 'transparent',
                     marginVertical: 0,
                     paddingBottom: 10,
