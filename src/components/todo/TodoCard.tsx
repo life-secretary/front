@@ -74,7 +74,7 @@ export function TodoCard({item}: TodoCardProps): React.JSX.Element {
         <View style={styles.cardInfoRow}>
           <View style={styles.cardTodoRow}>
             <AppText style={[styles.cardInfoText, styles.light]}>할일 </AppText>
-            {todoItem.subTodoList.length > 0 ? (
+            {todoItem.subTodoList && todoItem.subTodoList.length > 0 ? (
               <>
                 <AppText style={[styles.cardInfoText, styles.dark]}>
                   {todoItem.subTodoList.filter(item => item.isCompleted).length}

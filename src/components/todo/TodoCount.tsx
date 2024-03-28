@@ -3,13 +3,14 @@ import {StyleSheet, View} from 'react-native';
 import {AppText} from '../common/AppText';
 
 type Props = {
+  title: string;
   todoCount: number;
 };
 
-export function TodoCount({todoCount}: Props): React.JSX.Element {
+export function TodoCount({title, todoCount}: Props): React.JSX.Element {
   return (
     <View style={styles.container}>
-      <AppText style={styles.text}>나의 할 일</AppText>
+      <AppText style={styles.text}>{title}</AppText>
       <View style={styles.countContainer}>
         <AppText style={[styles.text, styles.countText]}>총 </AppText>
         <AppText style={[styles.text, styles.countHighlightText]}>
