@@ -2,6 +2,7 @@ import * as React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
 import {TodoCard} from './TodoCard';
 import {AppText} from '../common/AppText';
+import {TodoCount} from './TodoCount';
 
 // TODO: 별도의 컴포넌트로 분리
 const EmptyList = () => {
@@ -19,9 +20,10 @@ type TodoListProps = {
 export function CompletedTodoList({data}: TodoListProps): React.JSX.Element {
   return (
     <View style={styles.container}>
+      <TodoCount title="완료 할 일" todoCount={data.length} />
       <FlatList
         data={data}
-        renderItem={({item}) => <TodoCard {...item} />}
+        renderItem={({item}) => <TodoCard item={{...item}} />}
         keyExtractor={item => item.id}
         ListEmptyComponent={<EmptyList />}
         contentContainerStyle={styles.listContainer}
@@ -36,6 +38,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
+    marginTop: 22,
   },
   emptyListContainer: {
     flex: 1,

@@ -24,7 +24,7 @@ type TodoListProps = {
 export function OngoingTodoList({data}: TodoListProps): React.JSX.Element {
   return (
     <View style={styles.container}>
-      <TodoCount todoCount={data.length} />
+      <TodoCount title="나의 할 일" todoCount={data.length} />
       <FlatList
         data={data}
         renderItem={({item}) => <TodoCard item={{...item}} />}
