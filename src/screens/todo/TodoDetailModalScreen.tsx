@@ -2,7 +2,7 @@ import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRecoilState} from 'recoil';
-import {todoListState} from '../store/todoState';
+import {todoListState} from '../../store/todoState';
 
 import {TodoDetail} from '@/components/todo/detail/TodoDetail';
 import {SubTodoList} from '@/components/todo/detail/SubTodoList';

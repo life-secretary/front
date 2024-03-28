@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {TodoTabOption} from './TodoTabOption';
+import color from '@/styles/color';
 
 type Props = {
   tabOptions: string[];
@@ -43,6 +44,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 5,
-    marginBottom: 22,
+    backgroundColor: color.white,
+    borderRadius: 12,
   },
 });
