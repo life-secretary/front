@@ -12,6 +12,7 @@ import {AppHeader} from '@/components/common/AppHeader';
 import AppBottomSheet from '@/components/common/modal/AppBottomSheet';
 import AppConfirmModal from '@/components/common/modal/AppConfirmModal';
 import {removeItemAtIndex} from '@/utils';
+import color from '@/styles/color';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;
@@ -50,9 +51,9 @@ export function TodoDetailModalScreen({navigation, route}: any) {
   };
 
   return (
-    <SafeAreaView style={styles.layout}>
-      <AppHeader>
-        <View style={styles.headerContainer}>
+    <View style={styles.layout}>
+      <SafeAreaView>
+        <AppHeader style={styles.header}>
           <AppIcon
             type="fill"
             name="backLight"
@@ -68,18 +69,16 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             />
             <AppIcon
               type="stroke"
-              name="hamburger"
+              name="select"
               width={42}
               height={42}
               onPress={() => handleBottomSheetVisible(true)}
             />
           </View>
-        </View>
-      </AppHeader>
-      <View style={styles.container}>
+        </AppHeader>
         <TodoDetail {...todoItem} />
-        <SubTodoList subTodoList={todoItem.subTodoList} />
-      </View>
+      </SafeAreaView>
+      <SubTodoList subTodoList={todoItem.subTodoList} />
       <AppBottomSheet
         isVisible={isVisible}
         handleBottomSheetVisible={handleBottomSheetVisible}
@@ -89,12 +88,24 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             text="삭제하기"
             buttonStyle={styles.bottomSheetButton}
             textStyle={styles.bottomSheetButtonText}
+            startIcon={{
+              type: 'stroke',
+              name: 'trash',
+              width: 24,
+              height: 24,
+            }}
             onPressButton={() => handleModalVisible(true)}
           />
           <AppButton
             text="수정하기"
             buttonStyle={styles.bottomSheetButton}
             textStyle={styles.bottomSheetButtonText}
+            startIcon={{
+              type: 'stroke',
+              name: 'edit',
+              width: 24,
+              height: 24,
+            }}
             onPressButton={() => handleEditButtonPress()}
           />
         </View>
@@ -107,48 +118,32 @@ export function TodoDetailModalScreen({navigation, route}: any) {
         button={{
           first: {
             text: '취소',
-            textStyle: {fontWeight: '600', textAlign: 'center'},
-            buttonStyle: {
-              flex: 1,
-              backgroundColor: '#E7EDF3',
-              borderRadius: 10,
-              paddingVertical: 16,
-            },
+            textStyle: styles.modalFirstButtonText,
+            buttonStyle: styles.modalFirstButton,
             onPressButton: () => {
               handleModalVisible(false);
             },
           },
           second: {
             text: '삭제하기',
-            textStyle: {
-              fontWeight: '600',
-              textAlign: 'center',
-              color: '#FFFFFF',
-            },
-            buttonStyle: {
-              flex: 1,
-              backgroundColor: '#0B2A4F',
-              borderRadius: 10,
-              paddingVertical: 16,
-            },
+            textStyle: styles.modalSecondButtonText,
+            buttonStyle: styles.modalSecondButton,
             onPressButton: () => {
               handleDeleteButtonPress();
             },
           },
         }}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    backgroundColor: '#000E24',
+    backgroundColor: color.grey700,
   },
-  headerContainer: {
-    flex: 1,
-    flexDirection: 'row',
+  header: {
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 24,
@@ -159,9 +154,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 14,
   },
-  container: {
-    flex: 1,
-  },
   completeButton: {
     paddingHorizontal: 8,
     paddingVertical: 12,
@@ -169,7 +161,7 @@ const styles = StyleSheet.create({
   completeButtonText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#4681F6',
+    color: color.secondary,
   },
   bottomSheetContainer: {
     paddingTop: 23,
@@ -182,7 +174,11 @@ const styles = StyleSheet.create({
   },
   bottomSheetButton: {
     flex: 1,
-    backgroundColor: '#F2F4F7',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: color.grey100,
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 10,
@@ -190,5 +186,26 @@ const styles = StyleSheet.create({
   bottomSheetButtonText: {
     fontWeight: '500',
     textAlign: 'center',
+  },
+  modalFirstButton: {
+    flex: 1,
+    borderRadius: 10,
+    paddingVertical: 16,
+    backgroundColor: color.grey200,
+  },
+  modalFirstButtonText: {
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  modalSecondButton: {
+    flex: 1,
+    borderRadius: 10,
+    paddingVertical: 16,
+    backgroundColor: color.primary,
+  },
+  modalSecondButtonText: {
+    fontWeight: '600',
+    textAlign: 'center',
+    color: color.white,
   },
 });

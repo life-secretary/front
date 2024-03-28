@@ -1,37 +1,56 @@
 import * as React from 'react';
-import {Pressable, StyleSheet} from 'react-native';
-import {AppText} from '@/components/common/AppText';
+import {StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import color from '@/styles/color';
+
+import AppButton from '@/components/common/AppButton';
 import {SubTodoForm} from '@/components/todo/detail/form/SubTodoForm';
 
 export function AddSubTodoButton(): React.JSX.Element {
   const navigation = useNavigation();
 
+  const moveToScreen = (screen: string, params: object) => {
+    navigation.navigate(screen, params);
+  };
+
   return (
-    <Pressable
-      style={styles.buttonContainer}
-      onPress={() =>
-        navigation.navigate('Form', {
+    <AppButton
+      text="항목 추가하기"
+      buttonStyle={styles.button}
+      textStyle={styles.buttonText}
+      endIcon={{
+        type: 'stroke',
+        name: 'addLight',
+        width: 36,
+        height: 36,
+      }}
+      onPressButton={() =>
+        moveToScreen('Form', {
           form: <SubTodoForm />,
           headerTitle: '항목 추가하기',
         })
-      }>
-      <AppText style={styles.buttonText}>항목 추가하기</AppText>
-    </Pressable>
+      }
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    // flexDirection: 'row',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    backgroundColor: '#E7EDF3',
+  button: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 2,
+    paddingVertical: 6,
+    paddingLeft: 27,
+    paddingRight: 12,
+    borderWidth: 1,
     borderRadius: 24,
+    borderColor: color.grey200,
+    backgroundColor: color.grey100,
   },
   buttonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#000E24',
+    color: color.grey700,
   },
 });
