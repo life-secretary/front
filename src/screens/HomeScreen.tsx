@@ -50,7 +50,7 @@ const DUMMY_CAROUSEL_DATA = [
 
 export function HomeScreen(): React.JSX.Element {
   return (
-    <AppLayout>
+    <AppLayout style={styles.layout}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <AppHeader style={styles.header}>
           <AppTitle
@@ -89,6 +89,9 @@ export function HomeScreen(): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
+  layout: {
+    backgroundColor: color.white,
+  },
   header: {
     justifyContent: 'space-between',
   },

@@ -6,10 +6,10 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {HomeScreen} from './src/screens/HomeScreen';
-import {TodoScreen} from './src/screens/TodoScreen';
+import {TodoScreen} from './src/screens/todo/TodoScreen';
 import {SaveScreen} from './src/screens/SaveScreen';
-import {TodoDetailModalScreen} from './src/screens/TodoDetailModalScreen';
-import {TodoFormModalScreen} from './src/screens/TodoFormModalScreen';
+import {TodoDetailModalScreen} from './src/screens/todo/TodoDetailModalScreen';
+import {TodoFormModalScreen} from './src/screens/todo/TodoFormModalScreen';
 
 import SearchScreen from './src/screens/SearchScreen';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';

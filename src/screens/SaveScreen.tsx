@@ -59,7 +59,7 @@ export function SaveScreen(): React.JSX.Element {
   }, [isEditMode]);
 
   return (
-    <AppLayout>
+    <AppLayout style={styles.layout}>
       <AppHeader style={styles.header}>
         <AppTitle text="저장 목록" style={styles.title} />
       </AppHeader>
@@ -91,6 +91,9 @@ export function SaveScreen(): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
+  layout: {
+    backgroundColor: color.white,
+  },
   header: {
     justifyContent: 'center',
   },

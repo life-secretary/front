@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 14,
     borderRadius: 8,
+    marginTop: 22,
   },
   countContainer: {
     flexDirection: 'row',

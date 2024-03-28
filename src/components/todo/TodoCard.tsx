@@ -2,8 +2,14 @@ import * as React from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {AppText} from '../common/AppText';
 import {useNavigation} from '@react-navigation/native';
+import color from '@/styles/color';
+import AppIcon from '../common/AppIcon';
 
 type TodoCardProps = {
+  item: object;
+};
+
+interface TodoItem {
   id: string;
   title: string;
   field: object;
@@ -11,52 +17,86 @@ type TodoCardProps = {
   isCompleted: boolean;
   createdDate: string;
   subTodoList: object[];
-};
+}
 
-export function TodoCard({
-  id,
-  title,
-  field,
-  tags,
-  isCompleted,
-  createdDate,
-  subTodoList,
-}: TodoCardProps): React.JSX.Element {
+export function TodoCard({item}: TodoCardProps): React.JSX.Element {
   const navigation = useNavigation();
-  const todoItem = {
-    id,
-    title,
-    field,
-    tags,
-    isCompleted,
-    createdDate,
-    subTodoList,
+  const todoItem: TodoItem = {
+    id: item?.id,
+    title: item?.title,
+    field: item?.field,
+    tags: item?.tags,
+    isCompleted: item?.isCompleted,
+    createdDate: item?.createdDate,
+    subTodoList: item?.subTodoList,
   };
-  const onPressFn = () => {
-    navigation.navigate('TodoDetailModal', {todoItem});
+
+  const moveToScreen = (screen: string, params: object) => {
+    navigation.navigate(screen, params);
   };
 
   return (
-    <Pressable onPress={onPressFn}>
+    <Pressable
+      onPress={() => {
+        moveToScreen('TodoDetailModal', {todoItem});
+      }}>
       <View style={styles.cardContainer}>
         <View style={styles.cardTagsRow}>
-          {tags &&
-            tags.map(tag => (
-              <View style={styles.cardTagContainer}>
-                <AppText style={styles.cardTag}>{tag}</AppText>
+          {todoItem.tags &&
+            todoItem.tags.map((tag: string) => (
+              <View
+                style={[
+                  styles.cardTagContainer,
+                  tag === '나의 할 일'
+                    ? styles.myTagContainer
+                    : styles.defaultTagContainer,
+                ]}>
+                <AppText
+                  style={[
+                    styles.cardTag,
+                    tag === '나의 할 일' ? styles.myTag : styles.defaultTag,
+                  ]}>
+                  {tag}
+                </AppText>
               </View>
             ))}
         </View>
         <View style={styles.cardTitleRow}>
-          <AppText style={styles.cardTitle}>{title}</AppText>
+          <AppText style={styles.cardTitle}>{todoItem.title}</AppText>
+          <AppIcon
+            type="stroke"
+            name="arrowRightLight"
+            width={24}
+            height={24}
+          />
         </View>
         <View style={styles.divider} />
         <View style={styles.cardInfoRow}>
-          <AppText style={[styles.cardInfoText, styles.cardSubTodo]}>
-            할일 {subTodoList && subTodoList.length}개
-          </AppText>
+          <View style={styles.cardTodoRow}>
+            <AppText style={[styles.cardInfoText, styles.cardSubTodo]}>
+              할일{' '}
+            </AppText>
+            {todoItem.subTodoList.length > 0 ? (
+              <>
+                <AppText
+                  style={[styles.cardInfoText, styles.completedCardSubTodo]}>
+                  {todoItem.subTodoList.filter(item => item.isCompleted).length}
+                </AppText>
+                <AppText style={[styles.cardInfoText, styles.cardSubTodo]}>
+                  /{todoItem.subTodoList.length}
+                </AppText>
+              </>
+            ) : (
+              <AppText style={[styles.cardInfoText, styles.cardSubTodo]}>
+                1
+              </AppText>
+            )}
+            <AppText style={[styles.cardInfoText, styles.cardSubTodo]}>
+              개
+            </AppText>
+          </View>
           <AppText style={[styles.cardInfoText, styles.cardDate]}>
-            생성 {createdDate}
+            생성 {todoItem.createdDate}
           </AppText>
         </View>
       </View>
@@ -66,10 +106,10 @@ export function TodoCard({
 
 const styles = StyleSheet.create({
   cardContainer: {
-    borderWidth: 1,
     borderRadius: 12,
     padding: 22,
     gap: 14,
+    backgroundColor: color.white,
   },
   cardTagsRow: {
     flexDirection: 'row',
@@ -80,11 +120,27 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     paddingHorizontal: 6,
   },
+  defaultTagContainer: {
+    backgroundColor: color.grey100,
+  },
+  myTagContainer: {
+    backgroundColor: color.grey300,
+  },
   cardTag: {
     fontSize: 12,
     fontWeight: '600',
   },
-  cardTitleRow: {},
+  defaultTag: {
+    color: color.grey400,
+  },
+  myTag: {
+    color: color.grey500,
+  },
+  cardTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   cardTitle: {
     fontWeight: '600',
   },
@@ -100,8 +156,14 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '500',
   },
+  cardTodoRow: {
+    flexDirection: 'row',
+  },
   cardSubTodo: {
-    color: '#A1ACB9',
+    color: color.grey400,
+  },
+  completedCardSubTodo: {
+    color: color.grey700,
   },
   cardDate: {
     color: '#CBD3DC',
