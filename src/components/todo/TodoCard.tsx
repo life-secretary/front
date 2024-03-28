@@ -73,27 +73,20 @@ export function TodoCard({item}: TodoCardProps): React.JSX.Element {
         <View style={styles.divider} />
         <View style={styles.cardInfoRow}>
           <View style={styles.cardTodoRow}>
-            <AppText style={[styles.cardInfoText, styles.cardSubTodo]}>
-              할일{' '}
-            </AppText>
+            <AppText style={[styles.cardInfoText, styles.light]}>할일 </AppText>
             {todoItem.subTodoList.length > 0 ? (
               <>
-                <AppText
-                  style={[styles.cardInfoText, styles.completedCardSubTodo]}>
+                <AppText style={[styles.cardInfoText, styles.dark]}>
                   {todoItem.subTodoList.filter(item => item.isCompleted).length}
                 </AppText>
-                <AppText style={[styles.cardInfoText, styles.cardSubTodo]}>
+                <AppText style={[styles.cardInfoText, styles.light]}>
                   /{todoItem.subTodoList.length}
                 </AppText>
               </>
             ) : (
-              <AppText style={[styles.cardInfoText, styles.cardSubTodo]}>
-                1
-              </AppText>
+              <AppText style={[styles.cardInfoText, styles.dark]}>1</AppText>
             )}
-            <AppText style={[styles.cardInfoText, styles.cardSubTodo]}>
-              개
-            </AppText>
+            <AppText style={[styles.cardInfoText, styles.light]}>개</AppText>
           </View>
           <AppText style={[styles.cardInfoText, styles.cardDate]}>
             생성 {todoItem.createdDate}
@@ -159,10 +152,10 @@ const styles = StyleSheet.create({
   cardTodoRow: {
     flexDirection: 'row',
   },
-  cardSubTodo: {
+  light: {
     color: color.grey400,
   },
-  completedCardSubTodo: {
+  dark: {
     color: color.grey700,
   },
   cardDate: {

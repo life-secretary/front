@@ -1,6 +1,10 @@
 import * as React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {AppText} from '../../common/AppText';
+import AppIcon from '@/components/common/AppIcon';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import color from '@/styles/color';
+import AppButton from '@/components/common/AppButton';
 
 type ItemProps = {
   title: string;
@@ -8,30 +12,49 @@ type ItemProps = {
 
 export function SubTodoItem({title}: ItemProps): React.JSX.Element {
   return (
-    <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <View style={styles.dragContainer}>
-          <AppText style={styles.drag}>=</AppText>
+    <ScrollView horizontal={true} contentContainerStyle={styles.container}>
+      <View style={styles.itemContainer}>
+        <View style={styles.titleContainer}>
+          <AppIcon type="stroke" name="hamburger" width={24} height={24} />
+          <AppText style={styles.titleText}>{title}</AppText>
         </View>
-        <AppText style={styles.titleText}>{title}</AppText>
+        <BouncyCheckbox
+          size={18}
+          fillColor={color.grey500}
+          iconStyle={{borderWidth: 1.5, marginHorizontal: 12}}
+          disableText={true}
+        />
       </View>
-      <View style={styles.checkboxContainer}>
-        <AppText style={styles.checkbox}>O</AppText>
-      </View>
-    </View>
+      <AppButton
+        text="지우기"
+        textStyle={styles.deleteButtonText}
+        buttonStyle={styles.deleteButton}
+        startIcon={{
+          type: 'stroke',
+          name: 'trashLight',
+          width: 32,
+          height: 32,
+        }}
+      />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    gap: 12,
+  },
+  itemContainer: {
+    minWidth: '100%',
     borderWidth: 1,
     borderRadius: 12,
     borderColor: '#E7EDF3',
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 18,
     justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 18,
+    paddingVertical: 27,
   },
   titleContainer: {
     flexDirection: 'row',
@@ -41,20 +64,16 @@ const styles = StyleSheet.create({
   titleText: {
     fontWeight: '600',
   },
-  dragContainer: {
-    borderWidth: 1,
-    width: 24,
-    height: 24,
+  deleteButton: {
+    gap: 4,
+    borderRadius: 10,
+    paddingHorizontal: 17,
+    paddingVertical: 12,
+    backgroundColor: color.error,
   },
-  drag: {
-    textAlign: 'center',
+  deleteButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: color.white,
   },
-  checkboxContainer: {
-    borderWidth: 1,
-    width: 42,
-    height: 42,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkbox: {},
 });

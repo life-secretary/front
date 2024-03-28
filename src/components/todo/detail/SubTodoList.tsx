@@ -2,6 +2,7 @@ import * as React from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {SubTodoItem} from './SubTodoItem';
 import {AddSubTodoButton} from './AddSubTodoButton';
+import color from '@/styles/color';
 
 export function SubTodoList({subTodoList}: any): React.JSX.Element {
   return (
@@ -12,7 +13,7 @@ export function SubTodoList({subTodoList}: any): React.JSX.Element {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContainer}
       />
-      <View style={styles.buttonRow}>
+      <View style={styles.buttonContainer}>
         <AddSubTodoButton />
       </View>
     </View>
@@ -22,16 +23,16 @@ export function SubTodoList({subTodoList}: any): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderWidth: 1,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    gap: 22,
-    backgroundColor: '#FFFFFF',
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    backgroundColor: color.white,
   },
-  buttonRow: {
+  buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    marginBottom: 53,
   },
   listContainer: {
     gap: 20,

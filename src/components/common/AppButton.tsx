@@ -63,6 +63,7 @@ const AppButton = ({
           name={startIcon.name}
           width={startIcon.width}
           height={startIcon.height}
+          styles={startIcon.styles}
         />
       )}
       <AppText style={textStyle}>{text}</AppText>
@@ -72,6 +73,7 @@ const AppButton = ({
           name={endIcon.name}
           width={endIcon.width}
           height={endIcon.height}
+          styles={endIcon.styles}
         />
       )}
     </Pressable>
