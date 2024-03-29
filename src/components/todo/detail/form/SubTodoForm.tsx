@@ -1,8 +1,13 @@
 import * as React from 'react';
+import {useRecoilState} from 'recoil';
+import {todoListState} from '@/store/todoState';
+
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import {AppInput} from '@/components/common/AppInput';
 import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
+import {generateRandomId, replaceItemAtIndex} from '@/utils';
+import {useNavigation} from '@react-navigation/native';
 
 type SubTodoFormProps = {
   todoItem: object;
@@ -11,8 +16,36 @@ type SubTodoFormProps = {
 export function SubTodoForm({todoItem}: SubTodoFormProps) {
   const [isEmpty, setIsEmpty] = React.useState(false);
   const [subTitle, setSubTitle] = React.useState('');
+  const [todoList, setTodoList] = useRecoilState(todoListState);
+  const navigation = useNavigation();
 
-  const addSubTodo = () => {};
+  const itemIndex = todoList.findIndex(
+    (item: object) => item.id === todoItem?.id,
+  );
+
+  const resetForm = () => {
+    setSubTitle('');
+  };
+
+  const addSubTodo = () => {
+    const newSubTodo = {
+      id: generateRandomId(),
+      title: subTitle,
+      isCompleted: false,
+    };
+
+    const newSubTodoList = [...todoItem?.subTodoList, newSubTodo];
+
+    const newList = replaceItemAtIndex(todoList, itemIndex, {
+      ...todoItem,
+      subTodoList: newSubTodoList,
+    });
+
+    setTodoList(newList);
+
+    resetForm();
+    navigation.goBack();
+  };
 
   React.useEffect(() => {
     if (subTitle === '') {
