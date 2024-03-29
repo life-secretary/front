@@ -18,20 +18,28 @@ export function SubTodoItem({
   const [isChecked, setIsChecked] = React.useState(isCompleted);
 
   return (
-    <ScrollView horizontal={true} contentContainerStyle={styles.container}>
+    <ScrollView
+      horizontal={true}
+      contentContainerStyle={styles.container}
+      onScrollEndDrag={() => console.log('scroll')}>
       <View style={styles.itemContainer}>
         <View style={styles.titleContainer}>
-          <AppIcon type="stroke" name="hamburger" width={24} height={24} />
-          <AppText style={styles.titleText}>{title}</AppText>
+          <View style={styles.wrapper}>
+            <AppIcon type="stroke" name="hamburger" width={24} height={24} />
+            <AppText style={styles.titleText}>{title}</AppText>
+          </View>
+          <View style={styles.divider} />
         </View>
-        <BouncyCheckbox
-          size={18}
-          fillColor={color.grey500}
-          iconStyle={{borderWidth: 1.5, marginHorizontal: 12}}
-          disableText={true}
-          isChecked={isChecked}
-          onPress={() => setIsChecked(!isChecked)}
-        />
+        <View style={styles.checkboxContainer}>
+          <BouncyCheckbox
+            size={18}
+            fillColor={color.grey500}
+            iconStyle={{borderWidth: 1.5, marginHorizontal: 12}}
+            disableText={true}
+            isChecked={isChecked}
+            onPress={() => setIsChecked(!isChecked)}
+          />
+        </View>
       </View>
       <AppButton
         text="지우기"
@@ -54,20 +62,37 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   itemContainer: {
-    minWidth: '100%',
+    width: '100%',
     borderWidth: 1,
     borderRadius: 12,
-    borderColor: '#E7EDF3',
+    borderColor: color.grey200,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 18,
-    paddingVertical: 27,
+    paddingLeft: 16,
   },
   titleContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+    height: '100%',
+  },
+  wrapper: {
+    flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+  },
+  divider: {
+    borderWidth: 1,
+    borderColor: color.grey200,
+    borderStyle: 'dashed',
+  },
+  checkboxContainer: {
+    width: '100%',
+    height: '100%',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   titleText: {
     fontWeight: '600',
