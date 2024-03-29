@@ -1,12 +1,20 @@
 import * as React from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
 import {todoListState} from '../../../../store/todoState';
 import {getFormattedDate, generateRandomId, replaceItemAtIndex} from '@/utils';
 
-import {AppText} from '../../../common/AppText';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {AppInput} from '@/components/common/AppInput';
+import AppButton from '@/components/common/AppButton';
+import color from '@/styles/color';
+import AppIcon from '@/components/common/AppIcon';
 
 type TodoFormProps = {
   isEditMode?: boolean;
@@ -61,7 +69,6 @@ export function TodoForm({
 
   // EDIT TODO
   const editTodo = () => {
-    console.log(selectedField);
     const newList = replaceItemAtIndex(todoList, itemIndex, {
       ...todoItem,
       title,
@@ -83,33 +90,36 @@ export function TodoForm({
   */
 
   React.useEffect(() => {
-    if (!title && !selectedField) {
+    if (title === '' || !selectedField) {
       setIsEmpty(true);
     } else {
       setIsEmpty(false);
     }
-  }, [title, selectedField]);
+  }, [title, selectedField, isEmpty]);
 
   return (
     <>
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
         <View style={styles.form}>
           {/* TODO: 분야가 제대로 수정되지 않는 버그 */}
-          <Pressable onPress={() => handleBottomSheetVisible(true)}>
-            <AppInput
-              hasLabel={true}
-              labelText="분야"
-              text={selectedField.text}
-              onChangeText={(newText: string) =>
-                handleSelectField({key: 'USER', text: newText})
-              }
-              disabled={
-                isEditMode
-                  ? todoItem?.field?.key !== 'USER'
-                  : selectedField.key !== 'USER'
-              }
-            />
-          </Pressable>
+          <AppInput
+            hasLabel={true}
+            labelText="분야"
+            text={selectedField.text}
+            onChangeText={(newText: string) =>
+              handleSelectField({key: 'USER', text: newText})
+            }
+            editable={selectedField.key === 'USER'}
+            icon={{
+              type: 'stroke',
+              name: 'arrowRightLight',
+              width: 24,
+              height: 24,
+              onPress: () => handleBottomSheetVisible(true),
+            }}
+          />
           <AppInput
             hasLabel={true}
             labelText="할 일 제목"
@@ -119,15 +129,15 @@ export function TodoForm({
             onChangeText={setTitle}
           />
         </View>
-        <View style={styles.buttonContainer}>
-          <Pressable
-            style={[styles.button, isEmpty && styles.disabled]}
-            disabled={isEmpty}
-            onPress={isEditMode ? editTodo : addTodo}>
-            <AppText style={styles.buttonText}>완료</AppText>
-          </Pressable>
-        </View>
-      </View>
+        <AppButton
+          text="완료"
+          buttonStyle={styles.button}
+          textStyle={styles.buttonText}
+          isDisabled={isEmpty}
+          disabledBackgroundColor={color.grey300}
+          onPressButton={isEditMode ? editTodo : addTodo}
+        />
+      </KeyboardAvoidingView>
     </>
   );
 }
@@ -140,44 +150,19 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 20,
   },
-  inputContainer: {
-    borderWidth: 1,
-    borderRadius: 12,
-    borderColor: '#526070',
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-    gap: 10,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  fieldLabel: {
-    color: '#A1ACB9',
-  },
-  fieldText: {
-    fontWeight: '600',
-    color: '#000E24',
-  },
-  titleLabel: {
-    color: '#526070',
-  },
   buttonContainer: {
     justifyContent: 'center',
     marginBottom: 20,
   },
   button: {
-    backgroundColor: '#0B2A4F',
-    borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 16,
+    borderRadius: 10,
+    backgroundColor: color.primary,
   },
   buttonText: {
     fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  disabled: {
-    backgroundColor: 'lightgray',
+    color: color.white,
   },
 });

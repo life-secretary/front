@@ -4,42 +4,37 @@ import {AppText} from '../../common/AppText';
 import color from '@/styles/color';
 
 type todoDetailProps = {
-  id: string;
-  title: string;
-  tags: string[];
-  subTodoList: object[];
-  createdDate: string;
+  todoItem: object;
 };
 
-export function TodoDetail({
-  title,
-  tags,
-  subTodoList,
-  createdDate,
-}: todoDetailProps): React.JSX.Element {
+export function TodoDetail({todoItem}: todoDetailProps): React.JSX.Element {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <View style={styles.tagRow}>
-          {tags &&
-            tags.map(tag => (
+          {todoItem?.tags &&
+            todoItem?.tags.map((tag: string) => (
               <View style={styles.tagContainer}>
                 <AppText style={styles.tagText}>{tag}</AppText>
               </View>
             ))}
         </View>
-        <AppText style={styles.titleText}>{title}</AppText>
+        <AppText style={styles.titleText}>{todoItem?.title}</AppText>
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.infoRow}>
           <AppText style={[styles.infoText, styles.defaultText]}>할일</AppText>
-          {subTodoList.length > 0 ? (
+          {todoItem?.subTodoList.length > 0 ? (
             <View style={styles.todoRow}>
               <AppText style={[styles.infoText, styles.completedText]}>
-                {subTodoList.filter((item: object) => item.isCompleted).length}
+                {
+                  todoItem?.subTodoList.filter(
+                    (item: object) => item.isCompleted,
+                  ).length
+                }
               </AppText>
               <AppText style={[styles.infoText, styles.defaultText]}>
-                /{subTodoList.length}개
+                /{todoItem?.subTodoList.length}개
               </AppText>
             </View>
           ) : (
@@ -49,7 +44,7 @@ export function TodoDetail({
         <View style={styles.infoRow}>
           <AppText style={[styles.infoText, styles.defaultText]}>생성</AppText>
           <AppText style={[styles.infoText, styles.defaultText]}>
-            {createdDate}
+            {todoItem?.createdDate}
           </AppText>
         </View>
       </View>

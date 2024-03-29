@@ -1,71 +1,123 @@
 import * as React from 'react';
 import {StyleSheet, View, TextInput} from 'react-native';
 import {AppText} from './AppText';
+import color from '@/styles/color';
+import AppIcon from './AppIcon';
 
 type AppInputProps = {
-  /** label 존재 여부 */
+  /** Whether has label or not */
   hasLabel: boolean;
   /** label text value */
   labelText?: string;
-  /** TextInput required 속성 적용 여부 */
+  /** Whether TextInput is required or not */
   required?: boolean;
-  /** TextInput disabled 속성 적용 여부 */
+  /** Whether TextInput is disabled or not */
   disabled?: boolean;
-  /** input box focus 여부 */
+  /** Whether TextInput is editable or not */
+  editable?: boolean;
+  /** Whether input box is focused or not */
   focused?: boolean;
   /** TextInput placeholder text value */
   placeholder?: string;
+  /** TextInput placeholder text color */
+  placeholderTextColor?: string;
   /** TextInput text value */
   text: string;
-  /** input error 발생 여부 */
+  /** Whether input has error or not */
   error?: boolean;
   /** error message text value */
   errorMsg?: string;
   /** TextInput maxLength number value */
   maxLength?: number;
+  icon?: object;
   /** onChangeText Handler */
-  onChangeText: Function;
+  onChangeText?: Function;
 };
 
 // TODO: 추가 개발 필요
 export function AppInput({
   text,
   placeholder,
+  placeholderTextColor,
   hasLabel,
   labelText,
   maxLength,
   disabled = false,
+  editable = true,
+  icon,
   onChangeText,
 }: AppInputProps): React.JSX.Element {
+  const [isFocused, setIsFocused] = React.useState(false);
+
   return (
-    <View style={styles.container}>
-      {hasLabel && <AppText style={styles.label}>{labelText}</AppText>}
+    <View
+      style={[
+        styles.container,
+        isFocused && styles.focus,
+        disabled && styles.disabled,
+      ]}>
+      {hasLabel && (
+        <AppText style={[styles.label, disabled && styles.disabledText]}>
+          {labelText}
+        </AppText>
+      )}
       <TextInput
         placeholder={placeholder}
+        placeholderTextColor={placeholderTextColor}
         defaultValue={text}
-        onChangeText={newText => onChangeText(newText)}
+        onChangeText={newText => onChangeText && onChangeText(newText)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         maxLength={maxLength}
-        editable={!disabled}
+        editable={editable}
+        style={styles.inputText}
       />
+      {icon && !editable && (
+        <View style={styles.icon}>
+          <AppIcon
+            type={icon?.type}
+            name={icon?.name}
+            width={icon?.width}
+            height={icon?.height}
+            onPress={icon?.onPress}
+          />
+        </View>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 1,
+    borderWidth: 1.2,
     borderRadius: 12,
-    borderColor: '#A1ACB9',
+    borderColor: color.grey400,
     paddingVertical: 16,
-    paddingHorizontal: 12,
+    paddingHorizontal: 20,
     gap: 10,
   },
   label: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#526070',
+    color: color.grey500,
   },
   focus: {
-    borderColor: '#40474F',
+    borderColor: color.grey600,
+  },
+  disabled: {
+    borderWidth: 0,
+    backgroundColor: color.grey100,
+  },
+  inputText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  disabledText: {
+    color: color.grey400,
+  },
+  icon: {
+    position: 'absolute',
+    right: 12,
+    bottom: 16,
   },
 });

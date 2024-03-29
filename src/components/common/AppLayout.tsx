@@ -2,6 +2,7 @@ import * as React from 'react';
 import {StatusBar, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import spacing from '../../styles/spacing';
+import color from '@/styles/color';
 
 export function AppLayout({children, style}: any): React.JSX.Element {
   return (
@@ -16,5 +17,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: spacing.layoutPaddingHorizontal,
+    backgroundColor: color.white,
   },
 });

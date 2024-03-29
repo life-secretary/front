@@ -1,12 +1,7 @@
 import * as React from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import {AppText} from '../../components/common/AppText';
+import AppIcon from '@/components/common/AppIcon';
 import {AppHeader} from '../../components/common/AppHeader';
 import {AppLayout} from '../../components/common/AppLayout';
 import AppBottomSheet from '@/components/common/modal/AppBottomSheet';
@@ -31,16 +26,18 @@ export function TodoFormModalScreen({route, navigation}: any) {
     <>
       <AppLayout>
         <AppHeader style={styles.header}>
-          <View style={styles.titleContainer}>
-            <AppText style={styles.headerTitle}>{headerTitle}</AppText>
+          <AppText style={styles.headerTitle}>{headerTitle}</AppText>
+          <View style={styles.button}>
+            <AppIcon
+              type="stroke"
+              name="closeDark"
+              width={42}
+              height={42}
+              onPress={() => {
+                navigation.goBack();
+              }}
+            />
           </View>
-          <Pressable
-            style={styles.buttonContainer}
-            onPress={() => {
-              navigation.goBack();
-            }}>
-            <AppText style={styles.backButton}>X</AppText>
-          </Pressable>
         </AppHeader>
         <AppText>{isVisible}</AppText>
         <KeyboardAvoidingView
@@ -56,7 +53,7 @@ export function TodoFormModalScreen({route, navigation}: any) {
               isVisible={isVisible}
             />
           ) : (
-            <SubTodoForm />
+            <SubTodoForm todoItem={todoItem} />
           )}
         </KeyboardAvoidingView>
       </AppLayout>
@@ -74,29 +71,21 @@ export function TodoFormModalScreen({route, navigation}: any) {
 }
 
 const styles = StyleSheet.create({
-  layout: {
-    flex: 1,
-  },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    minHeight: 42,
+    justifyContent: 'center',
+    marginTop: 12,
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: '600',
     color: '#000E24',
   },
+  button: {
+    position: 'absolute',
+    right: 0,
+  },
   container: {
     flex: 1,
-  },
-  titleContainer: {},
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  backButton: {
-    fontWeight: '700',
   },
 });
