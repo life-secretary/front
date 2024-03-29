@@ -8,16 +8,16 @@ type ItemProps = {
   title: string;
 };
 
-const handlePress: any = (item: string) => {
-  console.log(item);
-};
-
 export function HomeCategoryItem({
   category,
   title,
 }: ItemProps): React.JSX.Element {
+  const handlePress = (item: string) => {
+    console.log(item);
+  };
+
   return (
-    <Pressable style={styles.container} onPress={handlePress(category)}>
+    <Pressable style={styles.container} onPress={() => handlePress(category)}>
       <AppIcon type="stroke" name={category} width={44} height={44} />
       <AppText style={styles.text}>{title}</AppText>
     </Pressable>

@@ -8,21 +8,21 @@ type ItemProps = {
   title: string;
 };
 
-const handlePress: any = (item: string) => {
-  console.log(item);
-};
-
 export function HomeContentsCategoryItem({
   category,
   title,
 }: ItemProps): React.JSX.Element {
+  const handlePress = (item: string) => {
+    console.log(item);
+  };
+
   return (
     <Pressable
       style={({pressed}) => [
         pressed ? styles.pressedButton : styles.defaultButton,
         styles.button,
       ]}
-      onPress={handlePress(category)}>
+      onPress={() => handlePress(category)}>
       {({pressed}) => (
         <AppText
           style={[
