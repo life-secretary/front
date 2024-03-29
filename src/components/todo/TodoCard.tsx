@@ -9,6 +9,7 @@ type TodoCardProps = {
   item: object;
 };
 
+// TODO: model에 정의
 interface TodoItem {
   id: string;
   title: string;
@@ -16,6 +17,7 @@ interface TodoItem {
   tags: string[];
   isCompleted: boolean;
   createdDate: string;
+  completedDate: string;
   subTodoList: object[];
 }
 
@@ -28,11 +30,34 @@ export function TodoCard({item}: TodoCardProps): React.JSX.Element {
     tags: item?.tags,
     isCompleted: item?.isCompleted,
     createdDate: item?.createdDate,
+    completedDate: item?.completedDate,
     subTodoList: item?.subTodoList,
   };
 
   const moveToScreen = (screen: string, params: object) => {
     navigation.navigate(screen, params);
+  };
+
+  const setTagContainerStyles = (tag: string) => {
+    switch (tag) {
+      case '나의 할 일':
+        return styles.myTagContainer;
+      case '완료':
+        return styles.completedTagContainer;
+      default:
+        return styles.defaultTagContainer;
+    }
+  };
+
+  const setTagTextStyles = (tag: string) => {
+    switch (tag) {
+      case '나의 할 일':
+        return styles.myTag;
+      case '완료':
+        return styles.completedTag;
+      default:
+        return styles.defaultTag;
+    }
   };
 
   return (
@@ -45,17 +70,8 @@ export function TodoCard({item}: TodoCardProps): React.JSX.Element {
           {todoItem.tags &&
             todoItem.tags.map((tag: string) => (
               <View
-                style={[
-                  styles.cardTagContainer,
-                  tag === '나의 할 일'
-                    ? styles.myTagContainer
-                    : styles.defaultTagContainer,
-                ]}>
-                <AppText
-                  style={[
-                    styles.cardTag,
-                    tag === '나의 할 일' ? styles.myTag : styles.defaultTag,
-                  ]}>
+                style={[styles.cardTagContainer, setTagContainerStyles(tag)]}>
+                <AppText style={[styles.cardTag, setTagTextStyles(tag)]}>
                   {tag}
                 </AppText>
               </View>
@@ -119,6 +135,9 @@ const styles = StyleSheet.create({
   myTagContainer: {
     backgroundColor: color.grey300,
   },
+  completedTagContainer: {
+    backgroundColor: color.grey700,
+  },
   cardTag: {
     fontSize: 12,
     fontWeight: '600',
@@ -128,6 +147,9 @@ const styles = StyleSheet.create({
   },
   myTag: {
     color: color.grey500,
+  },
+  completedTag: {
+    color: color.white,
   },
   cardTitleRow: {
     flexDirection: 'row',

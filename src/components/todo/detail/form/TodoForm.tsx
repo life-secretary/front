@@ -59,6 +59,7 @@ export function TodoForm({
         tags: ['나의 할 일', `${selectedField.text}`],
         isCompleted: false,
         createdDate: getFormattedDate(new Date()),
+        completedDate: null,
         subTodoList: [],
       },
     ]);
