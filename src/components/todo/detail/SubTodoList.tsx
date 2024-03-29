@@ -4,17 +4,21 @@ import {SubTodoItem} from './SubTodoItem';
 import {AddSubTodoButton} from './AddSubTodoButton';
 import color from '@/styles/color';
 
-export function SubTodoList({subTodoList}: any): React.JSX.Element {
+type SubTodoListProps = {
+  todoItem: object;
+};
+
+export function SubTodoList({todoItem}: SubTodoListProps): React.JSX.Element {
   return (
     <View style={styles.container}>
       <FlatList
-        data={subTodoList}
+        data={todoItem?.subTodoList}
         renderItem={({item}) => <SubTodoItem title={item.title} />}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContainer}
       />
       <View style={styles.buttonContainer}>
-        <AddSubTodoButton />
+        <AddSubTodoButton todoItem={todoItem} />
       </View>
     </View>
   );

@@ -32,8 +32,7 @@ export function TodoFieldSelect({
 
   return (
     <View style={styles.selectContainer}>
-      <AppText style={styles.selectTitle}>할 일의 분야를 선택해주세요</AppText>
-      <AppText>{isVisible}</AppText>
+      <AppText style={styles.title}>할 일의 분야를 선택해주세요</AppText>
       <FlatList
         data={DUMMY_SELECT_OPTIONS}
         renderItem={({item}) => (
@@ -41,7 +40,7 @@ export function TodoFieldSelect({
             <Pressable
               style={styles.option}
               onPress={() => handleSelectOption(item)}>
-              <AppText>{item.text}</AppText>
+              <AppText style={styles.optionText}>{item.text}</AppText>
             </Pressable>
           </View>
         )}
@@ -54,9 +53,10 @@ export function TodoFieldSelect({
 const styles = StyleSheet.create({
   selectContainer: {
     gap: 30,
-    padding: 24,
+    paddingHorizontal: 40,
   },
-  selectTitle: {
+  title: {
+    marginTop: 20,
     fontSize: 20,
     fontWeight: '600',
   },
@@ -64,8 +64,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   option: {
-    borderWidth: 1,
     paddingVertical: 8,
+  },
+  optionText: {
+    fontSize: 18,
+    fontWeight: '500',
   },
   row: {
     gap: 14,

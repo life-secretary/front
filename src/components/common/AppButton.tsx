@@ -18,6 +18,9 @@ export type ButtonProps = {
   /** Button background color when pressed */
   pressedBackgroundColor?: string;
 
+  /** Button background color when disabled */
+  disabledBackgroundColor?: string;
+
   /** Button press event handler */
   onPressButton?: Function;
 };
@@ -38,6 +41,7 @@ const AppButton = ({
   textStyle = {} || [],
   buttonStyle = {} || [],
   pressedBackgroundColor = '',
+  disabledBackgroundColor = '',
   startIcon,
   endIcon,
   onPressButton = () => {},
@@ -52,10 +56,23 @@ const AppButton = ({
     return [...defaultStyle, {backgroundColor}];
   };
 
+  const disabledStyle = (disabled: boolean) => {
+    const defaultStyle =
+      Array.isArray(buttonStyle) === true ? buttonStyle : [buttonStyle];
+    const backgroundColor = disabled
+      ? disabledBackgroundColor
+      : defaultStyle[0].backgroundColor;
+
+    return [...defaultStyle, {backgroundColor}];
+  };
+
   return (
     <Pressable
       disabled={isDisabled}
-      style={({pressed}) => pressableStyle(pressed)}
+      style={({pressed}) => [
+        pressableStyle(pressed),
+        isDisabled && disabledStyle(isDisabled),
+      ]}
       onPress={() => onPressButton()}>
       {startIcon && (
         <AppIcon

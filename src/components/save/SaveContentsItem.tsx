@@ -36,7 +36,6 @@ export function SaveContentsItem({
             fillColor={color.grey500}
             disableText
             onPress={(isChecked: boolean) => {
-              console.log(isChecked);
               isChecked ? (mode = 'ADD') : (mode = 'DELETE');
               handleCheckboxPress(item, mode);
             }}

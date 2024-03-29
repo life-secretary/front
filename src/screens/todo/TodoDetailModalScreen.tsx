@@ -3,15 +3,15 @@ import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRecoilState} from 'recoil';
 import {todoListState} from '../../store/todoState';
+import {removeItemAtIndex} from '@/utils';
 
-import {TodoDetail} from '@/components/todo/detail/TodoDetail';
-import {SubTodoList} from '@/components/todo/detail/SubTodoList';
+import {AppHeader} from '@/components/common/AppHeader';
 import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
-import {AppHeader} from '@/components/common/AppHeader';
 import AppBottomSheet from '@/components/common/modal/AppBottomSheet';
 import AppConfirmModal from '@/components/common/modal/AppConfirmModal';
-import {removeItemAtIndex} from '@/utils';
+import {TodoDetail} from '@/components/todo/detail/TodoDetail';
+import {SubTodoList} from '@/components/todo/detail/SubTodoList';
 import color from '@/styles/color';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
@@ -76,9 +76,9 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             />
           </View>
         </AppHeader>
-        <TodoDetail {...todoItem} />
+        <TodoDetail todoItem={{...todoItem}} />
       </SafeAreaView>
-      <SubTodoList subTodoList={todoItem.subTodoList} />
+      <SubTodoList todoItem={{...todoItem}} />
       <AppBottomSheet
         isVisible={isVisible}
         handleBottomSheetVisible={handleBottomSheetVisible}

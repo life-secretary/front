@@ -1,12 +1,17 @@
 import * as React from 'react';
 import {StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import color from '@/styles/color';
 
 import AppButton from '@/components/common/AppButton';
-import {SubTodoForm} from '@/components/todo/detail/form/SubTodoForm';
+import color from '@/styles/color';
 
-export function AddSubTodoButton(): React.JSX.Element {
+type AddSubTodoButtonProps = {
+  todoItem: object;
+};
+
+export function AddSubTodoButton({
+  todoItem,
+}: AddSubTodoButtonProps): React.JSX.Element {
   const navigation = useNavigation();
 
   const moveToScreen = (screen: string, params: object) => {
@@ -25,9 +30,10 @@ export function AddSubTodoButton(): React.JSX.Element {
         height: 36,
       }}
       onPressButton={() =>
-        moveToScreen('Form', {
-          form: <SubTodoForm />,
+        moveToScreen('TodoForm', {
+          form: 'SUBTODO',
           headerTitle: '항목 추가하기',
+          todoItem,
         })
       }
     />
