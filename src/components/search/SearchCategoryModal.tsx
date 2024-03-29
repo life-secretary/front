@@ -329,9 +329,9 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     header: {
-        // TODO: header 스타일 깨진 것 수정
         flexDirection: 'column',
         paddingHorizontal: 24,
+        borderWidth: 0.5,
         borderTopColor: 'transparent',
         borderLeftColor: 'transparent',
         borderRightColor: 'transparent',
