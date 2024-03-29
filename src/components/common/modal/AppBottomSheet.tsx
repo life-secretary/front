@@ -9,21 +9,25 @@ import {
 import {BottomSheetDefaultBackdropProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 
 type AppBottomSheetProps = {
+  mode?: string;
   isVisible: boolean;
+  snapPointsArr?: string[];
   children?: ReactNode;
   contentsStyle?: ViewStyle;
   handleBottomSheetVisible: Function;
 };
 
 const AppBottomSheet = ({
+  mode,
   isVisible,
+  snapPointsArr = ['25%', '50%'],
   children,
   contentsStyle,
   handleBottomSheetVisible,
 }: AppBottomSheetProps) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   // TODO: dynamic value로 변경
-  const snapPoints = useMemo(() => ['70%'], []);
+  const snapPoints = useMemo(() => snapPointsArr, [snapPointsArr]);
 
   const openBottomSheet = () => {
     bottomSheetModalRef.current?.present();
@@ -44,11 +48,13 @@ const AppBottomSheet = ({
         enableTouchThrough={true}
         appearsOnIndex={0}
         disappearsOnIndex={-1}
-        onPress={handleBottomSheetVisible(false)}
+        onPress={handleBottomSheetVisible(false, mode)}
       />
     ),
-    [handleBottomSheetVisible],
+    [handleBottomSheetVisible, mode],
   );
+
+  console.log('isVisible', isVisible);
 
   useEffect(() => {
     isVisible ? openBottomSheet() : closeBottomSheet();
