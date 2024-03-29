@@ -27,10 +27,10 @@ const DUMMY_TODO = [
     id: generateRandomId(),
     title: '사용자가 입력한 할 일 제목 2',
     field: {key: 'SELFDEV', text: '자기계발'},
-    tags: ['나의 할 일', '자기계발'],
+    tags: ['완료', '나의 할 일', '자기계발'],
     subTodoList: [
-      {id: '31', title: '자격증 취득', isCompleted: false},
-      {id: '32', title: '토익 900점 이상', isCompleted: false},
+      {id: '31', title: '자격증 취득', isCompleted: true},
+      {id: '32', title: '토익 900점 이상', isCompleted: true},
     ],
     createdDate: '2024.01.01',
     isCompleted: true,

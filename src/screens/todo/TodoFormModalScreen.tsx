@@ -59,6 +59,7 @@ export function TodoFormModalScreen({route, navigation}: any) {
       </AppLayout>
       <AppBottomSheet
         isVisible={isVisible}
+        snapPointsArr={['65%']}
         handleBottomSheetVisible={handleBottomSheetVisible}>
         <TodoFieldSelect
           isVisible={isVisible}
