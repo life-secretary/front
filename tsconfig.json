@@ -3,7 +3,17 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
     }
-  }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules", 
+    "**/*.js", 
+    "**/*.css", 
+    "**/*.json"
+  ],
 }
