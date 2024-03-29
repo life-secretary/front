@@ -1,20 +1,13 @@
 import * as React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
-import {todoListState} from '../../../../store/todoState';
+import {todoListState} from '@/store/todoState';
 import {getFormattedDate, generateRandomId, replaceItemAtIndex} from '@/utils';
 
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import {AppInput} from '@/components/common/AppInput';
 import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
-import AppIcon from '@/components/common/AppIcon';
 
 type TodoFormProps = {
   isEditMode?: boolean;
