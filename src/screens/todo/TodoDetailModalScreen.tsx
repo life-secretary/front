@@ -21,6 +21,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
   const [bottomSheetMode, setBottomSheetMode] = React.useState('');
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [todoList, setTodoList] = useRecoilState(todoListState);
+  const isCompleted = todoItem?.isCompleted;
 
   const itemIndex = todoList.findIndex(item => item.id === todoItem?.id);
 
@@ -58,7 +59,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
   const handleRetryButtonPress = () => {};
 
   return (
-    <View style={styles.layout}>
+    <View style={[styles.layout, isCompleted && styles.complete]}>
       <SafeAreaView>
         <AppHeader style={styles.header}>
           <AppIcon
@@ -69,12 +70,14 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             onPress={() => navigation.goBack()}
           />
           <View style={styles.headerButtonContainer}>
-            <AppButton
-              text="완료"
-              buttonStyle={styles.completeButton}
-              textStyle={styles.completeButtonText}
-              onPressButton={() => handleBottomSheetVisible(true, 'complete')}
-            />
+            {!isCompleted && (
+              <AppButton
+                text="완료"
+                buttonStyle={styles.completeButton}
+                textStyle={styles.completeButtonText}
+                onPressButton={() => handleBottomSheetVisible(true, 'complete')}
+              />
+            )}
             <AppIcon
               type="stroke"
               name="select"
@@ -106,7 +109,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             }}
             onPressButton={() => handleModalVisible(true)}
           />
-          {todoItem.isCompleted ? (
+          {isCompleted ? (
             <AppButton
               text="다시하기"
               buttonStyle={[styles.bottomSheetButton, styles.lightButton]}
@@ -197,6 +200,9 @@ const styles = StyleSheet.create({
   layout: {
     flex: 1,
     backgroundColor: color.grey700,
+  },
+  complete: {
+    backgroundColor: color.grey600,
   },
   header: {
     justifyContent: 'space-between',

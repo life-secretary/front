@@ -12,6 +12,7 @@ const DUMMY_TODO = [
       {id: '12', title: '월 저축액 계획하기', isCompleted: false},
     ],
     createdDate: '2024.01.01',
+    completedDate: null,
     isCompleted: false,
   },
   {
@@ -21,6 +22,7 @@ const DUMMY_TODO = [
     tags: ['나의 할 일', '건강'],
     subTodoList: [{id: '21', title: '2024 건강검진 하기', isCompleted: false}],
     createdDate: '2024.01.10',
+    completedDate: null,
     isCompleted: false,
   },
   {
@@ -33,6 +35,7 @@ const DUMMY_TODO = [
       {id: '32', title: '토익 900점 이상', isCompleted: true},
     ],
     createdDate: '2024.01.01',
+    completedDate: '2024.01.20',
     isCompleted: true,
   },
   {
@@ -42,6 +45,7 @@ const DUMMY_TODO = [
     tags: ['나의 할 일', '자기계발'],
     subTodoList: [],
     createdDate: '2024.01.31',
+    completedDate: null,
     isCompleted: false,
   },
 ];

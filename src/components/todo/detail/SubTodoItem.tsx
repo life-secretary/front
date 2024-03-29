@@ -8,9 +8,15 @@ import AppButton from '@/components/common/AppButton';
 
 type ItemProps = {
   title: string;
+  isCompleted: boolean;
 };
 
-export function SubTodoItem({title}: ItemProps): React.JSX.Element {
+export function SubTodoItem({
+  title,
+  isCompleted,
+}: ItemProps): React.JSX.Element {
+  const [isChecked, setIsChecked] = React.useState(isCompleted);
+
   return (
     <ScrollView horizontal={true} contentContainerStyle={styles.container}>
       <View style={styles.itemContainer}>
@@ -23,6 +29,8 @@ export function SubTodoItem({title}: ItemProps): React.JSX.Element {
           fillColor={color.grey500}
           iconStyle={{borderWidth: 1.5, marginHorizontal: 12}}
           disableText={true}
+          isChecked={isChecked}
+          onPress={() => setIsChecked(!isChecked)}
         />
       </View>
       <AppButton
