@@ -524,21 +524,23 @@ const SearchScreen = () => {
   return (
     <View style={styles.container}>
       <AppHeader style={styles.header}>
-        {!isSearchResultPage ? (
-          <View style={styles.logoContainer}>
-            <AppIcon type="stroke" name="logo" width={70} height={20} />
-          </View>
-        ) : (
-          <></>
-        )}
-        <SearchTextInput
-          isSearchResultPage={isSearchResultPage}
-          changeSearchText={changeSearchText}
-          submitSearchText={submitSearchText}
-          pressRemoveSearchTextButton={pressRemoveSearchTextButton}
-          pressSearchButton={pressSearchButton}
-        />
-        {!isSearchResultPage ? <></> : <SearchTab tabData={tabData} />}
+        <View style={styles.headerWrapper}>
+          {!isSearchResultPage ? (
+            <View style={styles.logoContainer}>
+              <AppIcon type="stroke" name="logo" width={70} height={20} />
+            </View>
+          ) : (
+            <></>
+          )}
+          <SearchTextInput
+            isSearchResultPage={isSearchResultPage}
+            changeSearchText={changeSearchText}
+            submitSearchText={submitSearchText}
+            pressRemoveSearchTextButton={pressRemoveSearchTextButton}
+            pressSearchButton={pressSearchButton}
+          />
+          {!isSearchResultPage ? <></> : <SearchTab tabData={tabData} />}
+        </View>
       </AppHeader>
       {!isSearchResultPage ? (
         // 검색어
@@ -591,14 +593,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   header: {
-    // TODO: header 스타일 깨진 것 수정
     flexDirection: 'column',
     paddingHorizontal: 24,
+    borderWidth: 0.5,
     borderTopColor: 'transparent',
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
     borderBottomColor: '#F2F4F7',
     marginVertical: 0,
+  },
+  headerWrapper: {
+    width: '100%',
   },
 
   logoContainer: {
