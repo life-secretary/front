@@ -39,7 +39,10 @@ function RootStack() {
           name="TodoDetailModal"
           component={TodoDetailModalScreen}
         />
-        <Stack.Screen name="TodoForm" component={TodoFormModalScreen} />
+        <Stack.Screen 
+          name="TodoForm" 
+          component={TodoFormModalScreen} 
+        />
       </Stack.Group>
     </Stack.Navigator>
   );
