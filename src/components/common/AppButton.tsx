@@ -49,9 +49,12 @@ const AppButton = ({
   const pressableStyle = pressed => {
     const defaultStyle =
       Array.isArray(buttonStyle) === true ? buttonStyle : [buttonStyle];
+
     const backgroundColor = pressed
       ? pressedBackgroundColor
-      : defaultStyle[0].backgroundColor;
+      : defaultStyle.find((style: object) =>
+          style.hasOwnProperty('backgroundColor'),
+        )?.backgroundColor;
 
     return [...defaultStyle, {backgroundColor}];
   };
