@@ -8,14 +8,40 @@ type todoDetailProps = {
 };
 
 export function TodoDetail({todoItem}: todoDetailProps): React.JSX.Element {
+  const isCompleted = todoItem?.isCompleted;
+
+  const setTagContainerStyles = (tag: string) => {
+    switch (tag) {
+      case '나의 할 일':
+        return styles.myTagContainer;
+      case '완료':
+        return styles.completedTagContainer;
+      default:
+        return styles.defaultTagContainer;
+    }
+  };
+
+  const setTagTextStyles = (tag: string) => {
+    switch (tag) {
+      case '나의 할 일':
+        return styles.myTag;
+      case '완료':
+        return styles.completedTag;
+      default:
+        return styles.defaultTag;
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <View style={styles.tagRow}>
           {todoItem?.tags &&
             todoItem?.tags.map((tag: string) => (
-              <View style={styles.tagContainer}>
-                <AppText style={styles.tagText}>{tag}</AppText>
+              <View style={[styles.tagContainer, setTagContainerStyles(tag)]}>
+                <AppText style={[styles.tag, setTagTextStyles(tag)]}>
+                  {tag}
+                </AppText>
               </View>
             ))}
         </View>
@@ -42,10 +68,29 @@ export function TodoDetail({todoItem}: todoDetailProps): React.JSX.Element {
           )}
         </View>
         <View style={styles.infoRow}>
-          <AppText style={[styles.infoText, styles.defaultText]}>생성</AppText>
-          <AppText style={[styles.infoText, styles.defaultText]}>
-            {todoItem?.createdDate}
-          </AppText>
+          <View style={styles.date}>
+            <AppText style={[styles.infoText, styles.defaultText]}>
+              생성
+            </AppText>
+            <AppText style={[styles.infoText, styles.defaultText]}>
+              {todoItem?.createdDate}
+            </AppText>
+          </View>
+          {isCompleted && (
+            <>
+              <AppText style={[styles.infoText, styles.defaultText]}>
+                &middot;
+              </AppText>
+              <View style={styles.date}>
+                <AppText style={[styles.infoText, styles.defaultText]}>
+                  완료
+                </AppText>
+                <AppText style={[styles.infoText, styles.defaultText]}>
+                  {todoItem?.completedDate}
+                </AppText>
+              </View>
+            </>
+          )}
         </View>
       </View>
     </View>
@@ -67,13 +112,29 @@ const styles = StyleSheet.create({
   tagContainer: {
     paddingVertical: 4,
     paddingHorizontal: 8,
-    backgroundColor: color.grey100,
     borderRadius: 4,
   },
-  tagText: {
+  defaultTagContainer: {
+    backgroundColor: color.grey100,
+  },
+  myTagContainer: {
+    backgroundColor: color.grey300,
+  },
+  completedTagContainer: {
+    backgroundColor: color.grey700,
+  },
+  tag: {
     fontSize: 12,
     fontWeight: '600',
+  },
+  defaultTag: {
     color: color.grey700,
+  },
+  myTag: {
+    color: color.grey700,
+  },
+  completedTag: {
+    color: color.white,
   },
   titleContainer: {
     gap: 12,
@@ -102,5 +163,9 @@ const styles = StyleSheet.create({
   },
   completedText: {
     color: color.white,
+  },
+  date: {
+    flexDirection: 'row',
+    gap: 10,
   },
 });
