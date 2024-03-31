@@ -30,7 +30,6 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
         <AppTitle text="To Do" style={styles.title} />
         <View style={styles.button}>
           <AppIcon
-            type="stroke"
             name="addDark"
             width={42}
             height={42}

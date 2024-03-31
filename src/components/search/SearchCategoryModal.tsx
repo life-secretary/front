@@ -279,7 +279,6 @@ const SearchCategoryModal = ({
                             !isCategoryDownModalVisible &&
                                 <View style={styles.backIconWrapper}>
                                     <AppIcon 
-                                        type='stroke'
                                         name='back'
                                         width={36}
                                         height={36}
@@ -296,11 +295,11 @@ const SearchCategoryModal = ({
                             <View style={styles.selectBoxButtonContainer}>
                                 <View style={styles.selectBoxButtonWrapper}>
                                     <AppIcon 
-                                        type='fill'
                                         name='angleDown'
                                         width={42}
                                         height={42}
                                         onPress={onToggleCategoryButton}
+                                        styles={{ color: '#000000' }}
                                     />
                                 </View>
                             </View>

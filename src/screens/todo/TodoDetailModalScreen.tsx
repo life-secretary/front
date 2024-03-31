@@ -67,10 +67,10 @@ export function TodoDetailModalScreen({navigation, route}: any) {
       <SafeAreaView>
         <AppHeader style={styles.header}>
           <AppIcon
-            type="fill"
-            name="backLight"
+            name="back"
             width={42}
             height={42}
+            styles={{ color: '#FFFFFF' }}
             onPress={() => navigation.goBack()}
           />
           <View style={styles.headerButtonContainer}>
@@ -83,7 +83,6 @@ export function TodoDetailModalScreen({navigation, route}: any) {
               />
             )}
             <AppIcon
-              type="stroke"
               name="select"
               width={42}
               height={42}

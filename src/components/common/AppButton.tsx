@@ -79,7 +79,6 @@ const AppButton = ({
       onPress={() => onPressButton()}>
       {startIcon && (
         <AppIcon
-          type={startIcon.type}
           name={startIcon.name}
           width={startIcon.width}
           height={startIcon.height}
@@ -90,7 +89,6 @@ const AppButton = ({
       <AppText style={textStyle}>{text}</AppText>
       {endIcon && (
         <AppIcon
-          type={endIcon.type}
           name={endIcon.name}
           width={endIcon.width}
           height={endIcon.height}

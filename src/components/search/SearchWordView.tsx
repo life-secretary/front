@@ -56,7 +56,6 @@ const SearchWordView = ({
                                     >
                                         <AppText style={styles.recentSearchText}>{item.title}</AppText>
                                         <AppIcon 
-                                            type='stroke'
                                             name='closeLight'
                                             width={36}
                                             height={36}
@@ -81,8 +80,7 @@ const SearchWordView = ({
                                 onPressButton={pressMoreListButton}
                             />
                             <AppIcon 
-                                type='stroke'
-                                name={isRecentSearchListOpen ? 'arrowUpDark' : 'arrowDownDark'}
+                                name={isRecentSearchListOpen ? 'arrowUp' : 'arrowDown'}
                                 width={36}
                                 height={36}
                                 onPress={pressMoreListButton}

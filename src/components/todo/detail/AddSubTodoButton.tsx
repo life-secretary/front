@@ -24,7 +24,6 @@ export function AddSubTodoButton({
       buttonStyle={styles.button}
       textStyle={styles.buttonText}
       endIcon={{
-        type: 'stroke',
         name: 'addLight',
         width: 36,
         height: 36,

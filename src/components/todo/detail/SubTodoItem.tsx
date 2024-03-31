@@ -100,7 +100,6 @@ export function SubTodoItem({
             <View style={styles.titleContainer}>
               <View style={styles.titleWrapper}>
                 <AppIcon
-                  type="stroke"
                   name="hamburger"
                   width={24}
                   height={24}
@@ -136,10 +135,10 @@ export function SubTodoItem({
             textStyle={styles.deleteButtonText}
             buttonStyle={styles.deleteButton}
             startIcon={{
-              type: 'stroke',
-              name: 'trashLight',
+              name: 'trash',
               width: 32,
               height: 32,
+              styles: { color: '#FFFFFF' }
             }}
             onPressButton={() => handleDeleteButtonPress(subTodoItem?.id)}
           />

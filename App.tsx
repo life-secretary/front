@@ -14,6 +14,8 @@ import {TodoFormModalScreen} from './src/screens/todo/TodoFormModalScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
+import Content from './src/components/contentDetail/ContentModal';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 

@@ -137,8 +137,8 @@ const SearchHashTagModal = ({
 
     const getSearchResultView = () => {
         const currentTab = currentData()?.id;
-        const headerContent = <HeaderHashTagResult data={contentData} hashTag={hashTag} />;
-        const headerToDo = <HeaderHashTagResult data={toDoData} hashTag={hashTag} />;
+        const headerContent = <HashTagResultHeader data={contentData} hashTag={hashTag} />;
+        const headerToDo = <HashTagResultHeader data={toDoData} hashTag={hashTag} />;
 
         switch(currentTab) {
             case 1:
@@ -176,7 +176,6 @@ const SearchHashTagModal = ({
                     <View style={styles.wrapper}>
                         <View style={styles.backIconWrapper}>
                             <AppIcon 
-                                type='stroke'
                                 name='back'
                                 width={36}
                                 height={36}
