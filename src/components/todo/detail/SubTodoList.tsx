@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {StyleSheet, View, FlatList} from 'react-native';
 import {SubTodoItem} from './SubTodoItem';
 import {AddSubTodoButton} from './AddSubTodoButton';
 import color from '@/styles/color';
@@ -25,7 +25,7 @@ export function SubTodoList({todoItem}: SubTodoListProps): React.JSX.Element {
       <FlatList
         data={todoItem?.subTodoList}
         renderItem={({item}) => (
-          <SubTodoItem title={item.title} isCompleted={item.isCompleted} />
+          <SubTodoItem todoItem={{...todoItem}} subTodoItem={{...item}} />
         )}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContainer}
