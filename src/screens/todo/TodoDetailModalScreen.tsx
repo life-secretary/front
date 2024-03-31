@@ -48,11 +48,15 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     handleBottomSheetVisible(false, 'editAndDelete');
   };
 
-  // TODO: DELETE TODO 호출 위치 고민
-  const handleDeleteButtonPress = () => {
+  const deleteTodo = () => {
     const newList = removeItemAtIndex(todoList, itemIndex);
 
     setTodoList(newList);
+  };
+
+  // TODO: DELETE TODO 호출 위치 고민
+  const handleDeleteButtonPress = () => {
+    deleteTodo();
     navigation.navigate('Todo');
   };
 
