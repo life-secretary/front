@@ -83,7 +83,7 @@ export function TodoCard({item}: TodoCardProps): React.JSX.Element {
             name="arrowRight"
             width={36}
             height={36}
-            styles={{ color: '#A1ACB9' }}
+            styles={{color: color.grey.grey400}}
           />
         </View>
         <View style={styles.divider} />
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 22,
     gap: 14,
-    backgroundColor: color.white,
+    backgroundColor: color.main.white,
   },
   cardTagsRow: {
     flexDirection: 'row',
@@ -130,26 +130,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
   defaultTagContainer: {
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
   },
   myTagContainer: {
-    backgroundColor: color.grey300,
+    backgroundColor: color.grey.grey300,
   },
   completedTagContainer: {
-    backgroundColor: color.grey700,
+    backgroundColor: color.grey.grey700,
   },
   cardTag: {
     fontSize: 12,
     fontWeight: '600',
   },
   defaultTag: {
-    color: color.grey400,
+    color: color.grey.grey400,
   },
   myTag: {
-    color: color.grey500,
+    color: color.grey.grey500,
   },
   completedTag: {
-    color: color.white,
+    color: color.main.white,
   },
   cardTitleRow: {
     flexDirection: 'row',
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: '#F2F4F7',
+    backgroundColor: color.grey.grey100,
   },
   cardInfoRow: {
     flexDirection: 'row',
@@ -175,12 +175,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   light: {
-    color: color.grey400,
+    color: color.grey.grey400,
   },
   dark: {
-    color: color.grey700,
+    color: color.grey.grey700,
   },
   cardDate: {
-    color: '#CBD3DC',
+    color: color.grey.grey300,
   },
 });

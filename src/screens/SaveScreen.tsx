@@ -92,7 +92,7 @@ export function SaveScreen(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   layout: {
-    backgroundColor: color.white,
+    backgroundColor: color.main.white,
   },
   header: {
     justifyContent: 'center',
@@ -111,19 +111,19 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
     marginTop: 7,
     marginBottom: 32,
   },
   totalCountText: {
     fontSize: 18,
     fontWeight: '600',
-    color: color.grey600,
+    color: color.grey.grey600,
   },
   editButton: {
     paddingHorizontal: 6,
     paddingVertical: 8,
     fontWeight: '600',
-    color: DUMMY_DATA.length > 0 ? color.grey400 : color.grey200,
+    color: DUMMY_DATA.length > 0 ? color.grey.grey400 : color.grey.grey200,
   },
 });

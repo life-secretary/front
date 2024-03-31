@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   divider: {
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
     height: 1,
     marginVertical: 16,
   },
@@ -105,12 +105,12 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     fontWeight: '600',
-    color: color.grey700,
+    color: color.grey.grey700,
   },
   subText: {
     fontSize: 14,
     fontWeight: '500',
-    color: color.grey500,
+    color: color.grey.grey500,
   },
   buttonContainer: {
     borderWidth: 1,

@@ -67,7 +67,7 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
 
 const styles = StyleSheet.create({
   layout: {
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
   },
   container: {
     flex: 1,

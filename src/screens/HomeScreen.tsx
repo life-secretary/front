@@ -85,7 +85,7 @@ export function HomeScreen(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   layout: {
-    backgroundColor: color.white,
+    backgroundColor: color.main.white,
   },
   header: {
     justifyContent: 'space-between',
@@ -103,13 +103,13 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: color.grey500,
+    color: color.grey.grey500,
     lineHeight: 21.48,
   },
   footerText: {
     textAlign: 'center',
     fontSize: 15,
     fontWeight: '600',
-    color: color.grey400,
+    color: color.grey.grey400,
   },
 });

@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: 1.2,
     borderRadius: 12,
-    borderColor: color.grey400,
+    borderColor: color.grey.grey400,
     paddingVertical: 16,
     paddingHorizontal: 20,
     gap: 10,
@@ -99,21 +99,21 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '500',
-    color: color.grey500,
+    color: color.grey.grey500,
   },
   focus: {
-    borderColor: color.grey600,
+    borderColor: color.grey.grey600,
   },
   disabled: {
     borderWidth: 0,
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
   },
   inputText: {
     fontSize: 16,
     fontWeight: '600',
   },
   disabledText: {
-    color: color.grey400,
+    color: color.grey.grey400,
   },
   icon: {
     position: 'absolute',

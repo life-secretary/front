@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {AppText} from '../common/AppText';
+import color from '@/styles/color';
 
 type Props = {
   title: string;
@@ -38,9 +39,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   countText: {
-    color: '#A1ACB9',
+    color: color.grey.grey400,
   },
   countHighlightText: {
-    color: '#4681F6',
+    color: color.main.secondary,
   },
 });

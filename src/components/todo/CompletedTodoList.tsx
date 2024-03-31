@@ -3,6 +3,7 @@ import {StyleSheet, View, FlatList} from 'react-native';
 import {TodoCard} from './TodoCard';
 import {AppText} from '../common/AppText';
 import {TodoCount} from './TodoCount';
+import color from '@/styles/color';
 
 // TODO: 별도의 컴포넌트로 분리
 const EmptyList = () => {
@@ -47,6 +48,6 @@ const styles = StyleSheet.create({
   },
   emptyListText: {
     fontWeight: '500',
-    color: '#526070',
+    color: color.grey.grey500,
   },
 });

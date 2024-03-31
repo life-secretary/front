@@ -33,26 +33,26 @@ const AppIcon = ({
   const [isIconPress, setIsIconPress] = useState(false);
 
   const icon = Icons[name];
-  
-  const iconStyle = icon.type === 'fill' ? 
-  {
-    fill: icon.defaultFill,
-    color: icon.defaultStroke,
-  }
-  :
-  {
-    color: icon.defaultStroke,
-  };
 
-  const iconPressStyle = icon.type === 'fill' ? 
-  {
-    fillOpacity: isIconPress ? 0.4 : 1,
-    strokeOpacity: isIconPress ? 0.4 : 1,
-  }
-  :
-  {
-    strokeOpacity: isIconPress ? 0.4 : 1,
-  }
+  const iconStyle =
+    icon.type === 'fill'
+      ? {
+          fill: icon.defaultFill,
+          color: icon.defaultStroke,
+        }
+      : {
+          color: icon.defaultStroke,
+        };
+
+  const iconPressStyle =
+    icon.type === 'fill'
+      ? {
+          fillOpacity: isIconPress ? 0.4 : 1,
+          strokeOpacity: isIconPress ? 0.4 : 1,
+        }
+      : {
+          strokeOpacity: isIconPress ? 0.4 : 1,
+        };
 
   const IconSvg = icon.file;
 

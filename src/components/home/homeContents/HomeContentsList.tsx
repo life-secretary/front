@@ -84,16 +84,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 26,
     paddingVertical: 34,
     borderRadius: 14,
-    backgroundColor: color.white,
+    backgroundColor: color.main.white,
     ...Platform.select({
       ios: {
-        shadowColor: color.shadow,
+        shadowColor: color.shadow.box,
         shadowOpacity: 0.5,
         shadowRadius: 20,
         shadowOffset: {width: 0, height: 0},
       },
       android: {
-        shadowColor: color.shadow,
+        shadowColor: color.shadow.box,
         elevation: 1,
       },
     }),
@@ -105,14 +105,14 @@ const styles = StyleSheet.create({
     marginBottom: 28,
     fontSize: 20,
     fontWeight: '700',
-    color: color.grey700,
+    color: color.grey.grey700,
   },
   username: {
     fontWeight: '600',
-    color: color.secondary,
+    color: color.main.secondary,
   },
   divider: {
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
     height: 1,
     marginVertical: 16,
   },

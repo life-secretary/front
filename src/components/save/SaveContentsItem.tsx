@@ -33,7 +33,7 @@ export function SaveContentsItem({
         <View style={styles.checkboxContainer}>
           <BouncyCheckbox
             size={18}
-            fillColor={color.grey500}
+            fillColor={color.grey.grey500}
             disableText
             onPress={(isChecked: boolean) => {
               isChecked ? (mode = 'ADD') : (mode = 'DELETE');
@@ -45,10 +45,10 @@ export function SaveContentsItem({
       <View style={styles.itemContainer}>
         <View style={styles.infoContainer}>
           <View style={styles.tagContainer}>
-            <AppText style={styles.tag}>{item.category}</AppText>
+            <AppText style={styles.tag}>{item?.category}</AppText>
           </View>
           <AppText style={styles.title} isEllipsizeMode={true}>
-            {item.title}
+            {item?.title}
           </AppText>
         </View>
         {isSaved ? (
@@ -56,7 +56,7 @@ export function SaveContentsItem({
             name="bookmarkMedium"
             width={42}
             height={42}
-            styles={{ fill: color.grey400 }}
+            styles={{fill: color.grey.grey400}}
             onPress={() => handleSaveButtonPress(isSaved)}
           />
         ) : (
@@ -94,20 +94,20 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingVertical: 3,
     paddingHorizontal: 6,
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
     overflow: 'hidden',
     fontSize: 12,
     fontWeight: '600',
-    color: color.grey400,
+    color: color.grey.grey400,
   },
   title: {
     fontWeight: '600',
-    color: color.grey700,
+    color: color.grey.grey700,
   },
   subTitle: {
     fontSize: 12,
     fontWeight: '500',
-    color: color.grey400,
+    color: color.grey.grey400,
   },
   button: {
     width: 42,
