@@ -99,11 +99,7 @@ export function SubTodoItem({
           <View style={[styles.itemContainer, {width: itemWidth}]}>
             <View style={styles.titleContainer}>
               <View style={styles.titleWrapper}>
-                <AppIcon
-                  name="hamburger"
-                  width={24}
-                  height={24}
-                />
+                <AppIcon name="hamburger" width={24} height={24} />
                 <View style={isEditable && styles.inputContainer}>
                   <TextInput
                     ref={inputRef}
@@ -138,7 +134,7 @@ export function SubTodoItem({
               name: 'trash',
               width: 32,
               height: 32,
-              styles: { color: '#FFFFFF' }
+              styles: {color: color.white},
             }}
             onPressButton={() => handleDeleteButtonPress(subTodoItem?.id)}
           />

@@ -3,23 +3,17 @@ import * as React from 'react';
 import {StyleSheet, ScrollView, View} from 'react-native';
 import {AppLayout} from '../components/common/AppLayout';
 import {AppHeader} from '../components/common/AppHeader';
+import {AppTitle} from '../components/common/AppTitle';
+import AppIcon from '@/components/common/AppIcon';
 import {HomeCategoryList} from '../components/home/HomeCategoryList';
 import {HomeContentsListWithFilter} from '../components/home/homeContents/HomeContentsListWithFilter';
 import {HomeImageCarousel} from '../components/home/HomeImageCarousel';
 import {HomeContentsList} from '../components/home/homeContents/HomeContentsList';
 import {SendQuestionButton} from '../components/home/SendQuestionButton';
-import {AppTitle} from '../components/common/AppTitle';
-
-// 유사한 사용자가 조회한 콘텐츠 리스트 데이터
-
-// 인기 많은 콘텐츠 리스트 데이터
-
-// 최근 업데이트된 콘텐츠 리스트 데이터
-
 import SearchCategoryModal from '../components/search/SearchCategoryModal';
-import AppIcon from '@/components/common/AppIcon';
 import {getFormattedDate} from '@/utils';
 import color from '@/styles/color';
+// import {fontStyles} from '@/styles/font';
 
 const DUMMY_CAROUSEL_DATA = [
   {
@@ -49,6 +43,12 @@ const DUMMY_CAROUSEL_DATA = [
 ];
 
 export function HomeScreen(): React.JSX.Element {
+  // 유사한 사용자가 조회한 콘텐츠 리스트 데이터
+
+  // 인기 많은 콘텐츠 리스트 데이터
+
+  // 최근 업데이트된 콘텐츠 리스트 데이터
+
   return (
     <AppLayout style={styles.layout}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -58,11 +58,7 @@ export function HomeScreen(): React.JSX.Element {
             style={styles.headerTitle}
           />
           <View style={styles.headerIconContainer}>
-            <AppIcon
-              name="notificationOn"
-              width={42}
-              height={42}
-            />
+            <AppIcon name="notificationOn" width={42} height={42} />
             <AppIcon name="balancer" width={42} height={42} />
           </View>
         </AppHeader>
