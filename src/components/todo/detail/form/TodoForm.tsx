@@ -108,9 +108,10 @@ export function TodoForm({
             editable={selectedField.key === 'USER'}
             icon={{
               type: 'stroke',
-              name: 'arrowRightLight',
-              width: 24,
-              height: 24,
+              name: 'arrowRight',
+              width: 36,
+              height: 36,
+              styles: { color: '#A1ACB9' },
               onPress: () => handleBottomSheetVisible(true),
             }}
           />

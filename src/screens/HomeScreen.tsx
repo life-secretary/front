@@ -59,12 +59,11 @@ export function HomeScreen(): React.JSX.Element {
           />
           <View style={styles.headerIconContainer}>
             <AppIcon
-              type="stroke"
               name="notificationOn"
               width={42}
               height={42}
             />
-            <AppIcon type="stroke" name="balancer" width={42} height={42} />
+            <AppIcon name="balancer" width={42} height={42} />
           </View>
         </AppHeader>
         <HomeCategoryList />

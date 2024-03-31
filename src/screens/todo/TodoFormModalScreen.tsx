@@ -29,7 +29,6 @@ export function TodoFormModalScreen({route, navigation}: any) {
           <AppText style={styles.headerTitle}>{headerTitle}</AppText>
           <View style={styles.button}>
             <AppIcon
-              type="stroke"
               name="closeDark"
               width={42}
               height={42}

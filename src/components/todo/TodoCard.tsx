@@ -80,10 +80,10 @@ export function TodoCard({item}: TodoCardProps): React.JSX.Element {
         <View style={styles.cardTitleRow}>
           <AppText style={styles.cardTitle}>{todoItem.title}</AppText>
           <AppIcon
-            type="stroke"
-            name="arrowRightLight"
-            width={24}
-            height={24}
+            name="arrowRight"
+            width={36}
+            height={36}
+            styles={{ color: '#A1ACB9' }}
           />
         </View>
         <View style={styles.divider} />

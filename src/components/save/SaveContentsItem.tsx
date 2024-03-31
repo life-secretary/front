@@ -53,17 +53,15 @@ export function SaveContentsItem({
         </View>
         {isSaved ? (
           <AppIcon
-            type="fill"
-            name="bookmarkLight"
+            name="bookmarkMedium"
             width={42}
             height={42}
-            styles={{fill: color.grey400}}
+            styles={{ fill: color.grey400 }}
             onPress={() => handleSaveButtonPress(isSaved)}
           />
         ) : (
           <AppIcon
-            type="stroke"
-            name="bookmarkLight"
+            name="bookmarkMedium"
             width={42}
             height={42}
             onPress={() => handleSaveButtonPress(isSaved)}

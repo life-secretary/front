@@ -13,7 +13,7 @@ export function ViewMoreButton(): React.JSX.Element {
       buttonStyle={styles.button}
       endIcon={{
         type: 'stroke',
-        name: 'arrowRightDark',
+        name: 'arrowRight',
         width: 24,
         height: 24,
       }}
