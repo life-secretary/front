@@ -83,6 +83,7 @@ const AppButton = ({
           width={startIcon.width}
           height={startIcon.height}
           styles={startIcon.styles}
+          onPress={() => onPressButton()}
         />
       )}
       <AppText style={textStyle}>{text}</AppText>
@@ -92,6 +93,7 @@ const AppButton = ({
           width={endIcon.width}
           height={endIcon.height}
           styles={endIcon.styles}
+          onPress={() => onPressButton()}
         />
       )}
     </Pressable>

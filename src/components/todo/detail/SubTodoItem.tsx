@@ -4,8 +4,14 @@ import {useRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
 import {replaceItemAtIndex} from '@/utils';
 
-import {Dimensions, ScrollView, StyleSheet, View} from 'react-native';
-import {AppText} from '../../common/AppText';
+import {
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  TextInput,
+  View,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -20,27 +26,64 @@ export function SubTodoItem({
   todoItem,
   subTodoItem,
 }: ItemProps): React.JSX.Element {
-  const navigation = useNavigation();
   const [todoList, setTodoList] = useRecoilState(todoListState);
+  const [title, onChangeTitle] = React.useState(subTodoItem?.title);
   const [isChecked, setIsChecked] = React.useState(subTodoItem?.isCompleted);
+  const [isEditable, setIsEditable] = React.useState(false);
+  const navigation = useNavigation();
+  const inputRef = React.useRef(null);
 
   // TODO: spacing 상수 값으로 변경
   const itemWidth = Dimensions.get('window').width - 24 * 2;
 
-  const deleteSubTodo = (subTodoId: string) => {
-    const todoItemIndex = todoList.findIndex(todo => todo.id === todoItem.id);
-    const currentSubTodoList = todoItem?.subTodoList;
+  const todoItemIndex = todoList.findIndex(todo => todo.id === todoItem.id);
+  const subTodoList = todoItem?.subTodoList;
 
-    const filteredSubTodoList = currentSubTodoList?.filter(
+  const handleInputPress = () => {
+    setIsEditable(true);
+  };
+
+  const handleInputBlur = () => {
+    inputRef?.current.blur();
+    setIsEditable(false);
+  };
+
+  const editSubTodo = (subTodoId: string) => {
+    const subTodoItemIndex = subTodoList?.findIndex(
+      (subTodo: object) => subTodo?.id === subTodoId,
+    );
+
+    const newSubTodoList = replaceItemAtIndex(subTodoList, subTodoItemIndex, {
+      ...subTodoItem,
+      title,
+    });
+
+    const newTodoList = replaceItemAtIndex(todoList, todoItemIndex, {
+      ...todoItem,
+      subTodoList: newSubTodoList,
+    });
+
+    setTodoList(newTodoList);
+  };
+
+  const deleteSubTodo = (subTodoId: string) => {
+    const filteredSubTodoList = subTodoList?.filter(
       (subTodo: object) => subTodo?.id !== subTodoId,
     );
 
-    const newList = replaceItemAtIndex(todoList, todoItemIndex, {
+    const newTodoList = replaceItemAtIndex(todoList, todoItemIndex, {
       ...todoItem,
       subTodoList: filteredSubTodoList,
     });
 
-    setTodoList(newList);
+    setTodoList(newTodoList);
+  };
+
+  // TODO: 수정 완료/취소 동작 구분
+  const handleInputSubmit = (id: string) => {
+    editSubTodo(id);
+    // TODO: 즉시 subtodo list를 update하는 function 필요
+    navigation.navigate('Todo');
   };
 
   const handleDeleteButtonPress = (id: string) => {
@@ -51,27 +94,42 @@ export function SubTodoItem({
 
   return (
     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-      <View style={styles.itemWrapper}>
-        <View style={[styles.itemContainer, {width: itemWidth}]}>
-          <View style={styles.titleContainer}>
-            <View style={styles.titleWrapper}>
-              <AppIcon name="hamburger" width={24} height={24} />
-              <AppText style={styles.titleText}>{subTodoItem?.title}</AppText>
+      <TouchableWithoutFeedback onPress={handleInputBlur}>
+        <View style={styles.itemWrapper}>
+          <View style={[styles.itemContainer, {width: itemWidth}]}>
+            <View style={styles.titleContainer}>
+              <View style={styles.titleWrapper}>
+                <AppIcon
+                  name="hamburger"
+                  width={24}
+                  height={24}
+                />
+                <View style={isEditable && styles.inputContainer}>
+                  <TextInput
+                    ref={inputRef}
+                    value={title}
+                    style={[styles.input, isEditable && styles.activeText]}
+                    editable={isEditable}
+                    onChangeText={onChangeTitle}
+                    onPressIn={handleInputPress}
+                    onBlur={handleInputBlur}
+                    onSubmitEditing={() => handleInputSubmit(subTodoItem?.id)}
+                  />
+                </View>
+              </View>
+              <View style={styles.divider} />
             </View>
-            <View style={styles.divider} />
+            <View style={styles.checkboxContainer}>
+              <BouncyCheckbox
+                size={18}
+                fillColor={color.grey500}
+                iconStyle={{borderWidth: 1.5, marginHorizontal: 12}}
+                disableText={true}
+                isChecked={isChecked}
+                onPress={() => setIsChecked(!isChecked)}
+              />
+            </View>
           </View>
-          <View style={styles.checkboxContainer}>
-            <BouncyCheckbox
-              size={18}
-              fillColor={color.grey500}
-              iconStyle={{borderWidth: 1.5, marginHorizontal: 12}}
-              disableText={true}
-              isChecked={isChecked}
-              onPress={() => setIsChecked(!isChecked)}
-            />
-          </View>
-        </View>
-        <View style={styles.buttonContainer}>
           <AppButton
             text="지우기"
             textStyle={styles.deleteButtonText}
@@ -86,7 +144,7 @@ export function SubTodoItem({
             onPressButton={() => handleDeleteButtonPress(subTodoItem?.id)}
           />
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </ScrollView>
   );
 }
@@ -103,7 +161,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: 16,
   },
   titleContainer: {
     flexDirection: 'row',
@@ -112,9 +169,23 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   titleWrapper: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+    paddingHorizontal: 18,
+  },
+  inputContainer: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderColor: color.grey500,
+  },
+  input: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  activeText: {
+    color: color.grey700,
   },
   divider: {
     borderWidth: 1,
@@ -122,16 +193,11 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
   },
   checkboxContainer: {
-    width: '100%',
-    height: '100%',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
   },
-  titleText: {
-    fontWeight: '600',
-  },
-  buttonContainer: {},
   deleteButton: {
     gap: 4,
     borderRadius: 10,
