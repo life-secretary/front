@@ -62,7 +62,6 @@ const SearchTextInput = ({
                         {
                             (text.length !== 0) ? 
                             <AppIcon 
-                                type='fill'
                                 name='closeFillLight'
                                 width={36}
                                 height={36}
@@ -72,7 +71,6 @@ const SearchTextInput = ({
                             <></>
                         }
                         <AppIcon 
-                            type='stroke'
                             name='search'
                             width={36}
                             height={36}

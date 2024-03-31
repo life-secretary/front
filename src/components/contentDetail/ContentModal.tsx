@@ -174,7 +174,6 @@ const ContentModal = ({
                     }}>
                         <View>
                             <AppIcon 
-                                type='stroke'
                                 name='back'
                                 width={36}
                                 height={36}
@@ -182,14 +181,12 @@ const ContentModal = ({
                         </View>
                         <View style={styles.headerRight}>
                             <AppIcon 
-                                type='stroke'
                                 name='upload'
                                 width={36}
                                 height={36}
                             />
                             <AppIcon 
-                                type='fill'
-                                name='bookmarkDark'
+                                name='bookmarkLarge'
                                 width={36}
                                 height={36}
                                 onPress={onPressContentBookMarkButton}
@@ -294,8 +291,7 @@ const ContentModal = ({
                                                 </View>
                                                 <View style={styles.contentSaveButtonWrapper}>
                                                     <AppIcon 
-                                                        type='fill'
-                                                        name='bookmarkLight'
+                                                        name='bookmarkMedium'
                                                         width={42}
                                                         height={42}
                                                         onPress={() => onPressRelatedContentBookMarkButton(index)}

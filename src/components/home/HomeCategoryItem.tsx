@@ -18,7 +18,7 @@ export function HomeCategoryItem({
 }: ItemProps): React.JSX.Element {
   return (
     <Pressable style={styles.container} onPress={handlePress(category)}>
-      <AppIcon type="stroke" name={category} width={44} height={44} />
+      <AppIcon name={category} width={44} height={44} />
       <AppText style={styles.text}>{title}</AppText>
     </Pressable>
   );

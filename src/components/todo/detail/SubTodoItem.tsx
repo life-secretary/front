@@ -15,7 +15,7 @@ export function SubTodoItem({title}: ItemProps): React.JSX.Element {
     <ScrollView horizontal={true} contentContainerStyle={styles.container}>
       <View style={styles.itemContainer}>
         <View style={styles.titleContainer}>
-          <AppIcon type="stroke" name="hamburger" width={24} height={24} />
+          <AppIcon name="hamburger" width={24} height={24} />
           <AppText style={styles.titleText}>{title}</AppText>
         </View>
         <BouncyCheckbox
@@ -31,9 +31,10 @@ export function SubTodoItem({title}: ItemProps): React.JSX.Element {
         buttonStyle={styles.deleteButton}
         startIcon={{
           type: 'stroke',
-          name: 'trashLight',
+          name: 'trash',
           width: 32,
           height: 32,
+          styles: { color: '#FFFFFF' }
         }}
       />
     </ScrollView>

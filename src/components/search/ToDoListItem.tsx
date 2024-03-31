@@ -41,7 +41,6 @@ const ToDoListItem = ({ hasMainCategory = true, item }: any): React.JSX.Element 
                     onPress={() => {}}
                 >
                     <AppIcon 
-                        type='stroke'
                         name='addCircle'
                         width={42}
                         height={42}

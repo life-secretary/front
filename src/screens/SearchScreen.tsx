@@ -527,7 +527,7 @@ const SearchScreen = () => {
         <View style={styles.headerWrapper}>
           {!isSearchResultPage ? (
             <View style={styles.logoContainer}>
-              <AppIcon type="stroke" name="logo" width={70} height={20} />
+              <AppIcon name="logo" width={70} height={20} />
             </View>
           ) : (
             <></>

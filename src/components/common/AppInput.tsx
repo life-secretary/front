@@ -75,10 +75,10 @@ export function AppInput({
       {icon && !editable && (
         <View style={styles.icon}>
           <AppIcon
-            type={icon?.type}
             name={icon?.name}
             width={icon?.width}
             height={icon?.height}
+            styles={icon?.styles}
             onPress={icon?.onPress}
           />
         </View>
@@ -118,6 +118,6 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     right: 12,
-    bottom: 16,
+    bottom: 11,
   },
 });
