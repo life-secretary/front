@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     paddingHorizontal: 24,
     paddingTop: 24,
-    backgroundColor: color.white,
+    backgroundColor: color.main.white,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -63,6 +63,6 @@ const styles = StyleSheet.create({
   },
   emptyListText: {
     fontWeight: '500',
-    color: color.grey500,
+    color: color.grey.grey500,
   },
 });

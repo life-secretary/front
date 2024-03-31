@@ -52,6 +52,6 @@ const styles = StyleSheet.create({
   },
   emptyListText: {
     fontWeight: '500',
-    color: color.grey500,
+    color: color.grey.grey500,
   },
 });

@@ -28,6 +28,6 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Pretendard Variable',
     fontSize: getFontSize(16),
-    color: color.black,
+    color: color.main.black,
   },
 });

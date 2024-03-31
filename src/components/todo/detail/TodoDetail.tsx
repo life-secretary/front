@@ -115,26 +115,26 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   defaultTagContainer: {
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
   },
   myTagContainer: {
-    backgroundColor: color.grey300,
+    backgroundColor: color.grey.grey300,
   },
   completedTagContainer: {
-    backgroundColor: color.grey700,
+    backgroundColor: color.grey.grey700,
   },
   tag: {
     fontSize: 12,
     fontWeight: '600',
   },
   defaultTag: {
-    color: color.grey700,
+    color: color.grey.grey700,
   },
   myTag: {
-    color: color.grey700,
+    color: color.grey.grey700,
   },
   completedTag: {
-    color: color.white,
+    color: color.main.white,
   },
   titleContainer: {
     gap: 12,
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 22,
     fontWeight: '700',
-    color: color.white,
+    color: color.main.white,
   },
   infoContainer: {
     gap: 6,
@@ -159,10 +159,10 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   defaultText: {
-    color: color.grey300,
+    color: color.grey.grey300,
   },
   completedText: {
-    color: color.white,
+    color: color.main.white,
   },
   date: {
     flexDirection: 'row',

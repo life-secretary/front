@@ -8,6 +8,7 @@ import AppBottomSheet from '@/components/common/modal/AppBottomSheet';
 import {TodoForm} from '@/components/todo/detail/form/TodoForm';
 import {SubTodoForm} from '@/components/todo/detail/form/SubTodoForm';
 import {TodoFieldSelect} from '@/components/todo/TodoFieldSelect';
+import color from '@/styles/color';
 
 export function TodoFormModalScreen({route, navigation}: any) {
   const {headerTitle, form, todoItem, isEditMode} = route.params;
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#000E24',
+    color: color.grey.grey700,
   },
   button: {
     position: 'absolute',

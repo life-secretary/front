@@ -17,6 +17,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: spacing.layoutPaddingHorizontal,
-    backgroundColor: color.white,
+    backgroundColor: color.main.white,
   },
 });

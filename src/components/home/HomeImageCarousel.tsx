@@ -116,17 +116,17 @@ const styles = StyleSheet.create({
   tag: {
     fontSize: 13,
     fontWeight: '600',
-    color: color.primary,
+    color: color.main.primary,
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 6,
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
     overflow: 'hidden',
   },
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: color.white,
+    color: color.main.white,
   },
   slideIndicator: {
     flexDirection: 'row',
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   slideIndex: {
     alignItems: 'center',
-    color: color.white,
+    color: color.main.white,
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 6,
