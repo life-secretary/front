@@ -54,8 +54,6 @@ const AppBottomSheet = ({
     [handleBottomSheetVisible, mode],
   );
 
-  console.log('isVisible', isVisible);
-
   useEffect(() => {
     isVisible ? openBottomSheet() : closeBottomSheet();
   }, [isVisible]);
