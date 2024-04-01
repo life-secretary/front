@@ -70,7 +70,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             name="back"
             width={42}
             height={42}
-            styles={{color: '#FFFFFF'}}
+            styles={{color: color.main.white}}
             onPress={() => navigation.goBack()}
           />
           <View style={styles.headerButtonContainer}>
@@ -86,6 +86,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
               name="select"
               width={42}
               height={42}
+              styles={{color: color.main.white}}
               onPress={() => handleBottomSheetVisible(true, 'editAndDelete')}
             />
           </View>

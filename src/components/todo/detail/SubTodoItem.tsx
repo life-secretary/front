@@ -178,6 +178,7 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 16,
     fontWeight: '600',
+    color: color.main.black,
   },
   activeText: {
     color: color.grey.grey700,
