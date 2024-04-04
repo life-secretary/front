@@ -43,6 +43,19 @@ const DUMMY_CAROUSEL_DATA = [
 ];
 
 export function HomeScreen(): React.JSX.Element {
+
+  // TODO: API 연동과 카테고리 id 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
+  const [isCategoryModalVisible, setIsCategoryModalVisible] = React.useState(false);
+
+  const openCategoryModal = (category: string) => {
+    // console.log(category);
+    setIsCategoryModalVisible(true);
+  };
+
+  const closeCategoryModal = () => {
+    setIsCategoryModalVisible(false);
+  };
+
   // 유사한 사용자가 조회한 콘텐츠 리스트 데이터
 
   // 인기 많은 콘텐츠 리스트 데이터
@@ -62,7 +75,9 @@ export function HomeScreen(): React.JSX.Element {
             <AppIcon name="balancer" width={42} height={42} />
           </View>
         </AppHeader>
-        <HomeCategoryList />
+        <HomeCategoryList 
+          openCategoryModal={openCategoryModal}
+        />
         <HomeImageCarousel data={DUMMY_CAROUSEL_DATA} />
         <HomeContentsList
           isUsernameUsed={true}
@@ -78,7 +93,10 @@ export function HomeScreen(): React.JSX.Element {
           <SendFeedbackButton />
         </View>
       </ScrollView>
-      <SearchCategoryModal isVisible={false} />
+      <SearchCategoryModal 
+        isVisible={isCategoryModalVisible}
+        closeCategoryModal={closeCategoryModal}
+      />
     </AppLayout>
   );
 }
