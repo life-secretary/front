@@ -3,6 +3,7 @@ import {
   Dimensions,
   ImageBackground,
   ImageRequireSource,
+  Pressable,
   StyleSheet,
   View,
 } from 'react-native';
@@ -54,17 +55,21 @@ function Slide({
 // TODO: type 재정의 필요
 type CarouselType = {
   data: object[];
+  openContentModal: () => void,
 };
 
 // TODO: slide index bar 추가 필요
-export function HomeImageCarousel({data}: CarouselType): React.JSX.Element {
+export function HomeImageCarousel({
+  data,
+  openContentModal,
+}: CarouselType): React.JSX.Element {
   // TODO: 추후 상수 값으로 대체
   const HORRIZONTAL_PADDING = 24 * 2;
   const width = Dimensions.get('window').width - HORRIZONTAL_PADDING;
   const height = 466;
   const ref = React.useRef<ICarouselInstance>(null);
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={openContentModal}>
       <Carousel
         ref={ref}
         loop
@@ -86,7 +91,7 @@ export function HomeImageCarousel({data}: CarouselType): React.JSX.Element {
           />
         )}
       />
-    </View>
+    </Pressable>
   );
 }
 

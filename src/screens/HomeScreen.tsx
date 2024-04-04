@@ -17,6 +17,7 @@ import {AppTitle} from '../components/common/AppTitle';
 // 최근 업데이트된 콘텐츠 리스트 데이터
 
 import SearchCategoryModal from '../components/search/SearchCategoryModal';
+import ContentModal from '@/components/contentDetail/ContentModal';
 import AppIcon from '@/components/common/AppIcon';
 import {getFormattedDate} from '@/utils';
 import color from '@/styles/color';
@@ -50,7 +51,7 @@ const DUMMY_CAROUSEL_DATA = [
 
 export function HomeScreen(): React.JSX.Element {
 
-  // TODO: API 연동과 카테고리 id 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
+  // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
   const [isCategoryModalVisible, setIsCategoryModalVisible] = React.useState(false);
 
   const openCategoryModal = (category: string) => {
@@ -60,6 +61,16 @@ export function HomeScreen(): React.JSX.Element {
 
   const closeCategoryModal = () => {
     setIsCategoryModalVisible(false);
+  };
+
+  const [isContentModalVisible, setIsContentModalVisible] = React.useState(false);
+
+  const openContentModal = () => {
+    setIsContentModalVisible(true);
+  };
+
+  const closeContentModal = () => {
+    setIsContentModalVisible(false);
   };
 
   return (
@@ -82,7 +93,10 @@ export function HomeScreen(): React.JSX.Element {
         <HomeCategoryList 
           openCategoryModal={openCategoryModal}
         />
-        <HomeImageCarousel data={DUMMY_CAROUSEL_DATA} />
+        <HomeImageCarousel
+          data={DUMMY_CAROUSEL_DATA} 
+          openContentModal={openContentModal}
+        />
         <HomeContentsList
           isUsernameUsed={true}
           title={'유사한 사용자가 읽고 있어요'}
@@ -100,6 +114,10 @@ export function HomeScreen(): React.JSX.Element {
       <SearchCategoryModal 
         isVisible={isCategoryModalVisible}
         closeCategoryModal={closeCategoryModal}
+      />
+      <ContentModal 
+        isVisible={isContentModalVisible}
+        closeContentModal={closeContentModal}
       />
     </AppLayout>
   );
