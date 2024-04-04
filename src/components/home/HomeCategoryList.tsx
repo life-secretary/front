@@ -3,6 +3,10 @@ import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {HomeCategoryItem} from './HomeCategoryItem';
 import color from '@/styles/color';
 
+type ItemProps = {
+  openCategoryModal: Function,
+};
+
 export const DUMMY_CATEGORY = [
   {
     id: '1',
@@ -46,13 +50,19 @@ export const DUMMY_CATEGORY = [
   },
 ];
 
-export function HomeCategoryList(): React.JSX.Element {
+export function HomeCategoryList({
+  openCategoryModal,
+}: ItemProps): React.JSX.Element {
   return (
     <View style={styles.container}>
       <FlatList
         data={DUMMY_CATEGORY}
         renderItem={({item}) => (
-          <HomeCategoryItem title={item.title} category={item.category} />
+          <HomeCategoryItem 
+            title={item.title} 
+            category={item.category} 
+            openCategoryModal={openCategoryModal}
+          />
         )}
         keyExtractor={item => item.id}
         horizontal={false}

@@ -6,19 +6,21 @@ import AppIcon from '../common/AppIcon';
 type ItemProps = {
   category: string;
   title: string;
+  openCategoryModal: Function,
 };
 
 export function HomeCategoryItem({
   category,
   title,
+  openCategoryModal,
 }: ItemProps): React.JSX.Element {
-  const handlePress = (item: string) => {
-    console.log(item);
+  const handlePress = (category: string) => {
+    openCategoryModal(category)
   };
 
   return (
     <Pressable style={styles.container} onPress={() => handlePress(category)}>
-      <AppIcon name={category} width={44} height={44} />
+      <AppIcon name={category} width={44} height={44} onPress={() => handlePress(category)} />
       <AppText style={styles.text}>{title}</AppText>
     </Pressable>
   );

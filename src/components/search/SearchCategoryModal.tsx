@@ -3,6 +3,7 @@ import {
     View,
     StyleSheet,
     TouchableOpacity,
+    Handle,
 } from 'react-native';
 
 import { AppHeader } from '../common/AppHeader';
@@ -19,7 +20,24 @@ import { getFontSize } from '../../utils/font';
 
 import { DUMMY_CATEGORY } from '../../components/home/HomeCategoryList'; // 임시 참고
 
-const HeaderCategoryResult = ({ searchData }) => {
+type HeaderCategoryResultProps = {
+    searchData: {}[];
+}
+
+type DropDownCategoryProps = {
+    // NOTE: Function 과 () => {} 차이 ?
+    onPressListItemButton: Function;
+    onPressDimmedSpace: () => void;
+};
+
+type SearchCategoryModal = {
+    isVisible: boolean;
+    closeCategoryModal: () => void;
+};
+
+const HeaderCategoryResult = ({ 
+    searchData 
+}: HeaderCategoryResultProps): React.JSX.Element => {
     
     return (
         <View style={styles.searchConditionContainer}>
@@ -31,7 +49,7 @@ const HeaderCategoryResult = ({ searchData }) => {
 const DropDownCategory = ({
     onPressListItemButton,
     onPressDimmedSpace,
-}) => {
+}: DropDownCategoryProps): React.JSX.Element => {
     return (
         <>
             <View style={styles.dropDownDivider} />
@@ -56,8 +74,9 @@ const DropDownCategory = ({
 };
 
 const SearchCategoryModal = ({
-    isVisible
-}) => {
+    isVisible,
+    closeCategoryModal,
+}: SearchCategoryModal): React.JSX.Element => {
 
     const constants = {
         MODAL_BACKDROP_COLOR: '#FFFFFF',
@@ -122,7 +141,7 @@ const SearchCategoryModal = ({
     ];
 
     // Tab
-    const pressTab = (number) => {
+    const pressTab = (number: number) => {
         setTabData((previousValue) => {
             return previousValue.map((item, index) => {
                 if (index === number) {
@@ -282,7 +301,7 @@ const SearchCategoryModal = ({
                                         name='back'
                                         width={36}
                                         height={36}
-                                        onPress={() => {}}
+                                        onPress={closeCategoryModal}
                                     />
                                 </View>
                         }
@@ -346,6 +365,7 @@ const styles = StyleSheet.create({
 
     backIconWrapper: {
         position: 'absolute',
+        zIndex: 5,
     },
     selectBoxWrapper: {
         flex: 1,
