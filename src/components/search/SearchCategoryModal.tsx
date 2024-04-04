@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { SetStateAction, useState } from 'react';
 import { 
     View,
     StyleSheet,
@@ -273,7 +273,7 @@ const SearchCategoryModal = ({
         setIsCategoryDownModalVisible((previousValue) => !previousValue);
     };
 
-    const onPressCategoryNameButton = (currentCategory) => {
+    const onPressCategoryNameButton = (currentCategory: SetStateAction<{id: string, title: string}>) => {
         /**
          * 카테고리 이름을 표기할 때 api 조회 파라미터에 있는 id값을 참조해서 표기하면 되는건가..?
          * 부모 컴포넌트가 모든 카테고리에 대한 데이터를 가지고 있지 않아도 되는가 ?
