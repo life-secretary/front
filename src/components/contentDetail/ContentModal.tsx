@@ -14,9 +14,15 @@ import SearchHashTagModal from '../search/SearchHashTagModal';
 import Markdown from 'react-native-markdown-display';
 import { getFontSize } from '../../utils/font';
 
+type ContentModalProps = Partial<AppModalProps> & {
+    isVisible: boolean;
+    closeContentModal: () => void;
+};  
+
 const ContentModal = ({ 
     isVisible=false,
-}: Partial<AppModalProps>): React.JSX.Element => {
+    closeContentModal,
+}: ContentModalProps): React.JSX.Element => {
 
     const constants = {
         MODAL_BACKDROP_COLOR: 'white',
@@ -40,6 +46,7 @@ const ContentModal = ({
     // ![20대_예산수립_1](https://github.com/life-secretary/front/assets/80025242/ab8bfe44-3f92-4d3d-a3ff-73c9671fbe8a) → 렌더 비용으로 잠깐 빼놓음
 
     const markdown = `
+![20대_예산수립_1](https://github.com/life-secretary/front/assets/80025242/ab8bfe44-3f92-4d3d-a3ff-73c9671fbe8a)
 
 ## 중간 타이틀 영역
     
@@ -132,7 +139,7 @@ const ContentModal = ({
     const [isHashTagModalVisible, setIsHashTagModalVisible] = useState(false);
     const [pressedHashTag, setPressedHashTag] = useState('');
 
-    const onPressHashTag = (index) => {
+    const onPressHashTag = (index: number) => {
         setPressedHashTag(data[0].hashTags[index]);
         setIsHashTagModalVisible(true);
     };
@@ -177,6 +184,7 @@ const ContentModal = ({
                                 name='back'
                                 width={36}
                                 height={36}
+                                onPress={closeContentModal}
                             />
                         </View>
                         <View style={styles.headerRight}>
@@ -208,6 +216,7 @@ const ContentModal = ({
                                         text={'부동산'}
                                         textStyle={styles.mainCategory}
                                         buttonStyle={styles.mainCategoryPressable}
+                                        disabledBackgroundColor='#0B2A4F'
                                     />
                                 </View>
                                 <AppText style={styles.title}>{'2월에 신청하는 새로운 청약통장'}</AppText>
