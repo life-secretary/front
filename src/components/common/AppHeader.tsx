@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React from 'react';
+
 import {StyleSheet, View} from 'react-native';
 
 export function AppHeader({children, style}: any): React.JSX.Element {

@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React from 'react';
+
 import {StyleSheet, View} from 'react-native';
-import {TodoTabOption} from './TodoTabOption';
+import {TodoTabOption} from '@/components/todo/TodoTabOption';
 import color from '@/styles/color';
 
 type Props = {

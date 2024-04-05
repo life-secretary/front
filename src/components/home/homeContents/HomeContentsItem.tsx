@@ -1,9 +1,11 @@
-import * as React from 'react';
+import React from 'react';
+
 import {StyleSheet, View, Image, ImageSourcePropType} from 'react-native';
-import {AppText} from '../../common/AppText';
+import {AppText} from '@/components/common/AppText';
 import color from '@/styles/color';
-import {getFormattedDate} from '@/utils';
 import {font} from '@/styles/font';
+
+import {getFormattedDate} from '@/utils';
 
 type ItemProps = {
   title: string;

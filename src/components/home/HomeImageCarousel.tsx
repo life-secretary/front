@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React from 'react';
+
 import {
   Dimensions,
   ImageBackground,
@@ -8,10 +9,10 @@ import {
   View,
 } from 'react-native';
 import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
-import {AppText} from '../common/AppText';
+import {AppText} from '@/components/common/AppText';
+import spacing from '@/styles/spacing';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
-import spacing from '@/styles/spacing';
 
 // TODO: type 재정의 필요
 type SlideType = {

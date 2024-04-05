@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {AppText} from '@/components/common/AppText';

@@ -1,11 +1,12 @@
-import * as React from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
-import {AppText} from '../common/AppText';
+import React from 'react';
 import {useNavigation} from '@react-navigation/native';
+
+import {Pressable, StyleSheet, View} from 'react-native';
+import {AppText} from '@/components/common/AppText';
+import {AppDivider} from '@/components/common/AppDivider';
+import AppIcon from '@/components/common/AppIcon';
 import color from '@/styles/color';
-import AppIcon from '../common/AppIcon';
 import {font} from '@/styles/font';
-import {AppDivider} from '../common/AppDivider';
 
 type TodoCardProps = {
   item: object;

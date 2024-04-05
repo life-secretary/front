@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React from 'react';
+
 import {FlatList, Pressable, StyleSheet, View} from 'react-native';
-import {AppText} from '../common/AppText';
+import {AppText} from '@/components/common/AppText';
 import {font} from '@/styles/font';
 import color from '@/styles/color';
 

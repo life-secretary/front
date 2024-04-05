@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React from 'react';
+
 import {StyleSheet, Pressable} from 'react-native';
-import {AppText} from '../../common/AppText';
+import {AppText} from '@/components/common/AppText';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 

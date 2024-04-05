@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 
 import {StyleSheet, View, FlatList} from 'react-native';
-import {TodoCard} from './TodoCard';
-import {AppText} from '../common/AppText';
-import {TodoCount} from './TodoCount';
+import {AppText} from '@/components/common/AppText';
+import {TodoCard} from '@/components/todo/TodoCard';
+import {TodoCount} from '@/components/todo/TodoCount';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
@@ -28,7 +28,7 @@ export function OngoingTodoList({data}: TodoListProps): React.JSX.Element {
       <TodoCount title="나의 할 일" todoCount={data.length} />
       <FlatList
         data={data}
-        renderItem={({item}) => <TodoCard item={{...item}} />}
+        renderItem={({item}) => <TodoCard key={item?.id} item={{...item}} />}
         ListEmptyComponent={<EmptyList />}
         keyExtractor={item => item?.id}
         contentContainerStyle={styles.listContainer}

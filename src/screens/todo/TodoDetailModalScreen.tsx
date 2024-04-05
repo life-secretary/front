@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
-import {removeItemAtIndex} from '@/utils';
 
+import {StyleSheet, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppText} from '@/components/common/AppText';
 import AppIcon from '@/components/common/AppIcon';
@@ -15,6 +14,8 @@ import {TodoDetail} from '@/components/todo/detail/TodoDetail';
 import {SubTodoList} from '@/components/todo/detail/SubTodoList';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+
+import {removeItemAtIndex} from '@/utils';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;

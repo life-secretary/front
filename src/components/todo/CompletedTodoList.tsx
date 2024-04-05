@@ -1,8 +1,9 @@
-import * as React from 'react';
+import React from 'react';
+
 import {StyleSheet, View, FlatList} from 'react-native';
-import {TodoCard} from './TodoCard';
-import {AppText} from '../common/AppText';
-import {TodoCount} from './TodoCount';
+import {AppText} from '@/components/common/AppText';
+import {TodoCard} from '@/components/todo/TodoCard';
+import {TodoCount} from '@/components/todo/TodoCount';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 

@@ -1,22 +1,21 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import {useRecoilValue} from 'recoil';
-import {todoListState} from '../../store/todoState';
+import {todoListState} from '@/store/todoState';
 
 import {StyleSheet, View, ScrollView} from 'react-native';
-
-import {AppLayout} from '../../components/common/AppLayout';
-import {AppHeader} from '../../components/common/AppHeader';
+import {AppLayout} from '@/components/common/AppLayout';
+import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
 import AppIcon from '@/components/common/AppIcon';
-import {TodoTabBar} from '../../components/todo/TodoTabBar';
-import {OngoingTodoList} from '../../components/todo/OngoingTodoList';
-import {CompletedTodoList} from '../../components/todo/CompletedTodoList';
+import {TodoTabBar} from '@/components/todo/TodoTabBar';
+import {OngoingTodoList} from '@/components/todo/OngoingTodoList';
+import {CompletedTodoList} from '@/components/todo/CompletedTodoList';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 export function TodoScreen({navigation}: any): React.JSX.Element {
   const todoList = useRecoilValue(todoListState);
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const moveToScreen = (screen: string, params: object) => {
     navigation.navigate(screen, params);

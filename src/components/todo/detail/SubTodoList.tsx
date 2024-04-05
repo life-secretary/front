@@ -1,9 +1,10 @@
-import * as React from 'react';
+import React from 'react';
+
 import {StyleSheet, View, FlatList} from 'react-native';
-import {SubTodoItem} from './SubTodoItem';
-import {AddSubTodoButton} from './AddSubTodoButton';
-import color from '@/styles/color';
 import {AppText} from '@/components/common/AppText';
+import {SubTodoItem} from '@/components/todo/detail/SubTodoItem';
+import {AddSubTodoButton} from '@/components/todo/detail/AddSubTodoButton';
+import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 type SubTodoListProps = {

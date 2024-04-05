@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, {useState} from 'react';
+
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import {AppText} from '../../components/common/AppText';
 import AppIcon from '@/components/common/AppIcon';
@@ -17,9 +18,8 @@ export function TodoFormModalScreen({route, navigation}: any) {
     ? todoItem?.category
     : {key: 'NONE', text: '선택안함'};
 
-  const [isVisible, setIsVisible] = React.useState(false);
-  const [selectedCategory, setSelectedCategory] =
-    React.useState(defaultCategory);
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(defaultCategory);
 
   const handleBottomSheetVisible = (arg: boolean) => {
     setIsVisible(arg);

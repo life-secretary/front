@@ -1,14 +1,14 @@
-import * as React from 'react';
+import React from 'react';
 
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
-import {AppText} from '../../common/AppText';
+import {AppText} from '@/components/common/AppText';
 import {AppDivider} from '@/components/common/AppDivider';
-import {HomeContentsItem} from './HomeContentsItem';
-import {ViewMoreButton} from '../ViewMoreButton';
+import {HomeContentsItem} from '@/components/home/homeContents/HomeContentsItem';
+import {ViewMoreButton} from '@/components/home/ViewMoreButton';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 import {generateRandomId} from '@/utils';
-import {font} from '@/styles/font';
 
 type HomeContentsProps = {
   isUsernameUsed?: boolean;

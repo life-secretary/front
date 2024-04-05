@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 
 import {StyleSheet, View} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import {AppText} from '../common/AppText';
-import AppIcon from '../common/AppIcon';
+import {AppText} from '@/components/common/AppText';
+import AppIcon from '@/components/common/AppIcon';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
