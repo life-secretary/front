@@ -1,43 +1,48 @@
-import * as React from 'react';
+import React, {useState} from 'react';
+
 import {StyleSheet, View} from 'react-native';
-import {AppText} from '../common/AppText';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import color from '@/styles/color';
+import {AppText} from '../common/AppText';
 import AppIcon from '../common/AppIcon';
+import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 type ItemProps = {
   item: object;
-  isEditMode: boolean;
-  changeButtonText: Function;
+  mode: string;
+  checkedContentsList: object[];
+  handleButtonPress: Function;
   handleCheckedContentsList: Function;
 };
 
 export function SaveContentsItem({
   item,
-  isEditMode,
+  mode,
   handleCheckedContentsList,
 }: ItemProps): React.JSX.Element {
-  const [isSaved, setIsSaved] = React.useState(false);
-  let mode: string = '';
+  const [isSaved, setIsSaved] = useState(true);
 
   const handleSaveButtonPress = (prevState: boolean) => {
     setIsSaved(!prevState);
   };
 
-  const handleCheckboxPress = (contents: object, mode: string) => {
-    handleCheckedContentsList(contents, mode);
+  const handleCheckboxPress = (contents: object, action: string) => {
+    handleCheckedContentsList(contents, action);
   };
+
   return (
     <View style={styles.container}>
-      {isEditMode && (
+      {(mode === 'EDIT' || mode === 'DELETE') && (
         <View style={styles.checkboxContainer}>
           <BouncyCheckbox
             size={18}
             fillColor={color.grey.grey500}
+            iconStyle={styles.checkbox}
             disableText
-            onPress={(isChecked: boolean) => {
-              isChecked ? (mode = 'ADD') : (mode = 'DELETE');
-              handleCheckboxPress(item, mode);
+            onPress={(checked: boolean) => {
+              checked
+                ? handleCheckboxPress(item, 'ADD')
+                : handleCheckboxPress(item, 'DELETE');
             }}
           />
         </View>
@@ -45,28 +50,29 @@ export function SaveContentsItem({
       <View style={styles.itemContainer}>
         <View style={styles.infoContainer}>
           <View style={styles.tagContainer}>
-            <AppText style={styles.tag}>{item?.category}</AppText>
+            <AppText style={styles.tag}>{item?.category?.title}</AppText>
           </View>
           <AppText style={styles.title} isEllipsizeMode={true}>
             {item?.title}
           </AppText>
         </View>
-        {isSaved ? (
-          <AppIcon
-            name="bookmarkMedium"
-            width={42}
-            height={42}
-            styles={{fill: color.grey.grey400}}
-            onPress={() => handleSaveButtonPress(isSaved)}
-          />
-        ) : (
-          <AppIcon
-            name="bookmarkMedium"
-            width={42}
-            height={42}
-            onPress={() => handleSaveButtonPress(isSaved)}
-          />
-        )}
+        {mode === 'READ' &&
+          (isSaved ? (
+            <AppIcon
+              name="bookmarkMedium"
+              width={42}
+              height={42}
+              styles={{fill: color.grey.grey400}}
+              onPress={() => handleSaveButtonPress(isSaved)}
+            />
+          ) : (
+            <AppIcon
+              name="bookmarkMedium"
+              width={42}
+              height={42}
+              onPress={() => handleSaveButtonPress(isSaved)}
+            />
+          ))}
       </View>
     </View>
   );
@@ -97,22 +103,15 @@ const styles = StyleSheet.create({
     backgroundColor: color.grey.grey100,
     overflow: 'hidden',
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 14.32,
     color: color.grey.grey400,
   },
   title: {
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 19.09,
+    letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey700,
-  },
-  subTitle: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: color.grey.grey400,
-  },
-  button: {
-    width: 42,
-    height: 42,
-    borderWidth: 1,
   },
   checkboxContainer: {
     width: 42,
@@ -121,6 +120,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   checkbox: {
-    textAlign: 'center',
+    borderWidth: 1.5,
+    borderColor: color.grey.grey500,
   },
 });
