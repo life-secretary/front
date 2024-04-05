@@ -4,6 +4,7 @@ import {SubTodoItem} from './SubTodoItem';
 import {AddSubTodoButton} from './AddSubTodoButton';
 import color from '@/styles/color';
 import {AppText} from '@/components/common/AppText';
+import {font} from '@/styles/font';
 
 type SubTodoListProps = {
   todoItem: object;
@@ -23,17 +24,16 @@ export function SubTodoList({todoItem}: SubTodoListProps): React.JSX.Element {
   return (
     <View style={styles.container}>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={todoItem?.subTodoList}
         renderItem={({item}) => (
           <SubTodoItem todoItem={{...todoItem}} subTodoItem={{...item}} />
         )}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item?.id}
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={EmptyList}
       />
-      <View style={styles.buttonContainer}>
-        <AddSubTodoButton todoItem={todoItem} />
-      </View>
+      <AddSubTodoButton todoItem={todoItem} />
     </View>
   );
 }
@@ -47,22 +47,18 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     backgroundColor: color.main.white,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 53,
-  },
   listContainer: {
-    flex: 1,
     gap: 20,
   },
   emptyListContainer: {
     flex: 1,
-    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 200,
   },
   emptyListText: {
-    fontWeight: '500',
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 19.09,
+    letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey500,
   },
 });

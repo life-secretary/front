@@ -3,14 +3,13 @@ import * as React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-export function AppDivider(): React.JSX.Element {
-  return <View style={styles.divider} />;
+export function AppDivider({style}: any): React.JSX.Element {
+  return <View style={[styles.divider, style]} />;
 }
 
 const styles = StyleSheet.create({
   divider: {
     height: 1,
-    marginVertical: 16,
     backgroundColor: color.grey.grey100,
   },
 });

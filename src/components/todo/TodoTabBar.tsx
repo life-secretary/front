@@ -9,21 +9,17 @@ type Props = {
   onTabPress: Function;
 };
 
-const handleTabPress = (
-  index: number,
-  selectedIndex: number,
-  onTabPress: Function,
-) => {
-  if (index !== selectedIndex) {
-    onTabPress(index);
-  }
-};
-
 export function TodoTabBar({
   tabOptions,
   selectedIndex,
   onTabPress,
 }: Props): React.JSX.Element {
+  const handleTabPress = (index: number) => {
+    if (index !== selectedIndex) {
+      onTabPress(index);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {tabOptions.map((tab, index) => (
@@ -32,7 +28,7 @@ export function TodoTabBar({
           tab={tab}
           index={index}
           isTabActive={selectedIndex === index}
-          onTabPress={() => handleTabPress(index, selectedIndex, onTabPress)}
+          onTabPress={() => handleTabPress(index)}
         />
       ))}
     </View>
@@ -44,7 +40,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 5,
-    backgroundColor: color.main.white,
     borderRadius: 12,
+    backgroundColor: color.main.white,
   },
 });

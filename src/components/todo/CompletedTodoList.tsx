@@ -4,6 +4,7 @@ import {TodoCard} from './TodoCard';
 import {AppText} from '../common/AppText';
 import {TodoCount} from './TodoCount';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 // TODO: 별도의 컴포넌트로 분리
 const EmptyList = () => {
@@ -25,7 +26,7 @@ export function CompletedTodoList({data}: TodoListProps): React.JSX.Element {
       <FlatList
         data={data}
         renderItem={({item}) => <TodoCard item={{...item}} />}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item?.id}
         ListEmptyComponent={<EmptyList />}
         contentContainerStyle={styles.listContainer}
       />
@@ -38,7 +39,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContainer: {
-    flex: 1,
     marginTop: 22,
   },
   emptyListContainer: {
@@ -47,7 +47,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyListText: {
-    fontWeight: '500',
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 19.09,
+    letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey500,
   },
 });

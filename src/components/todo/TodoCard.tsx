@@ -4,6 +4,8 @@ import {AppText} from '../common/AppText';
 import {useNavigation} from '@react-navigation/native';
 import color from '@/styles/color';
 import AppIcon from '../common/AppIcon';
+import {font} from '@/styles/font';
+import {AppDivider} from '../common/AppDivider';
 
 type TodoCardProps = {
   item: object;
@@ -13,9 +15,9 @@ type TodoCardProps = {
 interface TodoItem {
   id: string;
   title: string;
-  field: object;
+  category: object;
   tags: string[];
-  isCompleted: boolean;
+  isDone: boolean;
   createdDate: string;
   completedDate: string;
   subTodoList: object[];
@@ -26,9 +28,9 @@ export function TodoCard({item}: TodoCardProps): React.JSX.Element {
   const todoItem: TodoItem = {
     id: item?.id,
     title: item?.title,
-    field: item?.field,
+    category: item?.category,
     tags: item?.tags,
-    isCompleted: item?.isCompleted,
+    isDone: item?.isDone,
     createdDate: item?.createdDate,
     completedDate: item?.completedDate,
     subTodoList: item?.subTodoList,
@@ -60,10 +62,14 @@ export function TodoCard({item}: TodoCardProps): React.JSX.Element {
     }
   };
 
+  const handleCardPress = () => {
+    moveToScreen('TodoDetailModal', {todoItem});
+  };
+
   return (
     <Pressable
       onPress={() => {
-        moveToScreen('TodoDetailModal', {todoItem});
+        handleCardPress();
       }}>
       <View style={styles.cardContainer}>
         <View style={styles.cardTagsRow}>
@@ -86,14 +92,14 @@ export function TodoCard({item}: TodoCardProps): React.JSX.Element {
             styles={{color: color.grey.grey400}}
           />
         </View>
-        <View style={styles.divider} />
+        <AppDivider />
         <View style={styles.cardInfoRow}>
           <View style={styles.cardTodoRow}>
             <AppText style={[styles.cardInfoText, styles.light]}>할일 </AppText>
             {todoItem.subTodoList && todoItem.subTodoList.length > 0 ? (
               <>
                 <AppText style={[styles.cardInfoText, styles.dark]}>
-                  {todoItem.subTodoList.filter(item => item.isCompleted).length}
+                  {todoItem.subTodoList.filter(item => item?.isDone).length}
                 </AppText>
                 <AppText style={[styles.cardInfoText, styles.light]}>
                   /{todoItem.subTodoList.length}
@@ -125,9 +131,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   cardTagContainer: {
-    borderRadius: 4,
+    minHeight: 24,
     paddingVertical: 3,
     paddingHorizontal: 6,
+    borderRadius: 4,
   },
   defaultTagContainer: {
     backgroundColor: color.grey.grey100,
@@ -140,7 +147,8 @@ const styles = StyleSheet.create({
   },
   cardTag: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 14.32,
   },
   defaultTag: {
     color: color.grey.grey400,
@@ -157,11 +165,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cardTitle: {
-    fontWeight: '600',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: color.grey.grey100,
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 19.09,
+    letterSpacing: font.letterSpacing.medium,
+    color: color.grey.grey700,
   },
   cardInfoRow: {
     flexDirection: 'row',
@@ -169,7 +176,8 @@ const styles = StyleSheet.create({
   },
   cardInfoText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 15.51,
   },
   cardTodoRow: {
     flexDirection: 'row',

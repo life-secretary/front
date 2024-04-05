@@ -8,22 +8,23 @@ import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import {AppInput} from '@/components/common/AppInput';
 import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 type TodoFormProps = {
   isEditMode?: boolean;
   todoItem?: object;
-  selectedField: object;
+  selectedCategory: object;
   handleBottomSheetVisible: Function;
-  handleSelectField: Function;
+  handleSelectCategory: Function;
   isVisible: boolean;
 };
 
 export function TodoForm({
   isEditMode = false,
   todoItem,
-  selectedField,
+  selectedCategory,
   handleBottomSheetVisible,
-  handleSelectField,
+  handleSelectCategory,
 }: TodoFormProps) {
   // const [isValid, setIsValid] = React.useState(true);
   const [isEmpty, setIsEmpty] = useState(false);
@@ -37,7 +38,7 @@ export function TodoForm({
 
   const resetForm = () => {
     setTitle('');
-    handleSelectField({});
+    handleSelectCategory({});
   };
 
   // ADD TODO
@@ -48,9 +49,9 @@ export function TodoForm({
       {
         id: generateRandomId(),
         title: title,
-        field: selectedField,
-        tags: ['나의 할 일', `${selectedField.text}`],
-        isCompleted: false,
+        category: selectedCategory,
+        tags: ['나의 할 일', `${selectedCategory.text}`],
+        isDone: false,
         createdDate: getFormattedDate(new Date()),
         completedDate: null,
         subTodoList: [],
@@ -66,7 +67,7 @@ export function TodoForm({
     const newList = replaceItemAtIndex(todoList, itemIndex, {
       ...todoItem,
       title,
-      field: selectedField,
+      category: selectedCategory,
     });
 
     setTodoList(newList);
@@ -84,12 +85,12 @@ export function TodoForm({
   */
 
   useEffect(() => {
-    if (title === '' || !selectedField) {
+    if (title === '' || !selectedCategory) {
       setIsEmpty(true);
     } else {
       setIsEmpty(false);
     }
-  }, [title, selectedField, isEmpty]);
+  }, [title, selectedCategory, isEmpty]);
 
   return (
     <>
@@ -101,11 +102,12 @@ export function TodoForm({
           <AppInput
             hasLabel={true}
             labelText="분야"
-            text={selectedField.text}
+            placeholder="최대 6자 내로 입력 가능해요"
+            text={selectedCategory?.text}
             onChangeText={(newText: string) =>
-              handleSelectField({key: 'USER', text: newText})
+              handleSelectCategory({key: 'USER', text: newText})
             }
-            editable={selectedField.key === 'USER'}
+            editable={selectedCategory?.key === 'USER'}
             icon={{
               name: 'arrowRight',
               width: 36,
@@ -156,7 +158,9 @@ const styles = StyleSheet.create({
     backgroundColor: color.main.primary,
   },
   buttonText: {
-    fontWeight: '600',
+    textAlign: 'center',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 19.09,
     color: color.main.white,
   },
 });

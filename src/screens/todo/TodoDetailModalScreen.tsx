@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useRecoilState} from 'recoil';
@@ -14,14 +14,16 @@ import AppConfirmModal from '@/components/common/modal/AppConfirmModal';
 import {TodoDetail} from '@/components/todo/detail/TodoDetail';
 import {SubTodoList} from '@/components/todo/detail/SubTodoList';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;
-  const [isBottomSheetVisible, setIsBottomSheetVisible] = React.useState(false);
-  const [bottomSheetMode, setBottomSheetMode] = React.useState('');
-  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+  const [bottomSheetMode, setBottomSheetMode] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isSuccessed, setIsSuccessed] = useState(false);
   const [todoList, setTodoList] = useRecoilState(todoListState);
-  const isCompleted = todoItem?.isCompleted;
+  const isCompletedMode = todoItem?.isDone;
 
   const itemIndex = todoList.findIndex(item => item.id === todoItem?.id);
 
@@ -60,10 +62,25 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     navigation.navigate('Todo');
   };
 
-  const handleRetryButtonPress = () => {};
+  const handleRetryButtonPress = () => {
+    navigation.navigate('Todo');
+  };
+
+  useEffect(() => {
+    const hasNotYetDoneSubTodo = todoItem?.subTodoList.some(
+      (todo: object) => todo?.isDone === false,
+    );
+
+    if (hasNotYetDoneSubTodo) {
+      setIsSuccessed(false);
+      return;
+    }
+
+    setIsSuccessed(true);
+  }, [todoItem?.subTodoList]);
 
   return (
-    <View style={[styles.layout, isCompleted && styles.complete]}>
+    <View style={[styles.layout, isCompletedMode && styles.completed]}>
       <SafeAreaView>
         <AppHeader style={styles.header}>
           <AppIcon
@@ -74,7 +91,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             onPress={() => navigation.goBack()}
           />
           <View style={styles.headerButtonContainer}>
-            {!isCompleted && (
+            {!isCompletedMode && (
               <AppButton
                 text="완료"
                 buttonStyle={styles.completeButton}
@@ -106,20 +123,18 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             buttonStyle={[styles.bottomSheetButton, styles.lightButton]}
             textStyle={styles.bottomSheetButtonText}
             startIcon={{
-              type: 'stroke',
               name: 'trash',
               width: 24,
               height: 24,
             }}
             onPressButton={() => handleModalVisible(true)}
           />
-          {isCompleted ? (
+          {isCompletedMode ? (
             <AppButton
               text="다시하기"
               buttonStyle={[styles.bottomSheetButton, styles.lightButton]}
               textStyle={styles.bottomSheetButtonText}
               startIcon={{
-                type: 'stroke',
                 name: 'reload',
                 width: 24,
                 height: 24,
@@ -132,7 +147,6 @@ export function TodoDetailModalScreen({navigation, route}: any) {
               buttonStyle={[styles.bottomSheetButton, styles.lightButton]}
               textStyle={styles.bottomSheetButtonText}
               startIcon={{
-                type: 'stroke',
                 name: 'edit',
                 width: 24,
                 height: 24,
@@ -146,7 +160,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
         isVisible={bottomSheetMode === 'complete' && isBottomSheetVisible}
         handleBottomSheetVisible={handleBottomSheetVisible}
         contentsStyle={styles.bottomSheetContainer}
-        snapPointsArr={['30%']}>
+        snapPointsArr={isSuccessed ? ['35%'] : ['30%']}>
         <View style={styles.contentsContainer}>
           <View style={styles.titleContainer}>
             <View style={styles.closeButton}>
@@ -158,10 +172,14 @@ export function TodoDetailModalScreen({navigation, route}: any) {
               />
             </View>
             <AppText style={styles.contentsTitle}>
-              목표를 아직 채우지 못했어요!
+              {isSuccessed
+                ? '목표 달성 성공!\n이렇게 또 한걸음 성장했어요'
+                : '목표를 아직 채우지 못했어요!'}
             </AppText>
             <AppText style={styles.contentsDescription}>
-              현재 상태로 완료 처리할까요?
+              {isSuccessed
+                ? '목표를 완료 처리 할까요?'
+                : '현재 상태로 완료 처리할까요?'}
             </AppText>
           </View>
           <AppButton
@@ -179,16 +197,22 @@ export function TodoDetailModalScreen({navigation, route}: any) {
         button={{
           first: {
             text: '취소',
-            textStyle: styles.modalFirstButtonText,
-            buttonStyle: styles.modalFirstButton,
+            textStyle: {
+              ...styles.modalButtonText,
+              ...styles.modalFirstButtonText,
+            },
+            buttonStyle: {...styles.modalButton, ...styles.modalFirstButton},
             onPressButton: () => {
               handleModalVisible(false);
             },
           },
           second: {
             text: '삭제하기',
-            textStyle: styles.modalSecondButtonText,
-            buttonStyle: styles.modalSecondButton,
+            textStyle: {
+              ...styles.modalButtonText,
+              ...styles.modalSecondButtonText,
+            },
+            buttonStyle: {...styles.modalButton, ...styles.modalSecondButton},
             onPressButton: () => {
               handleDeleteButtonPress();
             },
@@ -204,7 +228,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.grey.grey700,
   },
-  complete: {
+  completed: {
     backgroundColor: color.grey.grey600,
   },
   header: {
@@ -223,8 +247,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   completeButtonText: {
+    textAlign: 'center',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 17.9,
     color: color.main.secondary,
   },
   bottomSheetContainer: {
@@ -257,11 +283,14 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   bottomSheetButtonText: {
-    fontWeight: '500',
     textAlign: 'center',
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 19.09,
+    color: color.grey.grey700,
   },
   bottomSheetButtonBoldText: {
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 19.09,
     color: color.main.white,
   },
   contentsContainer: {
@@ -272,34 +301,40 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   contentsTitle: {
+    textAlign: 'center',
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: font.fontWeight.bold,
+    lineHeight: 30,
+    letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey700,
   },
   contentsDescription: {
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 17.9,
+    letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey500,
   },
-  modalFirstButton: {
+  modalButton: {
     flex: 1,
     borderRadius: 10,
     paddingVertical: 16,
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 19.09,
+  },
+  modalFirstButton: {
     backgroundColor: color.grey.grey200,
   },
   modalFirstButtonText: {
-    fontWeight: '600',
-    textAlign: 'center',
+    color: color.main.primary,
   },
   modalSecondButton: {
-    flex: 1,
-    borderRadius: 10,
-    paddingVertical: 16,
     backgroundColor: color.main.primary,
   },
   modalSecondButtonText: {
-    fontWeight: '600',
-    textAlign: 'center',
     color: color.main.white,
   },
 });

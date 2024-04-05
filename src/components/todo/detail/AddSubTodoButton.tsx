@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 type AddSubTodoButtonProps = {
   todoItem: object;
@@ -19,27 +20,35 @@ export function AddSubTodoButton({
   };
 
   return (
-    <AppButton
-      text="항목 추가하기"
-      buttonStyle={styles.button}
-      textStyle={styles.buttonText}
-      endIcon={{
-        name: 'addLight',
-        width: 36,
-        height: 36,
-      }}
-      onPressButton={() =>
-        moveToScreen('TodoForm', {
-          form: 'SUBTODO',
-          headerTitle: '항목 추가하기',
-          todoItem,
-        })
-      }
-    />
+    <View style={styles.buttonContainer}>
+      <AppButton
+        text="항목 추가하기"
+        buttonStyle={styles.button}
+        textStyle={styles.buttonText}
+        endIcon={{
+          name: 'addLight',
+          width: 36,
+          height: 36,
+        }}
+        onPressButton={() =>
+          moveToScreen('TodoForm', {
+            form: 'SUBTODO',
+            headerTitle: '항목 추가하기',
+            todoItem,
+          })
+        }
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 53,
+    backgroundColor: 'transparent',
+  },
   button: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -55,7 +64,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 16.71,
+    letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey700,
   },
 });

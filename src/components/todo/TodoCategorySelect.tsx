@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {FlatList, Pressable, StyleSheet, View} from 'react-native';
 import {AppText} from '../common/AppText';
+import {font} from '@/styles/font';
+import color from '@/styles/color';
 
 const DUMMY_SELECT_OPTIONS = [
   {key: 'NONE', text: '선택안함'},
@@ -13,18 +15,18 @@ const DUMMY_SELECT_OPTIONS = [
   {key: 'USER', text: '직접입력'},
 ];
 
-type TodoFieldSelectProps = {
-  handleSelectField: Function;
+type TodoCategorySelectProps = {
+  handleSelectCategory: Function;
   handleBottomSheetVisible: Function;
   isVisible: boolean;
 };
 
-export function TodoFieldSelect({
-  handleSelectField,
+export function TodoCategorySelect({
+  handleSelectCategory,
   handleBottomSheetVisible,
-}: TodoFieldSelectProps): React.JSX.Element {
+}: TodoCategorySelectProps): React.JSX.Element {
   const handleSelectOption = (option: object) => {
-    handleSelectField(option);
+    handleSelectCategory(option);
     // TODO: 아래 핸들러가 제대로 값을 넘기지 못하는 버그 해결
     handleBottomSheetVisible(false);
   };
@@ -57,7 +59,10 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 20,
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 21,
+    letterSpacing: font.letterSpacing.medium,
+    color: color.grey.grey700,
   },
   optionContainer: {
     flex: 1,
@@ -67,7 +72,10 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 21.48,
+    letterSpacing: font.letterSpacing.medium,
+    color: color.grey.grey600,
   },
   row: {
     gap: 14,

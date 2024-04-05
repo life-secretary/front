@@ -66,7 +66,7 @@ export function HomeContentsList({
         <AppText style={styles.title}>{title}</AppText>
       </View>
       <FlatList
-        ItemSeparatorComponent={() => <AppDivider />}
+        ItemSeparatorComponent={() => <AppDivider style={styles.divider} />}
         data={DUMMY_DATA}
         renderItem={({item}) => (
           <HomeContentsItem
@@ -119,5 +119,8 @@ const styles = StyleSheet.create({
     lineHeight: 19.09,
     letterSpacing: font.letterSpacing.medium,
     color: color.main.secondary,
+  },
+  divider: {
+    marginVertical: 16,
   },
 });

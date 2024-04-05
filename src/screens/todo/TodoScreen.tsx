@@ -1,27 +1,36 @@
 import * as React from 'react';
 import {useRecoilValue} from 'recoil';
 import {todoListState} from '../../store/todoState';
+
 import {StyleSheet, View, ScrollView} from 'react-native';
-import color from '@/styles/color';
 
 import {AppLayout} from '../../components/common/AppLayout';
 import {AppHeader} from '../../components/common/AppHeader';
+import {AppTitle} from '@/components/common/AppTitle';
+import AppIcon from '@/components/common/AppIcon';
+import {TodoTabBar} from '../../components/todo/TodoTabBar';
 import {OngoingTodoList} from '../../components/todo/OngoingTodoList';
 import {CompletedTodoList} from '../../components/todo/CompletedTodoList';
-import {TodoTabBar} from '../../components/todo/TodoTabBar';
-import AppIcon from '@/components/common/AppIcon';
-import {AppTitle} from '@/components/common/AppTitle';
+import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 export function TodoScreen({navigation}: any): React.JSX.Element {
   const todoList = useRecoilValue(todoListState);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
+  const moveToScreen = (screen: string, params: object) => {
+    navigation.navigate(screen, params);
+  };
+
   const handleIndexChange = (index: number) => {
     setSelectedIndex(index);
   };
 
-  const moveToScreen = (screen: string, params: object) => {
-    navigation.navigate(screen, params);
+  const handleAddButtonPress = () => {
+    moveToScreen('TodoForm', {
+      form: 'TODO',
+      headerTitle: '할 일 생성하기',
+    });
   };
 
   return (
@@ -33,34 +42,29 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
             name="addDark"
             width={42}
             height={42}
-            onPress={() =>
-              moveToScreen('TodoForm', {
-                form: 'TODO',
-                headerTitle: '할 일 생성하기',
-              })
-            }
+            onPress={() => handleAddButtonPress()}
           />
         </View>
       </AppHeader>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.container}>
-          <TodoTabBar
-            tabOptions={['진행 중', '완료']}
-            selectedIndex={selectedIndex}
-            onTabPress={(index: number) => handleIndexChange(index)}
-          />
+      <View style={styles.container}>
+        <TodoTabBar
+          tabOptions={['진행 중', '완료']}
+          selectedIndex={selectedIndex}
+          onTabPress={(index: number) => handleIndexChange(index)}
+        />
+        <ScrollView showsVerticalScrollIndicator={false}>
           {selectedIndex === 0 && (
             <OngoingTodoList
-              data={todoList.filter(todo => todo.isCompleted === false)}
+              data={todoList.filter(todo => todo?.isDone === false)}
             />
           )}
           {selectedIndex === 1 && (
             <CompletedTodoList
-              data={todoList.filter(todo => todo.isCompleted === true)}
+              data={todoList.filter(todo => todo?.isDone === true)}
             />
           )}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </AppLayout>
   );
 }
@@ -78,7 +82,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: font.fontWeight.bold,
+    lineHeight: 23.87,
+    letterSpacing: font.letterSpacing.medium,
   },
   button: {
     position: 'absolute',
