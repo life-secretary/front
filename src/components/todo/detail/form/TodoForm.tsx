@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
@@ -26,8 +26,8 @@ export function TodoForm({
   handleSelectField,
 }: TodoFormProps) {
   // const [isValid, setIsValid] = React.useState(true);
-  const [isEmpty, setIsEmpty] = React.useState(false);
-  const [title, setTitle] = React.useState(todoItem?.title);
+  const [isEmpty, setIsEmpty] = useState(false);
+  const [title, setTitle] = useState(todoItem?.title);
   const [todoList, setTodoList] = useRecoilState(todoListState);
   const navigation = useNavigation();
 
@@ -83,7 +83,7 @@ export function TodoForm({
   };
   */
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (title === '' || !selectedField) {
       setIsEmpty(true);
     } else {

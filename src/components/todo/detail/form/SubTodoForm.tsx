@@ -71,7 +71,6 @@ export function SubTodoForm({todoItem}: SubTodoFormProps) {
           hasLabel={true}
           labelText="항목 명"
           placeholder="최대 18자 내로 입력 가능해요"
-          placeholderTextColor={color.grey.grey300}
           text={subTitle}
           maxLength={18}
           onChangeText={setSubTitle}

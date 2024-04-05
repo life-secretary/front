@@ -2,16 +2,21 @@ import * as React from 'react';
 import {StyleSheet} from 'react-native';
 import AppButton from '../common/AppButton';
 import color from '@/styles/color';
+import {useNavigation} from '@react-navigation/native';
 
-export function SendQuestionButton(): React.JSX.Element {
-  const handlePress = () => {};
+export function SendFeedbackButton(): React.JSX.Element {
+  const navigation = useNavigation();
+
+  const handleButtonPress = () => {
+    navigation.navigate('SettingModal', {menu: {key: 'sendFeedback'}});
+  };
 
   return (
     <AppButton
       text="문의 및 의견 보내기"
       textStyle={styles.buttonText}
       buttonStyle={styles.button}
-      onPress={handlePress}>
+      onPressButton={handleButtonPress}>
       문의 및 의견 보내기
     </AppButton>
   );
