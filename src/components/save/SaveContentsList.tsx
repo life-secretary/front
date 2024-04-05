@@ -1,10 +1,12 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
 import {SaveContentsItem} from './SaveContentsItem';
 import {AppText} from '../common/AppText';
 import color from '@/styles/color';
 import {SendFeedbackButton} from '../home/SendFeedbackButton';
 import {removeItemAtIndex} from '@/utils';
+import {AppDivider} from '../common/AppDivider';
+import {font} from '@/styles/font';
 
 const EmptyList = () => {
   return (
@@ -20,15 +22,20 @@ const EmptyList = () => {
   );
 };
 
+type Props = {
+  list: object[];
+  mode: string;
+  handleButtonPress: Function;
+  handleTotalCheckedCount: Function;
+};
+
 export function SaveContentsList({
   list,
-  isEditMode,
-  changeButtonText,
+  mode,
+  handleButtonPress,
   handleTotalCheckedCount,
-}: any): React.JSX.Element {
-  const [checkedContentsList, setCheckedContentsList] = React.useState<
-    object[]
-  >([]);
+}: Props): React.JSX.Element {
+  const [checkedContentsList, setCheckedContentsList] = useState<object[]>([]);
 
   const addCheckedContentsList = (contents: object) => {
     setCheckedContentsList([...checkedContentsList, contents]);
@@ -42,8 +49,8 @@ export function SaveContentsList({
     setCheckedContentsList(filteredList);
   };
 
-  const handleCheckedContentsList = (contents: object, mode: string) => {
-    switch (mode) {
+  const handleCheckedContentsList = (contents: object, action: string) => {
+    switch (action) {
       case 'ADD':
         addCheckedContentsList(contents);
         break;
@@ -55,10 +62,19 @@ export function SaveContentsList({
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const totalCount = checkedContentsList.length;
+
+    if (totalCount > 0) {
+      handleButtonPress('delete');
+    }
+
+    if (totalCount === 0 && mode === 'DELETE') {
+      handleButtonPress('edit');
+    }
+
     handleTotalCheckedCount(totalCount);
-  }, [checkedContentsList, handleTotalCheckedCount]);
+  }, [checkedContentsList, handleTotalCheckedCount, handleButtonPress, mode]);
 
   return (
     <View style={styles.container}>
@@ -67,14 +83,14 @@ export function SaveContentsList({
         renderItem={({item}) => (
           <SaveContentsItem
             item={{...item}}
-            isEditMode={isEditMode}
-            changeButtonText={changeButtonText}
+            mode={mode}
+            checkedContentsList={checkedContentsList}
+            handleButtonPress={handleButtonPress}
             handleCheckedContentsList={handleCheckedContentsList}
           />
         )}
-        ItemSeparatorComponent={() => <View style={styles.divider} />}
+        ItemSeparatorComponent={() => <AppDivider style={styles.divider} />}
         ListEmptyComponent={<EmptyList />}
-        contentContainerStyle={styles.listContainer}
       />
     </View>
   );
@@ -85,12 +101,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
   },
-  listContainer: {
-    flex: 1,
-  },
   divider: {
-    backgroundColor: color.grey.grey100,
-    height: 1,
     marginVertical: 16,
   },
   emptyListContainer: {
@@ -105,13 +116,19 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   text: {
+    textAlign: 'center',
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 21,
+    letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey700,
   },
   subText: {
+    textAlign: 'center',
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 17.9,
+    letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey500,
   },
   buttonContainer: {

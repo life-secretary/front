@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import color from '@/styles/color';
 
@@ -8,55 +8,96 @@ import {AppText} from '../components/common/AppText';
 import {AppTitle} from '@/components/common/AppTitle';
 import AppButton from '@/components/common/AppButton';
 import {SaveContentsList} from '../components/save/SaveContentsList';
+import {generateRandomId} from '@/utils';
+import {font} from '@/styles/font';
+import {AppDivider} from '@/components/common/AppDivider';
 
 interface SaveContentsItem {
   id: string;
-  category: string;
+  category: object;
   title: string;
 }
 
-const DUMMY_DATA: SaveContentsItem[] = [
+const SAVE_CONTENTS_LIST: SaveContentsItem[] = [
   {
-    id: '1',
-    category: '경제',
+    id: generateRandomId(),
+    category: {key: 'economy', title: '경제'},
     title: '콘텐츠 제목 영역1',
   },
   {
-    id: '2',
-    category: '부동산',
+    id: generateRandomId(),
+    category: {key: 'law', title: '법'},
     title: '콘텐츠 제목 영역2',
   },
   {
-    id: '3',
-    category: '법',
+    id: generateRandomId(),
+    category: {key: 'eco', title: '환경'},
     title: '콘텐츠 제목 영역3',
   },
   {
-    id: '4',
-    category: '문화',
+    id: generateRandomId(),
+    category: {key: 'selfdev', title: '자기계발'},
     title: '콘텐츠 제목 영역4',
   },
   {
-    id: '5',
-    category: '기타',
+    id: generateRandomId(),
+    category: {key: 'health', title: '건강'},
     title: '콘텐츠 제목 영역5',
   },
 ];
 
 export function SaveScreen(): React.JSX.Element {
-  const [isEditMode, setEditModeState] = React.useState(false);
-  const [buttonText, setButtonText] = React.useState('편집');
+  const [mode, setMode] = useState('READ'); // TODO: ENUM type 정의
+  const [buttonText, setButtonText] = useState('');
   const [totalCheckedCount, setTotalCheckedCount] = React.useState(0);
 
-  const totalCount = DUMMY_DATA.length;
+  const totalCount = SAVE_CONTENTS_LIST.length;
 
-  const handleButtonPress = (prevState: boolean) => {
-    setEditModeState(!prevState);
+  const switchMode = (action: string) => {
+    switch (action) {
+      case 'read':
+        setMode('READ');
+        break;
+      case 'edit':
+        setMode('EDIT');
+        break;
+      case 'delete':
+        setMode('DELETE');
+        break;
+      default:
+        setMode('');
+    }
   };
 
-  React.useEffect(() => {
-    isEditMode ? setButtonText('취소') : setButtonText('편집');
-  }, [isEditMode]);
+  const handleButtonPress = () => {
+    if (mode === 'READ') {
+      switchMode('edit');
+    }
+
+    if (mode === 'EDIT') {
+      switchMode('read');
+    }
+  };
+
+  useEffect(() => {
+    const switchButtonText = () => {
+      switch (mode) {
+        case 'READ':
+          setButtonText('편집');
+          break;
+        case 'EDIT':
+          setButtonText('취소');
+          break;
+        case 'DELETE':
+          setButtonText('삭제');
+          break;
+        default:
+          setButtonText('');
+      }
+    };
+
+    switchButtonText();
+  }, [mode]);
 
   return (
     <AppLayout isUsedPadding={false}>
@@ -66,21 +107,26 @@ export function SaveScreen(): React.JSX.Element {
       <View style={styles.container}>
         <View style={styles.row}>
           <AppText style={styles.totalCountText}>
-            {isEditMode
+            {mode !== 'READ'
               ? `총 ${totalCheckedCount}개 선택`
               : `총 ${totalCount}개`}
           </AppText>
           <AppButton
             text={buttonText}
-            textStyle={styles.editButton}
-            onPressButton={() => handleButtonPress(isEditMode)}
+            textStyle={[
+              styles.button,
+              totalCount > 0
+                ? {color: color.grey.grey400}
+                : {color: color.grey.grey200},
+            ]}
+            onPressButton={() => handleButtonPress()}
           />
         </View>
-        <View style={styles.divider} />
+        <AppDivider style={styles.divider} />
         <SaveContentsList
-          list={DUMMY_DATA}
-          isEditMode={isEditMode}
-          changeButtonText={(text: string) => setButtonText(text)}
+          list={SAVE_CONTENTS_LIST}
+          mode={mode}
+          handleButtonPress={switchMode}
           handleTotalCheckedCount={(count: number) =>
             setTotalCheckedCount(count)
           }
@@ -99,8 +145,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
+    textAlign: 'center',
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: font.fontWeight.bold,
+    lineHeight: 23.87,
+    color: color.grey.grey700,
   },
   row: {
     flexDirection: 'row',
@@ -109,20 +158,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   divider: {
-    height: 1,
-    backgroundColor: color.grey.grey100,
     marginTop: 7,
     marginBottom: 32,
   },
   totalCountText: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 21.48,
     color: color.grey.grey600,
   },
-  editButton: {
+  button: {
     paddingHorizontal: 6,
     paddingVertical: 8,
-    fontWeight: '600',
-    color: DUMMY_DATA.length > 0 ? color.grey.grey400 : color.grey.grey200,
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 19.09,
   },
 });
