@@ -1,50 +1,53 @@
 import * as React from 'react';
+
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {HomeCategoryItem} from './HomeCategoryItem';
 import color from '@/styles/color';
 
+import {generateRandomId} from '@/utils';
+
 type ItemProps = {
-  openCategoryModal: Function,
+  openCategoryModal: Function;
 };
 
 export const DUMMY_CATEGORY = [
   {
-    id: '1',
+    id: generateRandomId(),
     category: 'all',
     title: '전체',
   },
   {
-    id: '2',
+    id: generateRandomId(),
     category: 'economy',
     title: '경제',
   },
   {
-    id: '3',
+    id: generateRandomId(),
     category: 'law',
     title: '법',
   },
   {
-    id: '4',
+    id: generateRandomId(),
     category: 'eco',
     title: '환경',
   },
   {
-    id: '5',
+    id: generateRandomId(),
     category: 'selfdev',
     title: '자기계발',
   },
   {
-    id: '6',
+    id: generateRandomId(),
     category: 'health',
     title: '건강',
   },
   {
-    id: '7',
+    id: generateRandomId(),
     category: 'culture',
     title: '문화',
   },
   {
-    id: '8',
+    id: generateRandomId(),
     category: 'etc',
     title: '기타',
   },
@@ -58,9 +61,9 @@ export function HomeCategoryList({
       <FlatList
         data={DUMMY_CATEGORY}
         renderItem={({item}) => (
-          <HomeCategoryItem 
-            title={item.title} 
-            category={item.category} 
+          <HomeCategoryItem
+            title={item.title}
+            category={item.category}
             openCategoryModal={openCategoryModal}
           />
         )}

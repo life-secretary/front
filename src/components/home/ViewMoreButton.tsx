@@ -2,6 +2,7 @@ import * as React from 'react';
 import {StyleSheet} from 'react-native';
 import AppButton from '../common/AppButton';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 export function ViewMoreButton(): React.JSX.Element {
   const handlePress = () => {};
@@ -12,7 +13,6 @@ export function ViewMoreButton(): React.JSX.Element {
       textStyle={styles.buttonText}
       buttonStyle={styles.button}
       endIcon={{
-        type: 'stroke',
         name: 'arrowRight',
         width: 24,
         height: 24,
@@ -30,10 +30,13 @@ const styles = StyleSheet.create({
     marginTop: 36,
     paddingVertical: 15,
     borderRadius: 6,
+    gap: 4,
     backgroundColor: color.grey.grey100,
   },
   buttonText: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 17.9,
+    color: color.main.primary,
   },
 });

@@ -1,12 +1,15 @@
 import * as React from 'react';
+
 import {StyleSheet, Pressable} from 'react-native';
 import {AppText} from '../common/AppText';
 import AppIcon from '../common/AppIcon';
+import {font} from '@/styles/font';
+import color from '@/styles/color';
 
 type ItemProps = {
   category: string;
   title: string;
-  openCategoryModal: Function,
+  openCategoryModal: Function;
 };
 
 export function HomeCategoryItem({
@@ -15,12 +18,17 @@ export function HomeCategoryItem({
   openCategoryModal,
 }: ItemProps): React.JSX.Element {
   const handlePress = (category: string) => {
-    openCategoryModal(category)
+    openCategoryModal(category);
   };
 
   return (
     <Pressable style={styles.container} onPress={() => handlePress(category)}>
-      <AppIcon name={category} width={44} height={44} onPress={() => handlePress(category)} />
+      <AppIcon
+        name={category}
+        width={44}
+        height={44}
+        onPress={() => handlePress(category)}
+      />
       <AppText style={styles.text}>{title}</AppText>
     </Pressable>
   );
@@ -29,21 +37,13 @@ export function HomeCategoryItem({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-  },
-  imageContainer: {
-    width: 44,
-    height: 44,
+    gap: 5,
   },
 
-  image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 6,
-  },
-
-  text: {
+  title: {
     fontSize: 13,
-    fontWeight: '500',
-    marginTop: 5,
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 15.51,
+    color: color.grey.grey700,
   },
 });

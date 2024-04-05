@@ -1,47 +1,14 @@
 import * as React from 'react';
+
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
-import {HomeContentsItem} from './HomeContentsItem';
 import {AppText} from '../../common/AppText';
+import {AppDivider} from '@/components/common/AppDivider';
+import {HomeContentsItem} from './HomeContentsItem';
 import {ViewMoreButton} from '../ViewMoreButton';
 import color from '@/styles/color';
 
-const DUMMY_DATA = [
-  {
-    id: 1,
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: '경제',
-    thumbnail: require('../../../assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024. 01. 01',
-  },
-  {
-    id: 2,
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: '문화',
-    thumbnail: require('../../../assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024. 01. 11',
-  },
-  {
-    id: 3,
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: '자기계발',
-    thumbnail: require('../../../assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024. 02. 05',
-  },
-  {
-    id: 4,
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: '건강',
-    thumbnail: require('../../../assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024. 02. 22',
-  },
-  {
-    id: 5,
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: '환경',
-    thumbnail: require('../../../assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024. 03. 01',
-  },
-];
+import {generateRandomId} from '@/utils';
+import {font} from '@/styles/font';
 
 type HomeContentsProps = {
   isUsernameUsed?: boolean;
@@ -52,6 +19,44 @@ export function HomeContentsList({
   isUsernameUsed = false,
   title,
 }: HomeContentsProps): React.JSX.Element {
+  const DUMMY_DATA = [
+    {
+      id: generateRandomId(),
+      title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
+      category: '경제',
+      thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+      createdDate: '2024-01-01',
+    },
+    {
+      id: generateRandomId(),
+      title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
+      category: '문화',
+      thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+      createdDate: '2024-01-11',
+    },
+    {
+      id: generateRandomId(),
+      title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
+      category: '자기계발',
+      thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+      createdDate: '2024-02-05',
+    },
+    {
+      id: generateRandomId(),
+      title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
+      category: '건강',
+      thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+      createdDate: '2024-02-22',
+    },
+    {
+      id: generateRandomId(),
+      title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
+      category: '환경',
+      thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+      createdDate: '2024-03-01',
+    },
+  ];
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -61,16 +66,16 @@ export function HomeContentsList({
         <AppText style={styles.title}>{title}</AppText>
       </View>
       <FlatList
+        ItemSeparatorComponent={() => <AppDivider />}
         data={DUMMY_DATA}
         renderItem={({item}) => (
           <HomeContentsItem
-            title={item.title}
-            thumbnail={item.thumbnail}
-            category={item.category}
-            date={item.date}
+            title={item?.title}
+            thumbnail={item?.thumbnail}
+            category={item?.category}
+            createdDate={item?.createdDate}
           />
         )}
-        ItemSeparatorComponent={() => <View style={styles.divider} />}
       />
       <ViewMoreButton />
     </View>
@@ -79,7 +84,7 @@ export function HomeContentsList({
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    flex: 1,
     marginVertical: 10,
     paddingHorizontal: 26,
     paddingVertical: 34,
@@ -104,16 +109,15 @@ const styles = StyleSheet.create({
   title: {
     marginBottom: 28,
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: font.fontWeight.bold,
+    lineHeight: 23.87,
+    letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey700,
   },
   username: {
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 19.09,
+    letterSpacing: font.letterSpacing.medium,
     color: color.main.secondary,
-  },
-  divider: {
-    backgroundColor: color.grey.grey100,
-    height: 1,
-    marginVertical: 16,
   },
 });

@@ -7,9 +7,11 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {AppText} from '../common/AppText';
 import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
+import {AppText} from '../common/AppText';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
+import spacing from '@/styles/spacing';
 
 // TODO: type 재정의 필요
 type SlideType = {
@@ -55,16 +57,14 @@ function Slide({
 // TODO: type 재정의 필요
 type CarouselType = {
   data: object[];
-  openContentModal: () => void,
+  openContentModal: () => void;
 };
 
-// TODO: slide index bar 추가 필요
 export function HomeImageCarousel({
   data,
   openContentModal,
 }: CarouselType): React.JSX.Element {
-  // TODO: 추후 상수 값으로 대체
-  const HORRIZONTAL_PADDING = 24 * 2;
+  const HORRIZONTAL_PADDING = spacing.layoutPaddingHorizontal * 2;
   const width = Dimensions.get('window').width - HORRIZONTAL_PADDING;
   const height = 466;
   const ref = React.useRef<ICarouselInstance>(null);
@@ -83,9 +83,9 @@ export function HomeImageCarousel({
         }}
         renderItem={({item, index}) => (
           <Slide
-            tag={item.tag}
-            title={item.title}
-            thumbnail={item.thumbnail}
+            tag={item?.tag}
+            title={item?.title}
+            thumbnail={item?.thumbnail}
             totalSlideCount={data.length}
             currentSlideIndex={index + 1}
           />
@@ -97,9 +97,9 @@ export function HomeImageCarousel({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    marginVertical: 10,
     borderRadius: 14,
     overflow: 'hidden',
   },
@@ -120,7 +120,8 @@ const styles = StyleSheet.create({
   },
   tag: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 15.51,
     color: color.main.primary,
     paddingVertical: 4,
     paddingHorizontal: 10,
@@ -130,7 +131,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: font.fontWeight.bold,
+    lineHeight: 36,
     color: color.main.white,
   },
   slideIndicator: {
