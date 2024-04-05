@@ -1,10 +1,11 @@
+import React, {useState} from 'react';
+
+import {ScrollView, StyleSheet, View} from 'react-native';
 import AppIcon from '@/components/common/AppIcon';
 import {AppText} from '@/components/common/AppText';
+import Accordion from 'react-native-collapsible/Accordion';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
-import React, {useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import Accordion from 'react-native-collapsible/Accordion';
 
 const EmptyList = () => (
   <View style={styles.emptyListContainer}>

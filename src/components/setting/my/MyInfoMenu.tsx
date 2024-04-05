@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {StyleSheet, View, FlatList} from 'react-native';
 import {MyInfoMenuItem} from './MyInfoMenuItem';
 import color from '@/styles/color';
