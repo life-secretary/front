@@ -7,6 +7,7 @@ import {AppDivider} from '@/components/common/AppDivider';
 import AppIcon from '@/components/common/AppIcon';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import {getFormattedDate} from '@/utils';
 
 type TodoCardProps = {
   item: object;
@@ -112,7 +113,7 @@ export function TodoCard({item}: TodoCardProps): React.JSX.Element {
             <AppText style={[styles.cardInfoText, styles.light]}>개</AppText>
           </View>
           <AppText style={[styles.cardInfoText, styles.cardDate]}>
-            생성 {todoItem.createdDate}
+            생성 {getFormattedDate(new Date(todoItem.createdDate), '.')}
           </AppText>
         </View>
       </View>
