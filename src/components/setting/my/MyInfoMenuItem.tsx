@@ -1,10 +1,11 @@
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
+
 import {StyleSheet, View} from 'react-native';
 import AppIcon from '@/components/common/AppIcon';
+import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
-import AppButton from '@/components/common/AppButton';
-import {useNavigation} from '@react-navigation/native';
 
 type SettingMenuItemProps = {
   myInfoMenu: object;

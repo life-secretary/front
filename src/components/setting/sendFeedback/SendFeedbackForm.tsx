@@ -11,10 +11,10 @@ import {
 } from 'react-native';
 import {AppInput} from '@/components/common/AppInput';
 import AppButton from '@/components/common/AppButton';
-import color from '@/styles/color';
-import {font} from '@/styles/font';
 import {AppText} from '@/components/common/AppText';
 import AppModal from '@/components/common/modal/AppModal';
+import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 export function SendFeedbackForm() {
   // const [isValid, setIsValid] = React.useState(true);

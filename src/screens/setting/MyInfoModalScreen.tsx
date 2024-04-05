@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {StyleSheet, View} from 'react-native';
 import {AppHeader} from '@/components/common/AppHeader';
 import AppIcon from '@/components/common/AppIcon';

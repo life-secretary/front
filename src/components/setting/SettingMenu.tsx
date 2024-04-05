@@ -1,6 +1,7 @@
 import React from 'react';
+
 import {StyleSheet, View, FlatList} from 'react-native';
-import {SettingMenuItem} from './SettingMenuItem';
+import {SettingMenuItem} from '@/components/setting/SettingMenuItem';
 
 type SettingMenuProps = {
   settingMenuList: object[];

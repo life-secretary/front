@@ -1,10 +1,11 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import AppButton from '../common/AppButton';
-import {font} from '@/styles/font';
-import {AppText} from '../common/AppText';
-import color from '@/styles/color';
 import {useNavigation} from '@react-navigation/native';
+
+import {StyleSheet, View} from 'react-native';
+import AppButton from '@/components/common/AppButton';
+import {AppText} from '@/components/common/AppText';
+import {font} from '@/styles/font';
+import color from '@/styles/color';
 
 type SettingMenuItemProps = {
   settingMenu: object;

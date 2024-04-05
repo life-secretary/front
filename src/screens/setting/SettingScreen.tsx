@@ -1,13 +1,14 @@
 import * as React from 'react';
 
 import {StyleSheet, View} from 'react-native';
-import {AppLayout} from '../../components/common/AppLayout';
-import {AppHeader} from '../../components/common/AppHeader';
-import {AppTitle} from '../../components/common/AppTitle';
+import {AppLayout} from '@/components/common/AppLayout';
+import {AppHeader} from '@/components/common/AppHeader';
+import {AppTitle} from '@/components/common/AppTitle';
 import AppIcon from '@/components/common/AppIcon';
-import color from '@/styles/color';
 import {MyInfoSection} from '@/components/setting/my/MyInfoSection';
 import {SettingMenu} from '@/components/setting/SettingMenu';
+import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 const DUMMY_USER = {
   userId: '1',
@@ -93,9 +94,9 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
-    color: color.grey.grey700,
+    fontWeight: font.fontWeight.bold,
     lineHeight: 23.87,
+    color: color.grey.grey700,
   },
   headerIconContainer: {
     flexDirection: 'row',

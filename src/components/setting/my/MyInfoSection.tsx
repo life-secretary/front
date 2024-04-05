@@ -1,10 +1,11 @@
-import color from '@/styles/color';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {AppText} from '../../common/AppText';
-import {font} from '@/styles/font';
-import AppButton from '../../common/AppButton';
 import {useNavigation} from '@react-navigation/native';
+
+import {StyleSheet, View} from 'react-native';
+import {AppText} from '@/components/common/AppText';
+import AppButton from '@/components/common/AppButton';
+import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 type UserInfoSectionProps = {
   settingMenu: object;

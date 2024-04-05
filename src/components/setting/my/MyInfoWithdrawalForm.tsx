@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 
 import {
@@ -15,6 +15,7 @@ import AppButton from '@/components/common/AppButton';
 import AppConfirmModal from '@/components/common/modal/AppConfirmModal';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+
 import {removeItemAtIndex} from '@/utils';
 
 type checkboxItemProps = {

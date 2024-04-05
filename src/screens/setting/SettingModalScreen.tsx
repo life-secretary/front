@@ -1,14 +1,15 @@
 import React from 'react';
+
 import {StyleSheet, View} from 'react-native';
 import {AppHeader} from '@/components/common/AppHeader';
 import AppIcon from '@/components/common/AppIcon';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppText} from '@/components/common/AppText';
-import {font} from '@/styles/font';
-import color from '@/styles/color';
 import {MyInfoMenu} from '@/components/setting/my/MyInfoMenu';
 import {SendFeedbackForm} from '@/components/setting/sendFeedback/SendFeedbackForm';
 import {Notice} from '@/components/setting/notice/Notice';
+import {font} from '@/styles/font';
+import color from '@/styles/color';
 
 export function SettingModalScreen({
   route,
