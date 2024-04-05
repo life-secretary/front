@@ -1,7 +1,7 @@
-import color from '@/styles/color';
-import * as React from 'react';
+import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
+import color from '@/styles/color';
 
 export function AppDivider({style}: any): React.JSX.Element {
   return <View style={[styles.divider, style]} />;

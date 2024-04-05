@@ -1,16 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import color from '@/styles/color';
 
-import {AppLayout} from '../components/common/AppLayout';
-import {AppHeader} from '../components/common/AppHeader';
-import {AppText} from '../components/common/AppText';
+import {AppLayout} from '@/components/common/AppLayout';
+import {AppHeader} from '@/components/common/AppHeader';
+import {AppText} from '@/components/common/AppText';
 import {AppTitle} from '@/components/common/AppTitle';
-import AppButton from '@/components/common/AppButton';
-import {SaveContentsList} from '../components/save/SaveContentsList';
-import {generateRandomId} from '@/utils';
-import {font} from '@/styles/font';
 import {AppDivider} from '@/components/common/AppDivider';
+import AppButton from '@/components/common/AppButton';
+import {SaveContentsList} from '@/components/save/SaveContentsList';
+import color from '@/styles/color';
+import {font} from '@/styles/font';
+
+import {generateRandomId} from '@/utils';
 
 interface SaveContentsItem {
   id: string;

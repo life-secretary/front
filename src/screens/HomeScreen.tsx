@@ -1,21 +1,21 @@
-import * as React from 'react';
+import React from 'react';
 
 import {StyleSheet, ScrollView, View} from 'react-native';
-import {AppLayout} from '../components/common/AppLayout';
-import {AppHeader} from '../components/common/AppHeader';
-import {AppTitle} from '../components/common/AppTitle';
+import {AppLayout} from '@/components/common/AppLayout';
+import {AppHeader} from '@/components/common/AppHeader';
+import {AppTitle} from '@/components/common/AppTitle';
 import AppIcon from '@/components/common/AppIcon';
-import {HomeCategoryList} from '../components/home/HomeCategoryList';
-import {HomeContentsListWithFilter} from '../components/home/homeContents/HomeContentsListWithFilter';
-import {HomeImageCarousel} from '../components/home/HomeImageCarousel';
-import {HomeContentsList} from '../components/home/homeContents/HomeContentsList';
-import {SendFeedbackButton} from '../components/home/SendFeedbackButton';
-import SearchCategoryModal from '../components/search/SearchCategoryModal';
+import {HomeCategoryList} from '@/components/home/HomeCategoryList';
+import {HomeContentsListWithFilter} from '@/components/home/homeContents/HomeContentsListWithFilter';
+import {HomeImageCarousel} from '@/components/home/HomeImageCarousel';
+import {HomeContentsList} from '@/components/home/homeContents/HomeContentsList';
+import {SendFeedbackButton} from '@/components/home/SendFeedbackButton';
+import SearchCategoryModal from '@/components/search/SearchCategoryModal';
 import ContentModal from '@/components/contentDetail/ContentModal';
-import {getFormattedDate} from '@/utils';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
-// import {fontStyles} from '@/styles/font';
+
+import {getFormattedDate} from '@/utils';
 
 const DUMMY_CAROUSEL_DATA = [
   {
@@ -45,9 +45,9 @@ const DUMMY_CAROUSEL_DATA = [
 ];
 
 export function HomeScreen(): React.JSX.Element {
-
   // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
-  const [isCategoryModalVisible, setIsCategoryModalVisible] = React.useState(false);
+  const [isCategoryModalVisible, setIsCategoryModalVisible] =
+    React.useState(false);
 
   const openCategoryModal = (category: string) => {
     // console.log(category);
@@ -58,7 +58,8 @@ export function HomeScreen(): React.JSX.Element {
     setIsCategoryModalVisible(false);
   };
 
-  const [isContentModalVisible, setIsContentModalVisible] = React.useState(false);
+  const [isContentModalVisible, setIsContentModalVisible] =
+    React.useState(false);
 
   const openContentModal = () => {
     setIsContentModalVisible(true);
@@ -87,11 +88,9 @@ export function HomeScreen(): React.JSX.Element {
             <AppIcon name="balancer" width={42} height={42} />
           </View>
         </AppHeader>
-        <HomeCategoryList 
-          openCategoryModal={openCategoryModal}
-        />
+        <HomeCategoryList openCategoryModal={openCategoryModal} />
         <HomeImageCarousel
-          data={DUMMY_CAROUSEL_DATA} 
+          data={DUMMY_CAROUSEL_DATA}
           openContentModal={openContentModal}
         />
         <HomeContentsList
@@ -108,11 +107,11 @@ export function HomeScreen(): React.JSX.Element {
           <SendFeedbackButton />
         </View>
       </ScrollView>
-      <SearchCategoryModal 
+      <SearchCategoryModal
         isVisible={isCategoryModalVisible}
         closeCategoryModal={closeCategoryModal}
       />
-      <ContentModal 
+      <ContentModal
         isVisible={isContentModalVisible}
         closeContentModal={closeContentModal}
       />

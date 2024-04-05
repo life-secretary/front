@@ -1,8 +1,7 @@
-import * as React from 'react';
+import React, {useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
-import {replaceItemAtIndex} from '@/utils';
 
 import {
   StyleSheet,
@@ -15,8 +14,11 @@ import {
 import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import spacing from '@/styles/spacing';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+
+import {replaceItemAtIndex} from '@/utils';
 
 type ItemProps = {
   todoItem: object;
@@ -28,17 +30,18 @@ export function SubTodoItem({
   subTodoItem,
 }: ItemProps): React.JSX.Element {
   const [todoList, setTodoList] = useRecoilState(todoListState);
-  const [title, onChangeTitle] = React.useState(subTodoItem?.title);
-  const [isChecked, setIsChecked] = React.useState(subTodoItem?.isDone);
-  const [isEditable, setIsEditable] = React.useState(false);
+  const [title, onChangeTitle] = useState(subTodoItem?.title);
+  const [isChecked, setIsChecked] = useState(subTodoItem?.isDone);
+  const [isEditable, setIsEditable] = useState(false);
   const navigation = useNavigation();
-  const inputRef = React.useRef(null);
+  const inputRef = useRef(null);
 
-  // TODO: spacing 상수 값으로 변경
-  const itemWidth = Dimensions.get('window').width - 24 * 2;
+  const itemWidth =
+    Dimensions.get('window').width - spacing.layoutPaddingHorizontal * 2;
 
   const todoItemIndex = todoList.findIndex(todo => todo.id === todoItem.id);
   const subTodoList = todoItem?.subTodoList;
+  const isDone = todoItem?.isDone;
 
   const handleInputPress = () => {
     setIsEditable(true);
@@ -122,6 +125,7 @@ export function SubTodoItem({
                 fillColor={color.grey.grey500}
                 iconStyle={{borderWidth: 1.5, marginHorizontal: 12}}
                 disableText={true}
+                disabled={isDone}
                 isChecked={isChecked}
                 onPress={() => setIsChecked(!isChecked)}
               />

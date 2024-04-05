@@ -1,4 +1,5 @@
 import React, {ReactNode, useCallback, useEffect, useMemo, useRef} from 'react';
+
 import {StyleSheet, ViewStyle} from 'react-native';
 import {
   BottomSheetModal,
@@ -6,6 +7,7 @@ import {
   BottomSheetModalProvider,
   BottomSheetBackdrop,
 } from '@gorhom/bottom-sheet';
+
 import {BottomSheetDefaultBackdropProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 
 type AppBottomSheetProps = {

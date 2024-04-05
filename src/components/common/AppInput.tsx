@@ -1,8 +1,9 @@
-import * as React from 'react';
+import React, {useState} from 'react';
+
 import {StyleSheet, View, TextInput, ViewStyle} from 'react-native';
 import {AppText} from './AppText';
-import color from '@/styles/color';
 import AppIcon from './AppIcon';
+import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 type AppInputProps = {
@@ -58,7 +59,7 @@ export function AppInput({
   inputStyles,
   onChangeText,
 }: AppInputProps): React.JSX.Element {
-  const [isFocused, setIsFocused] = React.useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   return (
     <View

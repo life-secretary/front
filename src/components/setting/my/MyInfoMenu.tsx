@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {StyleSheet, View, FlatList} from 'react-native';
-import {MyInfoMenuItem} from './MyInfoMenuItem';
+import {MyInfoMenuItem} from '@/components/setting/my/MyInfoMenuItem';
 import color from '@/styles/color';
 
 const MY_INFO_MENU = [

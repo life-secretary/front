@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 
 import {StyleSheet, FlatList} from 'react-native';
-import {HomeContentsCategoryItem} from './HomeContentsCategoryItem';
+import {HomeContentsCategoryItem} from '@/components/home/homeContents/HomeContentsCategoryItem';
 
 import {generateRandomId} from '@/utils';
 

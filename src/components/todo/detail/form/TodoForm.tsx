@@ -1,14 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import {useNavigation} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
-import {getFormattedDate, generateRandomId, replaceItemAtIndex} from '@/utils';
+import {useNavigation} from '@react-navigation/native';
 
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import {AppInput} from '@/components/common/AppInput';
 import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+
+import {getFormattedDate, generateRandomId, replaceItemAtIndex} from '@/utils';
 
 type TodoFormProps = {
   isEditMode?: boolean;
@@ -85,7 +86,7 @@ export function TodoForm({
   */
 
   useEffect(() => {
-    if (title === '' || !selectedCategory) {
+    if (!title || !selectedCategory) {
       setIsEmpty(true);
     } else {
       setIsEmpty(false);

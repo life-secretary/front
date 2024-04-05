@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react';
+
 import {StyleSheet, View, FlatList} from 'react-native';
-import {SaveContentsItem} from './SaveContentsItem';
-import {AppText} from '../common/AppText';
+import {AppText} from '@/components/common/AppText';
+import {AppDivider} from '@/components/common/AppDivider';
+import {SaveContentsItem} from '@/components/save/SaveContentsItem';
+import {SendFeedbackButton} from '@/components/home/SendFeedbackButton';
 import color from '@/styles/color';
-import {SendFeedbackButton} from '../home/SendFeedbackButton';
-import {removeItemAtIndex} from '@/utils';
-import {AppDivider} from '../common/AppDivider';
 import {font} from '@/styles/font';
+
+import {removeItemAtIndex} from '@/utils';
 
 const EmptyList = () => {
   return (

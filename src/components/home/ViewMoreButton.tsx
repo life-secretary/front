@@ -1,6 +1,7 @@
-import * as React from 'react';
+import React from 'react';
+
 import {StyleSheet} from 'react-native';
-import AppButton from '../common/AppButton';
+import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 

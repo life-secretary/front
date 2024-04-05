@@ -1,8 +1,9 @@
-import * as React from 'react';
-import {StyleSheet} from 'react-native';
-import AppButton from '../common/AppButton';
-import color from '@/styles/color';
+import React from 'react';
 import {useNavigation} from '@react-navigation/native';
+
+import {StyleSheet} from 'react-native';
+import AppButton from '@/components/common/AppButton';
+import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 export function SendFeedbackButton(): React.JSX.Element {
