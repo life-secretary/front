@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   emptyListContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    marginTop: 200,
   },
   emptyListText: {
     fontWeight: '500',

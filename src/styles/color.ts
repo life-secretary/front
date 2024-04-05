@@ -3,6 +3,7 @@ type ColorPalette = {
   grey: GreyColor;
   state: StateColor;
   shadow: ShadowColor;
+  dimmed: DimmedColor;
 };
 
 interface MainColor {
@@ -29,6 +30,10 @@ interface StateColor {
 
 interface ShadowColor {
   box: string;
+}
+
+interface DimmedColor {
+  modal: string;
 }
 
 const color: ColorPalette = {
@@ -60,6 +65,11 @@ const color: ColorPalette = {
   // Shadow Colors
   shadow: {
     box: '#CBD3DC80',
+  },
+
+  // Dimmed Colors
+  dimmed: {
+    modal: '#111111',
   },
 };
 

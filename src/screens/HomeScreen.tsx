@@ -9,7 +9,7 @@ import {HomeCategoryList} from '../components/home/HomeCategoryList';
 import {HomeContentsListWithFilter} from '../components/home/homeContents/HomeContentsListWithFilter';
 import {HomeImageCarousel} from '../components/home/HomeImageCarousel';
 import {HomeContentsList} from '../components/home/homeContents/HomeContentsList';
-import {SendQuestionButton} from '../components/home/SendQuestionButton';
+import {SendFeedbackButton} from '../components/home/SendFeedbackButton';
 import SearchCategoryModal from '../components/search/SearchCategoryModal';
 import {getFormattedDate} from '@/utils';
 import color from '@/styles/color';
@@ -75,7 +75,7 @@ export function HomeScreen(): React.JSX.Element {
             text="인생비서 팀에게 자유롭게 얘기해주세요"
             style={styles.footerText}
           />
-          <SendQuestionButton />
+          <SendFeedbackButton />
         </View>
       </ScrollView>
       <SearchCategoryModal isVisible={false} />

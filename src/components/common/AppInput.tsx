@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {StyleSheet, View, TextInput} from 'react-native';
+import {StyleSheet, View, TextInput, ViewStyle} from 'react-native';
 import {AppText} from './AppText';
 import color from '@/styles/color';
 import AppIcon from './AppIcon';
@@ -23,12 +23,19 @@ type AppInputProps = {
   placeholderTextColor?: string;
   /** TextInput text value */
   text: string;
+  /** Whether TextInput is multiline or not */
+  isMultiline?: boolean;
+  /** TextInput minHeight number value */
+  minHeight?: number;
+  /** TextInput styles */
+  inputStyles?: ViewStyle;
   /** Whether input has error or not */
   error?: boolean;
   /** error message text value */
   errorMsg?: string;
   /** TextInput maxLength number value */
   maxLength?: number;
+  /** Icon used inside of TextInput */
   icon?: object;
   /** onChangeText Handler */
   onChangeText?: Function;
@@ -37,6 +44,8 @@ type AppInputProps = {
 // TODO: 추가 개발 필요
 export function AppInput({
   text,
+  isMultiline = false,
+  minHeight,
   placeholder,
   placeholderTextColor,
   hasLabel,
@@ -45,6 +54,7 @@ export function AppInput({
   disabled = false,
   editable = true,
   icon,
+  inputStyles,
   onChangeText,
 }: AppInputProps): React.JSX.Element {
   const [isFocused, setIsFocused] = React.useState(false);
@@ -52,9 +62,10 @@ export function AppInput({
   return (
     <View
       style={[
-        styles.container,
+        inputStyles ? inputStyles : styles.container,
         isFocused && styles.focus,
         disabled && styles.disabled,
+        minHeight ? {minHeight: minHeight} : null,
       ]}>
       {hasLabel && (
         <AppText style={[styles.label, disabled && styles.disabledText]}>
@@ -63,14 +74,15 @@ export function AppInput({
       )}
       <TextInput
         placeholder={placeholder}
-        placeholderTextColor={placeholderTextColor}
+        placeholderTextColor={placeholderTextColor || color.grey.grey300}
         defaultValue={text}
-        onChangeText={newText => onChangeText && onChangeText(newText)}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        multiline={isMultiline}
         maxLength={maxLength}
         editable={editable}
         style={styles.inputText}
+        onChangeText={newText => onChangeText && onChangeText(newText)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
       />
       {icon && !editable && (
         <View style={styles.icon}>
