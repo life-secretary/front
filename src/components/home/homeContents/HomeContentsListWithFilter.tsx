@@ -1,45 +1,49 @@
 import * as React from 'react';
+
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
-import {AppText} from '../../common/AppText';
-import {ViewMoreButton} from '../ViewMoreButton';
-import {HomeContentsCategoryList} from './HomeContentsCategoryList';
+import {AppText} from '@/components/common/AppText';
+import {HomeContentsCategoryList} from '@/components/home/homeContents/HomeContentsCategoryList';
+import {ViewMoreButton} from '@/components/home/ViewMoreButton';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
+
+import {generateRandomId} from '@/utils';
 
 const DUMMY_DATA = [
   {
-    id: 1,
+    id: generateRandomId(),
     title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
     category: '경제',
-    thumbnail: require('../../../assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024. 01. 01',
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    date: '2024-01-01',
   },
   {
-    id: 2,
+    id: generateRandomId(),
     title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
     category: '문화',
-    thumbnail: require('../../../assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024. 01. 11',
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    date: '2024-01-11',
   },
   {
-    id: 3,
+    id: generateRandomId(),
     title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
     category: '자기계발',
-    thumbnail: require('../../../assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024. 02. 05',
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    date: '2024-02-05',
   },
   {
-    id: 4,
+    id: generateRandomId(),
     title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
     category: '건강',
-    thumbnail: require('../../../assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024. 02. 22',
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    date: '2024-02-22',
   },
   {
-    id: 5,
+    id: generateRandomId(),
     title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
     category: '환경',
-    thumbnail: require('../../../assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024. 03. 01',
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    date: '2024-03-01',
   },
 ];
 
@@ -98,7 +102,9 @@ const styles = StyleSheet.create({
   listTitle: {
     marginBottom: 18,
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: font.fontWeight.bold,
+    lineHeight: 23.87,
+    letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey700,
   },
   contents: {
@@ -109,14 +115,15 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     textAlign: 'center',
-    fontSize: 16,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
     color: color.grey.grey300,
   },
   contentsTitle: {
     flex: 1,
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 17.9,
+    letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey700,
   },
 });

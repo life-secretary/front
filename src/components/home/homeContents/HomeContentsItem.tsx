@@ -2,19 +2,21 @@ import * as React from 'react';
 import {StyleSheet, View, Image, ImageSourcePropType} from 'react-native';
 import {AppText} from '../../common/AppText';
 import color from '@/styles/color';
+import {getFormattedDate} from '@/utils';
+import {font} from '@/styles/font';
 
 type ItemProps = {
   title: string;
   category: string;
   thumbnail: ImageSourcePropType;
-  date: string;
+  createdDate: string;
 };
 
 export function HomeContentsItem({
   title,
   category,
   thumbnail,
-  date,
+  createdDate,
 }: ItemProps): React.JSX.Element {
   return (
     <View style={styles.container}>
@@ -30,7 +32,9 @@ export function HomeContentsItem({
         <View style={styles.row}>
           <AppText style={styles.subTitle}>{category}</AppText>
           <AppText style={styles.subTitle}>|</AppText>
-          <AppText style={styles.subTitle}>{date}</AppText>
+          <AppText style={styles.subTitle}>
+            {getFormattedDate(new Date(createdDate), '.')}
+          </AppText>
         </View>
       </View>
     </View>
@@ -64,12 +68,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 17.9,
+    letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey700,
   },
   subTitle: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 14.32,
     color: color.grey.grey400,
   },
 });

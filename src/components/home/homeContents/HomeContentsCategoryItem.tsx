@@ -2,6 +2,7 @@ import * as React from 'react';
 import {StyleSheet, Pressable} from 'react-native';
 import {AppText} from '../../common/AppText';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 type ItemProps = {
   category: string;
@@ -12,9 +13,7 @@ export function HomeContentsCategoryItem({
   category,
   title,
 }: ItemProps): React.JSX.Element {
-  const handlePress = (item: string) => {
-    console.log(item);
-  };
+  const handlePress = (item: string) => {};
 
   return (
     <Pressable
@@ -40,9 +39,9 @@ const styles = StyleSheet.create({
   button: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 18,
     paddingHorizontal: 18,
     paddingVertical: 10,
+    borderRadius: 18.5,
   },
   defaultButton: {
     backgroundColor: color.grey.grey100,
@@ -51,15 +50,17 @@ const styles = StyleSheet.create({
     backgroundColor: color.main.primary,
   },
   text: {
+    textAlign: 'center',
     fontSize: 15,
+    lineHeight: 17.9,
     marginTop: 5,
   },
   defaultText: {
-    fontWeight: '500',
+    fontWeight: font.fontWeight.medium,
     color: color.grey.grey500,
   },
   pressedText: {
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
     color: color.main.white,
   },
 });

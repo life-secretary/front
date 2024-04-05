@@ -14,6 +14,7 @@ import SearchCategoryModal from '../components/search/SearchCategoryModal';
 import ContentModal from '@/components/contentDetail/ContentModal';
 import {getFormattedDate} from '@/utils';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
 // import {fontStyles} from '@/styles/font';
 
 const DUMMY_CAROUSEL_DATA = [
@@ -21,25 +22,25 @@ const DUMMY_CAROUSEL_DATA = [
     id: 'c1',
     tag: '경제',
     title: '2024년 달라지는 것들\n알아보기',
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    thumbnail: require('@/assets/images/carouselPlaceholder.jpg'),
   },
   {
     id: 'c2',
     tag: '부동산',
     title: '2024년 달라지는 것들\n알아보기',
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    thumbnail: require('@/assets/images/carouselPlaceholder.jpg'),
   },
   {
     id: 'c3',
     tag: '건강',
     title: '2024년 달라지는 것들\n알아보기',
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    thumbnail: require('@/assets/images/carouselPlaceholder.jpg'),
   },
   {
     id: 'c4',
     tag: '기타',
     title: '2024년 달라지는 것들\n알아보기',
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    thumbnail: require('@/assets/images/carouselPlaceholder.jpg'),
   },
 ];
 
@@ -74,7 +75,7 @@ export function HomeScreen(): React.JSX.Element {
   // 최근 업데이트된 콘텐츠 리스트 데이터
 
   return (
-    <AppLayout style={styles.layout}>
+    <AppLayout>
       <ScrollView showsVerticalScrollIndicator={false}>
         <AppHeader style={styles.header}>
           <AppTitle
@@ -120,9 +121,6 @@ export function HomeScreen(): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  layout: {
-    backgroundColor: color.main.white,
-  },
   header: {
     justifyContent: 'space-between',
   },
@@ -130,22 +128,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 10,
   },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: font.fontWeight.bold,
+    lineHeight: 21.48,
+    color: color.grey.grey500,
+  },
   footer: {
     flex: 1,
     alignItems: 'center',
     marginVertical: 34,
     gap: 18,
   },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: color.grey.grey500,
-    lineHeight: 21.48,
-  },
   footerText: {
     textAlign: 'center',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 21,
     color: color.grey.grey400,
   },
 });

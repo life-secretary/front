@@ -3,6 +3,7 @@ import {StyleSheet} from 'react-native';
 import AppButton from '../common/AppButton';
 import color from '@/styles/color';
 import {useNavigation} from '@react-navigation/native';
+import {font} from '@/styles/font';
 
 export function SendFeedbackButton(): React.JSX.Element {
   const navigation = useNavigation();
@@ -29,9 +30,10 @@ const styles = StyleSheet.create({
     backgroundColor: color.main.primary,
   },
   buttonText: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: color.main.white,
     textAlign: 'center',
+    fontSize: 14,
+    fontWeight: font.fontWeight.bold,
+    lineHeight: 16.71,
+    color: color.main.white,
   },
 });
