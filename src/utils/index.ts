@@ -6,6 +6,8 @@ export const getFormattedDate = (date: Date, unit: string): string => {
   switch (unit) {
     case '.':
       return `${year}.${month}.${day}`;
+    case '-':
+      return `${year}-${month}-${day}`;
     case 'kor':
       return `${year}년 ${month}월 ${day}일`;
     default:

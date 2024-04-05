@@ -53,7 +53,7 @@ export function TodoForm({
         category: selectedCategory,
         tags: ['나의 할 일', `${selectedCategory.text}`],
         isDone: false,
-        createdDate: getFormattedDate(new Date()),
+        createdDate: getFormattedDate(new Date(), '-'),
         completedDate: null,
         subTodoList: [],
       },
