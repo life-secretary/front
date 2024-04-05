@@ -2,6 +2,7 @@ import * as React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {AppText} from '../common/AppText';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 type Props = {
   index: number;
@@ -32,15 +33,15 @@ export function TodoTabOption({
 
 const styles = StyleSheet.create({
   tab: {
+    width: '50%',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    width: '50%',
     paddingVertical: 12,
   },
   tabText: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 19.09,
     color: color.grey.grey400,
   },
   activeTab: {

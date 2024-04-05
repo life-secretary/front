@@ -16,6 +16,7 @@ import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 type ItemProps = {
   todoItem: object;
@@ -28,7 +29,7 @@ export function SubTodoItem({
 }: ItemProps): React.JSX.Element {
   const [todoList, setTodoList] = useRecoilState(todoListState);
   const [title, onChangeTitle] = React.useState(subTodoItem?.title);
-  const [isChecked, setIsChecked] = React.useState(subTodoItem?.isCompleted);
+  const [isChecked, setIsChecked] = React.useState(subTodoItem?.isDone);
   const [isEditable, setIsEditable] = React.useState(false);
   const navigation = useNavigation();
   const inputRef = React.useRef(null);
@@ -150,25 +151,25 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   itemContainer: {
-    borderWidth: 1,
-    borderRadius: 12,
-    borderColor: color.grey.grey200,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 12,
+    borderColor: color.grey.grey200,
   },
   titleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     width: '80%',
     height: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   titleWrapper: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
     paddingHorizontal: 18,
+    gap: 10,
   },
   inputContainer: {
     flex: 1,
@@ -177,7 +178,9 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 19.09,
+    letterSpacing: font.letterSpacing.medium,
     color: color.main.black,
   },
   activeText: {
@@ -185,8 +188,8 @@ const styles = StyleSheet.create({
   },
   divider: {
     borderWidth: 1,
-    borderColor: color.grey.grey200,
     borderStyle: 'dashed',
+    borderColor: color.grey.grey200,
   },
   checkboxContainer: {
     flex: 1,
@@ -203,7 +206,9 @@ const styles = StyleSheet.create({
   },
   deleteButtonText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 14.32,
+    letterSpacing: font.letterSpacing.medium,
     color: color.main.white,
   },
 });

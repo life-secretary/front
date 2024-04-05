@@ -1,14 +1,18 @@
 import * as React from 'react';
+
 import {StyleSheet, View} from 'react-native';
 import {AppText} from '../../common/AppText';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
+
+import {getFormattedDate} from '@/utils';
 
 type todoDetailProps = {
   todoItem: object;
 };
 
 export function TodoDetail({todoItem}: todoDetailProps): React.JSX.Element {
-  const isCompleted = todoItem?.isCompleted;
+  const isCompleted = todoItem?.isDone;
 
   const setTagContainerStyles = (tag: string) => {
     switch (tag) {
@@ -54,9 +58,8 @@ export function TodoDetail({todoItem}: todoDetailProps): React.JSX.Element {
             <View style={styles.todoRow}>
               <AppText style={[styles.infoText, styles.completedText]}>
                 {
-                  todoItem?.subTodoList.filter(
-                    (item: object) => item.isCompleted,
-                  ).length
+                  todoItem?.subTodoList.filter((item: object) => item?.isDone)
+                    .length
                 }
               </AppText>
               <AppText style={[styles.infoText, styles.defaultText]}>
@@ -73,7 +76,7 @@ export function TodoDetail({todoItem}: todoDetailProps): React.JSX.Element {
               생성
             </AppText>
             <AppText style={[styles.infoText, styles.defaultText]}>
-              {todoItem?.createdDate}
+              {getFormattedDate(new Date(todoItem?.createdDate), '.')}
             </AppText>
           </View>
           {isCompleted && (
@@ -86,7 +89,7 @@ export function TodoDetail({todoItem}: todoDetailProps): React.JSX.Element {
                   완료
                 </AppText>
                 <AppText style={[styles.infoText, styles.defaultText]}>
-                  {todoItem?.completedDate}
+                  {getFormattedDate(new Date(todoItem?.completedDate), '.')}
                 </AppText>
               </View>
             </>
@@ -125,7 +128,8 @@ const styles = StyleSheet.create({
   },
   tag: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 14.32,
   },
   defaultTag: {
     color: color.grey.grey700,
@@ -141,7 +145,9 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: font.fontWeight.bold,
+    lineHeight: 26.25,
+    letterSpacing: font.letterSpacing.medium,
     color: color.main.white,
   },
   infoContainer: {
@@ -156,7 +162,8 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 15.51,
   },
   defaultText: {
     color: color.grey.grey300,

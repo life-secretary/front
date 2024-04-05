@@ -3,6 +3,7 @@ import {StyleSheet, View, TextInput, ViewStyle} from 'react-native';
 import {AppText} from './AppText';
 import color from '@/styles/color';
 import AppIcon from './AppIcon';
+import {font} from '@/styles/font';
 
 type AppInputProps = {
   /** Whether has label or not */
@@ -41,7 +42,7 @@ type AppInputProps = {
   onChangeText?: Function;
 };
 
-// TODO: 추가 개발 필요
+// TODO: input validation check 추가
 export function AppInput({
   text,
   isMultiline = false,
@@ -84,7 +85,7 @@ export function AppInput({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
-      {icon && !editable && (
+      {icon && (
         <View style={styles.icon}>
           <AppIcon
             name={icon?.name}
@@ -110,7 +111,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 16.71,
     color: color.grey.grey500,
   },
   focus: {
@@ -121,8 +123,11 @@ const styles = StyleSheet.create({
     backgroundColor: color.grey.grey100,
   },
   inputText: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 16, // TextInput에 적용되는 font에는 default size가 적용되지 않음.
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 21,
+    letterSpacing: font.letterSpacing.medium,
+    color: color.grey.grey700,
   },
   disabledText: {
     color: color.grey.grey400,

@@ -1,13 +1,15 @@
 import * as React from 'react';
 import {useRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
+import {useNavigation} from '@react-navigation/native';
 
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import {AppInput} from '@/components/common/AppInput';
 import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
+
 import {generateRandomId, replaceItemAtIndex} from '@/utils';
-import {useNavigation} from '@react-navigation/native';
+import {font} from '@/styles/font';
 
 type SubTodoFormProps = {
   todoItem: object;
@@ -108,7 +110,9 @@ const styles = StyleSheet.create({
     backgroundColor: color.main.primary,
   },
   buttonText: {
-    fontWeight: '600',
+    textAlign: 'center',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 19.09,
     color: color.main.white,
   },
 });

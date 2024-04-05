@@ -2,6 +2,7 @@ import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {AppText} from '../common/AppText';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 type Props = {
   title: string;
@@ -27,8 +28,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderRadius: 8,
     marginTop: 22,
+    borderRadius: 8,
   },
   countContainer: {
     flexDirection: 'row',
@@ -36,7 +37,10 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 16.71,
+    letterSpacing: font.letterSpacing.medium,
+    color: color.grey.grey700,
   },
   countText: {
     color: color.grey.grey400,

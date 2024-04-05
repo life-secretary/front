@@ -7,17 +7,19 @@ import {AppLayout} from '../../components/common/AppLayout';
 import AppBottomSheet from '@/components/common/modal/AppBottomSheet';
 import {TodoForm} from '@/components/todo/detail/form/TodoForm';
 import {SubTodoForm} from '@/components/todo/detail/form/SubTodoForm';
-import {TodoFieldSelect} from '@/components/todo/TodoFieldSelect';
+import {TodoCategorySelect} from '@/components/todo/TodoCategorySelect';
 import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 export function TodoFormModalScreen({route, navigation}: any) {
   const {headerTitle, form, todoItem, isEditMode} = route.params;
-  const defaultField = isEditMode
-    ? todoItem?.field
+  const defaultCategory = isEditMode
+    ? todoItem?.category
     : {key: 'NONE', text: '선택안함'};
 
   const [isVisible, setIsVisible] = React.useState(false);
-  const [selectedField, setSelectedField] = React.useState(defaultField);
+  const [selectedCategory, setSelectedCategory] =
+    React.useState(defaultCategory);
 
   const handleBottomSheetVisible = (arg: boolean) => {
     setIsVisible(arg);
@@ -48,8 +50,8 @@ export function TodoFormModalScreen({route, navigation}: any) {
               isEditMode={isEditMode}
               todoItem={todoItem}
               handleBottomSheetVisible={handleBottomSheetVisible}
-              handleSelectField={(arg: object) => setSelectedField(arg)}
-              selectedField={selectedField}
+              handleSelectCategory={(arg: object) => setSelectedCategory(arg)}
+              selectedCategory={selectedCategory}
               isVisible={isVisible}
             />
           ) : (
@@ -61,9 +63,9 @@ export function TodoFormModalScreen({route, navigation}: any) {
         isVisible={isVisible}
         snapPointsArr={['65%']}
         handleBottomSheetVisible={handleBottomSheetVisible}>
-        <TodoFieldSelect
+        <TodoCategorySelect
           isVisible={isVisible}
-          handleSelectField={(arg: object) => setSelectedField(arg)}
+          handleSelectCategory={(arg: object) => setSelectedCategory(arg)}
           handleBottomSheetVisible={handleBottomSheetVisible}
         />
       </AppBottomSheet>
@@ -79,7 +81,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: font.fontWeight.semiBold,
+    lineHeight: 23.87,
     color: color.grey.grey700,
   },
   button: {
