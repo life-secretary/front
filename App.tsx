@@ -4,17 +4,20 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
+import {StyleSheet} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {HomeScreen} from './src/screens/HomeScreen';
 import {TodoScreen} from './src/screens/todo/TodoScreen';
 import {SaveScreen} from './src/screens/SaveScreen';
 import {TodoDetailModalScreen} from './src/screens/todo/TodoDetailModalScreen';
 import {TodoFormModalScreen} from './src/screens/todo/TodoFormModalScreen';
-
+import {SettingScreen} from './src/screens/setting/SettingScreen';
+import {SettingModalScreen} from './src/screens/setting/SettingModalScreen';
+import {MyInfoModalScreen} from './src/screens/setting/MyInfoModalScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
-import Content from './src/components/contentDetail/ContentModal';
+// import Content from './src/components/contentDetail/ContentModal';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -26,6 +29,7 @@ function HomeTabs() {
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Todo" component={TodoScreen} />
       <Tab.Screen name="Save" component={SaveScreen} />
+      <Tab.Screen name="Setting" component={SettingScreen} />
     </Tab.Navigator>
   );
 }
@@ -41,10 +45,9 @@ function RootStack() {
           name="TodoDetailModal"
           component={TodoDetailModalScreen}
         />
-        <Stack.Screen 
-          name="TodoForm" 
-          component={TodoFormModalScreen} 
-        />
+        <Stack.Screen name="TodoForm" component={TodoFormModalScreen} />
+        <Stack.Screen name="SettingModal" component={SettingModalScreen} />
+        <Stack.Screen name="MyInfoModal" component={MyInfoModalScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -53,7 +56,7 @@ function RootStack() {
 function App(): React.JSX.Element {
   return (
     <RecoilRoot>
-      <GestureHandlerRootView style={{flex: 1}}>
+      <GestureHandlerRootView style={styles.container}>
         <SafeAreaProvider>
           <NavigationContainer>
             <RootStack />
@@ -63,5 +66,11 @@ function App(): React.JSX.Element {
     </RecoilRoot>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default App;

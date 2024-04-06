@@ -4,9 +4,14 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import spacing from '../../styles/spacing';
 import color from '@/styles/color';
 
-export function AppLayout({children, style}: any): React.JSX.Element {
+export function AppLayout({
+  children,
+  style,
+  isUsedPadding = true,
+}: any): React.JSX.Element {
   return (
-    <SafeAreaView style={[styles.container, style]}>
+    <SafeAreaView
+      style={[styles.layout, style, isUsedPadding && styles.padding]}>
       <StatusBar barStyle="default" />
       {children}
     </SafeAreaView>
@@ -14,9 +19,11 @@ export function AppLayout({children, style}: any): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  layout: {
     flex: 1,
+    backgroundColor: color.main.white,
+  },
+  padding: {
     paddingHorizontal: spacing.layoutPaddingHorizontal,
-    backgroundColor: color.white,
   },
 });

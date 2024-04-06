@@ -3,24 +3,19 @@ import * as React from 'react';
 import {StyleSheet, ScrollView, View} from 'react-native';
 import {AppLayout} from '../components/common/AppLayout';
 import {AppHeader} from '../components/common/AppHeader';
+import {AppTitle} from '../components/common/AppTitle';
+import AppIcon from '@/components/common/AppIcon';
 import {HomeCategoryList} from '../components/home/HomeCategoryList';
 import {HomeContentsListWithFilter} from '../components/home/homeContents/HomeContentsListWithFilter';
 import {HomeImageCarousel} from '../components/home/HomeImageCarousel';
 import {HomeContentsList} from '../components/home/homeContents/HomeContentsList';
-import {SendQuestionButton} from '../components/home/SendQuestionButton';
-import {AppTitle} from '../components/common/AppTitle';
-
-// 유사한 사용자가 조회한 콘텐츠 리스트 데이터
-
-// 인기 많은 콘텐츠 리스트 데이터
-
-// 최근 업데이트된 콘텐츠 리스트 데이터
-
+import {SendFeedbackButton} from '../components/home/SendFeedbackButton';
 import SearchCategoryModal from '../components/search/SearchCategoryModal';
 import ContentModal from '@/components/contentDetail/ContentModal';
 import AppIcon from '@/components/common/AppIcon';
 import {getFormattedDate} from '@/utils';
 import color from '@/styles/color';
+// import {fontStyles} from '@/styles/font';
 
 const DUMMY_CAROUSEL_DATA = [
   {
@@ -50,7 +45,6 @@ const DUMMY_CAROUSEL_DATA = [
 ];
 
 export function HomeScreen(): React.JSX.Element {
-
   // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
   const [isCategoryModalVisible, setIsCategoryModalVisible] = React.useState(false);
 
@@ -73,6 +67,12 @@ export function HomeScreen(): React.JSX.Element {
     setIsContentModalVisible(false);
   };
 
+  // 유사한 사용자가 조회한 콘텐츠 리스트 데이터
+
+  // 인기 많은 콘텐츠 리스트 데이터
+
+  // 최근 업데이트된 콘텐츠 리스트 데이터
+
   return (
     <AppLayout style={styles.layout}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -82,11 +82,7 @@ export function HomeScreen(): React.JSX.Element {
             style={styles.headerTitle}
           />
           <View style={styles.headerIconContainer}>
-            <AppIcon
-              name="notificationOn"
-              width={42}
-              height={42}
-            />
+            <AppIcon name="notificationOn" width={42} height={42} />
             <AppIcon name="balancer" width={42} height={42} />
           </View>
         </AppHeader>
@@ -108,7 +104,7 @@ export function HomeScreen(): React.JSX.Element {
             text="인생비서 팀에게 자유롭게 얘기해주세요"
             style={styles.footerText}
           />
-          <SendQuestionButton />
+          <SendFeedbackButton />
         </View>
       </ScrollView>
       <SearchCategoryModal 
@@ -125,7 +121,7 @@ export function HomeScreen(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   layout: {
-    backgroundColor: color.white,
+    backgroundColor: color.main.white,
   },
   header: {
     justifyContent: 'space-between',
@@ -143,13 +139,13 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: color.grey500,
+    color: color.grey.grey500,
     lineHeight: 21.48,
   },
   footerText: {
     textAlign: 'center',
     fontSize: 15,
     fontWeight: '600',
-    color: color.grey400,
+    color: color.grey.grey400,
   },
 });

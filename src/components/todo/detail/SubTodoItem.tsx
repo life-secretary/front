@@ -99,11 +99,7 @@ export function SubTodoItem({
           <View style={[styles.itemContainer, {width: itemWidth}]}>
             <View style={styles.titleContainer}>
               <View style={styles.titleWrapper}>
-                <AppIcon
-                  name="hamburger"
-                  width={24}
-                  height={24}
-                />
+                <AppIcon name="hamburger" width={24} height={24} />
                 <View style={isEditable && styles.inputContainer}>
                   <TextInput
                     ref={inputRef}
@@ -122,7 +118,7 @@ export function SubTodoItem({
             <View style={styles.checkboxContainer}>
               <BouncyCheckbox
                 size={18}
-                fillColor={color.grey500}
+                fillColor={color.grey.grey500}
                 iconStyle={{borderWidth: 1.5, marginHorizontal: 12}}
                 disableText={true}
                 isChecked={isChecked}
@@ -138,7 +134,7 @@ export function SubTodoItem({
               name: 'trash',
               width: 32,
               height: 32,
-              styles: { color: '#FFFFFF' }
+              styles: {color: color.main.white},
             }}
             onPressButton={() => handleDeleteButtonPress(subTodoItem?.id)}
           />
@@ -156,7 +152,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     borderWidth: 1,
     borderRadius: 12,
-    borderColor: color.grey200,
+    borderColor: color.grey.grey200,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -177,18 +173,19 @@ const styles = StyleSheet.create({
   inputContainer: {
     flex: 1,
     borderBottomWidth: 1,
-    borderColor: color.grey500,
+    borderColor: color.grey.grey500,
   },
   input: {
     fontSize: 16,
     fontWeight: '600',
+    color: color.main.black,
   },
   activeText: {
-    color: color.grey700,
+    color: color.grey.grey700,
   },
   divider: {
     borderWidth: 1,
-    borderColor: color.grey200,
+    borderColor: color.grey.grey200,
     borderStyle: 'dashed',
   },
   checkboxContainer: {
@@ -202,11 +199,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 17,
     paddingVertical: 12,
-    backgroundColor: color.error,
+    backgroundColor: color.state.error,
   },
   deleteButtonText: {
     fontSize: 12,
     fontWeight: '600',
-    color: color.white,
+    color: color.main.white,
   },
 });

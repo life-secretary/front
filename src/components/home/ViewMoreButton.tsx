@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     marginTop: 36,
     paddingVertical: 15,
     borderRadius: 6,
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
   },
   buttonText: {
     fontSize: 15,

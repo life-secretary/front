@@ -41,12 +41,12 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 16,
     fontWeight: '600',
-    color: color.grey400,
+    color: color.grey.grey400,
   },
   activeTab: {
-    backgroundColor: color.grey700,
+    backgroundColor: color.grey.grey700,
   },
   activeTabText: {
-    color: color.white,
+    color: color.main.white,
   },
 });

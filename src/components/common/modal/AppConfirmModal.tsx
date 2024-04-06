@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
   },
 
   description: {
+    textAlign: 'center', // NOTICE: 텍스트 중간 배치를 위해서 추가 했습니다.
     alignSelf: 'center',
     fontWeight: '500',
     fontSize: getFontSize(15),

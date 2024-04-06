@@ -22,7 +22,6 @@ type TodoFieldSelectProps = {
 export function TodoFieldSelect({
   handleSelectField,
   handleBottomSheetVisible,
-  isVisible,
 }: TodoFieldSelectProps): React.JSX.Element {
   const handleSelectOption = (option: object) => {
     handleSelectField(option);

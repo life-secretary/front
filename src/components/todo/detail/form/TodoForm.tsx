@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
@@ -26,8 +26,8 @@ export function TodoForm({
   handleSelectField,
 }: TodoFormProps) {
   // const [isValid, setIsValid] = React.useState(true);
-  const [isEmpty, setIsEmpty] = React.useState(false);
-  const [title, setTitle] = React.useState(todoItem?.title);
+  const [isEmpty, setIsEmpty] = useState(false);
+  const [title, setTitle] = useState(todoItem?.title);
   const [todoList, setTodoList] = useRecoilState(todoListState);
   const navigation = useNavigation();
 
@@ -83,7 +83,7 @@ export function TodoForm({
   };
   */
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (title === '' || !selectedField) {
       setIsEmpty(true);
     } else {
@@ -107,11 +107,10 @@ export function TodoForm({
             }
             editable={selectedField.key === 'USER'}
             icon={{
-              type: 'stroke',
               name: 'arrowRight',
               width: 36,
               height: 36,
-              styles: { color: '#A1ACB9' },
+              styles: {color: color.grey.grey400},
               onPress: () => handleBottomSheetVisible(true),
             }}
           />
@@ -129,7 +128,7 @@ export function TodoForm({
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
           isDisabled={isEmpty}
-          disabledBackgroundColor={color.grey300}
+          disabledBackgroundColor={color.grey.grey300}
           onPressButton={isEditMode ? editTodo : addTodo}
         />
       </KeyboardAvoidingView>
@@ -154,10 +153,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
     borderRadius: 10,
-    backgroundColor: color.primary,
+    backgroundColor: color.main.primary,
   },
   buttonText: {
     fontWeight: '600',
-    color: color.white,
+    color: color.main.white,
   },
 });

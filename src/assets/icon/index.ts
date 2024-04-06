@@ -43,252 +43,252 @@ import {default as select} from './icon_select.svg';
 
 // TODO: iconName 키 타입 string -> string literal 변경하기
 export type IconsData = {
-    [iconName: string]: {
-        type: 'stroke' | 'fill';
-        file: React.FC<SvgProps>;
-        defaultStroke: string;
-        defaultFill: string;
-    }
+  [iconName: string]: {
+    type: 'stroke' | 'fill';
+    file: React.FC<SvgProps>;
+    defaultStroke: string;
+    defaultFill: string;
+  };
 };
 
 const Icons: IconsData = {
-    addCircle: {
-        type: 'stroke',
-        file: addCircle,
-        defaultStroke: '#526070',
-        defaultFill: '',
-    },
-    // BUG: addDark & addLight 분명 같은 아이콘인데 묘하게 다름,, 
-    addDark: {
-        type: 'stroke',
-        file: addDark,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    addLight: {
-        type: 'stroke',
-        file: addLight,
-        defaultStroke: '#A1ACB9',
-        defaultFill: '',
-    },
-    angleDown: {
-        type: 'stroke',
-        file: angleDown,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    angleUp: {
-        type: 'stroke',
-        file: angleUp,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    // arrow icon dark color : #000E24
-    // arrow icon light color: #A1ACB9
-    arrowDown: {
-        type: 'stroke',
-        file: arrowDown,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    arrowLeft: {
-        type: 'stroke',
-        file: arrowLeft,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    arrowRight: {
-        type: 'stroke',
-        file: arrowRight,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    arrowUp: {
-        type: 'stroke',
-        file: arrowUp,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    back: {
-        type: 'stroke',
-        file: back,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    balancer: {
-        type: 'stroke',
-        file: balancer,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    bookmarkLarge: {
-        type: 'fill',
-        file: bookmarkLarge,
-        defaultStroke: '#000E24',
-        defaultFill: '#FFFFFF',
-    },
-    bookmarkMedium: {
-        type: 'fill',
-        file: bookmarkMedium,
-        defaultStroke: '#A1ACB9',
-        defaultFill: '#FFFFFF',
-    },
-    checkBoxCircle: {
-        type: 'fill',
-        file: checkBoxCircle,
-        defaultStroke: '#526070',
-        defaultFill: '#FFFFFF',
-    },
-    checkboxSquare: {
-        type: 'fill',
-        file: checkboxSquare,
-        defaultStroke: '#0B2A4F',
-        defaultFill: '#FFFFFF',
-    },
-    closeDark: {
-        type: 'stroke',
-        file: closeDark,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    closeFillDark: {
-        type: 'fill',
-        file: closeFillDark,
-        defaultStroke: '#526070',
-        defaultFill: '#CBD3DC',
-    },
-    closeFillLight: {
-        type: 'fill',
-        file: closeFillLight,
-        defaultStroke: '#A1ACB9',
-        defaultFill: '#E7EDF3',
-    },
-    closeLight: {
-        type: 'stroke',
-        file: closeLight,
-        defaultStroke: '#A1ACB9',
-        defaultFill: '',
-    },
-    edit: {
-        type: 'stroke',
-        file: edit,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    hamburger: {
-        type: 'stroke',
-        file: hamburger,
-        defaultStroke: '#CBD3DC',
-        defaultFill: '',
-    },
-    meatball: {
-        type: 'fill',
-        file: meatball,
-        defaultStroke: '#FFFFFF',
-        defaultFill: '#FFFFFF',
-    },
-    notificationOff: {
-        type: 'stroke',
-        file: notificationOff,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    notificationOn: {
-        type: 'stroke',
-        file: notificationOn,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    reload: {
-        type: 'stroke',
-        file: reload,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    search: {
-        type: 'stroke',
-        file: search,
-        defaultStroke: '#0B2A4F',
-        defaultFill: '',
-    },
-    setting: {
-        type: 'stroke',
-        file: setting,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    trash: {
-        type: 'stroke',
-        file: trash,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    upload: {
-        type: 'stroke',
-        file: upload,
-        defaultStroke: '#000E24',
-        defaultFill: '',
-    },
-    logo: {
-        type: 'fill',
-        file: logo,
-        defaultStroke: '#0B2A4F',
-        defaultFill: '#0B2A4F',
-    },
-    all: {
-        type: 'fill',
-        file: all,
-        defaultStroke: '',
-        defaultFill: '',
-    },
-    economy: {
-        type: 'fill',
-        file: economy,
-        defaultStroke: '',
-        defaultFill: '',
-    },
-    law: {
-        type: 'fill',
-        file: law,
-        defaultStroke: '',
-        defaultFill: '',
-    },
-    eco: {
-        type: 'fill',
-        file: eco,
-        defaultStroke: '',
-        defaultFill: '',
-    },
-    selfdev: {
-        type: 'fill',
-        file: selfdev,
-        defaultStroke: '',
-        defaultFill: '',
-    },
-    health: {
-        type: 'fill',
-        file: health,
-        defaultStroke: '',
-        defaultFill: '',
-    },
-    culture: {
-        type: 'fill',
-        file: culture,
-        defaultStroke: '',
-        defaultFill: '',
-    },
-    etc: {
-        type: 'fill',
-        file: etc,
-        defaultStroke: '',
-        defaultFill: '',
-    },
-    select: {
-        type: 'fill',
-        file: select,
-        defaultStroke: '',
-        defaultFill: '#F2F4F7',
-    },
+  addCircle: {
+    type: 'stroke',
+    file: addCircle,
+    defaultStroke: '#526070',
+    defaultFill: '',
+  },
+  // BUG: addDark & addLight 분명 같은 아이콘인데 묘하게 다름,,
+  addDark: {
+    type: 'stroke',
+    file: addDark,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  addLight: {
+    type: 'stroke',
+    file: addLight,
+    defaultStroke: '#A1ACB9',
+    defaultFill: '',
+  },
+  angleDown: {
+    type: 'stroke',
+    file: angleDown,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  angleUp: {
+    type: 'stroke',
+    file: angleUp,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  // arrow icon dark color : #000E24
+  // arrow icon light color: #A1ACB9
+  arrowDown: {
+    type: 'stroke',
+    file: arrowDown,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  arrowLeft: {
+    type: 'stroke',
+    file: arrowLeft,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  arrowRight: {
+    type: 'stroke',
+    file: arrowRight,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  arrowUp: {
+    type: 'stroke',
+    file: arrowUp,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  back: {
+    type: 'stroke',
+    file: back,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  balancer: {
+    type: 'stroke',
+    file: balancer,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  bookmarkLarge: {
+    type: 'fill',
+    file: bookmarkLarge,
+    defaultStroke: '#000E24',
+    defaultFill: '#FFFFFF',
+  },
+  bookmarkMedium: {
+    type: 'fill',
+    file: bookmarkMedium,
+    defaultStroke: '#A1ACB9',
+    defaultFill: '#FFFFFF',
+  },
+  checkBoxCircle: {
+    type: 'fill',
+    file: checkBoxCircle,
+    defaultStroke: '#526070',
+    defaultFill: '#FFFFFF',
+  },
+  checkboxSquare: {
+    type: 'fill',
+    file: checkboxSquare,
+    defaultStroke: '#0B2A4F',
+    defaultFill: '#FFFFFF',
+  },
+  closeDark: {
+    type: 'stroke',
+    file: closeDark,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  closeFillDark: {
+    type: 'fill',
+    file: closeFillDark,
+    defaultStroke: '#526070',
+    defaultFill: '#CBD3DC',
+  },
+  closeFillLight: {
+    type: 'fill',
+    file: closeFillLight,
+    defaultStroke: '#A1ACB9',
+    defaultFill: '#E7EDF3',
+  },
+  closeLight: {
+    type: 'stroke',
+    file: closeLight,
+    defaultStroke: '#A1ACB9',
+    defaultFill: '',
+  },
+  edit: {
+    type: 'stroke',
+    file: edit,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  hamburger: {
+    type: 'stroke',
+    file: hamburger,
+    defaultStroke: '#CBD3DC',
+    defaultFill: '',
+  },
+  meatball: {
+    type: 'fill',
+    file: meatball,
+    defaultStroke: '#FFFFFF',
+    defaultFill: '#FFFFFF',
+  },
+  notificationOff: {
+    type: 'stroke',
+    file: notificationOff,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  notificationOn: {
+    type: 'stroke',
+    file: notificationOn,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  reload: {
+    type: 'stroke',
+    file: reload,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  search: {
+    type: 'stroke',
+    file: search,
+    defaultStroke: '#0B2A4F',
+    defaultFill: '',
+  },
+  setting: {
+    type: 'stroke',
+    file: setting,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  trash: {
+    type: 'stroke',
+    file: trash,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  upload: {
+    type: 'stroke',
+    file: upload,
+    defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  logo: {
+    type: 'fill',
+    file: logo,
+    defaultStroke: '#0B2A4F',
+    defaultFill: '#0B2A4F',
+  },
+  all: {
+    type: 'fill',
+    file: all,
+    defaultStroke: '',
+    defaultFill: '',
+  },
+  economy: {
+    type: 'fill',
+    file: economy,
+    defaultStroke: '',
+    defaultFill: '',
+  },
+  law: {
+    type: 'fill',
+    file: law,
+    defaultStroke: '',
+    defaultFill: '',
+  },
+  eco: {
+    type: 'fill',
+    file: eco,
+    defaultStroke: '',
+    defaultFill: '',
+  },
+  selfdev: {
+    type: 'fill',
+    file: selfdev,
+    defaultStroke: '',
+    defaultFill: '',
+  },
+  health: {
+    type: 'fill',
+    file: health,
+    defaultStroke: '',
+    defaultFill: '',
+  },
+  culture: {
+    type: 'fill',
+    file: culture,
+    defaultStroke: '',
+    defaultFill: '',
+  },
+  etc: {
+    type: 'fill',
+    file: etc,
+    defaultStroke: '',
+    defaultFill: '',
+  },
+  select: {
+    type: 'fill',
+    file: select,
+    defaultStroke: '',
+    defaultFill: '#F2F4F7',
+  },
 };
 
 export default Icons;

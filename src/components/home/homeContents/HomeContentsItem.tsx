@@ -65,11 +65,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15,
     fontWeight: '500',
-    color: color.grey700,
+    color: color.grey.grey700,
   },
   subTitle: {
     fontSize: 12,
     fontWeight: '500',
-    color: color.grey400,
+    color: color.grey.grey400,
   },
 });

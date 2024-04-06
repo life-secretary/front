@@ -59,7 +59,7 @@ export function SaveScreen(): React.JSX.Element {
   }, [isEditMode]);
 
   return (
-    <AppLayout style={styles.layout}>
+    <AppLayout isUsedPadding={false}>
       <AppHeader style={styles.header}>
         <AppTitle text="저장 목록" style={styles.title} />
       </AppHeader>
@@ -91,11 +91,9 @@ export function SaveScreen(): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  layout: {
-    backgroundColor: color.white,
-  },
   header: {
     justifyContent: 'center',
+    marginTop: 16,
   },
   container: {
     flex: 1,
@@ -108,22 +106,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 24,
   },
   divider: {
     height: 1,
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
     marginTop: 7,
     marginBottom: 32,
   },
   totalCountText: {
     fontSize: 18,
     fontWeight: '600',
-    color: color.grey600,
+    color: color.grey.grey600,
   },
   editButton: {
     paddingHorizontal: 6,
     paddingVertical: 8,
     fontWeight: '600',
-    color: DUMMY_DATA.length > 0 ? color.grey400 : color.grey200,
+    color: DUMMY_DATA.length > 0 ? color.grey.grey400 : color.grey.grey200,
   },
 });

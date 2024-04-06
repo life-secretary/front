@@ -71,7 +71,6 @@ export function SubTodoForm({todoItem}: SubTodoFormProps) {
           hasLabel={true}
           labelText="항목 명"
           placeholder="최대 18자 내로 입력 가능해요"
-          placeholderTextColor={color.grey300}
           text={subTitle}
           maxLength={18}
           onChangeText={setSubTitle}
@@ -82,7 +81,7 @@ export function SubTodoForm({todoItem}: SubTodoFormProps) {
         buttonStyle={styles.button}
         textStyle={styles.buttonText}
         isDisabled={isEmpty}
-        disabledBackgroundColor={color.grey300}
+        disabledBackgroundColor={color.grey.grey300}
         onPressButton={addSubTodo}
       />
     </KeyboardAvoidingView>
@@ -106,10 +105,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
     borderRadius: 10,
-    backgroundColor: color.primary,
+    backgroundColor: color.main.primary,
   },
   buttonText: {
     fontWeight: '600',
-    color: color.white,
+    color: color.main.white,
   },
 });

@@ -45,10 +45,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   defaultButton: {
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
   },
   pressedButton: {
-    backgroundColor: color.primary,
+    backgroundColor: color.main.primary,
   },
   text: {
     fontSize: 15,
@@ -56,10 +56,10 @@ const styles = StyleSheet.create({
   },
   defaultText: {
     fontWeight: '500',
-    color: color.grey500,
+    color: color.grey.grey500,
   },
   pressedText: {
     fontWeight: '600',
-    color: color.white,
+    color: color.main.white,
   },
 });

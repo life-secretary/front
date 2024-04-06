@@ -78,16 +78,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 26,
     paddingVertical: 34,
     borderRadius: 14,
-    backgroundColor: color.white,
+    backgroundColor: color.main.white,
     ...Platform.select({
       ios: {
-        shadowColor: color.shadow,
+        shadowColor: color.shadow.box,
         shadowOpacity: 0.5,
         shadowRadius: 20,
         shadowOffset: {width: 0, height: 0},
       },
       android: {
-        shadowColor: color.shadow,
+        shadowColor: color.shadow.box,
         elevation: 1,
       },
     }),
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     fontSize: 20,
     fontWeight: '700',
-    color: color.grey700,
+    color: color.grey.grey700,
   },
   contents: {
     flexDirection: 'row',
@@ -111,12 +111,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '600',
-    color: color.grey300,
+    color: color.grey.grey300,
   },
   contentsTitle: {
     flex: 1,
     fontSize: 15,
     fontWeight: '500',
-    color: color.grey700,
+    color: color.grey.grey700,
   },
 });

@@ -50,12 +50,12 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     borderWidth: 1,
     borderRadius: 24,
-    borderColor: color.grey200,
-    backgroundColor: color.grey100,
+    borderColor: color.grey.grey200,
+    backgroundColor: color.grey.grey100,
   },
   buttonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: color.grey700,
+    color: color.grey.grey700,
   },
 });

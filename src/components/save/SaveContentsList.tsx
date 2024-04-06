@@ -3,7 +3,7 @@ import {StyleSheet, View, FlatList} from 'react-native';
 import {SaveContentsItem} from './SaveContentsItem';
 import {AppText} from '../common/AppText';
 import color from '@/styles/color';
-import {SendQuestionButton} from '../home/SendQuestionButton';
+import {SendFeedbackButton} from '../home/SendFeedbackButton';
 import {removeItemAtIndex} from '@/utils';
 
 const EmptyList = () => {
@@ -15,10 +15,11 @@ const EmptyList = () => {
           찾는 콘텐츠가 없다면 의견을 보내주세요
         </AppText>
       </View>
-      <SendQuestionButton />
+      <SendFeedbackButton />
     </View>
   );
 };
+
 export function SaveContentsList({
   list,
   isEditMode,
@@ -82,12 +83,13 @@ export function SaveContentsList({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 24,
   },
   listContainer: {
     flex: 1,
   },
   divider: {
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
     height: 1,
     marginVertical: 16,
   },
@@ -105,12 +107,12 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     fontWeight: '600',
-    color: color.grey700,
+    color: color.grey.grey700,
   },
   subText: {
     fontSize: 14,
     fontWeight: '500',
-    color: color.grey500,
+    color: color.grey.grey500,
   },
   buttonContainer: {
     borderWidth: 1,

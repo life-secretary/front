@@ -81,16 +81,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 14,
-    backgroundColor: color.white,
+    backgroundColor: color.main.white,
     ...Platform.select({
       ios: {
-        shadowColor: color.shadow,
+        shadowColor: color.shadow.box,
         shadowOpacity: 0.5,
         shadowRadius: 20,
         shadowOffset: {width: 0, height: 0},
       },
       android: {
-        shadowColor: color.shadow,
+        shadowColor: color.shadow.box,
         elevation: 1,
       },
     }),

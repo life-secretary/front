@@ -70,7 +70,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             name="back"
             width={42}
             height={42}
-            styles={{ color: '#FFFFFF' }}
+            styles={{color: color.main.white}}
             onPress={() => navigation.goBack()}
           />
           <View style={styles.headerButtonContainer}>
@@ -86,6 +86,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
               name="select"
               width={42}
               height={42}
+              styles={{color: color.main.white}}
               onPress={() => handleBottomSheetVisible(true, 'editAndDelete')}
             />
           </View>
@@ -150,7 +151,6 @@ export function TodoDetailModalScreen({navigation, route}: any) {
           <View style={styles.titleContainer}>
             <View style={styles.closeButton}>
               <AppIcon
-                type="stroke"
                 name="closeDark"
                 width={36}
                 height={36}
@@ -202,10 +202,10 @@ export function TodoDetailModalScreen({navigation, route}: any) {
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
-    backgroundColor: color.grey700,
+    backgroundColor: color.grey.grey700,
   },
   complete: {
-    backgroundColor: color.grey600,
+    backgroundColor: color.grey.grey600,
   },
   header: {
     justifyContent: 'space-between',
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   completeButtonText: {
     fontSize: 15,
     fontWeight: '600',
-    color: color.secondary,
+    color: color.main.secondary,
   },
   bottomSheetContainer: {
     paddingHorizontal: 24,
@@ -247,11 +247,11 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: color.grey100,
+    backgroundColor: color.grey.grey100,
   },
   darkButton: {
     paddingVertical: 16,
-    backgroundColor: color.primary,
+    backgroundColor: color.main.primary,
   },
   closeButton: {
     alignSelf: 'flex-end',
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
   },
   bottomSheetButtonBoldText: {
     fontWeight: '600',
-    color: color.white,
+    color: color.main.white,
   },
   contentsContainer: {
     gap: 30,
@@ -274,18 +274,18 @@ const styles = StyleSheet.create({
   contentsTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: color.grey700,
+    color: color.grey.grey700,
   },
   contentsDescription: {
     fontSize: 15,
     fontWeight: '500',
-    color: color.grey500,
+    color: color.grey.grey500,
   },
   modalFirstButton: {
     flex: 1,
     borderRadius: 10,
     paddingVertical: 16,
-    backgroundColor: color.grey200,
+    backgroundColor: color.grey.grey200,
   },
   modalFirstButtonText: {
     fontWeight: '600',
@@ -295,11 +295,11 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 10,
     paddingVertical: 16,
-    backgroundColor: color.primary,
+    backgroundColor: color.main.primary,
   },
   modalSecondButtonText: {
     fontWeight: '600',
     textAlign: 'center',
-    color: color.white,
+    color: color.main.white,
   },
 });
