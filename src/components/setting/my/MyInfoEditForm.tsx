@@ -6,6 +6,7 @@ import AppButton from '@/components/common/AppButton';
 import {AppInput} from '@/components/common/AppInput';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import {getFormattedDate} from '@/utils';
 
 type MyInfoEditFormProps = {
   user: object;
@@ -43,11 +44,12 @@ export function MyInfoEditForm({user}: MyInfoEditFormProps): React.JSX.Element {
           text={nickname}
           onChangeText={onChangeNickname}
         />
+        {/* TODO: Date Picker 적용 */}
         <AppInput
           hasLabel={true}
           editable={false}
           labelText="생년월일"
-          text={birthdate}
+          text={getFormattedDate(new Date(birthdate), 'kor')}
           onChangeText={onChangeBirthdate}
           icon={{
             name: 'arrowDown',
