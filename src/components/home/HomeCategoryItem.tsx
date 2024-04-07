@@ -29,7 +29,7 @@ export function HomeCategoryItem({
         height={44}
         onPress={() => handlePress(category)}
       />
-      <AppText style={styles.text}>{title}</AppText>
+      <AppText style={styles.title}>{title}</AppText>
     </Pressable>
   );
 }
