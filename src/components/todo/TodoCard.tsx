@@ -9,33 +9,33 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 import {getFormattedDate} from '@/utils';
 
-type TodoCardProps = {
+type Props = {
   item: object;
 };
 
 // TODO: model에 정의
 interface TodoItem {
   id: string;
-  title: string;
-  category: object;
+  title: string | null;
+  category: object | string;
   tags: string[];
-  isDone: boolean;
-  createdDate: string;
-  completedDate: string;
-  subTodoList: object[];
+  hasDone: boolean;
+  createdDate: string | null;
+  completedDate: string | null;
+  subTodoList: object[] | null;
 }
 
-export function TodoCard({item}: TodoCardProps): React.JSX.Element {
+export function TodoCard({item}: Props): React.JSX.Element {
   const navigation = useNavigation();
   const todoItem: TodoItem = {
     id: item?.id,
     title: item?.title,
     category: item?.category,
-    tags: item?.tags,
-    isDone: item?.isDone,
-    createdDate: item?.createdDate,
-    completedDate: item?.completedDate,
-    subTodoList: item?.subTodoList,
+    tags: [],
+    hasDone: item?.hasDone,
+    createdDate: null,
+    completedDate: null,
+    subTodoList: [],
   };
 
   const moveToScreen = (screen: string, params: object) => {
@@ -101,7 +101,10 @@ export function TodoCard({item}: TodoCardProps): React.JSX.Element {
             {todoItem.subTodoList && todoItem.subTodoList.length > 0 ? (
               <>
                 <AppText style={[styles.cardInfoText, styles.dark]}>
-                  {todoItem.subTodoList.filter(item => item?.isDone).length}
+                  {
+                    todoItem.subTodoList.filter((item: object) => item?.hasDone)
+                      .length
+                  }
                 </AppText>
                 <AppText style={[styles.cardInfoText, styles.light]}>
                   /{todoItem.subTodoList.length}
@@ -113,7 +116,9 @@ export function TodoCard({item}: TodoCardProps): React.JSX.Element {
             <AppText style={[styles.cardInfoText, styles.light]}>개</AppText>
           </View>
           <AppText style={[styles.cardInfoText, styles.cardDate]}>
-            생성 {getFormattedDate(new Date(todoItem.createdDate), '.')}
+            생성{' '}
+            {todoItem?.createdDate &&
+              getFormattedDate(new Date(todoItem?.createdDate), '.')}
           </AppText>
         </View>
       </View>
