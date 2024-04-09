@@ -40,6 +40,9 @@ import {default as health} from './category/icon_category_health.svg';
 import {default as culture} from './category/icon_category_culture.svg';
 import {default as etc} from './category/icon_category_etc.svg';
 import {default as select} from './icon_select.svg';
+import {default as logoKakao} from './login/icon_kakao.svg';
+import {default as logoGoogle} from './login/icon_google.svg';
+import {default as logoApple} from './login/icon_apple.svg';
 
 // TODO: iconName 키 타입 string -> string literal 변경하기
 export type IconsData = {
@@ -289,6 +292,24 @@ const Icons: IconsData = {
     defaultStroke: '',
     defaultFill: '#F2F4F7',
   },
+  logoKakao: {
+    type: 'fill',
+    file: logoKakao,
+    defaultStroke: '',
+    defaultFill: '',
+  },
+  logoGoogle: {
+    type: 'fill',
+    file: logoGoogle,
+    defaultStroke: '',
+    defaultFill: '',
+  },
+  logoApple: {
+    type: 'fill',
+    file: logoApple,
+    defaultStroke: '',
+    defaultFill: '',
+  }
 };
 
 export default Icons;
