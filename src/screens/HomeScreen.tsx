@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import {categoryListState} from '@/store/categoryState';
 
 import {StyleSheet, ScrollView, View} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
@@ -17,6 +18,8 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 import {getFormattedDate} from '@/utils';
+import {fetchData} from '@/api/api';
+import {useSetRecoilState} from 'recoil';
 
 const DUMMY_CAROUSEL_DATA = [
   {
@@ -47,8 +50,8 @@ const DUMMY_CAROUSEL_DATA = [
 
 export function HomeScreen(): React.JSX.Element {
   // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
-  const [isCategoryModalVisible, setIsCategoryModalVisible] =
-    React.useState(false);
+  const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
+  const setCategories = useSetRecoilState(categoryListState);
 
   const openCategoryModal = (category: string) => {
     // console.log(category);
@@ -81,7 +84,16 @@ export function HomeScreen(): React.JSX.Element {
 
   const closeAllProcess = () => {
     setIsDone(true);
-};
+  };
+
+  useEffect(() => {
+    async function fetchCategories() {
+      const {data} = await fetchData('/categories', null);
+      setCategories(data.data);
+    }
+
+    fetchCategories();
+  }, [setCategories]);
 
   return (
     <AppLayout>
@@ -115,10 +127,7 @@ export function HomeScreen(): React.JSX.Element {
           <SendFeedbackButton />
         </View>
       </ScrollView>
-      <Login
-        isVisible={!isDone}
-        closeAllProcess={closeAllProcess}
-      />
+      <Login isVisible={!isDone} closeAllProcess={closeAllProcess} />
       <SearchCategoryModal
         isVisible={isCategoryModalVisible}
         closeCategoryModal={closeCategoryModal}

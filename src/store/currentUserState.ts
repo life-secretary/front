@@ -10,7 +10,7 @@ const FAKE_USER = {
   hasChild: false,
 };
 
-export const userState = atom({
-  key: 'userState',
+export const currentUserState = atom({
+  key: 'currentUserState',
   default: FAKE_USER,
 });

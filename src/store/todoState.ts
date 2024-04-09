@@ -1,5 +1,5 @@
 import {generateRandomId} from '@/utils';
-import {atom} from 'recoil';
+import {atom, selector} from 'recoil';
 
 const DUMMY_TODO = [
   {
@@ -57,7 +57,32 @@ const DUMMY_TODO = [
   },
 ];
 
-export const todoListState = atom({
+// atom
+const todoListState = atom({
   key: 'todoListState',
-  default: DUMMY_TODO,
+  // default: DUMMY_TODO,
+  default: [],
 });
+
+const todoListFilterState = atom({
+  key: 'TodoListFilter',
+  default: '진행 중',
+});
+
+const filteredTodoListState = selector({
+  key: 'FilteredTodoListState',
+  get: ({get}) => {
+    const filter = get(todoListFilterState);
+    const list = get(todoListState);
+
+    if (filter === '진행 중') {
+      return list.filter(item => !item?.hasDone);
+    }
+
+    if (filter === '완료') {
+      return list.filter(item => item?.hasDone);
+    }
+  },
+});
+
+export {todoListState, todoListFilterState, filteredTodoListState};

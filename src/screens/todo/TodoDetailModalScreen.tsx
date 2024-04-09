@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useSetRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
 
 import {StyleSheet, View} from 'react-native';
@@ -16,25 +16,33 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 import {removeItemAtIndex} from '@/utils';
+import {
+  bottomSheetModeState,
+  bottomSheetVisibleState,
+} from '@/store/bottomSheetState';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;
-  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
-  const [bottomSheetMode, setBottomSheetMode] = useState('');
+
+  console.log(todoItem);
+
+  const [todoList, setTodoList] = useRecoilState(todoListState);
+  const setIsBottomSheetVisible = useSetRecoilState(bottomSheetVisibleState);
+  const [bottomSheetMode, setBottomSheetMode] =
+    useRecoilState(bottomSheetModeState);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSuccessed, setIsSuccessed] = useState(false);
-  const [todoList, setTodoList] = useRecoilState(todoListState);
   const isCompletedMode = todoItem?.isDone;
 
   const itemIndex = todoList.findIndex(item => item.id === todoItem?.id);
 
-  const handleBottomSheetVisible = (status: boolean, mode: string) => {
-    setBottomSheetMode(mode);
-    setIsBottomSheetVisible(status);
+  const handleModalVisible = (status: boolean) => {
+    setIsModalVisible(status);
   };
 
-  const handleModalVisible = (arg: boolean) => {
-    setIsModalVisible(arg);
+  const handleBottomSheetVisible = (status: boolean, mode?: string) => {
+    setIsBottomSheetVisible(status);
+    mode && setBottomSheetMode(mode);
   };
 
   const handleCloseButtonPress = (mode: string) => {
@@ -48,6 +56,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
       headerTitle: '할 일 수정',
       todoItem,
     });
+
     handleBottomSheetVisible(false, 'editAndDelete');
   };
 
@@ -67,10 +76,17 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     navigation.navigate('Todo');
   };
 
+  const handleCompleteButtonPress = () => {
+    navigation.navigate('Todo');
+  };
+
   useEffect(() => {
-    const hasNotYetDoneSubTodo = todoItem?.subTodoList.some(
-      (todo: object) => todo?.isDone === false,
-    );
+    const hasNotYetDoneSubTodo =
+      (todoItem?.subTodoList &&
+        todoItem?.subTodoList.some(
+          (todo: object) => todo?.hasDone === false,
+        )) ||
+      false;
 
     if (hasNotYetDoneSubTodo) {
       setIsSuccessed(false);
@@ -78,7 +94,11 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     }
 
     setIsSuccessed(true);
-  }, [todoItem?.subTodoList]);
+
+    return () => {
+      setIsBottomSheetVisible(false);
+    };
+  }, [setIsBottomSheetVisible, todoItem?.subTodoList]);
 
   return (
     <View style={[styles.layout, isCompletedMode && styles.completed]}>
@@ -112,84 +132,85 @@ export function TodoDetailModalScreen({navigation, route}: any) {
         <TodoDetail todoItem={{...todoItem}} />
       </SafeAreaView>
       <SubTodoList todoItem={{...todoItem}} />
-      <AppBottomSheet
-        isVisible={bottomSheetMode === 'editAndDelete' && isBottomSheetVisible}
-        mode={bottomSheetMode}
-        handleBottomSheetVisible={handleBottomSheetVisible}
-        contentsStyle={styles.bottomSheetContainer}
-        snapPointsArr={['18%']}>
-        <View style={styles.buttonContainer}>
-          <AppButton
-            text="삭제하기"
-            buttonStyle={[styles.bottomSheetButton, styles.lightButton]}
-            textStyle={styles.bottomSheetButtonText}
-            startIcon={{
-              name: 'trash',
-              width: 24,
-              height: 24,
-            }}
-            onPressButton={() => handleModalVisible(true)}
-          />
-          {isCompletedMode ? (
+      {bottomSheetMode === 'editAndDelete' && (
+        <AppBottomSheet
+          mode={bottomSheetMode}
+          contentsStyle={styles.bottomSheetContainer}
+          snapPointsArr={['18%']}>
+          <View style={styles.buttonContainer}>
             <AppButton
-              text="다시하기"
+              text="삭제하기"
               buttonStyle={[styles.bottomSheetButton, styles.lightButton]}
               textStyle={styles.bottomSheetButtonText}
               startIcon={{
-                name: 'reload',
+                name: 'trash',
                 width: 24,
                 height: 24,
               }}
-              onPressButton={() => handleRetryButtonPress()}
+              onPressButton={() => handleModalVisible(true)}
             />
-          ) : (
-            <AppButton
-              text="수정하기"
-              buttonStyle={[styles.bottomSheetButton, styles.lightButton]}
-              textStyle={styles.bottomSheetButtonText}
-              startIcon={{
-                name: 'edit',
-                width: 24,
-                height: 24,
-              }}
-              onPressButton={() => handleEditButtonPress()}
-            />
-          )}
-        </View>
-      </AppBottomSheet>
-      <AppBottomSheet
-        isVisible={bottomSheetMode === 'complete' && isBottomSheetVisible}
-        handleBottomSheetVisible={handleBottomSheetVisible}
-        contentsStyle={styles.bottomSheetContainer}
-        snapPointsArr={isSuccessed ? ['35%'] : ['30%']}>
-        <View style={styles.contentsContainer}>
-          <View style={styles.titleContainer}>
-            <View style={styles.closeButton}>
-              <AppIcon
-                name="closeDark"
-                width={36}
-                height={36}
-                onPress={() => handleCloseButtonPress('complete')}
+            {isCompletedMode ? (
+              <AppButton
+                text="다시하기"
+                buttonStyle={[styles.bottomSheetButton, styles.lightButton]}
+                textStyle={styles.bottomSheetButtonText}
+                startIcon={{
+                  name: 'reload',
+                  width: 24,
+                  height: 24,
+                }}
+                onPressButton={() => handleRetryButtonPress()}
               />
-            </View>
-            <AppText style={styles.contentsTitle}>
-              {isSuccessed
-                ? '목표 달성 성공!\n이렇게 또 한걸음 성장했어요'
-                : '목표를 아직 채우지 못했어요!'}
-            </AppText>
-            <AppText style={styles.contentsDescription}>
-              {isSuccessed
-                ? '목표를 완료 처리 할까요?'
-                : '현재 상태로 완료 처리할까요?'}
-            </AppText>
+            ) : (
+              <AppButton
+                text="수정하기"
+                buttonStyle={[styles.bottomSheetButton, styles.lightButton]}
+                textStyle={styles.bottomSheetButtonText}
+                startIcon={{
+                  name: 'edit',
+                  width: 24,
+                  height: 24,
+                }}
+                onPressButton={() => handleEditButtonPress()}
+              />
+            )}
           </View>
-          <AppButton
-            text="완료하기"
-            textStyle={styles.bottomSheetButtonBoldText}
-            buttonStyle={[styles.bottomSheetButton, styles.darkButton]}
-          />
-        </View>
-      </AppBottomSheet>
+        </AppBottomSheet>
+      )}
+      {bottomSheetMode === 'complete' && (
+        <AppBottomSheet
+          contentsStyle={styles.bottomSheetContainer}
+          snapPointsArr={isSuccessed ? ['35%'] : ['30%']}>
+          <View style={styles.contentsContainer}>
+            <View style={styles.titleContainer}>
+              <View style={styles.closeButton}>
+                <AppIcon
+                  name="closeDark"
+                  width={36}
+                  height={36}
+                  onPress={() => handleCloseButtonPress('complete')}
+                />
+              </View>
+              <AppText style={styles.contentsTitle}>
+                {isSuccessed
+                  ? '목표 달성 성공!\n이렇게 또 한걸음 성장했어요'
+                  : '목표를 아직 채우지 못했어요!'}
+              </AppText>
+              <AppText style={styles.contentsDescription}>
+                {isSuccessed
+                  ? '목표를 완료 처리 할까요?'
+                  : '현재 상태로 완료 처리할까요?'}
+              </AppText>
+            </View>
+            <AppButton
+              text="완료하기"
+              textStyle={styles.bottomSheetButtonBoldText}
+              buttonStyle={[styles.bottomSheetButton, styles.darkButton]}
+              onPressButton={handleCompleteButtonPress}
+            />
+          </View>
+        </AppBottomSheet>
+      )}
       <AppConfirmModal
         isVisible={isModalVisible}
         type="row"
