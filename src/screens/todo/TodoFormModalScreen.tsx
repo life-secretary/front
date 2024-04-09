@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import {bottomSheetVisibleState} from '@/store/bottomSheetState';
+import {useRecoilState} from 'recoil';
 
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import {AppText} from '../../components/common/AppText';
@@ -16,14 +18,11 @@ export function TodoFormModalScreen({route, navigation}: any) {
   const {headerTitle, form, todoItem, isEditMode} = route.params;
   const defaultCategory = isEditMode
     ? todoItem?.category
-    : {key: 'NONE', text: '선택안함'};
+    : {id: 0, key: 'none', name: '선택안함'};
 
-  const [isVisible, setIsVisible] = useState(false);
+  // const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useRecoilState(bottomSheetVisibleState);
   const [selectedCategory, setSelectedCategory] = useState(defaultCategory);
-
-  const handleBottomSheetVisible = (arg: boolean) => {
-    setIsVisible(arg);
-  };
 
   return (
     <>
@@ -41,7 +40,6 @@ export function TodoFormModalScreen({route, navigation}: any) {
             />
           </View>
         </AppHeader>
-        <AppText>{isVisible}</AppText>
         <KeyboardAvoidingView
           style={styles.container}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -49,8 +47,9 @@ export function TodoFormModalScreen({route, navigation}: any) {
             <TodoForm
               isEditMode={isEditMode}
               todoItem={todoItem}
-              handleBottomSheetVisible={handleBottomSheetVisible}
-              handleSelectCategory={(arg: object) => setSelectedCategory(arg)}
+              handleSelectCategory={(category: string) =>
+                setSelectedCategory(category)
+              }
               selectedCategory={selectedCategory}
               isVisible={isVisible}
             />
@@ -59,14 +58,9 @@ export function TodoFormModalScreen({route, navigation}: any) {
           )}
         </KeyboardAvoidingView>
       </AppLayout>
-      <AppBottomSheet
-        isVisible={isVisible}
-        snapPointsArr={['65%']}
-        handleBottomSheetVisible={handleBottomSheetVisible}>
+      <AppBottomSheet snapPointsArr={['65%', '90%']}>
         <TodoCategorySelect
-          isVisible={isVisible}
           handleSelectCategory={(arg: object) => setSelectedCategory(arg)}
-          handleBottomSheetVisible={handleBottomSheetVisible}
         />
       </AppBottomSheet>
     </>

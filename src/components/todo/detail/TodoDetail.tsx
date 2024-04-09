@@ -12,7 +12,7 @@ type todoDetailProps = {
 };
 
 export function TodoDetail({todoItem}: todoDetailProps): React.JSX.Element {
-  const isCompleted = todoItem?.isDone;
+  const isCompleted = todoItem?.hasDone;
 
   const setTagContainerStyles = (tag: string) => {
     switch (tag) {
@@ -54,7 +54,7 @@ export function TodoDetail({todoItem}: todoDetailProps): React.JSX.Element {
       <View style={styles.infoContainer}>
         <View style={styles.infoRow}>
           <AppText style={[styles.infoText, styles.defaultText]}>할일</AppText>
-          {todoItem?.subTodoList.length > 0 ? (
+          {todoItem?.subTodoList && todoItem?.subTodoList.length > 0 ? (
             <View style={styles.todoRow}>
               <AppText style={[styles.infoText, styles.completedText]}>
                 {

@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
+import {bottomSheetVisibleState} from '@/store/bottomSheetState';
 import {useNavigation} from '@react-navigation/native';
 
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
@@ -9,28 +10,28 @@ import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-import {getFormattedDate, generateRandomId, replaceItemAtIndex} from '@/utils';
+import {getFormattedDate, replaceItemAtIndex} from '@/utils';
+import {createData} from '@/api/api';
 
-type TodoFormProps = {
+type Props = {
   isEditMode?: boolean;
   todoItem?: object;
-  selectedCategory: object;
-  handleBottomSheetVisible: Function;
-  handleSelectCategory: Function;
+  selectedCategory: object | null;
   isVisible: boolean;
+  handleSelectCategory: Function;
 };
 
 export function TodoForm({
   isEditMode = false,
   todoItem,
   selectedCategory,
-  handleBottomSheetVisible,
   handleSelectCategory,
-}: TodoFormProps) {
+}: Props) {
+  const [isVisible, setIsVisible] = useRecoilState(bottomSheetVisibleState);
   // const [isValid, setIsValid] = React.useState(true);
+  const [todoList, setTodoList] = useRecoilState(todoListState);
   const [isEmpty, setIsEmpty] = useState(false);
   const [title, setTitle] = useState(todoItem?.title);
-  const [todoList, setTodoList] = useRecoilState(todoListState);
   const navigation = useNavigation();
 
   const itemIndex = todoList.findIndex(
@@ -43,24 +44,33 @@ export function TodoForm({
   };
 
   // ADD TODO
-  const addTodo = () => {
-    setTodoList(oldTodoList => [
-      ...oldTodoList,
-      // TODO: todo item type 정의
-      {
-        id: generateRandomId(),
-        title: title,
-        category: selectedCategory,
-        tags: ['나의 할 일', `${selectedCategory.text}`],
-        isDone: false,
-        createdDate: getFormattedDate(new Date(), '-'),
-        completedDate: null,
-        subTodoList: [],
-      },
-    ]);
+  const addTodo = async () => {
+    // setTodoList(oldTodoList => [
+    //   ...oldTodoList,
+    //   {
+    //     id: generateRandomId(),
+    //     title: title,
+    //     category: selectedCategory,
+    //     tags: ['나의 할 일', `${selectedCategory.text}`],
+    //     isDone: false,
+    //     createdDate: getFormattedDate(new Date(), '-'),
+    //     completedDate: null,
+    //     subTodoList: [],
+    //   },
+    // ]);
 
-    resetForm();
-    navigation.navigate('Todo');
+    const newTodo = {
+      title,
+      category: selectedCategory?.name,
+      userId: 1,
+    };
+
+    const res = await createData('/user-todos', newTodo);
+
+    if (res.status === 200) {
+      resetForm();
+      navigation.navigate('Todo');
+    }
   };
 
   // EDIT TODO
@@ -99,22 +109,19 @@ export function TodoForm({
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}>
         <View style={styles.form}>
-          {/* TODO: 분야가 제대로 수정되지 않는 버그 */}
           <AppInput
             hasLabel={true}
             labelText="분야"
             placeholder="최대 6자 내로 입력 가능해요"
-            text={selectedCategory?.text}
-            onChangeText={(newText: string) =>
-              handleSelectCategory({key: 'USER', text: newText})
-            }
-            editable={selectedCategory?.key === 'USER'}
+            text={selectedCategory?.name}
+            onChangeText={(newText: string) => handleSelectCategory(newText)}
+            editable={selectedCategory?.key === 'custom'}
             icon={{
               name: 'arrowRight',
               width: 36,
               height: 36,
               styles: {color: color.grey.grey400},
-              onPress: () => handleBottomSheetVisible(true),
+              onPress: () => setIsVisible(true),
             }}
           />
           <AppInput

@@ -1,7 +1,7 @@
 import axiosInstance from './axios';
 
 // GET
-export async function fetchData(url: string, params: object) {
+export async function fetchData(url: string, params: object | null) {
   try {
     return await axiosInstance.get(url, {params});
   } catch (err) {

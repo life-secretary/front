@@ -1,6 +1,6 @@
 import React, {ReactNode, useCallback, useEffect, useMemo, useRef} from 'react';
 
-import {StyleSheet, ViewStyle} from 'react-native';
+import {ViewStyle} from 'react-native';
 import {
   BottomSheetModal,
   BottomSheetView,
@@ -9,24 +9,27 @@ import {
 } from '@gorhom/bottom-sheet';
 
 import {BottomSheetDefaultBackdropProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
+import {useRecoilState, useSetRecoilState} from 'recoil';
+import {
+  bottomSheetModeState,
+  bottomSheetVisibleState,
+} from '@/store/bottomSheetState';
 
 type AppBottomSheetProps = {
   mode?: string;
-  isVisible: boolean;
   snapPointsArr?: string[];
   children?: ReactNode;
   contentsStyle?: ViewStyle;
-  handleBottomSheetVisible: Function;
 };
 
 const AppBottomSheet = ({
   mode,
-  isVisible,
   snapPointsArr = ['25%', '50%'],
   children,
   contentsStyle,
-  handleBottomSheetVisible,
 }: AppBottomSheetProps) => {
+  const [isVisible, setIsVisible] = useRecoilState(bottomSheetVisibleState);
+  const setMode = useSetRecoilState(bottomSheetModeState);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   // TODO: dynamic value로 변경
   const snapPoints = useMemo(() => snapPointsArr, [snapPointsArr]);
@@ -41,6 +44,11 @@ const AppBottomSheet = ({
 
   const handleSheetChanges = useCallback((index: number) => {}, []);
 
+  const handlePress = () => {
+    setIsVisible(false);
+    mode && setMode(mode);
+  };
+
   const renderBackdrop = useCallback(
     (
       props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps,
@@ -50,10 +58,10 @@ const AppBottomSheet = ({
         enableTouchThrough={true}
         appearsOnIndex={0}
         disappearsOnIndex={-1}
-        onPress={handleBottomSheetVisible(false, mode)}
+        onPress={handlePress}
       />
     ),
-    [handleBottomSheetVisible, mode],
+    [handlePress],
   );
 
   useEffect(() => {
@@ -68,18 +76,10 @@ const AppBottomSheet = ({
         snapPoints={snapPoints}
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}>
-        <BottomSheetView style={[styles.contentContainer, contentsStyle]}>
-          {children}
-        </BottomSheetView>
+        <BottomSheetView style={contentsStyle}>{children}</BottomSheetView>
       </BottomSheetModal>
     </BottomSheetModalProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    flex: 1,
-  },
-});
 
 export default AppBottomSheet;

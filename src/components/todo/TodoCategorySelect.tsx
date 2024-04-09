@@ -1,48 +1,46 @@
 import React from 'react';
+import {categoryListState} from '@/store/categoryState';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 
 import {FlatList, Pressable, StyleSheet, View} from 'react-native';
 import {AppText} from '@/components/common/AppText';
 import {font} from '@/styles/font';
 import color from '@/styles/color';
+import {bottomSheetVisibleState} from '@/store/bottomSheetState';
 
-const DUMMY_SELECT_OPTIONS = [
-  {key: 'NONE', text: '선택안함'},
-  {key: 'ECONOMY', text: '경제'},
-  {key: 'LAW', text: '법'},
-  {key: 'ECO', text: '환경'},
-  {key: 'SELFDEV', text: '자기계발'},
-  {key: 'HEALTH', text: '건강'},
-  {key: 'CULTURE', text: '문화'},
-  {key: 'USER', text: '직접입력'},
-];
-
-type TodoCategorySelectProps = {
+type Props = {
   handleSelectCategory: Function;
-  handleBottomSheetVisible: Function;
-  isVisible: boolean;
 };
 
 export function TodoCategorySelect({
   handleSelectCategory,
-  handleBottomSheetVisible,
-}: TodoCategorySelectProps): React.JSX.Element {
+}: Props): React.JSX.Element {
+  const setIsVisible = useSetRecoilState(bottomSheetVisibleState);
+  const categories = useRecoilValue(categoryListState);
+  const CATEGORY_SELECT_OPTIONS = [
+    {id: 0, key: 'none', name: '선택안함'},
+    ...categories,
+    {id: categories.length + 1, key: 'custom', name: '직접입력'},
+  ];
+
   const handleSelectOption = (option: object) => {
     handleSelectCategory(option);
-    // TODO: 아래 핸들러가 제대로 값을 넘기지 못하는 버그 해결
-    handleBottomSheetVisible(false);
+    setIsVisible(false);
   };
 
   return (
     <View style={styles.selectContainer}>
       <AppText style={styles.title}>할 일의 분야를 선택해주세요</AppText>
       <FlatList
-        data={DUMMY_SELECT_OPTIONS}
+        showsVerticalScrollIndicator={false}
+        alwaysBounceVertical={false}
+        data={CATEGORY_SELECT_OPTIONS}
         renderItem={({item}) => (
           <View style={styles.optionContainer}>
             <Pressable
               style={styles.option}
               onPress={() => handleSelectOption(item)}>
-              <AppText style={styles.optionText}>{item.text}</AppText>
+              <AppText style={styles.optionText}>{item.name}</AppText>
             </Pressable>
           </View>
         )}
