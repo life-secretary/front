@@ -23,16 +23,13 @@ import {
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;
-
-  console.log(todoItem);
-
   const [todoList, setTodoList] = useRecoilState(todoListState);
   const setIsBottomSheetVisible = useSetRecoilState(bottomSheetVisibleState);
   const [bottomSheetMode, setBottomSheetMode] =
     useRecoilState(bottomSheetModeState);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSuccessed, setIsSuccessed] = useState(false);
-  const isCompletedMode = todoItem?.isDone;
+  const isCompletedMode = todoItem?.hasDone;
 
   const itemIndex = todoList.findIndex(item => item.id === todoItem?.id);
 
