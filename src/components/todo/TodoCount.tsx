@@ -7,17 +7,17 @@ import {font} from '@/styles/font';
 
 type Props = {
   title: string;
-  todoCount: number;
+  totalTodoCount: number | undefined;
 };
 
-export function TodoCount({title, todoCount}: Props): React.JSX.Element {
+export function TodoCount({title, totalTodoCount}: Props): React.JSX.Element {
   return (
     <View style={styles.container}>
       <AppText style={styles.text}>{title}</AppText>
       <View style={styles.countContainer}>
         <AppText style={[styles.text, styles.countText]}>총 </AppText>
         <AppText style={[styles.text, styles.countHighlightText]}>
-          {todoCount}
+          {totalTodoCount}
         </AppText>
         <AppText style={[styles.text, styles.countText]}>개</AppText>
       </View>

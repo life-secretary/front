@@ -3,6 +3,8 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {TodoTabOption} from '@/components/todo/TodoTabOption';
 import color from '@/styles/color';
+import {useSetRecoilState} from 'recoil';
+import {todoListFilterState} from '@/store/todoState';
 
 type Props = {
   tabOptions: string[];
@@ -15,9 +17,12 @@ export function TodoTabBar({
   selectedIndex,
   onTabPress,
 }: Props): React.JSX.Element {
-  const handleTabPress = (index: number) => {
+  const setTodoListFilterState = useSetRecoilState(todoListFilterState);
+
+  const handleTabPress = (index: number, tab: string) => {
     if (index !== selectedIndex) {
       onTabPress(index);
+      setTodoListFilterState(tab);
     }
   };
 
@@ -29,7 +34,7 @@ export function TodoTabBar({
           tab={tab}
           index={index}
           isTabActive={selectedIndex === index}
-          onTabPress={() => handleTabPress(index)}
+          onTabPress={() => handleTabPress(index, tab)}
         />
       ))}
     </View>
