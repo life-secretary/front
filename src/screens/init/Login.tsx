@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         gap: 10,
         paddingHorizontal: 24,
-        zIndex: 99,
+        zIndex: 9,
     },
 
     buttonKakao: {
