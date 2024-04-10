@@ -38,6 +38,8 @@ export function TodoForm({
     (item: object) => item.id === todoItem?.id,
   );
 
+  const isCustomCategory = selectedCategory?.key === 'custom';
+
   const resetForm = () => {
     setTitle('');
     handleSelectCategory({});
@@ -45,20 +47,6 @@ export function TodoForm({
 
   // ADD TODO
   const addTodo = async () => {
-    // setTodoList(oldTodoList => [
-    //   ...oldTodoList,
-    //   {
-    //     id: generateRandomId(),
-    //     title: title,
-    //     category: selectedCategory,
-    //     tags: ['나의 할 일', `${selectedCategory.text}`],
-    //     isDone: false,
-    //     createdDate: getFormattedDate(new Date(), '-'),
-    //     completedDate: null,
-    //     subTodoList: [],
-    //   },
-    // ]);
-
     const newTodo = {
       title,
       category: selectedCategory?.name,
@@ -96,6 +84,8 @@ export function TodoForm({
   */
 
   useEffect(() => {
+    console.log(selectedCategory);
+
     if (!title || !selectedCategory) {
       setIsEmpty(true);
     } else {
@@ -113,9 +103,11 @@ export function TodoForm({
             hasLabel={true}
             labelText="분야"
             placeholder="최대 6자 내로 입력 가능해요"
-            text={selectedCategory?.name}
-            onChangeText={(newText: string) => handleSelectCategory(newText)}
-            editable={selectedCategory?.key === 'custom'}
+            text={isCustomCategory ? '' : selectedCategory?.name}
+            onChangeText={(newText: string) =>
+              handleSelectCategory({key: 'custom', name: newText})
+            }
+            editable={isCustomCategory}
             icon={{
               name: 'arrowRight',
               width: 36,

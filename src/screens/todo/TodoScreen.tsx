@@ -1,10 +1,10 @@
-import React, {useCallback, useState, Suspense} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {fetchData} from '@/api/api';
-import {useRecoilState} from 'recoil';
+import {useSetRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
 
-import {StyleSheet, View, ScrollView, ActivityIndicator} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
@@ -16,14 +16,14 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 export function TodoScreen({navigation}: any): React.JSX.Element {
-  const [todoList, setTodoList] = useRecoilState(todoListState);
+  const setTodoList = useSetRecoilState(todoListState);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const moveToScreen = (screen: string, params: object) => {
     navigation.navigate(screen, params);
   };
 
-  const handleIndexChange = (index: number) => {
+  const handleTabChange = (index: number) => {
     setSelectedIndex(index);
   };
 
@@ -41,12 +41,11 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
           userId: 1,
         });
 
-        const list = data.data;
-        setTodoList(list);
+        setTodoList(data.data);
       }
 
       fetchTodoList();
-    }, []),
+    }, [setTodoList]),
   );
 
   return (
@@ -66,25 +65,14 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
         <TodoTabBar
           tabOptions={['진행 중', '완료']}
           selectedIndex={selectedIndex}
-          onTabPress={(index: number) => handleIndexChange(index)}
+          onTabPress={(index: number) => handleTabChange(index)}
         />
-        <Suspense
-          fallback={
-            <ActivityIndicator size="large" color={color.grey.grey400} />
-          }>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {selectedIndex === 0 && (
-              <OngoingTodoList
-                data={todoList.filter(todo => todo?.hasDone === false)}
-              />
-            )}
-            {selectedIndex === 1 && (
-              <CompletedTodoList
-                data={todoList.filter(todo => todo?.hasDone === true)}
-              />
-            )}
-          </ScrollView>
-        </Suspense>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.container}>
+            {selectedIndex === 0 && <OngoingTodoList />}
+            {selectedIndex === 1 && <CompletedTodoList />}
+          </View>
+        </ScrollView>
       </View>
     </AppLayout>
   );

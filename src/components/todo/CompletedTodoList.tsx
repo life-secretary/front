@@ -6,6 +6,11 @@ import {TodoCard} from '@/components/todo/TodoCard';
 import {TodoCount} from '@/components/todo/TodoCount';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import {
+  filteredTodoListState,
+  todoListTotalCountState,
+} from '@/store/todoState';
+import {useRecoilValue} from 'recoil';
 
 // TODO: 별도의 컴포넌트로 분리
 const EmptyList = () => {
@@ -16,16 +21,15 @@ const EmptyList = () => {
   );
 };
 
-type TodoListProps = {
-  data: object[];
-};
+export function CompletedTodoList(): React.JSX.Element {
+  const totalTodoCount = useRecoilValue(todoListTotalCountState);
+  const list = useRecoilValue(filteredTodoListState);
 
-export function CompletedTodoList({data}: TodoListProps): React.JSX.Element {
   return (
     <View style={styles.container}>
-      <TodoCount title="완료 할 일" todoCount={data.length} />
+      <TodoCount title="완료 할 일" totalTodoCount={totalTodoCount} />
       <FlatList
-        data={data}
+        data={list}
         renderItem={({item}) => <TodoCard item={{...item}} />}
         keyExtractor={item => item?.id}
         ListEmptyComponent={<EmptyList />}
@@ -40,12 +44,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContainer: {
+    gap: 16,
     marginTop: 22,
   },
   emptyListContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 22,
   },
   emptyListText: {
     fontWeight: font.fontWeight.medium,
