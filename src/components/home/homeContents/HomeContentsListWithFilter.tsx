@@ -47,18 +47,20 @@ const DUMMY_DATA = [
   },
 ];
 
-type ContentsListProps = {
+type Props = {
+  categories: object[];
   title: string;
   data?: object[];
 };
 
 export function HomeContentsListWithFilter({
+  categories,
   title,
-}: ContentsListProps): React.JSX.Element {
+}: Props): React.JSX.Element {
   return (
     <View style={styles.container}>
       <AppText style={styles.listTitle}>{title}</AppText>
-      <HomeContentsCategoryList />
+      <HomeContentsCategoryList categories={categories} />
       <FlatList
         data={DUMMY_DATA}
         renderItem={({item, index}) => (

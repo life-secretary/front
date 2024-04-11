@@ -34,8 +34,8 @@ import {default as logo} from './icon_logo.svg';
 import {default as all} from './category/icon_category_all.svg';
 import {default as economy} from './category/icon_category_economy.svg';
 import {default as law} from './category/icon_category_law.svg';
-import {default as eco} from './category/icon_category_eco.svg';
-import {default as selfdev} from './category/icon_category_selfdev.svg';
+import {default as environment} from './category/icon_category_environment.svg';
+import {default as selfImprovement} from './category/icon_category_selfimprovement.svg';
 import {default as health} from './category/icon_category_health.svg';
 import {default as culture} from './category/icon_category_culture.svg';
 import {default as etc} from './category/icon_category_etc.svg';
@@ -48,7 +48,7 @@ import {default as logoApple} from './login/icon_apple.svg';
 export type IconsData = {
   [iconName: string]: {
     type: 'stroke' | 'fill';
-    file: React.FC<SvgProps>;
+    file: React.FC<SvgProps> | string;
     defaultStroke: string;
     defaultFill: string;
   };
@@ -256,15 +256,15 @@ const Icons: IconsData = {
     defaultStroke: '',
     defaultFill: '',
   },
-  eco: {
+  environment: {
     type: 'fill',
-    file: eco,
+    file: environment,
     defaultStroke: '',
     defaultFill: '',
   },
-  selfdev: {
+  selfImprovement: {
     type: 'fill',
-    file: selfdev,
+    file: selfImprovement,
     defaultStroke: '',
     defaultFill: '',
   },
@@ -309,7 +309,7 @@ const Icons: IconsData = {
     file: logoApple,
     defaultStroke: '',
     defaultFill: '',
-  }
+  },
 };
 
 export default Icons;

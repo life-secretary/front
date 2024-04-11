@@ -4,70 +4,26 @@ import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {HomeCategoryItem} from '@/components/home/HomeCategoryItem';
 import color from '@/styles/color';
 
-import {generateRandomId} from '@/utils';
-
-type ItemProps = {
+type Props = {
+  categories: object[];
   openCategoryModal: Function;
 };
 
-export const DUMMY_CATEGORY = [
-  {
-    id: generateRandomId(),
-    category: 'all',
-    title: '전체',
-  },
-  {
-    id: generateRandomId(),
-    category: 'economy',
-    title: '경제',
-  },
-  {
-    id: generateRandomId(),
-    category: 'law',
-    title: '법',
-  },
-  {
-    id: generateRandomId(),
-    category: 'eco',
-    title: '환경',
-  },
-  {
-    id: generateRandomId(),
-    category: 'selfdev',
-    title: '자기계발',
-  },
-  {
-    id: generateRandomId(),
-    category: 'health',
-    title: '건강',
-  },
-  {
-    id: generateRandomId(),
-    category: 'culture',
-    title: '문화',
-  },
-  {
-    id: generateRandomId(),
-    category: 'etc',
-    title: '기타',
-  },
-];
-
 export function HomeCategoryList({
+  categories,
   openCategoryModal,
-}: ItemProps): React.JSX.Element {
+}: Props): React.JSX.Element {
   return (
     <View style={styles.container}>
       <FlatList
-        data={DUMMY_CATEGORY}
+        data={categories}
         renderItem={({item}) => (
           <HomeCategoryItem
-            title={item.title}
-            category={item.category}
+            item={{...item}}
             openCategoryModal={openCategoryModal}
           />
         )}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item?.id}
         horizontal={false}
         numColumns={4}
         columnWrapperStyle={styles.listColumn}

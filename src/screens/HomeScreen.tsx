@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {categoryListState} from '@/store/categoryState';
+import {categoryListState, mainCategoryListState} from '@/store/categoryState';
 
 import {StyleSheet, ScrollView, View} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
@@ -17,9 +17,9 @@ import ContentModal from '@/components/contentDetail/ContentModal';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-import {getFormattedDate} from '@/utils';
+import {generateRandomId, getFormattedDate} from '@/utils';
 import {fetchData} from '@/api/api';
-import {useSetRecoilState} from 'recoil';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 
 const DUMMY_CAROUSEL_DATA = [
   {
@@ -51,7 +51,16 @@ const DUMMY_CAROUSEL_DATA = [
 export function HomeScreen(): React.JSX.Element {
   // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
   const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
+  const [isContentModalVisible, setIsContentModalVisible] = useState(false);
   const setCategories = useSetRecoilState(categoryListState);
+  // Login → Agreement → Survey 과정 임시 테스팅 중
+  const [isDone, setIsDone] = useState(false);
+  const mainCategories = useRecoilValue(mainCategoryListState);
+  const HOME_CATEGORIES = [
+    {id: generateRandomId(), category: 'all', title: '전체'},
+    ...mainCategories,
+    {id: generateRandomId(), category: 'etc', title: '기타'},
+  ];
 
   const openCategoryModal = (category: string) => {
     // console.log(category);
@@ -61,9 +70,6 @@ export function HomeScreen(): React.JSX.Element {
   const closeCategoryModal = () => {
     setIsCategoryModalVisible(false);
   };
-
-  const [isContentModalVisible, setIsContentModalVisible] =
-    React.useState(false);
 
   const openContentModal = () => {
     setIsContentModalVisible(true);
@@ -78,9 +84,6 @@ export function HomeScreen(): React.JSX.Element {
   // 인기 많은 콘텐츠 리스트 데이터
 
   // 최근 업데이트된 콘텐츠 리스트 데이터
-
-  // Login → Agreement → Survey 과정 임시 테스팅 중
-  const [isDone, setIsDone] = useState(false);
 
   const closeAllProcess = () => {
     setIsDone(true);
@@ -108,7 +111,10 @@ export function HomeScreen(): React.JSX.Element {
             <AppIcon name="balancer" width={42} height={42} />
           </View>
         </AppHeader>
-        <HomeCategoryList openCategoryModal={openCategoryModal} />
+        <HomeCategoryList
+          categories={HOME_CATEGORIES}
+          openCategoryModal={openCategoryModal}
+        />
         <HomeImageCarousel
           data={DUMMY_CAROUSEL_DATA}
           openContentModal={openContentModal}
@@ -117,7 +123,10 @@ export function HomeScreen(): React.JSX.Element {
           isUsernameUsed={true}
           title={'유사한 사용자가 읽고 있어요'}
         />
-        <HomeContentsListWithFilter title={'인기 많은 콘텐츠'} />
+        <HomeContentsListWithFilter
+          categories={HOME_CATEGORIES}
+          title={'인기 많은 콘텐츠'}
+        />
         <HomeContentsList title={'최근 업데이트 되었어요'} />
         <View style={styles.footer}>
           <AppTitle
