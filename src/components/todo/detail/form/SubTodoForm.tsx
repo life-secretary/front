@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-import {useRecoilState} from 'recoil';
-import {todoListState} from '@/store/todoState';
 import {useNavigation} from '@react-navigation/native';
 
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
@@ -9,44 +7,38 @@ import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-import {generateRandomId, replaceItemAtIndex} from '@/utils';
+import {createData} from '@/api/api';
 
-type SubTodoFormProps = {
+type Props = {
   todoItem: object;
 };
 
-export function SubTodoForm({todoItem}: SubTodoFormProps) {
+export function SubTodoForm({todoItem}: Props) {
   const [isEmpty, setIsEmpty] = useState(false);
   const [subTitle, setSubTitle] = useState('');
-  const [todoList, setTodoList] = useRecoilState(todoListState);
+  // const [todoList, setTodoList] = useRecoilState(todoListState);
   const navigation = useNavigation();
+  const parentTodoId = todoItem?.id;
 
-  const itemIndex = todoList.findIndex(
-    (item: object) => item.id === todoItem?.id,
-  );
+  // const itemIndex = todoList.findIndex(
+  //   (item: object) => item.id === todoItem?.id,
+  // );
 
   const resetForm = () => {
     setSubTitle('');
   };
 
-  const addSubTodo = () => {
+  const addSubTodo = async () => {
     const newSubTodo = {
-      id: generateRandomId(),
       title: subTitle,
-      isCompleted: false,
     };
 
-    const newSubTodoList = [...todoItem?.subTodoList, newSubTodo];
+    const res = await createData(`user-todos/${parentTodoId}/sub`, newSubTodo);
 
-    const newList = replaceItemAtIndex(todoList, itemIndex, {
-      ...todoItem,
-      subTodoList: newSubTodoList,
-    });
-
-    setTodoList(newList);
-
-    resetForm();
-    navigation.goBack();
+    if (res.status === 200) {
+      resetForm();
+      navigation.goBack();
+    }
   };
 
   React.useEffect(() => {

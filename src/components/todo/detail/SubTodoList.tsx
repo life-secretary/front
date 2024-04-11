@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {StyleSheet, View, FlatList} from 'react-native';
 import {AppText} from '@/components/common/AppText';
@@ -6,8 +6,9 @@ import {SubTodoItem} from '@/components/todo/detail/SubTodoItem';
 import {AddSubTodoButton} from '@/components/todo/detail/AddSubTodoButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import {fetchData} from '@/api/api';
 
-type SubTodoListProps = {
+type Props = {
   todoItem: object;
 };
 
@@ -21,14 +22,32 @@ const EmptyList = () => {
   );
 };
 
-export function SubTodoList({todoItem}: SubTodoListProps): React.JSX.Element {
+export function SubTodoList({todoItem}: Props): React.JSX.Element {
+  const [subTodoList, setSubTodoList] = useState([]);
+  const parentTodoId = todoItem?.id;
+
+  useEffect(() => {
+    async function fetchSubTodoList() {
+      const {data, status} = await fetchData(
+        `/user-todos/${parentTodoId}/sub`,
+        {},
+      );
+
+      if (status === 200) {
+        setSubTodoList(data.data);
+      }
+    }
+
+    fetchSubTodoList();
+  }, [parentTodoId, subTodoList]);
+
   return (
     <View style={styles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={todoItem?.subTodoList}
+        data={subTodoList}
         renderItem={({item}) => (
-          <SubTodoItem todoItem={{...todoItem}} subTodoItem={{...item}} />
+          <SubTodoItem todoItem={{...todoItem}} subTodoItem={item} />
         )}
         keyExtractor={item => item?.id}
         contentContainerStyle={styles.listContainer}
