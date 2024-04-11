@@ -44,24 +44,26 @@ const AppBottomSheet = ({
 
   const handleSheetChanges = useCallback((index: number) => {}, []);
 
-  const handlePress = () => {
-    setIsVisible(false);
-    mode && setMode(mode);
-  };
-
   const renderBackdrop = useCallback(
     (
       props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps,
-    ) => (
-      <BottomSheetBackdrop
-        {...props}
-        enableTouchThrough={true}
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-        onPress={handlePress}
-      />
-    ),
-    [handlePress],
+    ) => {
+      const handlePress = () => {
+        setIsVisible(false);
+        mode && setMode(mode);
+      };
+
+      return (
+        <BottomSheetBackdrop
+          {...props}
+          enableTouchThrough={true}
+          appearsOnIndex={0}
+          disappearsOnIndex={-1}
+          onPress={() => handlePress()}
+        />
+      );
+    },
+    [mode, setIsVisible, setMode],
   );
 
   useEffect(() => {
