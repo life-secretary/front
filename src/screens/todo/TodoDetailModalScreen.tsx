@@ -18,7 +18,7 @@ import {
   bottomSheetModeState,
   bottomSheetVisibleState,
 } from '@/store/bottomSheetState';
-import {deleteData} from '@/api/api';
+import {deleteData, fetchData} from '@/api/api';
 import Toast from 'react-native-toast-message';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
@@ -28,6 +28,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     useRecoilState(bottomSheetModeState);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSuccessed, setIsSuccessed] = useState(false);
+  const [subTodoList, setSubTodoList] = useState([]);
   const isCompletedMode = todoItem?.isDone;
   const todoId = todoItem?.id;
 
@@ -87,9 +88,19 @@ export function TodoDetailModalScreen({navigation, route}: any) {
   };
 
   useEffect(() => {
+    async function fetchSubTodoList() {
+      const {data, status} = await fetchData(`/user-todos/${todoId}/sub`, {});
+
+      if (status === 200) {
+        setSubTodoList(data.data);
+      }
+    }
+
+    fetchSubTodoList();
+
     const hasNotYetDoneSubTodo =
-      (todoItem?.subTodoList &&
-        todoItem?.subTodoList.some((todo: object) => todo?.isDone === false)) ||
+      (subTodoList &&
+        subTodoList.some((todo: object) => todo?.isDone === false)) ||
       false;
 
     if (hasNotYetDoneSubTodo) {
@@ -102,7 +113,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     return () => {
       setIsBottomSheetVisible(false);
     };
-  }, [setIsBottomSheetVisible, todoItem?.subTodoList]);
+  }, [setIsBottomSheetVisible, subTodoList, todoId]);
 
   return (
     <View style={[styles.layout, isCompletedMode && styles.completed]}>
@@ -138,7 +149,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
           isCompletedMode={isCompletedMode}
         />
       </SafeAreaView>
-      <SubTodoList todoItem={{...todoItem}} />
+      <SubTodoList todoItem={{...todoItem}} subTodoList={subTodoList} />
       {bottomSheetMode === 'editAndDelete' && (
         <AppBottomSheet
           mode={bottomSheetMode}

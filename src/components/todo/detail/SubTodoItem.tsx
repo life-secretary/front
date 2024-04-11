@@ -19,6 +19,7 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 import {replaceItemAtIndex} from '@/utils';
+import {deleteData} from '@/api/api';
 
 type ItemProps = {
   todoItem: object;
@@ -39,8 +40,8 @@ export function SubTodoItem({
   const itemWidth =
     Dimensions.get('window').width - spacing.layoutPaddingHorizontal * 2;
 
-  const todoItemIndex = todoList.findIndex(todo => todo.id === todoItem.id);
-  const subTodoList = todoItem?.subTodoList;
+  // const todoItemIndex = todoList.findIndex(todo => todo.id === todoItem.id);
+  const parentTodoId = todoItem?.id;
   const isCompletedMode = todoItem?.isDone;
 
   const handleInputPress = () => {
@@ -53,34 +54,31 @@ export function SubTodoItem({
   };
 
   const editSubTodo = (subTodoId: string) => {
-    const subTodoItemIndex = subTodoList?.findIndex(
-      (subTodo: object) => subTodo?.id === subTodoId,
-    );
-
-    const newSubTodoList = replaceItemAtIndex(subTodoList, subTodoItemIndex, {
-      ...subTodoItem,
-      title,
-    });
-
-    const newTodoList = replaceItemAtIndex(todoList, todoItemIndex, {
-      ...todoItem,
-      subTodoList: newSubTodoList,
-    });
-
-    setTodoList(newTodoList);
+    // const subTodoItemIndex = subTodoList?.findIndex(
+    //   (subTodo: object) => subTodo?.id === subTodoId,
+    // );
+    // const newSubTodoList = replaceItemAtIndex(subTodoList, subTodoItemIndex, {
+    //   ...subTodoItem,
+    //   title,
+    // });
+    // const newTodoList = replaceItemAtIndex(todoList, todoItemIndex, {
+    //   ...todoItem,
+    //   subTodoList: newSubTodoList,
+    // });
+    // setTodoList(newTodoList);
   };
 
-  const deleteSubTodo = (subTodoId: string) => {
-    const filteredSubTodoList = subTodoList?.filter(
-      (subTodo: object) => subTodo?.id !== subTodoId,
-    );
+  const deleteSubTodo = async (subTodoId: string) => {
+    // const filteredSubTodoList = subTodoList?.filter(
+    //   (subTodo: object) => subTodo?.id !== subTodoId,
+    // );
+    // const newTodoList = replaceItemAtIndex(todoList, todoItemIndex, {
+    //   ...todoItem,
+    //   subTodoList: filteredSubTodoList,
+    // });
+    // setTodoList(newTodoList);
 
-    const newTodoList = replaceItemAtIndex(todoList, todoItemIndex, {
-      ...todoItem,
-      subTodoList: filteredSubTodoList,
-    });
-
-    setTodoList(newTodoList);
+    await deleteData(`/user-todos/${parentTodoId}/sub`, {}, subTodoId);
   };
 
   // TODO: 수정 완료/취소 동작 구분
@@ -92,8 +90,6 @@ export function SubTodoItem({
 
   const handleDeleteButtonPress = (id: string) => {
     deleteSubTodo(id);
-    // TODO: 즉시 subtodo list를 update하는 function 필요
-    navigation.navigate('Todo');
   };
 
   return (

@@ -22,7 +22,7 @@ export async function createData(url: string, data: any) {
 export async function updateData(
   url: string,
   params: object,
-  id: number,
+  id: number | string,
   data: any,
 ) {
   try {
@@ -33,7 +33,11 @@ export async function updateData(
 }
 
 // DELETE
-export async function deleteData(url: string, params: object, id: number) {
+export async function deleteData(
+  url: string,
+  params: object,
+  id: number | string,
+) {
   try {
     return await axiosInstance.delete(`${url}/${id}`, {params});
   } catch (err) {
