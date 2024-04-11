@@ -49,7 +49,7 @@ export function TodoForm({
   const addTodo = async () => {
     const newTodo = {
       title,
-      category: selectedCategory?.name,
+      category: selectedCategory?.title,
       userId: 1,
     };
 
@@ -101,7 +101,7 @@ export function TodoForm({
             hasLabel={true}
             labelText="분야"
             placeholder="최대 6자 내로 입력 가능해요"
-            text={isCustomCategory ? '' : selectedCategory?.name}
+            text={isCustomCategory ? '' : selectedCategory?.title}
             onChangeText={(newText: string) =>
               handleSelectCategory({key: 'custom', name: newText})
             }

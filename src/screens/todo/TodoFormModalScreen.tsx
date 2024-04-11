@@ -18,7 +18,7 @@ export function TodoFormModalScreen({route, navigation}: any) {
   const {headerTitle, form, todoItem, isEditMode} = route.params;
   const defaultCategory = isEditMode
     ? todoItem?.category
-    : {id: 0, key: 'none', name: '선택안함'};
+    : {id: 0, key: 'none', title: '선택안함'};
 
   // const [isVisible, setIsVisible] = useState(false);
   const [isVisible, setIsVisible] = useRecoilState(bottomSheetVisibleState);
