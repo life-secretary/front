@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {useRecoilState, useSetRecoilState} from 'recoil';
-import {todoListState} from '@/store/todoState';
 
 import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -20,6 +19,7 @@ import {
   bottomSheetVisibleState,
 } from '@/store/bottomSheetState';
 import {deleteData} from '@/api/api';
+import Toast from 'react-native-toast-message';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;
@@ -62,6 +62,14 @@ export function TodoDetailModalScreen({navigation, route}: any) {
 
     if (res.status === 200) {
       navigation.navigate('Todo');
+      Toast.show({
+        type: 'success',
+        props: {text: '할 일이 삭제되었어요'},
+        position: 'bottom',
+        bottomOffset: 20,
+        visibilityTime: 2000,
+        autoHide: true,
+      });
     }
   };
 
