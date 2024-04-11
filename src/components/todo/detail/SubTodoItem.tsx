@@ -41,7 +41,7 @@ export function SubTodoItem({
 
   const todoItemIndex = todoList.findIndex(todo => todo.id === todoItem.id);
   const subTodoList = todoItem?.subTodoList;
-  const isDone = todoItem?.isDone;
+  const isCompletedMode = todoItem?.isDone;
 
   const handleInputPress = () => {
     setIsEditable(true);
@@ -123,9 +123,9 @@ export function SubTodoItem({
               <BouncyCheckbox
                 size={18}
                 fillColor={color.grey.grey500}
-                iconStyle={{borderWidth: 1.5, marginHorizontal: 12}}
+                iconStyle={styles.checkbox}
                 disableText={true}
-                disabled={isDone}
+                disabled={isCompletedMode}
                 isChecked={isChecked}
                 onPress={() => setIsChecked(!isChecked)}
               />
@@ -200,6 +200,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  checkbox: {
+    borderWidth: 1.5,
+    marginHorizontal: 12,
   },
   deleteButton: {
     gap: 4,
