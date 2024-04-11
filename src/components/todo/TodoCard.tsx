@@ -9,21 +9,21 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 import {getFormattedDate} from '@/utils';
 
-type Props = {
-  item: object;
-};
-
 // TODO: model에 정의
 interface TodoItem {
   id: string;
   title: string | null;
   category: object | string;
-  tags: string[];
-  hasDone: boolean;
-  createdDate: string | null;
-  completedDate: string | null;
-  subTodoList: object[] | null;
+  tags: string[] | [];
+  isDone: boolean;
+  createdTime: string | null;
+  completedTime: string | null;
+  subTodoList: object[] | [];
 }
+
+type Props = {
+  item: object;
+};
 
 export function TodoCard({item}: Props): React.JSX.Element {
   const navigation = useNavigation();
@@ -31,11 +31,11 @@ export function TodoCard({item}: Props): React.JSX.Element {
     id: item?.id,
     title: item?.title,
     category: item?.category,
-    tags: [],
-    hasDone: item?.hasDone,
-    createdDate: null,
-    completedDate: null,
-    subTodoList: [],
+    tags: item?.tags,
+    isDone: item?.isDone,
+    createdTime: item?.createdTime,
+    completedTime: item?.completedTime,
+    subTodoList: item?.subTodoList,
   };
 
   const moveToScreen = (screen: string, params: object) => {
@@ -102,7 +102,7 @@ export function TodoCard({item}: Props): React.JSX.Element {
               <>
                 <AppText style={[styles.cardInfoText, styles.dark]}>
                   {
-                    todoItem.subTodoList.filter((item: object) => item?.hasDone)
+                    todoItem.subTodoList.filter((item: object) => item?.isDone)
                       .length
                   }
                 </AppText>
@@ -117,8 +117,8 @@ export function TodoCard({item}: Props): React.JSX.Element {
           </View>
           <AppText style={[styles.cardInfoText, styles.cardDate]}>
             생성{' '}
-            {todoItem?.createdDate &&
-              getFormattedDate(new Date(todoItem?.createdDate), '.')}
+            {todoItem?.createdTime &&
+              getFormattedDate(new Date(todoItem?.createdTime), '.')}
           </AppText>
         </View>
       </View>

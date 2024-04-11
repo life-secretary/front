@@ -18,9 +18,9 @@ export function TodoCategorySelect({
   const setIsVisible = useSetRecoilState(bottomSheetVisibleState);
   const categories = useRecoilValue(categoryListState);
   const CATEGORY_SELECT_OPTIONS = [
-    {id: 0, key: 'none', name: '선택안함'},
+    {id: 0, key: 'none', title: '선택안함'},
     ...categories,
-    {id: categories.length + 1, key: 'custom', name: '직접입력'},
+    {id: categories.length + 1, key: 'custom', title: '직접입력'},
   ];
 
   const handleSelectOption = (option: object) => {
@@ -40,7 +40,7 @@ export function TodoCategorySelect({
             <Pressable
               style={styles.option}
               onPress={() => handleSelectOption(item)}>
-              <AppText style={styles.optionText}>{item.name}</AppText>
+              <AppText style={styles.optionText}>{item.title}</AppText>
             </Pressable>
           </View>
         )}

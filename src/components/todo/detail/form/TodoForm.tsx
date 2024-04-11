@@ -84,8 +84,6 @@ export function TodoForm({
   */
 
   useEffect(() => {
-    console.log(selectedCategory);
-
     if (!title || !selectedCategory) {
       setIsEmpty(true);
     } else {
