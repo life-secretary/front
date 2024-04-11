@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {StyleSheet, Pressable} from 'react-native';
 import {AppText} from '@/components/common/AppText';
@@ -6,30 +6,53 @@ import AppIcon from '@/components/common/AppIcon';
 import {font} from '@/styles/font';
 import color from '@/styles/color';
 
-type ItemProps = {
-  category: string;
-  title: string;
+type Props = {
+  item: object;
   openCategoryModal: Function;
 };
 
 export function HomeCategoryItem({
-  category,
-  title,
+  item,
   openCategoryModal,
-}: ItemProps): React.JSX.Element {
+}: Props): React.JSX.Element {
   const handlePress = (category: string) => {
     openCategoryModal(category);
   };
 
+  const setCategoryIcon = useCallback((category: string) => {
+    switch (category) {
+      case 'all':
+        return 'all';
+      case 'economy':
+        return 'economy';
+      case 'law':
+        return 'law';
+      case 'environment':
+        return 'environment';
+      case 'self-improvement':
+        return 'selfImprovement';
+      case 'health':
+        return 'health';
+      case 'culture':
+        return 'culture';
+      case 'etc':
+        return 'etc';
+      default:
+        return '';
+    }
+  }, []);
+
   return (
-    <Pressable style={styles.container} onPress={() => handlePress(category)}>
+    <Pressable
+      style={styles.container}
+      onPress={() => handlePress(item?.category)}>
       <AppIcon
-        name={category}
+        name={setCategoryIcon(item?.category)}
         width={44}
         height={44}
-        onPress={() => handlePress(category)}
+        onPress={() => handlePress(item?.category)}
       />
-      <AppText style={styles.title}>{title}</AppText>
+      <AppText style={styles.title}>{item?.title}</AppText>
     </Pressable>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import {categoryListState} from '@/store/categoryState';
+import {categoryListState, mainCategoryListState} from '@/store/categoryState';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 
 import {FlatList, Pressable, StyleSheet, View} from 'react-native';
@@ -16,7 +16,8 @@ export function TodoCategorySelect({
   handleSelectCategory,
 }: Props): React.JSX.Element {
   const setIsVisible = useSetRecoilState(bottomSheetVisibleState);
-  const categories = useRecoilValue(categoryListState);
+  const categories = useRecoilValue(mainCategoryListState);
+
   const CATEGORY_SELECT_OPTIONS = [
     {id: 0, key: 'none', title: '선택안함'},
     ...categories,

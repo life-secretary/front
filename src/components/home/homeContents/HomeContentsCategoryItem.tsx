@@ -1,37 +1,47 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-import {StyleSheet, Pressable} from 'react-native';
+import {StyleSheet, Pressable, View} from 'react-native';
 import {AppText} from '@/components/common/AppText';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 type ItemProps = {
-  category: string;
-  title: string;
+  item: object;
+  activeCategory: string;
+  handleActiveCategory: Function;
 };
 
 export function HomeContentsCategoryItem({
-  category,
-  title,
+  item,
+  activeCategory,
+  handleActiveCategory,
 }: ItemProps): React.JSX.Element {
-  const handlePress = (item: string) => {};
+  const [isActive, setIsActive] = useState(false);
+
+  const handleCategoryPress = (category: string) => {
+    setIsActive(!isActive);
+    handleActiveCategory(category);
+  };
 
   return (
-    <Pressable
-      style={({pressed}) => [
-        pressed ? styles.pressedButton : styles.defaultButton,
-        styles.button,
-      ]}
-      onPress={() => handlePress(category)}>
-      {({pressed}) => (
+    <Pressable onPress={() => handleCategoryPress(item?.category)}>
+      <View
+        style={[
+          activeCategory === item?.category
+            ? styles.pressedButton
+            : styles.defaultButton,
+          styles.button,
+        ]}>
         <AppText
           style={[
-            pressed ? styles.pressedText : styles.defaultText,
+            activeCategory === item?.category
+              ? styles.pressedText
+              : styles.defaultText,
             styles.text,
           ]}>
-          {title}
+          {item?.title}
         </AppText>
-      )}
+      </View>
     </Pressable>
   );
 }
@@ -54,7 +64,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 15,
     lineHeight: 17.9,
-    marginTop: 5,
   },
   defaultText: {
     fontWeight: font.fontWeight.medium,

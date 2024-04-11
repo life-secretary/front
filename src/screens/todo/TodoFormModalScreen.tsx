@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {bottomSheetVisibleState} from '@/store/bottomSheetState';
-import {useRecoilState} from 'recoil';
+import {useRecoilValue} from 'recoil';
 
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import {AppText} from '../../components/common/AppText';
@@ -21,7 +21,7 @@ export function TodoFormModalScreen({route, navigation}: any) {
     : {id: 0, key: 'none', title: '선택안함'};
 
   // const [isVisible, setIsVisible] = useState(false);
-  const [isVisible, setIsVisible] = useRecoilState(bottomSheetVisibleState);
+  const isVisible = useRecoilValue(bottomSheetVisibleState);
   const [selectedCategory, setSelectedCategory] = useState(defaultCategory);
 
   return (
@@ -58,7 +58,7 @@ export function TodoFormModalScreen({route, navigation}: any) {
           )}
         </KeyboardAvoidingView>
       </AppLayout>
-      <AppBottomSheet snapPointsArr={['65%', '90%']}>
+      <AppBottomSheet snapPointsArr={['65%']}>
         <TodoCategorySelect
           handleSelectCategory={(arg: object) => setSelectedCategory(arg)}
         />

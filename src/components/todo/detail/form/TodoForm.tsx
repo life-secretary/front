@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useSetRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
 import {bottomSheetVisibleState} from '@/store/bottomSheetState';
 import {useNavigation} from '@react-navigation/native';
@@ -10,7 +10,7 @@ import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-import {getFormattedDate, replaceItemAtIndex} from '@/utils';
+import {replaceItemAtIndex} from '@/utils';
 import {createData} from '@/api/api';
 
 type Props = {
@@ -27,7 +27,7 @@ export function TodoForm({
   selectedCategory,
   handleSelectCategory,
 }: Props) {
-  const [isVisible, setIsVisible] = useRecoilState(bottomSheetVisibleState);
+  const setIsVisible = useSetRecoilState(bottomSheetVisibleState);
   // const [isValid, setIsValid] = React.useState(true);
   const [todoList, setTodoList] = useRecoilState(todoListState);
   const [isEmpty, setIsEmpty] = useState(false);

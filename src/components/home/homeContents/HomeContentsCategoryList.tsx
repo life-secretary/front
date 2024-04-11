@@ -1,61 +1,42 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 
 import {StyleSheet, FlatList} from 'react-native';
 import {HomeContentsCategoryItem} from '@/components/home/homeContents/HomeContentsCategoryItem';
 
-import {generateRandomId} from '@/utils';
+type Props = {
+  categories: object[];
+};
 
-const DUMMY_CATEGORY = [
-  {
-    id: generateRandomId(),
-    category: 'all',
-    title: '전체',
-  },
-  {
-    id: generateRandomId(),
-    category: 'economy',
-    title: '경제',
-  },
-  {
-    id: generateRandomId(),
-    category: 'law',
-    title: '법',
-  },
-  {
-    id: generateRandomId(),
-    category: 'echo',
-    title: '환경',
-  },
-  {
-    id: generateRandomId(),
-    category: 'selfImprovement',
-    title: '자기계발',
-  },
-  {
-    id: generateRandomId(),
-    category: 'health',
-    title: '건강',
-  },
-  {
-    id: 'cate7',
-    category: 'culture',
-    title: '문화',
-  },
-  {
-    id: generateRandomId(),
-    category: 'etc',
-    title: '기타',
-  },
-];
+export function HomeContentsCategoryList({
+  categories,
+}: Props): React.JSX.Element {
+  const [activeCategory, setActiveCategory] = useState('all');
 
-export function HomeContentsCategoryList(): React.JSX.Element {
+  const handleActiveCategory = (category: string) => {
+    setActiveCategory(category);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setActiveCategory('all');
+      };
+    }, []),
+  );
+
   return (
     <FlatList
-      data={DUMMY_CATEGORY}
+      scrollsToTop
+      data={categories}
       renderItem={({item}) => (
-        <HomeContentsCategoryItem title={item.title} category={item.category} />
+        <HomeContentsCategoryItem
+          item={{...item}}
+          activeCategory={activeCategory}
+          handleActiveCategory={handleActiveCategory}
+        />
       )}
-      keyExtractor={item => item.id}
+      keyExtractor={item => item?.id}
       horizontal={true}
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.listContainer}
@@ -65,7 +46,6 @@ export function HomeContentsCategoryList(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   listContainer: {
-    flex: 1,
     gap: 8,
     marginBottom: 28,
   },
