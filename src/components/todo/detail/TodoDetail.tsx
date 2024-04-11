@@ -7,13 +7,15 @@ import {font} from '@/styles/font';
 
 import {getFormattedDate} from '@/utils';
 
-type todoDetailProps = {
+type Props = {
   todoItem: object;
+  isCompletedMode: false;
 };
 
-export function TodoDetail({todoItem}: todoDetailProps): React.JSX.Element {
-  const isCompleted = todoItem?.hasDone;
-
+export function TodoDetail({
+  todoItem,
+  isCompletedMode,
+}: Props): React.JSX.Element {
   const setTagContainerStyles = (tag: string) => {
     switch (tag) {
       case '나의 할 일':
@@ -76,10 +78,10 @@ export function TodoDetail({todoItem}: todoDetailProps): React.JSX.Element {
               생성
             </AppText>
             <AppText style={[styles.infoText, styles.defaultText]}>
-              {getFormattedDate(new Date(todoItem?.createdDate), '.')}
+              {getFormattedDate(new Date(todoItem?.createdTime), '.')}
             </AppText>
           </View>
-          {isCompleted && (
+          {isCompletedMode && (
             <>
               <AppText style={[styles.infoText, styles.defaultText]}>
                 &middot;
@@ -89,7 +91,7 @@ export function TodoDetail({todoItem}: todoDetailProps): React.JSX.Element {
                   완료
                 </AppText>
                 <AppText style={[styles.infoText, styles.defaultText]}>
-                  {getFormattedDate(new Date(todoItem?.completedDate), '.')}
+                  {getFormattedDate(new Date(todoItem?.completedTime), '.')}
                 </AppText>
               </View>
             </>

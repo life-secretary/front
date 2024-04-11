@@ -15,23 +15,23 @@ import {SubTodoList} from '@/components/todo/detail/SubTodoList';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-import {removeItemAtIndex} from '@/utils';
 import {
   bottomSheetModeState,
   bottomSheetVisibleState,
 } from '@/store/bottomSheetState';
+import {deleteData} from '@/api/api';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;
-  const [todoList, setTodoList] = useRecoilState(todoListState);
   const setIsBottomSheetVisible = useSetRecoilState(bottomSheetVisibleState);
   const [bottomSheetMode, setBottomSheetMode] =
     useRecoilState(bottomSheetModeState);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSuccessed, setIsSuccessed] = useState(false);
-  const isCompletedMode = todoItem?.hasDone;
+  const isCompletedMode = todoItem?.isDone;
+  const todoId = todoItem?.id;
 
-  const itemIndex = todoList.findIndex(item => item.id === todoItem?.id);
+  // const itemIndex = todoList.findIndex(item => item.id === todoItem?.id);
 
   const handleModalVisible = (status: boolean) => {
     setIsModalVisible(status);
@@ -57,16 +57,17 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     handleBottomSheetVisible(false, 'editAndDelete');
   };
 
-  const deleteTodo = () => {
-    const newList = removeItemAtIndex(todoList, itemIndex);
+  const deleteTodo = async () => {
+    const res = await deleteData('/user-todos', {}, todoId);
 
-    setTodoList(newList);
+    if (res.status === 200) {
+      navigation.navigate('Todo');
+    }
   };
 
   // TODO: DELETE TODO 호출 위치 고민
   const handleDeleteButtonPress = () => {
     deleteTodo();
-    navigation.navigate('Todo');
   };
 
   const handleRetryButtonPress = () => {
@@ -80,9 +81,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
   useEffect(() => {
     const hasNotYetDoneSubTodo =
       (todoItem?.subTodoList &&
-        todoItem?.subTodoList.some(
-          (todo: object) => todo?.hasDone === false,
-        )) ||
+        todoItem?.subTodoList.some((todo: object) => todo?.isDone === false)) ||
       false;
 
     if (hasNotYetDoneSubTodo) {
@@ -126,7 +125,10 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             />
           </View>
         </AppHeader>
-        <TodoDetail todoItem={{...todoItem}} />
+        <TodoDetail
+          todoItem={{...todoItem}}
+          isCompletedMode={isCompletedMode}
+        />
       </SafeAreaView>
       <SubTodoList todoItem={{...todoItem}} />
       {bottomSheetMode === 'editAndDelete' && (
