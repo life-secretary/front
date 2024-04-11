@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 
 import { AppText } from '@/components/common/AppText';
@@ -8,9 +8,47 @@ import AppButton from '@/components/common/AppButton';
 
 import { getFontSize } from '@/utils/font';
 
-const Login = () => {
+import Agreement from '../init/Agreement';
+
+type LoginProps = {
+    isVisible: boolean;
+    closeAllProcess: () => void;
+};
+
+const Login = ({
+    isVisible,
+    closeAllProcess,
+}: LoginProps): React.JSX.Element => {
+
+    const [isLogin, setIsLogin] = useState(false);
+    const [isStartModalOpen, setIsStartModalOpen] = useState(false);
+
+    const onPressKakaoLoginButton = () => {
+        setIsLogin(true);
+        setIsStartModalOpen(true);
+    };
+
+    const onPressGoogleLoginButton = () => {
+        setIsLogin(true);
+        setIsStartModalOpen(true);
+    };
+
+    const onPressAppleLoginButton = () => {
+        setIsLogin(true);
+        setIsStartModalOpen(true);
+    };
+
+    const closeStartModal = () => {
+        setIsStartModalOpen(false);
+    };
+
+    const closeStartProcess = () => {
+        setIsStartModalOpen(false);
+        closeAllProcess();
+    };
+
     return (
-        <AppModal isVisible={true}>
+        <AppModal isVisible={isVisible}>
             <View style={styles.container}>
                 <View style={styles.logoContainer}>
                     <AppText style={styles.logoText}>
@@ -34,6 +72,7 @@ const Login = () => {
                             width: 18,
                             height: 19,
                         }}
+                        onPressButton={onPressKakaoLoginButton}
                     />
                     <AppButton 
                         text='Google 로그인'
@@ -44,6 +83,7 @@ const Login = () => {
                             width: 19,
                             height: 19,
                         }}
+                        onPressButton={onPressGoogleLoginButton}
                     />
                     <AppButton 
                         text='Apple 로그인'
@@ -54,6 +94,7 @@ const Login = () => {
                             width: 15,
                             height: 16,
                         }}
+                        onPressButton={onPressAppleLoginButton}
                     />
                     <View style={styles.loginHelpTextContainer}>
                         <AppButton 
@@ -63,6 +104,11 @@ const Login = () => {
                     </View>
                 </View>
             </View>
+            <Agreement 
+                isVisible={isStartModalOpen} 
+                closeModalHandler={closeStartModal}
+                closeStartProcess={closeStartProcess}
+            />
         </AppModal>
     )
 };

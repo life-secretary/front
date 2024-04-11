@@ -1,18 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Image, Platform } from 'react-native';
 
 import { AppText } from '@/components/common/AppText';
 import { AppHeader } from '@/components/common/AppHeader';
 import AppModal from '@/components/common/modal/AppModal';
 import AppIcon from '@/components/common/AppIcon';
-import { getFontSize } from '@/utils/font';
 import AppButton from '@/components/common/AppButton';
 
+import { getFontSize } from '@/utils/font';
 
-const Agreement = () => {
+import Survey from '../init/Survey';
+
+type AgreementProps = {
+    isVisible: boolean;
+    closeModalHandler: () => void;
+    closeStartProcess: () => void;
+}
+
+const Agreement = ({
+    isVisible,
+    closeModalHandler,
+    closeStartProcess,
+}: AgreementProps): React.JSX.Element => {
+
+    const [isSurveyModalOpen, setIsSurveyModalOpen] = useState(false);
+
+    const onPressAgreeAndStartButton = () => {
+        setIsSurveyModalOpen(true);
+    };
+
+    const closeSurveyModal = () => {
+        setIsSurveyModalOpen(false);
+    };
+
     return (
         <AppModal
-            isVisible={true}
+            isVisible={isVisible}
         > 
             <View style={styles.container}>
                 <AppHeader>
@@ -20,7 +43,7 @@ const Agreement = () => {
                         name='back'
                         width={42}
                         height={42}
-                        onPress={() => {}}
+                        onPress={closeModalHandler}
                     />
                 </AppHeader>
                 <View style={styles.logoContainer}>
@@ -71,6 +94,7 @@ const Agreement = () => {
                         text='동의하고 시작하기'
                         textStyle={styles.startButtonText}
                         buttonStyle={styles.startButton}
+                        onPressButton={onPressAgreeAndStartButton}
                     />
                     <AppText style={styles.disagreementText}>
                         만 14세 미만이거나 이용약관에 
@@ -82,6 +106,11 @@ const Agreement = () => {
                     </AppText>
                 </View>
             </View>
+            <Survey 
+                isVisible={isSurveyModalOpen} 
+                closeModalHandler={closeSurveyModal}
+                closeStartProcess={closeStartProcess}
+            />
         </AppModal>  
     );
 };
