@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {StyleSheet, ScrollView, View} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
@@ -10,6 +10,7 @@ import {HomeContentsListWithFilter} from '@/components/home/homeContents/HomeCon
 import {HomeImageCarousel} from '@/components/home/HomeImageCarousel';
 import {HomeContentsList} from '@/components/home/homeContents/HomeContentsList';
 import {SendFeedbackButton} from '@/components/home/SendFeedbackButton';
+import Login from './init/Login';
 import SearchCategoryModal from '@/components/search/SearchCategoryModal';
 import ContentModal from '@/components/contentDetail/ContentModal';
 import color from '@/styles/color';
@@ -75,6 +76,13 @@ export function HomeScreen(): React.JSX.Element {
 
   // 최근 업데이트된 콘텐츠 리스트 데이터
 
+  // Login → Agreement → Survey 과정 임시 테스팅 중
+  const [isDone, setIsDone] = useState(false);
+
+  const closeAllProcess = () => {
+    setIsDone(true);
+};
+
   return (
     <AppLayout>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -107,6 +115,10 @@ export function HomeScreen(): React.JSX.Element {
           <SendFeedbackButton />
         </View>
       </ScrollView>
+      <Login
+        isVisible={!isDone}
+        closeAllProcess={closeAllProcess}
+      />
       <SearchCategoryModal
         isVisible={isCategoryModalVisible}
         closeCategoryModal={closeCategoryModal}
