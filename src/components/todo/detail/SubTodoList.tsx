@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
 import {StyleSheet, View, FlatList} from 'react-native';
 import {AppText} from '@/components/common/AppText';
@@ -6,10 +6,10 @@ import {SubTodoItem} from '@/components/todo/detail/SubTodoItem';
 import {AddSubTodoButton} from '@/components/todo/detail/AddSubTodoButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
-import {fetchData} from '@/api/api';
 
 type Props = {
   todoItem: object;
+  subTodoList: object[];
 };
 
 const EmptyList = () => {
@@ -22,25 +22,7 @@ const EmptyList = () => {
   );
 };
 
-export function SubTodoList({todoItem}: Props): React.JSX.Element {
-  const [subTodoList, setSubTodoList] = useState([]);
-  const parentTodoId = todoItem?.id;
-
-  useEffect(() => {
-    async function fetchSubTodoList() {
-      const {data, status} = await fetchData(
-        `/user-todos/${parentTodoId}/sub`,
-        {},
-      );
-
-      if (status === 200) {
-        setSubTodoList(data.data);
-      }
-    }
-
-    fetchSubTodoList();
-  }, [parentTodoId, subTodoList]);
-
+export function SubTodoList({todoItem, subTodoList}: Props): React.JSX.Element {
   return (
     <View style={styles.container}>
       <FlatList
