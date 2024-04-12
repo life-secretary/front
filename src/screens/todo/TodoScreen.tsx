@@ -68,10 +68,8 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
           onTabPress={(index: number) => handleTabChange(index)}
         />
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.container}>
-            {selectedIndex === 0 && <OngoingTodoList />}
-            {selectedIndex === 1 && <CompletedTodoList />}
-          </View>
+          {selectedIndex === 0 && <OngoingTodoList />}
+          {selectedIndex === 1 && <CompletedTodoList />}
         </ScrollView>
       </View>
     </AppLayout>

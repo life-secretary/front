@@ -9,12 +9,12 @@ import {getFormattedDate} from '@/utils';
 
 type Props = {
   todoItem: object;
-  isCompletedMode: false;
+  isCompleteMode: boolean;
 };
 
 export function TodoDetail({
   todoItem,
-  isCompletedMode,
+  isCompleteMode,
 }: Props): React.JSX.Element {
   const setTagContainerStyles = (tag: string) => {
     switch (tag) {
@@ -81,7 +81,7 @@ export function TodoDetail({
               {getFormattedDate(new Date(todoItem?.createdTime), '.')}
             </AppText>
           </View>
-          {isCompletedMode && (
+          {isCompleteMode && (
             <>
               <AppText style={[styles.infoText, styles.defaultText]}>
                 &middot;

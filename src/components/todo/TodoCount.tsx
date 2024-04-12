@@ -27,9 +27,10 @@ export function TodoCount({title, totalTodoCount}: Props): React.JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 22,
+    marginVertical: 22,
     borderRadius: 8,
   },
   countContainer: {

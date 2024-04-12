@@ -18,8 +18,9 @@ import {
   bottomSheetModeState,
   bottomSheetVisibleState,
 } from '@/store/bottomSheetState';
-import {deleteData, fetchData} from '@/api/api';
+import {deleteData, fetchData, updateData} from '@/api/api';
 import Toast from 'react-native-toast-message';
+import {getFormattedDate} from '@/utils';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;
@@ -29,7 +30,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSuccessed, setIsSuccessed] = useState(false);
   const [subTodoList, setSubTodoList] = useState([]);
-  const isCompletedMode = todoItem?.isDone;
+  const isCompleteMode = todoItem?.isDone;
   const todoId = todoItem?.id;
 
   const handleModalVisible = (status: boolean) => {
@@ -76,7 +77,21 @@ export function TodoDetailModalScreen({navigation, route}: any) {
   };
 
   const handleCompleteButtonPress = () => {
-    navigation.navigate('Todo');
+    completeTodo(todoItem?.id);
+  };
+
+  const completeTodo = async (id: number) => {
+    const completedTodo = {
+      ...todoItem,
+      isDone: true,
+      completedTime: getFormattedDate(new Date(), '-'),
+    };
+
+    const res = await updateData('/user-todos', id, completedTodo);
+
+    if (res.status === 200) {
+      navigation.navigate('Todo');
+    }
   };
 
   const fetchSubTodoList = useCallback(async () => {
@@ -103,7 +118,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
   }, [hasNotYetDoneSubTodo, setIsBottomSheetVisible]);
 
   return (
-    <View style={[styles.layout, isCompletedMode && styles.completed]}>
+    <View style={[styles.layout, isCompleteMode && styles.completed]}>
       <SafeAreaView>
         <AppHeader style={styles.header}>
           <AppIcon
@@ -114,7 +129,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             onPress={() => navigation.goBack()}
           />
           <View style={styles.headerButtonContainer}>
-            {!isCompletedMode && (
+            {!isCompleteMode && (
               <AppButton
                 text="완료"
                 buttonStyle={styles.completeButton}
@@ -137,12 +152,13 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             />
           </View>
         </AppHeader>
-        <TodoDetail
-          todoItem={{...todoItem}}
-          isCompletedMode={isCompletedMode}
-        />
+        <TodoDetail todoItem={{...todoItem}} isCompleteMode={isCompleteMode} />
       </SafeAreaView>
-      <SubTodoList todoItem={{...todoItem}} subTodoList={subTodoList} />
+      <SubTodoList
+        todoItem={{...todoItem}}
+        subTodoList={subTodoList}
+        isCompleteMode={isCompleteMode}
+      />
       {bottomSheetMode === 'editAndDelete' && (
         <AppBottomSheet
           contentsStyle={styles.bottomSheetContainer}
@@ -159,7 +175,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
               }}
               onPressButton={() => handleModalVisible(true)}
             />
-            {isCompletedMode ? (
+            {isCompleteMode ? (
               <AppButton
                 text="다시하기"
                 buttonStyle={[styles.bottomSheetButton, styles.lightButton]}

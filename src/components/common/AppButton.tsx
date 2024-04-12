@@ -56,14 +56,13 @@ const AppButton = ({
           style.hasOwnProperty('backgroundColor'),
         )?.backgroundColor;
 
-
     return [...defaultStyle, {backgroundColor}];
   };
 
   const disabledStyle = (disabled: boolean) => {
     const defaultStyle =
       Array.isArray(buttonStyle) === true ? buttonStyle : [buttonStyle];
-      
+
     const backgroundColor = disabled
       ? disabledBackgroundColor
       : defaultStyle[0].backgroundColor;
