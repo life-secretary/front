@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import {useRecoilState, useSetRecoilState} from 'recoil';
 
 import {StyleSheet, View} from 'react-native';
@@ -23,7 +23,9 @@ import Toast from 'react-native-toast-message';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;
-  const setIsBottomSheetVisible = useSetRecoilState(bottomSheetVisibleState);
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useRecoilState(
+    bottomSheetVisibleState,
+  );
   const [bottomSheetMode, setBottomSheetMode] =
     useRecoilState(bottomSheetModeState);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -38,13 +40,8 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     setIsModalVisible(status);
   };
 
-  const handleBottomSheetVisible = (status: boolean, mode?: string) => {
-    setIsBottomSheetVisible(status);
-    mode && setBottomSheetMode(mode);
-  };
-
-  const handleCloseButtonPress = (mode: string) => {
-    handleBottomSheetVisible(false, mode);
+  const handleCloseButtonPress = () => {
+    setIsBottomSheetVisible(false);
   };
 
   const handleEditButtonPress = () => {
@@ -55,7 +52,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
       todoItem,
     });
 
-    handleBottomSheetVisible(false, 'editAndDelete');
+    setIsBottomSheetVisible(false);
   };
 
   const deleteTodo = async () => {
@@ -74,7 +71,6 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     }
   };
 
-  // TODO: DELETE TODO 호출 위치 고민
   const handleDeleteButtonPress = () => {
     deleteTodo();
   };
@@ -87,33 +83,28 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     navigation.navigate('Todo');
   };
 
+  const fetchSubTodoList = useCallback(async () => {
+    const res = await fetchData(`/user-todos/${todoId}/sub`, {});
+    if (res.status === 200) {
+      setSubTodoList(res.data.data);
+    }
+  }, [todoId]);
+
+  const hasNotYetDoneSubTodo = useMemo(() => {
+    return subTodoList.some((todo: object) => todo?.isDone === false);
+  }, [subTodoList]);
+
   useEffect(() => {
-    async function fetchSubTodoList() {
-      const {data, status} = await fetchData(`/user-todos/${todoId}/sub`, {});
-
-      if (status === 200) {
-        setSubTodoList(data.data);
-      }
-    }
-
     fetchSubTodoList();
+  }, [fetchSubTodoList, subTodoList]);
 
-    const hasNotYetDoneSubTodo =
-      (subTodoList &&
-        subTodoList.some((todo: object) => todo?.isDone === false)) ||
-      false;
-
-    if (hasNotYetDoneSubTodo) {
-      setIsSuccessed(false);
-      return;
-    }
-
-    setIsSuccessed(true);
+  useEffect(() => {
+    hasNotYetDoneSubTodo ? setIsSuccessed(false) : setIsSuccessed(true);
 
     return () => {
       setIsBottomSheetVisible(false);
     };
-  }, [setIsBottomSheetVisible, subTodoList, todoId]);
+  }, [hasNotYetDoneSubTodo, setIsBottomSheetVisible]);
 
   return (
     <View style={[styles.layout, isCompletedMode && styles.completed]}>
@@ -132,7 +123,10 @@ export function TodoDetailModalScreen({navigation, route}: any) {
                 text="완료"
                 buttonStyle={styles.completeButton}
                 textStyle={styles.completeButtonText}
-                onPressButton={() => handleBottomSheetVisible(true, 'complete')}
+                onPressButton={() => {
+                  setBottomSheetMode('complete');
+                  setIsBottomSheetVisible(true);
+                }}
               />
             )}
             <AppIcon
@@ -140,7 +134,10 @@ export function TodoDetailModalScreen({navigation, route}: any) {
               width={42}
               height={42}
               styles={{color: color.main.white}}
-              onPress={() => handleBottomSheetVisible(true, 'editAndDelete')}
+              onPress={() => {
+                setBottomSheetMode('editAndDelete');
+                setIsBottomSheetVisible(true);
+              }}
             />
           </View>
         </AppHeader>
@@ -152,7 +149,6 @@ export function TodoDetailModalScreen({navigation, route}: any) {
       <SubTodoList todoItem={{...todoItem}} subTodoList={subTodoList} />
       {bottomSheetMode === 'editAndDelete' && (
         <AppBottomSheet
-          mode={bottomSheetMode}
           contentsStyle={styles.bottomSheetContainer}
           snapPointsArr={['18%']}>
           <View style={styles.buttonContainer}>
@@ -206,7 +202,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
                   name="closeDark"
                   width={36}
                   height={36}
-                  onPress={() => handleCloseButtonPress('complete')}
+                  onPress={handleCloseButtonPress}
                 />
               </View>
               <AppText style={styles.contentsTitle}>

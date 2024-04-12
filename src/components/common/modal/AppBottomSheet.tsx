@@ -9,27 +9,25 @@ import {
 } from '@gorhom/bottom-sheet';
 
 import {BottomSheetDefaultBackdropProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
-import {useRecoilState, useSetRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {
   bottomSheetModeState,
   bottomSheetVisibleState,
 } from '@/store/bottomSheetState';
 
 type AppBottomSheetProps = {
-  mode?: string;
   snapPointsArr?: string[];
   children?: ReactNode;
   contentsStyle?: ViewStyle;
 };
 
 const AppBottomSheet = ({
-  mode,
   snapPointsArr = ['25%', '50%'],
   children,
   contentsStyle,
 }: AppBottomSheetProps) => {
   const [isVisible, setIsVisible] = useRecoilState(bottomSheetVisibleState);
-  const setMode = useSetRecoilState(bottomSheetModeState);
+  const mode = useRecoilValue(bottomSheetModeState);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   // TODO: dynamic value로 변경
   const snapPoints = useMemo(() => snapPointsArr, [snapPointsArr]);
@@ -42,15 +40,12 @@ const AppBottomSheet = ({
     bottomSheetModalRef.current?.close();
   };
 
-  const handleSheetChanges = useCallback((index: number) => {}, []);
-
   const renderBackdrop = useCallback(
     (
       props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps,
     ) => {
       const handlePress = () => {
-        setIsVisible(false);
-        mode && setMode(mode);
+        // setIsVisible(false);
       };
 
       return (
@@ -63,10 +58,11 @@ const AppBottomSheet = ({
         />
       );
     },
-    [mode, setIsVisible, setMode],
+    [],
   );
 
   useEffect(() => {
+    console.log('bs');
     isVisible ? openBottomSheet() : closeBottomSheet();
   }, [isVisible]);
 
@@ -76,8 +72,7 @@ const AppBottomSheet = ({
         ref={bottomSheetModalRef}
         index={0}
         snapPoints={snapPoints}
-        backdropComponent={renderBackdrop}
-        onChange={handleSheetChanges}>
+        backdropComponent={renderBackdrop}>
         <BottomSheetView style={contentsStyle}>{children}</BottomSheetView>
       </BottomSheetModal>
     </BottomSheetModalProvider>

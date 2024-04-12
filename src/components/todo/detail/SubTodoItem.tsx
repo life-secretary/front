@@ -1,7 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {useRecoilState} from 'recoil';
-import {todoListState} from '@/store/todoState';
+import {deleteData, updateData} from '@/api/api';
 
 import {
   StyleSheet,
@@ -9,7 +7,6 @@ import {
   ScrollView,
   TextInput,
   View,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
@@ -17,9 +14,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import spacing from '@/styles/spacing';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
-
-import {replaceItemAtIndex} from '@/utils';
-import {deleteData} from '@/api/api';
+import OutsidePressHandler from 'react-native-outside-press';
 
 type ItemProps = {
   todoItem: object;
@@ -30,11 +25,9 @@ export function SubTodoItem({
   todoItem,
   subTodoItem,
 }: ItemProps): React.JSX.Element {
-  const [todoList, setTodoList] = useRecoilState(todoListState);
-  const [title, onChangeTitle] = useState(subTodoItem?.title);
-  const [isChecked, setIsChecked] = useState(subTodoItem?.isDone);
+  const [title, onChangeTitle] = useState(subTodoItem?.title || '');
+  const [isChecked, setIsChecked] = useState(subTodoItem?.isDone || false);
   const [isEditable, setIsEditable] = useState(false);
-  const navigation = useNavigation();
   const inputRef = useRef(null);
 
   const itemWidth =
@@ -43,6 +36,10 @@ export function SubTodoItem({
   // const todoItemIndex = todoList.findIndex(todo => todo.id === todoItem.id);
   const parentTodoId = todoItem?.id;
   const isCompletedMode = todoItem?.isDone;
+
+  const handleOutsidePress = () => {
+    handleInputBlur();
+  };
 
   const handleInputPress = () => {
     setIsEditable(true);
@@ -53,39 +50,31 @@ export function SubTodoItem({
     setIsEditable(false);
   };
 
-  const editSubTodo = (subTodoId: string) => {
-    // const subTodoItemIndex = subTodoList?.findIndex(
-    //   (subTodo: object) => subTodo?.id === subTodoId,
-    // );
-    // const newSubTodoList = replaceItemAtIndex(subTodoList, subTodoItemIndex, {
-    //   ...subTodoItem,
-    //   title,
-    // });
-    // const newTodoList = replaceItemAtIndex(todoList, todoItemIndex, {
-    //   ...todoItem,
-    //   subTodoList: newSubTodoList,
-    // });
-    // setTodoList(newTodoList);
+  const handleCheckboxPress = (status: boolean) => {
+    editSubTodo(subTodoItem?.id, status);
+    setIsChecked(status);
+  };
+
+  const editSubTodo = async (subTodoId: string, isDone?: boolean) => {
+    const editedSubTodo = {
+      title,
+      isDone,
+    };
+
+    await updateData(
+      `/user-todos/${parentTodoId}/sub`,
+      subTodoId,
+      editedSubTodo,
+    );
   };
 
   const deleteSubTodo = async (subTodoId: string) => {
-    // const filteredSubTodoList = subTodoList?.filter(
-    //   (subTodo: object) => subTodo?.id !== subTodoId,
-    // );
-    // const newTodoList = replaceItemAtIndex(todoList, todoItemIndex, {
-    //   ...todoItem,
-    //   subTodoList: filteredSubTodoList,
-    // });
-    // setTodoList(newTodoList);
-
     await deleteData(`/user-todos/${parentTodoId}/sub`, {}, subTodoId);
   };
 
   // TODO: 수정 완료/취소 동작 구분
   const handleInputSubmit = (id: string) => {
     editSubTodo(id);
-    // TODO: 즉시 subtodo list를 update하는 function 필요
-    navigation.navigate('Todo');
   };
 
   const handleDeleteButtonPress = (id: string) => {
@@ -94,13 +83,13 @@ export function SubTodoItem({
 
   return (
     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-      <TouchableWithoutFeedback onPress={handleInputBlur}>
-        <View style={styles.itemWrapper}>
-          <View style={[styles.itemContainer, {width: itemWidth}]}>
-            <View style={styles.titleContainer}>
-              <View style={styles.titleWrapper}>
-                <AppIcon name="hamburger" width={24} height={24} />
-                <View style={isEditable && styles.inputContainer}>
+      <View style={styles.itemWrapper}>
+        <View style={[styles.itemContainer, {width: itemWidth}]}>
+          <View style={styles.titleContainer}>
+            <View style={styles.titleWrapper}>
+              <AppIcon name="hamburger" width={24} height={24} />
+              <View style={isEditable && styles.inputContainer}>
+                <OutsidePressHandler onOutsidePress={handleOutsidePress}>
                   <TextInput
                     ref={inputRef}
                     value={title}
@@ -111,36 +100,36 @@ export function SubTodoItem({
                     onBlur={handleInputBlur}
                     onSubmitEditing={() => handleInputSubmit(subTodoItem?.id)}
                   />
-                </View>
+                </OutsidePressHandler>
               </View>
-              <View style={styles.divider} />
             </View>
-            <View style={styles.checkboxContainer}>
-              <BouncyCheckbox
-                size={18}
-                fillColor={color.grey.grey500}
-                iconStyle={styles.checkbox}
-                disableText={true}
-                disabled={isCompletedMode}
-                isChecked={isChecked}
-                onPress={() => setIsChecked(!isChecked)}
-              />
-            </View>
+            <View style={styles.divider} />
           </View>
-          <AppButton
-            text="지우기"
-            textStyle={styles.deleteButtonText}
-            buttonStyle={styles.deleteButton}
-            startIcon={{
-              name: 'trash',
-              width: 32,
-              height: 32,
-              styles: {color: color.main.white},
-            }}
-            onPressButton={() => handleDeleteButtonPress(subTodoItem?.id)}
-          />
+          <View style={styles.checkboxContainer}>
+            <BouncyCheckbox
+              size={18}
+              fillColor={color.grey.grey500}
+              iconStyle={styles.checkbox}
+              disableText={true}
+              disabled={isCompletedMode}
+              isChecked={isChecked}
+              onPress={checked => handleCheckboxPress(checked)}
+            />
+          </View>
         </View>
-      </TouchableWithoutFeedback>
+        <AppButton
+          text="지우기"
+          textStyle={styles.deleteButtonText}
+          buttonStyle={styles.deleteButton}
+          startIcon={{
+            name: 'trash',
+            width: 32,
+            height: 32,
+            styles: {color: color.main.white},
+          }}
+          onPressButton={() => handleDeleteButtonPress(subTodoItem?.id)}
+        />
+      </View>
     </ScrollView>
   );
 }
