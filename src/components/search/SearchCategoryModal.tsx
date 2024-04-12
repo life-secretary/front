@@ -3,6 +3,7 @@ import {View, StyleSheet, TouchableOpacity } from 'react-native';
 
 import type {CategoryObject} from '../../models/common';
 
+import color from '../../styles/color';
 import {AppHeader} from '../common/AppHeader';
 import AppButton from '../common/AppButton';
 import AppIcon from '../common/AppIcon';
@@ -78,12 +79,6 @@ const SearchCategoryModal = ({
   categories,
   selectedCategory,
 }: SearchCategoryModal): React.JSX.Element => {
-
-  const constants = {
-    MODAL_BACKDROP_COLOR: '#FFFFFF',
-    MODAL_BACKDROP_OPACITY: 1,
-  }; // TODO 상수로 관리
-
   // NOTICE: date format을 YYYY-MM-DD로 수정
   const contentData = [
     {
@@ -448,8 +443,8 @@ const SearchCategoryModal = ({
   return (
     <AppModal
       isVisible={isVisible}
-      backdropColor={constants.MODAL_BACKDROP_COLOR}
-      backdropOpacity={constants.MODAL_BACKDROP_OPACITY}>
+      backdropColor={color.main.white}
+      backdropOpacity={1}>
       <View style={styles.container}>
         <AppHeader style={styles.header}>
           <View style={styles.wrapper}>
