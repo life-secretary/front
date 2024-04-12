@@ -3,6 +3,7 @@ import {RecoilRoot} from 'recoil';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {EventProvider} from 'react-native-outside-press';
 
 import {StyleSheet} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -56,13 +57,15 @@ function RootStack() {
 function App(): React.JSX.Element {
   return (
     <RecoilRoot>
-      <GestureHandlerRootView style={styles.container}>
-        <SafeAreaProvider>
-          <NavigationContainer>
-            <RootStack />
-          </NavigationContainer>
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
+      <EventProvider>
+        <GestureHandlerRootView style={styles.container}>
+          <SafeAreaProvider>
+            <NavigationContainer>
+              <RootStack />
+            </NavigationContainer>
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </EventProvider>
     </RecoilRoot>
   );
 }

@@ -19,14 +19,9 @@ export async function createData(url: string, data: any) {
 }
 
 // PUT
-export async function updateData(
-  url: string,
-  params: object,
-  id: number | string,
-  data: any,
-) {
+export async function updateData(url: string, id: number | string, data: any) {
   try {
-    return await axiosInstance.put(`${url}/${id}`, {params}, data);
+    return await axiosInstance.put(`${url}/${id}`, data);
   } catch (err) {
     throw err;
   }
