@@ -62,7 +62,6 @@ const AppBottomSheet = ({
   );
 
   useEffect(() => {
-    console.log('bs');
     isVisible ? openBottomSheet() : closeBottomSheet();
   }, [isVisible]);
 

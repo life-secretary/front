@@ -33,7 +33,6 @@ export function SubTodoItem({
   const itemWidth =
     Dimensions.get('window').width - spacing.layoutPaddingHorizontal * 2;
 
-  // const todoItemIndex = todoList.findIndex(todo => todo.id === todoItem.id);
   const parentTodoId = todoItem?.id;
   const isCompletedMode = todoItem?.isDone;
 

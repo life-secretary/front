@@ -23,9 +23,7 @@ import Toast from 'react-native-toast-message';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;
-  const [isBottomSheetVisible, setIsBottomSheetVisible] = useRecoilState(
-    bottomSheetVisibleState,
-  );
+  const setIsBottomSheetVisible = useSetRecoilState(bottomSheetVisibleState);
   const [bottomSheetMode, setBottomSheetMode] =
     useRecoilState(bottomSheetModeState);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -33,8 +31,6 @@ export function TodoDetailModalScreen({navigation, route}: any) {
   const [subTodoList, setSubTodoList] = useState([]);
   const isCompletedMode = todoItem?.isDone;
   const todoId = todoItem?.id;
-
-  // const itemIndex = todoList.findIndex(item => item.id === todoItem?.id);
 
   const handleModalVisible = (status: boolean) => {
     setIsModalVisible(status);
