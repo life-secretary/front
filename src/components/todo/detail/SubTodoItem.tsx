@@ -19,11 +19,13 @@ import OutsidePressHandler from 'react-native-outside-press';
 type ItemProps = {
   todoItem: object;
   subTodoItem: object;
+  isCompleteMode: boolean;
 };
 
 export function SubTodoItem({
   todoItem,
   subTodoItem,
+  isCompleteMode,
 }: ItemProps): React.JSX.Element {
   const [title, onChangeTitle] = useState(subTodoItem?.title || '');
   const [isChecked, setIsChecked] = useState(subTodoItem?.isDone || false);
@@ -34,7 +36,7 @@ export function SubTodoItem({
     Dimensions.get('window').width - spacing.layoutPaddingHorizontal * 2;
 
   const parentTodoId = todoItem?.id;
-  const isCompletedMode = todoItem?.isDone;
+  const isInputActive = isEditable && !isCompleteMode;
 
   const handleOutsidePress = () => {
     handleInputBlur();
@@ -71,7 +73,6 @@ export function SubTodoItem({
     await deleteData(`/user-todos/${parentTodoId}/sub`, {}, subTodoId);
   };
 
-  // TODO: 수정 완료/취소 동작 구분
   const handleInputSubmit = (id: string) => {
     editSubTodo(id);
   };
@@ -87,13 +88,13 @@ export function SubTodoItem({
           <View style={styles.titleContainer}>
             <View style={styles.titleWrapper}>
               <AppIcon name="hamburger" width={24} height={24} />
-              <View style={isEditable && styles.inputContainer}>
+              <View style={isInputActive && styles.inputContainer}>
                 <OutsidePressHandler onOutsidePress={handleOutsidePress}>
                   <TextInput
                     ref={inputRef}
                     value={title}
-                    style={[styles.input, isEditable && styles.activeText]}
-                    editable={isEditable}
+                    style={[styles.input, isInputActive && styles.activeText]}
+                    editable={isInputActive}
                     onChangeText={onChangeTitle}
                     onPressIn={handleInputPress}
                     onBlur={handleInputBlur}
@@ -110,7 +111,7 @@ export function SubTodoItem({
               fillColor={color.grey.grey500}
               iconStyle={styles.checkbox}
               disableText={true}
-              disabled={isCompletedMode}
+              disabled={isCompleteMode}
               isChecked={isChecked}
               onPress={checked => handleCheckboxPress(checked)}
             />
@@ -120,13 +121,17 @@ export function SubTodoItem({
           text="지우기"
           textStyle={styles.deleteButtonText}
           buttonStyle={styles.deleteButton}
+          isDisabled={isCompleteMode}
+          disabledBackgroundColor={color.grey.grey300}
           startIcon={{
             name: 'trash',
             width: 32,
             height: 32,
             styles: {color: color.main.white},
           }}
-          onPressButton={() => handleDeleteButtonPress(subTodoItem?.id)}
+          onPressButton={() =>
+            !isCompleteMode && handleDeleteButtonPress(subTodoItem?.id)
+          }
         />
       </View>
     </ScrollView>

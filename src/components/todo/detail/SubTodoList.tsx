@@ -10,6 +10,7 @@ import {font} from '@/styles/font';
 type Props = {
   todoItem: object;
   subTodoList: object[];
+  isCompleteMode: boolean;
 };
 
 const EmptyList = () => {
@@ -22,20 +23,28 @@ const EmptyList = () => {
   );
 };
 
-export function SubTodoList({todoItem, subTodoList}: Props): React.JSX.Element {
+export function SubTodoList({
+  todoItem,
+  subTodoList,
+  isCompleteMode,
+}: Props): React.JSX.Element {
   return (
     <View style={styles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={subTodoList}
         renderItem={({item}) => (
-          <SubTodoItem todoItem={{...todoItem}} subTodoItem={item} />
+          <SubTodoItem
+            todoItem={{...todoItem}}
+            subTodoItem={item}
+            isCompleteMode={isCompleteMode}
+          />
         )}
         keyExtractor={item => item?.id}
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={EmptyList}
       />
-      <AddSubTodoButton todoItem={todoItem} />
+      {!isCompleteMode && <AddSubTodoButton todoItem={todoItem} />}
     </View>
   );
 }

@@ -136,7 +136,7 @@ export function HomeScreen(): React.JSX.Element {
           <SendFeedbackButton />
         </View>
       </ScrollView>
-      <Login isVisible={!isDone} closeAllProcess={closeAllProcess} />
+      {/* <Login isVisible={!isDone} closeAllProcess={closeAllProcess} /> */}
       <SearchCategoryModal
         isVisible={isCategoryModalVisible}
         closeCategoryModal={closeCategoryModal}

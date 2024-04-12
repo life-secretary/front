@@ -27,15 +27,27 @@ type Props = {
 
 export function TodoCard({item}: Props): React.JSX.Element {
   const navigation = useNavigation();
+
+  // TODO: 실 데이터로 교체되면 임시 코드 제거
+  const setTagList = () => {
+    let list = [];
+
+    item?.isDone
+      ? (list = ['완료', '나의 할 일', item?.category])
+      : (list = ['나의 할 일', item?.category]);
+
+    return list;
+  };
+
   const todoItem: TodoItem = {
     id: item?.id,
     title: item?.title,
     category: item?.category,
-    tags: item?.tags,
+    tags: setTagList(), // TODO: 추후 실 데이터로 교체
     isDone: item?.isDone,
     createdTime: item?.createdTime,
     completedTime: item?.completedTime,
-    subTodoList: item?.subTodoList,
+    subTodoList: item?.subTodoList, // TODO: 할 일 데이터에 세부 항목 리스트 데이터 포함 요청
   };
 
   const moveToScreen = (screen: string, params: object) => {
@@ -138,7 +150,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   cardTagContainer: {
-    minHeight: 24,
     paddingVertical: 3,
     paddingHorizontal: 6,
     borderRadius: 4,

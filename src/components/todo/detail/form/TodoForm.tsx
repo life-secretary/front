@@ -103,7 +103,7 @@ export function TodoForm({
             placeholder="최대 6자 내로 입력 가능해요"
             text={isCustomCategory ? '' : selectedCategory?.title}
             onChangeText={(newText: string) =>
-              handleSelectCategory({key: 'custom', name: newText})
+              handleSelectCategory({key: 'custom', title: newText})
             }
             editable={isCustomCategory}
             icon={{

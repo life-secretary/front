@@ -27,14 +27,19 @@ export function CompletedTodoList(): React.JSX.Element {
 
   return (
     <View style={styles.container}>
-      <TodoCount title="완료 할 일" totalTodoCount={totalTodoCount} />
-      <FlatList
-        data={list}
-        renderItem={({item}) => <TodoCard item={{...item}} />}
-        keyExtractor={item => item?.id}
-        ListEmptyComponent={<EmptyList />}
-        contentContainerStyle={styles.listContainer}
-      />
+      {list.length > 0 ? (
+        <>
+          <TodoCount title="완료 할 일" totalTodoCount={totalTodoCount} />
+          <FlatList
+            data={list}
+            renderItem={({item}) => <TodoCard item={{...item}} />}
+            keyExtractor={item => item?.id}
+            contentContainerStyle={styles.listContainer}
+          />
+        </>
+      ) : (
+        <EmptyList />
+      )}
     </View>
   );
 }
@@ -45,13 +50,11 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     gap: 16,
-    marginTop: 22,
   },
   emptyListContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    marginTop: 262,
   },
   emptyListText: {
     fontWeight: font.fontWeight.medium,
