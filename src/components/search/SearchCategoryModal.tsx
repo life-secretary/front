@@ -1,5 +1,7 @@
-import React, {SetStateAction, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Handle} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, TouchableOpacity } from 'react-native';
+
+import type {CategoryObject} from '../../models/common';
 
 import {AppHeader} from '../common/AppHeader';
 import AppButton from '../common/AppButton';
@@ -13,14 +15,13 @@ import SearchToDoView from '../../components/search/SearchToDoView';
 
 import {getFontSize} from '../../utils/font';
 
-import {DUMMY_CATEGORY} from '../../components/home/HomeCategoryList'; // 임시 참고
-
 type HeaderCategoryResultProps = {
   searchData: {}[];
 };
 
 type DropDownCategoryProps = {
   // NOTE: Function 과 () => {} 차이 ?
+  categories: CategoryObject[];
   onPressListItemButton: Function;
   onPressDimmedSpace: () => void;
 };
@@ -28,6 +29,8 @@ type DropDownCategoryProps = {
 type SearchCategoryModal = {
   isVisible: boolean;
   closeCategoryModal: () => void;
+  categories: CategoryObject[];
+  selectedCategory: CategoryObject;
 };
 
 const HeaderCategoryResult = ({
@@ -41,6 +44,7 @@ const HeaderCategoryResult = ({
 };
 
 const DropDownCategory = ({
+  categories,
   onPressListItemButton,
   onPressDimmedSpace,
 }: DropDownCategoryProps): React.JSX.Element => {
@@ -48,13 +52,14 @@ const DropDownCategory = ({
     <>
       <View style={styles.dropDownDivider} />
       <View style={styles.dropDownContainer}>
-        {DUMMY_CATEGORY.map(item => {
+        {categories.map(item => {
           return (
             <AppButton
+              key={item.id}
               text={item.title}
               textStyle={styles.categoryListText}
               onPressButton={() =>
-                onPressListItemButton({id: item.id, title: item.title})
+                onPressListItemButton(item)
               }
             />
           );
@@ -70,7 +75,10 @@ const DropDownCategory = ({
 const SearchCategoryModal = ({
   isVisible,
   closeCategoryModal,
+  categories,
+  selectedCategory,
 }: SearchCategoryModal): React.JSX.Element => {
+
   const constants = {
     MODAL_BACKDROP_COLOR: '#FFFFFF',
     MODAL_BACKDROP_OPACITY: 1,
@@ -418,30 +426,24 @@ const SearchCategoryModal = ({
     }
   };
 
-  const [isCategoryDownModalVisible, setIsCategoryDownModalVisible] =
-    useState(false);
-  // 카테고리의 이름과 아이디 모두 필요할 듯하여.
-  const [currentCategory, setCurrentCategory] = useState({
-    id: '1',
-    title: '전체',
-  });
+  const [isCategoryDownModalVisible, setIsCategoryDownModalVisible] = useState(false);
+  const [currentCategory, setCurrentCategory] = useState(selectedCategory);
 
   const onToggleCategoryButton = () => {
     setIsCategoryDownModalVisible(previousValue => !previousValue);
   };
 
   const onPressCategoryNameButton = (
-    currentCategory: SetStateAction<{id: string; title: string}>,
+    category: CategoryObject
   ) => {
-    /**
-     * 카테고리 이름을 표기할 때 api 조회 파라미터에 있는 id값을 참조해서 표기하면 되는건가..?
-     * 부모 컴포넌트가 모든 카테고리에 대한 데이터를 가지고 있지 않아도 되는가 ?
-     */
-    console.log(currentCategory);
-    setCurrentCategory(currentCategory);
+    setCurrentCategory(category);
     // todo code: api get request
     setIsCategoryDownModalVisible(false);
   };
+
+  useEffect(() => {
+    setCurrentCategory(selectedCategory);
+  });
 
   return (
     <AppModal
@@ -486,6 +488,7 @@ const SearchCategoryModal = ({
         {/** 야매 DropDown */}
         {isCategoryDownModalVisible && (
           <DropDownCategory
+            categories={categories}
             onPressListItemButton={onPressCategoryNameButton}
             onPressDimmedSpace={onToggleCategoryButton}
           />

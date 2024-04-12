@@ -1,11 +1,13 @@
 import React from 'react';
 
+import type {CategoryObject} from '../../models/common';
+
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {HomeCategoryItem} from '@/components/home/HomeCategoryItem';
 import color from '@/styles/color';
 
 type Props = {
-  categories: object[];
+  categories: CategoryObject[];
   openCategoryModal: Function;
 };
 
@@ -20,10 +22,10 @@ export function HomeCategoryList({
         renderItem={({item}) => (
           <HomeCategoryItem
             item={{...item}}
-            openCategoryModal={openCategoryModal}
+            openCategoryModal={() => openCategoryModal(item)}
           />
         )}
-        keyExtractor={item => item?.id}
+        keyExtractor={item => String(item?.id)}
         horizontal={false}
         numColumns={4}
         columnWrapperStyle={styles.listColumn}

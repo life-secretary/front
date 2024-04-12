@@ -21,7 +21,7 @@ export const generateRandomId = () => {
     randomId += Math.floor(Math.random() * 10);
   }
 
-  return randomId;
+  return Number(randomId);
 };
 
 export const replaceItemAtIndex = (
