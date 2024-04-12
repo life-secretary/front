@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {categoryListState, mainCategoryListState} from '@/store/categoryState';
 
+import type {CategoryObject} from '../models/common';
+
 import {StyleSheet, ScrollView, View} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
@@ -49,12 +51,6 @@ const DUMMY_CAROUSEL_DATA = [
 ];
 
 export function HomeScreen(): React.JSX.Element {
-  // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
-  const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
-  const [isContentModalVisible, setIsContentModalVisible] = useState(false);
-  const setCategories = useSetRecoilState(categoryListState);
-  // Login → Agreement → Survey 과정 임시 테스팅 중
-  const [isDone, setIsDone] = useState(false);
   const mainCategories = useRecoilValue(mainCategoryListState);
   const HOME_CATEGORIES = [
     {id: generateRandomId(), category: 'all', title: '전체'},
@@ -62,8 +58,16 @@ export function HomeScreen(): React.JSX.Element {
     {id: generateRandomId(), category: 'etc', title: '기타'},
   ];
 
-  const openCategoryModal = (category: string) => {
-    // console.log(category);
+  // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
+  const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
+  const [isContentModalVisible, setIsContentModalVisible] = useState(false);
+  const setCategories = useSetRecoilState(categoryListState);
+  // Login → Agreement → Survey 과정 임시 테스팅 중
+  const [isDone, setIsDone] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(HOME_CATEGORIES[0]);
+
+  const openCategoryModal = (category: CategoryObject) => {
+    setSelectedCategory(category);
     setIsCategoryModalVisible(true);
   };
 
@@ -136,10 +140,12 @@ export function HomeScreen(): React.JSX.Element {
           <SendFeedbackButton />
         </View>
       </ScrollView>
-      <Login isVisible={!isDone} closeAllProcess={closeAllProcess} />
+      {/* <Login isVisible={!isDone} closeAllProcess={closeAllProcess} /> */}
       <SearchCategoryModal
         isVisible={isCategoryModalVisible}
         closeCategoryModal={closeCategoryModal}
+        categories={HOME_CATEGORIES}
+        selectedCategory={selectedCategory}
       />
       <ContentModal
         isVisible={isContentModalVisible}
