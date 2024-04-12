@@ -26,10 +26,11 @@ const EmptyList = () => {
 export function OngoingTodoList(): React.JSX.Element {
   const totalTodoCount = useRecoilValue(todoListTotalCountState);
   const list = useRecoilValue(filteredTodoListState);
+  const isEmpty = list.length === 0;
 
   return (
     <View style={styles.container}>
-      {list.length > 0 ? (
+      {!isEmpty ? (
         <>
           <TodoCount title="나의 할 일" totalTodoCount={totalTodoCount} />
           <FlatList
