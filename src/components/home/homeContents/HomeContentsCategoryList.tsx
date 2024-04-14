@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 
 import {StyleSheet, FlatList} from 'react-native';
@@ -6,23 +6,25 @@ import {HomeContentsCategoryItem} from '@/components/home/homeContents/HomeConte
 
 type Props = {
   categories: object[];
+  activeCategory: object;
+  setActiveCategory: Function;
 };
 
 export function HomeContentsCategoryList({
   categories,
+  activeCategory,
+  setActiveCategory,
 }: Props): React.JSX.Element {
-  const [activeCategory, setActiveCategory] = useState('all');
-
-  const handleActiveCategory = (category: string) => {
+  const handleActiveCategory = (category: object) => {
     setActiveCategory(category);
   };
 
   useFocusEffect(
     useCallback(() => {
       return () => {
-        setActiveCategory('all');
+        setActiveCategory(categories[0]);
       };
-    }, []),
+    }, [categories, setActiveCategory]),
   );
 
   return (

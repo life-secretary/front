@@ -50,6 +50,44 @@ const DUMMY_CAROUSEL_DATA = [
   },
 ];
 
+const DUMMY_LIST = [
+  {
+    id: generateRandomId(),
+    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
+    category: {category: 'economy', title: '경제'},
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    createdDate: '2024-01-01',
+  },
+  {
+    id: generateRandomId(),
+    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
+    category: {category: 'economy', title: '경제'},
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    createdDate: '2024-01-11',
+  },
+  {
+    id: generateRandomId(),
+    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
+    category: {category: 'economy', title: '경제'},
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    createdDate: '2024-02-05',
+  },
+  {
+    id: generateRandomId(),
+    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
+    category: {category: 'economy', title: '경제'},
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    createdDate: '2024-02-22',
+  },
+  {
+    id: generateRandomId(),
+    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
+    category: {category: 'economy', title: '경제'},
+    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
+    createdDate: '2024-03-01',
+  },
+];
+
 export function HomeScreen(): React.JSX.Element {
   const mainCategories = useRecoilValue(mainCategoryListState);
   const HOME_CATEGORIES = [
@@ -65,6 +103,7 @@ export function HomeScreen(): React.JSX.Element {
   // Login → Agreement → Survey 과정 임시 테스팅 중
   const [isDone, setIsDone] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(HOME_CATEGORIES[0]);
+  const [newestHomeContentsList, setNewestHomeContentsList] = useState([]);
 
   const openCategoryModal = (category: CategoryObject) => {
     setSelectedCategory(category);
@@ -83,23 +122,29 @@ export function HomeScreen(): React.JSX.Element {
     setIsContentModalVisible(false);
   };
 
-  // 유사한 사용자가 조회한 콘텐츠 리스트 데이터
-
-  // 인기 많은 콘텐츠 리스트 데이터
-
-  // 최근 업데이트된 콘텐츠 리스트 데이터
-
   const closeAllProcess = () => {
     setIsDone(true);
   };
 
   useEffect(() => {
     async function fetchCategories() {
-      const {data} = await fetchData('/categories', null);
-      setCategories(data.data);
+      const res = await fetchData('/categories', null);
+      if (res.status === 200) {
+        setCategories(res.data.data);
+      }
+    }
+
+    async function fetchHomeContentsListByNewest() {
+      const res = await fetchData('/articles', {sort: 'createdAt'});
+      const list = res.data.data.content;
+
+      if (res.status === 200) {
+        setNewestHomeContentsList(list);
+      }
     }
 
     fetchCategories();
+    fetchHomeContentsListByNewest();
   }, [setCategories]);
 
   return (
@@ -126,12 +171,17 @@ export function HomeScreen(): React.JSX.Element {
         <HomeContentsList
           isUsernameUsed={true}
           title={'유사한 사용자가 읽고 있어요'}
+          list={DUMMY_LIST}
         />
         <HomeContentsListWithFilter
           categories={HOME_CATEGORIES}
+          list={DUMMY_LIST}
           title={'인기 많은 콘텐츠'}
         />
-        <HomeContentsList title={'최근 업데이트 되었어요'} />
+        <HomeContentsList
+          title={'최근 업데이트 되었어요'}
+          list={newestHomeContentsList}
+        />
         <View style={styles.footer}>
           <AppTitle
             text="인생비서 팀에게 자유롭게 얘기해주세요"

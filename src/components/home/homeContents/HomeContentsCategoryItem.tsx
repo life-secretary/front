@@ -5,9 +5,9 @@ import {AppText} from '@/components/common/AppText';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-type ItemProps = {
+type Props = {
   item: object;
-  activeCategory: string;
+  activeCategory: object;
   handleActiveCategory: Function;
 };
 
@@ -15,26 +15,26 @@ export function HomeContentsCategoryItem({
   item,
   activeCategory,
   handleActiveCategory,
-}: ItemProps): React.JSX.Element {
+}: Props): React.JSX.Element {
   const [isActive, setIsActive] = useState(false);
 
-  const handleCategoryPress = (category: string) => {
+  const handleCategoryPress = (category: object) => {
     setIsActive(!isActive);
     handleActiveCategory(category);
   };
 
   return (
-    <Pressable onPress={() => handleCategoryPress(item?.category)}>
+    <Pressable onPress={() => handleCategoryPress(item)}>
       <View
         style={[
-          activeCategory === item?.category
+          activeCategory?.category === item?.category
             ? styles.pressedButton
             : styles.defaultButton,
           styles.button,
         ]}>
         <AppText
           style={[
-            activeCategory === item?.category
+            activeCategory?.category === item?.category
               ? styles.pressedText
               : styles.defaultText,
             styles.text,

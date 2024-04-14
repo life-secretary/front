@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {AppText} from '@/components/common/AppText';
@@ -7,67 +7,52 @@ import {ViewMoreButton} from '@/components/home/ViewMoreButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-import {generateRandomId} from '@/utils';
-
-const DUMMY_DATA = [
-  {
-    id: generateRandomId(),
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: '경제',
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024-01-01',
-  },
-  {
-    id: generateRandomId(),
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: '문화',
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024-01-11',
-  },
-  {
-    id: generateRandomId(),
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: '자기계발',
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024-02-05',
-  },
-  {
-    id: generateRandomId(),
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: '건강',
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024-02-22',
-  },
-  {
-    id: generateRandomId(),
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: '환경',
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-    date: '2024-03-01',
-  },
-];
+import {fetchData} from '@/api/api';
 
 type Props = {
   categories: object[];
   title: string;
-  data?: object[];
+  list: object[];
 };
 
 export function HomeContentsListWithFilter({
   categories,
   title,
+  list,
 }: Props): React.JSX.Element {
+  const [activeCategory, setActiveCategory] = useState(categories[0]);
+  const [contentsList, setContentsList] = useState([]);
+
+  useEffect(() => {
+    const fetchHomeContentsListByCategory = async () => {
+      const res = await fetchData('/articles/popular', {
+        categoryId: activeCategory?.id,
+      });
+
+      if (res.status === 200) {
+        const data = res.data.data.slice(0, 5);
+        data.length > 0 ? setContentsList(data) : setContentsList(list); // 임시 코드
+      }
+    };
+
+    fetchHomeContentsListByCategory();
+  }, [activeCategory, list]);
+
   return (
     <View style={styles.container}>
       <AppText style={styles.listTitle}>{title}</AppText>
-      <HomeContentsCategoryList categories={categories} />
+      <HomeContentsCategoryList
+        categories={categories}
+        activeCategory={activeCategory}
+        setActiveCategory={setActiveCategory}
+      />
       <FlatList
-        data={DUMMY_DATA}
+        data={contentsList}
         renderItem={({item, index}) => (
           <View style={styles.contents}>
             <AppText style={styles.contentsNo}>{index + 1}</AppText>
             <AppText isEllipsizeMode={true} style={styles.contentsTitle}>
-              {item.title}
+              {item?.title}
             </AppText>
           </View>
         )}
