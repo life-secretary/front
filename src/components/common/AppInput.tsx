@@ -57,44 +57,55 @@ export function AppInput({
   editable = true,
   icon,
   inputStyles,
+  error,
+  errorMsg,
   onChangeText,
 }: AppInputProps): React.JSX.Element {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View
-      style={[
-        inputStyles ? inputStyles : styles.container,
-        isFocused && styles.focus,
-        disabled && styles.disabled,
-        minHeight ? {minHeight: minHeight} : null,
-      ]}>
-      {hasLabel && (
-        <AppText style={[styles.label, disabled && styles.disabledText]}>
-          {labelText}
-        </AppText>
-      )}
-      <TextInput
-        placeholder={placeholder}
-        placeholderTextColor={placeholderTextColor || color.grey.grey300}
-        defaultValue={text}
-        multiline={isMultiline}
-        maxLength={maxLength}
-        editable={editable}
-        style={styles.inputText}
-        onChangeText={newText => onChangeText && onChangeText(newText)}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-      />
-      {icon && (
-        <View style={styles.icon}>
-          <AppIcon
-            name={icon?.name}
-            width={icon?.width}
-            height={icon?.height}
-            styles={icon?.styles}
-            onPress={icon?.onPress}
-          />
+    <View>
+      <View
+        style={[
+          inputStyles ? inputStyles : styles.container,
+          isFocused && styles.focus,
+          disabled && styles.disabled,
+          error && styles.error,
+          minHeight ? {minHeight: minHeight} : null,
+        ]}>
+        {hasLabel && (
+          <AppText style={[styles.label, disabled && styles.disabledText]}>
+            {labelText}
+          </AppText>
+        )}
+        <TextInput
+          placeholder={placeholder}
+          placeholderTextColor={placeholderTextColor || color.grey.grey300}
+          defaultValue={text}
+          multiline={isMultiline}
+          maxLength={maxLength}
+          editable={editable}
+          style={styles.inputText}
+          onChangeText={newText => onChangeText && onChangeText(newText)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+        />
+        {icon && (
+          <View style={styles.icon}>
+            <AppIcon
+              name={icon?.name}
+              width={icon?.width}
+              height={icon?.height}
+              styles={icon?.styles}
+              onPress={icon?.onPress}
+            />
+          </View>
+        )}
+      </View>
+      {error && (
+        <View style={styles.errorMsgContainer}>
+          <AppIcon name="warning" width={24} height={24} />
+          <AppText style={styles.errorMsg}>{errorMsg}</AppText>
         </View>
       )}
     </View>
@@ -137,5 +148,21 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 12,
     bottom: 11,
+  },
+  error: {
+    borderColor: color.state.error,
+  },
+  errorMsgContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 2,
+  },
+  errorMsg: {
+    fontSize: 13,
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 15.51,
+    letterSpacing: font.letterSpacing.medium,
+    color: color.state.error,
   },
 });
