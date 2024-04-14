@@ -7,6 +7,7 @@ import {HomeContentsItem} from '@/components/home/homeContents/HomeContentsItem'
 import {ViewMoreButton} from '@/components/home/ViewMoreButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import spacing from '@/styles/spacing';
 
 type HomeContentsProps = {
   isUsernameUsed?: boolean;
@@ -40,7 +41,7 @@ export function HomeContentsList({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginVertical: 10,
+    marginHorizontal: spacing.layoutPaddingHorizontal,
     paddingHorizontal: 26,
     paddingVertical: 34,
     borderRadius: 14,

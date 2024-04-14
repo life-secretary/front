@@ -5,6 +5,7 @@ import type {CategoryObject} from '../../models/common';
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {HomeCategoryItem} from '@/components/home/HomeCategoryItem';
 import color from '@/styles/color';
+import spacing from '@/styles/spacing';
 
 type Props = {
   categories: CategoryObject[];
@@ -37,6 +38,7 @@ export function HomeCategoryList({
 
 const styles = StyleSheet.create({
   container: {
+    marginHorizontal: spacing.layoutPaddingHorizontal,
     marginVertical: 10,
     padding: 20,
     justifyContent: 'center',

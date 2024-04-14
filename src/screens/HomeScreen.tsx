@@ -148,7 +148,7 @@ export function HomeScreen(): React.JSX.Element {
   }, [setCategories]);
 
   return (
-    <AppLayout>
+    <AppLayout isPaddingUsed={false}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <AppHeader style={styles.header}>
           <AppTitle
@@ -160,28 +160,30 @@ export function HomeScreen(): React.JSX.Element {
             <AppIcon name="balancer" width={42} height={42} />
           </View>
         </AppHeader>
-        <HomeCategoryList
-          categories={HOME_CATEGORIES}
-          openCategoryModal={openCategoryModal}
-        />
-        <HomeImageCarousel
-          data={DUMMY_CAROUSEL_DATA}
-          openContentModal={openContentModal}
-        />
-        <HomeContentsList
-          isUsernameUsed={true}
-          title={'유사한 사용자가 읽고 있어요'}
-          list={DUMMY_LIST}
-        />
-        <HomeContentsListWithFilter
-          categories={HOME_CATEGORIES}
-          list={DUMMY_LIST}
-          title={'인기 많은 콘텐츠'}
-        />
-        <HomeContentsList
-          title={'최근 업데이트 되었어요'}
-          list={newestHomeContentsList}
-        />
+        <View style={styles.section}>
+          <HomeCategoryList
+            categories={HOME_CATEGORIES}
+            openCategoryModal={openCategoryModal}
+          />
+          <HomeImageCarousel
+            data={DUMMY_CAROUSEL_DATA}
+            openContentModal={openContentModal}
+          />
+          <HomeContentsList
+            isUsernameUsed={true}
+            title={'유사한 사용자가 읽고 있어요'}
+            list={DUMMY_LIST}
+          />
+          <HomeContentsListWithFilter
+            categories={HOME_CATEGORIES}
+            list={DUMMY_LIST}
+            title={'인기 많은 콘텐츠'}
+          />
+          <HomeContentsList
+            title={'최근 업데이트 되었어요'}
+            list={newestHomeContentsList}
+          />
+        </View>
         <View style={styles.footer}>
           <AppTitle
             text="인생비서 팀에게 자유롭게 얘기해주세요"
@@ -208,6 +210,7 @@ export function HomeScreen(): React.JSX.Element {
 const styles = StyleSheet.create({
   header: {
     justifyContent: 'space-between',
+    paddingHorizontal: 24,
   },
   headerIconContainer: {
     flexDirection: 'row',
@@ -218,6 +221,9 @@ const styles = StyleSheet.create({
     fontWeight: font.fontWeight.bold,
     lineHeight: 21.48,
     color: color.grey.grey500,
+  },
+  section: {
+    gap: 34,
   },
   footer: {
     flex: 1,
