@@ -8,55 +8,17 @@ import {ViewMoreButton} from '@/components/home/ViewMoreButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-import {generateRandomId} from '@/utils';
-
 type HomeContentsProps = {
   isUsernameUsed?: boolean;
   title: string;
+  list: object[];
 };
 
 export function HomeContentsList({
   isUsernameUsed = false,
   title,
+  list,
 }: HomeContentsProps): React.JSX.Element {
-  const DUMMY_DATA = [
-    {
-      id: generateRandomId(),
-      title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-      category: '경제',
-      thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-      createdDate: '2024-01-01',
-    },
-    {
-      id: generateRandomId(),
-      title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-      category: '문화',
-      thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-      createdDate: '2024-01-11',
-    },
-    {
-      id: generateRandomId(),
-      title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-      category: '자기계발',
-      thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-      createdDate: '2024-02-05',
-    },
-    {
-      id: generateRandomId(),
-      title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-      category: '건강',
-      thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-      createdDate: '2024-02-22',
-    },
-    {
-      id: generateRandomId(),
-      title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-      category: '환경',
-      thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-      createdDate: '2024-03-01',
-    },
-  ];
-
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -67,15 +29,8 @@ export function HomeContentsList({
       </View>
       <FlatList
         ItemSeparatorComponent={() => <AppDivider style={styles.divider} />}
-        data={DUMMY_DATA}
-        renderItem={({item}) => (
-          <HomeContentsItem
-            title={item?.title}
-            thumbnail={item?.thumbnail}
-            category={item?.category}
-            createdDate={item?.createdDate}
-          />
-        )}
+        data={list}
+        renderItem={({item}) => <HomeContentsItem item={{...item}} />}
       />
       <ViewMoreButton />
     </View>
