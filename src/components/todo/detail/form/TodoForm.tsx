@@ -191,14 +191,16 @@ export function TodoForm({
             errorMsg={titleErrorMsg}
           />
         </View>
-        <AppButton
-          text="완료"
-          buttonStyle={styles.button}
-          textStyle={styles.buttonText}
-          isDisabled={isEmpty}
-          disabledBackgroundColor={color.grey.grey300}
-          onPressButton={handleSubmitButtonPress}
-        />
+        <View style={styles.buttonContainer}>
+          <AppButton
+            text="완료"
+            buttonStyle={styles.button}
+            textStyle={styles.buttonText}
+            isDisabled={isEmpty}
+            disabledBackgroundColor={color.grey.grey300}
+            onPressButton={handleSubmitButtonPress}
+          />
+        </View>
       </KeyboardAvoidingView>
     </>
   );

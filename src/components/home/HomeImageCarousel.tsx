@@ -56,7 +56,7 @@ function Slide({
 }
 
 // TODO: type 재정의 필요
-type CarouselType = {
+type Props = {
   data: object[];
   openContentModal: () => void;
 };
@@ -64,40 +64,43 @@ type CarouselType = {
 export function HomeImageCarousel({
   data,
   openContentModal,
-}: CarouselType): React.JSX.Element {
+}: Props): React.JSX.Element {
   const HORRIZONTAL_PADDING = spacing.layoutPaddingHorizontal * 2;
   const width = Dimensions.get('window').width - HORRIZONTAL_PADDING;
   const height = 466;
   const ref = React.useRef<ICarouselInstance>(null);
   return (
-    <Pressable style={styles.container} onPress={openContentModal}>
-      <Carousel
-        ref={ref}
-        loop
-        width={width}
-        height={height}
-        autoPlay={true}
-        data={data}
-        scrollAnimationDuration={3000}
-        panGestureHandlerProps={{
-          activeOffsetX: [-10, 10],
-        }}
-        renderItem={({item, index}) => (
-          <Slide
-            tag={item?.tag}
-            title={item?.title}
-            thumbnail={item?.thumbnail}
-            totalSlideCount={data.length}
-            currentSlideIndex={index + 1}
-          />
-        )}
-      />
+    <Pressable onPress={openContentModal}>
+      <View style={styles.container}>
+        <Carousel
+          ref={ref}
+          loop
+          width={width}
+          height={height}
+          autoPlay={true}
+          data={data}
+          scrollAnimationDuration={3000}
+          panGestureHandlerProps={{
+            activeOffsetX: [-10, 10],
+          }}
+          renderItem={({item, index}) => (
+            <Slide
+              tag={item?.tag}
+              title={item?.title}
+              thumbnail={item?.thumbnail}
+              totalSlideCount={data.length}
+              currentSlideIndex={index + 1}
+            />
+          )}
+        />
+      </View>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    marginHorizontal: spacing.layoutPaddingHorizontal,
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 10,

@@ -8,6 +8,7 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 import {fetchData} from '@/api/api';
+import spacing from '@/styles/spacing';
 
 type Props = {
   categories: object[];
@@ -65,7 +66,7 @@ export function HomeContentsListWithFilter({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
+    marginHorizontal: spacing.layoutPaddingHorizontal,
     paddingHorizontal: 26,
     paddingVertical: 34,
     borderRadius: 14,

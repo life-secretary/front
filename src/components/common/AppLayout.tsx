@@ -12,7 +12,7 @@ import AppIcon from './AppIcon';
 export function AppLayout({
   children,
   style,
-  isUsedPadding = true,
+  isPaddingUsed = true,
 }: any): React.JSX.Element {
   const toastWidth =
     Dimensions.get('window').width - spacing.layoutPaddingHorizontal * 2;
@@ -35,7 +35,7 @@ export function AppLayout({
 
   return (
     <SafeAreaView
-      style={[styles.layout, style, isUsedPadding && styles.padding]}>
+      style={[styles.layout, style, isPaddingUsed && styles.padding]}>
       <StatusBar barStyle="default" />
       {children}
       <Toast config={toastConfig} />
