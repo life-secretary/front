@@ -22,14 +22,7 @@ const SearchContentView = ({data, headerComponent}) => {
     <VirtualizedList
       initialNumToRender={8}
       renderItem={({item}) => {
-        return (
-          <HomeContentsItem
-            title={item.title}
-            thumbnail={item.thumbnail}
-            category={item.category}
-            createdDate={item.date}
-          />
-        );
+        return <HomeContentsItem item={{...item}} />;
       }}
       keyExtractor={getContentTabKeyExtractor}
       getItemCount={getContentTabItemCount}

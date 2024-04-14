@@ -1,6 +1,4 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {useRecoilState, useSetRecoilState} from 'recoil';
-import {todoListState} from '@/store/todoState';
 import {bottomSheetVisibleState} from '@/store/bottomSheetState';
 import {useNavigation} from '@react-navigation/native';
 
@@ -10,13 +8,13 @@ import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-import {replaceItemAtIndex} from '@/utils';
-import {createData} from '@/api/api';
+import {createData, updateData} from '@/api/api';
 import {
   checkInappropriateKeyword,
   checkSpecialChar,
   formValidation,
 } from '@/utils/formValidation';
+import {useSetRecoilState} from 'recoil';
 
 type Props = {
   isEditMode?: boolean;
@@ -38,13 +36,9 @@ export function TodoForm({
   const [isTitleInvalid, setIsTitleInvalid] = useState(false);
   const [categoryErrorMsg, setCategoryErrorMsg] = useState('');
   const [titleErrorMsg, setTitleErrorMsg] = useState('');
+  const [category, setCategory] = useState('');
   const [title, setTitle] = useState(todoItem?.title || '');
-  const [todoList, setTodoList] = useRecoilState(todoListState);
   const navigation = useNavigation();
-
-  const itemIndex = todoList.findIndex(
-    (item: object) => item.id === todoItem?.id,
-  );
 
   const isCustomCategory = selectedCategory?.key === 'custom';
 
@@ -61,16 +55,16 @@ export function TodoForm({
 
   // ADD TODO
   const addTodo = async () => {
-    let category: any = '';
+    let currentCategory: any = '';
     if (selectedCategory?.key === 'none') {
-      category = null;
+      currentCategory = null;
     } else {
-      category = selectedCategory?.title;
+      currentCategory = category;
     }
 
     const newTodo = {
       title,
-      category,
+      category: currentCategory,
       userId: 1,
     };
 
@@ -83,21 +77,22 @@ export function TodoForm({
   };
 
   // EDIT TODO
-  const editTodo = () => {
-    const newList = replaceItemAtIndex(todoList, itemIndex, {
-      ...todoItem,
+  const editTodo = async () => {
+    const editedTodo = {
       title,
-      category: selectedCategory,
-    });
+      category,
+    };
 
-    setTodoList(newList);
+    const res = await updateData('/user-todos', todoItem?.id, editedTodo);
 
-    resetForm();
-    navigation.navigate('Todo');
+    if (res.status === 200) {
+      resetForm();
+      navigation.navigate('Todo');
+    }
   };
 
   const checkCategoryInputValidation = useCallback(() => {
-    if (checkSpecialChar(selectedCategory?.title)) {
+    if (checkSpecialChar(category)) {
       setIsCategoryInvalid(true);
       setCategoryErrorMsg(formValidation.common.specialChar.errorMsg);
       return false;
@@ -106,7 +101,7 @@ export function TodoForm({
     if (
       checkInappropriateKeyword(
         formValidation.common.inappropriate.keywords,
-        selectedCategory?.title,
+        category,
       )
     ) {
       setIsCategoryInvalid(true);
@@ -117,7 +112,7 @@ export function TodoForm({
     setIsCategoryInvalid(false);
     setCategoryErrorMsg('');
     return true;
-  }, [selectedCategory?.title]);
+  }, [category]);
 
   const checkTitleInputValidation = useCallback(() => {
     if (checkSpecialChar(title)) {
@@ -143,8 +138,25 @@ export function TodoForm({
   }, [title]);
 
   useEffect(() => {
-    !title || !selectedCategory ? setIsEmpty(true) : setIsEmpty(false);
+    if (!selectedCategory) {
+      setCategory('');
+      return;
+    }
 
+    if (typeof selectedCategory === 'object') {
+      setCategory(selectedCategory?.title);
+    } else {
+      setCategory(todoItem?.category);
+    }
+  }, [selectedCategory, todoItem?.category]);
+
+  useEffect(() => {
+    if (!title || !selectedCategory) {
+      setIsEmpty(true);
+      return;
+    }
+
+    setIsEmpty(false);
     checkCategoryInputValidation();
     checkTitleInputValidation();
   }, [
@@ -165,7 +177,7 @@ export function TodoForm({
             hasLabel={true}
             labelText="분야"
             placeholder="최대 6자 내로 입력 가능해요"
-            text={isCustomCategory ? '' : selectedCategory?.title}
+            text={isCustomCategory ? '' : category}
             onChangeText={(newText: string) =>
               handleSelectCategory({key: 'custom', title: newText})
             }
