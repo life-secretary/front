@@ -15,10 +15,7 @@ export const checkSpecialChar = (text: string) => {
   return regExp.test(text);
 };
 
-export const checkInappropriatedKeyword = (
-  keywords: string[],
-  text: string,
-) => {
+export const checkInappropriateKeyword = (keywords: string[], text: string) => {
   let result: boolean = false;
 
   keywords.forEach((keyword: string) => {
