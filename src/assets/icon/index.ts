@@ -43,6 +43,7 @@ import {default as select} from './icon_select.svg';
 import {default as logoKakao} from './login/icon_kakao.svg';
 import {default as logoGoogle} from './login/icon_google.svg';
 import {default as logoApple} from './login/icon_apple.svg';
+import {default as warning} from './icon_warning.svg';
 
 // TODO: iconName 키 타입 string -> string literal 변경하기
 export type IconsData = {
@@ -307,6 +308,12 @@ const Icons: IconsData = {
   logoApple: {
     type: 'fill',
     file: logoApple,
+    defaultStroke: '',
+    defaultFill: '',
+  },
+  warning: {
+    type: 'stroke',
+    file: warning,
     defaultStroke: '',
     defaultFill: '',
   },

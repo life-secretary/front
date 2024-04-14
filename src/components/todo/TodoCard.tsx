@@ -32,9 +32,15 @@ export function TodoCard({item}: Props): React.JSX.Element {
   const setTagList = () => {
     let list = [];
 
-    item?.isDone
-      ? (list = ['완료', '나의 할 일', item?.category])
-      : (list = ['나의 할 일', item?.category]);
+    if (item?.isDone) {
+      list.push('완료', '나의 할 일');
+    } else {
+      list.push('나의 할 일');
+    }
+
+    if (item?.category !== null) {
+      list.push(item?.category);
+    }
 
     return list;
   };

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {useRecoilState, useSetRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
 import {bottomSheetVisibleState} from '@/store/bottomSheetState';
@@ -12,6 +12,11 @@ import {font} from '@/styles/font';
 
 import {replaceItemAtIndex} from '@/utils';
 import {createData} from '@/api/api';
+import {
+  checkInappropriatedKeyword,
+  checkSpecialChar,
+  formValidation,
+} from '@/utils/formValidation';
 
 type Props = {
   isEditMode?: boolean;
@@ -28,10 +33,13 @@ export function TodoForm({
   handleSelectCategory,
 }: Props) {
   const setIsVisible = useSetRecoilState(bottomSheetVisibleState);
-  // const [isValid, setIsValid] = React.useState(true);
+  const [isCategoryInValid, setIsCategoryInValid] = useState(false);
+  const [isTitleInValid, setIsTitleInValid] = useState(false);
+  const [categoryErrorMsg, setCategoryErrorMsg] = useState('');
+  const [titleErrorMsg, setTitleErrorMsg] = useState('');
   const [todoList, setTodoList] = useRecoilState(todoListState);
   const [isEmpty, setIsEmpty] = useState(false);
-  const [title, setTitle] = useState(todoItem?.title);
+  const [title, setTitle] = useState(todoItem?.title || '');
   const navigation = useNavigation();
 
   const itemIndex = todoList.findIndex(
@@ -45,11 +53,24 @@ export function TodoForm({
     handleSelectCategory({});
   };
 
+  const handleSubmitButtonPress = () => {
+    if (checkCategoryInputValidation() && checkTitleInputValidation()) {
+      isEditMode ? editTodo() : addTodo();
+    }
+  };
+
   // ADD TODO
   const addTodo = async () => {
+    let category: any = '';
+    if (selectedCategory?.key === 'none') {
+      category = null;
+    } else {
+      category = selectedCategory?.title;
+    }
+
     const newTodo = {
       title,
-      category: selectedCategory?.title,
+      category,
       userId: 1,
     };
 
@@ -75,21 +96,64 @@ export function TodoForm({
     navigation.navigate('Todo');
   };
 
-  /** TODO: Form Validation Check 추가
-  const checkInputValidation = () => {
-  // onChange
-  // onBlur
-  // onSubmit
-  };
-  */
+  const checkCategoryInputValidation = useCallback(() => {
+    if (checkSpecialChar(selectedCategory?.title)) {
+      setIsCategoryInValid(true);
+      setCategoryErrorMsg(formValidation.common.specialChar.errorMsg);
+      return false;
+    }
+
+    if (
+      checkInappropriatedKeyword(
+        formValidation.common.inappropriate.keywords,
+        selectedCategory?.title,
+      )
+    ) {
+      setIsCategoryInValid(true);
+      setCategoryErrorMsg(formValidation.common.inappropriate.errorMsg);
+      return false;
+    }
+
+    setIsCategoryInValid(false);
+    setCategoryErrorMsg('');
+    return true;
+  }, [selectedCategory?.title]);
+
+  const checkTitleInputValidation = useCallback(() => {
+    if (checkSpecialChar(title)) {
+      setIsTitleInValid(true);
+      setTitleErrorMsg(formValidation.common.specialChar.errorMsg);
+      return false;
+    }
+
+    if (
+      checkInappropriatedKeyword(
+        formValidation.common.inappropriate.keywords,
+        title,
+      )
+    ) {
+      setIsTitleInValid(true);
+      setTitleErrorMsg(formValidation.common.inappropriate.errorMsg);
+      return false;
+    }
+
+    setIsTitleInValid(false);
+    setTitleErrorMsg('');
+    return true;
+  }, [title]);
 
   useEffect(() => {
-    if (!title || !selectedCategory) {
-      setIsEmpty(true);
-    } else {
-      setIsEmpty(false);
-    }
-  }, [title, selectedCategory, isEmpty]);
+    !title || !selectedCategory ? setIsEmpty(true) : setIsEmpty(false);
+
+    checkCategoryInputValidation();
+    checkTitleInputValidation();
+  }, [
+    title,
+    selectedCategory,
+    isEmpty,
+    checkTitleInputValidation,
+    checkCategoryInputValidation,
+  ]);
 
   return (
     <>
@@ -113,6 +177,8 @@ export function TodoForm({
               styles: {color: color.grey.grey400},
               onPress: () => setIsVisible(true),
             }}
+            error={isCategoryInValid}
+            errorMsg={categoryErrorMsg}
           />
           <AppInput
             hasLabel={true}
@@ -121,6 +187,8 @@ export function TodoForm({
             text={title}
             maxLength={20}
             onChangeText={setTitle}
+            error={isTitleInValid}
+            errorMsg={titleErrorMsg}
           />
         </View>
         <AppButton
@@ -129,7 +197,7 @@ export function TodoForm({
           textStyle={styles.buttonText}
           isDisabled={isEmpty}
           disabledBackgroundColor={color.grey.grey300}
-          onPressButton={isEditMode ? editTodo : addTodo}
+          onPressButton={handleSubmitButtonPress}
         />
       </KeyboardAvoidingView>
     </>
