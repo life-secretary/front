@@ -85,6 +85,7 @@ export function AppInput({
           multiline={isMultiline}
           maxLength={maxLength}
           editable={editable}
+          autoCapitalize="none"
           style={styles.inputText}
           onChangeText={newText => onChangeText && onChangeText(newText)}
           onFocus={() => setIsFocused(true)}

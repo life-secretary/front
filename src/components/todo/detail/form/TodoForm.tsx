@@ -13,7 +13,7 @@ import {font} from '@/styles/font';
 import {replaceItemAtIndex} from '@/utils';
 import {createData} from '@/api/api';
 import {
-  checkInappropriatedKeyword,
+  checkInappropriateKeyword,
   checkSpecialChar,
   formValidation,
 } from '@/utils/formValidation';
@@ -33,13 +33,13 @@ export function TodoForm({
   handleSelectCategory,
 }: Props) {
   const setIsVisible = useSetRecoilState(bottomSheetVisibleState);
-  const [isCategoryInValid, setIsCategoryInValid] = useState(false);
-  const [isTitleInValid, setIsTitleInValid] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false);
+  const [isCategoryInvalid, setIsCategoryInvalid] = useState(false);
+  const [isTitleInvalid, setIsTitleInvalid] = useState(false);
   const [categoryErrorMsg, setCategoryErrorMsg] = useState('');
   const [titleErrorMsg, setTitleErrorMsg] = useState('');
-  const [todoList, setTodoList] = useRecoilState(todoListState);
-  const [isEmpty, setIsEmpty] = useState(false);
   const [title, setTitle] = useState(todoItem?.title || '');
+  const [todoList, setTodoList] = useRecoilState(todoListState);
   const navigation = useNavigation();
 
   const itemIndex = todoList.findIndex(
@@ -98,46 +98,46 @@ export function TodoForm({
 
   const checkCategoryInputValidation = useCallback(() => {
     if (checkSpecialChar(selectedCategory?.title)) {
-      setIsCategoryInValid(true);
+      setIsCategoryInvalid(true);
       setCategoryErrorMsg(formValidation.common.specialChar.errorMsg);
       return false;
     }
 
     if (
-      checkInappropriatedKeyword(
+      checkInappropriateKeyword(
         formValidation.common.inappropriate.keywords,
         selectedCategory?.title,
       )
     ) {
-      setIsCategoryInValid(true);
+      setIsCategoryInvalid(true);
       setCategoryErrorMsg(formValidation.common.inappropriate.errorMsg);
       return false;
     }
 
-    setIsCategoryInValid(false);
+    setIsCategoryInvalid(false);
     setCategoryErrorMsg('');
     return true;
   }, [selectedCategory?.title]);
 
   const checkTitleInputValidation = useCallback(() => {
     if (checkSpecialChar(title)) {
-      setIsTitleInValid(true);
+      setIsTitleInvalid(true);
       setTitleErrorMsg(formValidation.common.specialChar.errorMsg);
       return false;
     }
 
     if (
-      checkInappropriatedKeyword(
+      checkInappropriateKeyword(
         formValidation.common.inappropriate.keywords,
         title,
       )
     ) {
-      setIsTitleInValid(true);
+      setIsTitleInvalid(true);
       setTitleErrorMsg(formValidation.common.inappropriate.errorMsg);
       return false;
     }
 
-    setIsTitleInValid(false);
+    setIsTitleInvalid(false);
     setTitleErrorMsg('');
     return true;
   }, [title]);
@@ -177,7 +177,7 @@ export function TodoForm({
               styles: {color: color.grey.grey400},
               onPress: () => setIsVisible(true),
             }}
-            error={isCategoryInValid}
+            error={isCategoryInvalid}
             errorMsg={categoryErrorMsg}
           />
           <AppInput
@@ -187,7 +187,7 @@ export function TodoForm({
             text={title}
             maxLength={20}
             onChangeText={setTitle}
-            error={isTitleInValid}
+            error={isTitleInvalid}
             errorMsg={titleErrorMsg}
           />
         </View>

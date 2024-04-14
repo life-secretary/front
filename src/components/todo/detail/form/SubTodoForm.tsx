@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
@@ -8,6 +8,11 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 import {createData} from '@/api/api';
+import {
+  checkInappropriateKeyword,
+  checkSpecialChar,
+  formValidation,
+} from '@/utils/formValidation';
 
 type Props = {
   todoItem: object;
@@ -15,18 +20,44 @@ type Props = {
 
 export function SubTodoForm({todoItem}: Props) {
   const [isEmpty, setIsEmpty] = useState(false);
+  const [isInvalid, setIsInvalid] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [subTitle, setSubTitle] = useState('');
-  // const [todoList, setTodoList] = useRecoilState(todoListState);
   const navigation = useNavigation();
   const parentTodoId = todoItem?.id;
-
-  // const itemIndex = todoList.findIndex(
-  //   (item: object) => item.id === todoItem?.id,
-  // );
 
   const resetForm = () => {
     setSubTitle('');
   };
+
+  const handleSubmitButtonPress = () => {
+    if (checkInputValidation()) {
+      addSubTodo();
+    }
+  };
+
+  const checkInputValidation = useCallback(() => {
+    if (checkSpecialChar(subTitle)) {
+      setIsInvalid(true);
+      setErrorMsg(formValidation.common.specialChar.errorMsg);
+      return false;
+    }
+
+    if (
+      checkInappropriateKeyword(
+        formValidation.common.inappropriate.keywords,
+        subTitle,
+      )
+    ) {
+      setIsInvalid(true);
+      setErrorMsg(formValidation.common.inappropriate.errorMsg);
+      return false;
+    }
+
+    setIsInvalid(false);
+    setErrorMsg('');
+    return true;
+  }, [subTitle]);
 
   const addSubTodo = async () => {
     const newSubTodo = {
@@ -41,13 +72,11 @@ export function SubTodoForm({todoItem}: Props) {
     }
   };
 
-  React.useEffect(() => {
-    if (subTitle === '') {
-      setIsEmpty(true);
-    } else {
-      setIsEmpty(false);
-    }
-  }, [subTitle]);
+  useEffect(() => {
+    !subTitle ? setIsEmpty(true) : setIsEmpty(false);
+
+    checkInputValidation();
+  }, [checkInputValidation, subTitle]);
 
   return (
     <KeyboardAvoidingView
@@ -67,6 +96,8 @@ export function SubTodoForm({todoItem}: Props) {
           placeholder="최대 18자 내로 입력 가능해요"
           text={subTitle}
           maxLength={18}
+          error={isInvalid}
+          errorMsg={errorMsg}
           onChangeText={setSubTitle}
         />
       </View>
@@ -76,7 +107,7 @@ export function SubTodoForm({todoItem}: Props) {
         textStyle={styles.buttonText}
         isDisabled={isEmpty}
         disabledBackgroundColor={color.grey.grey300}
-        onPressButton={addSubTodo}
+        onPressButton={handleSubmitButtonPress}
       />
     </KeyboardAvoidingView>
   );
