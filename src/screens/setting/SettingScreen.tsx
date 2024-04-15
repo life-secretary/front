@@ -64,7 +64,7 @@ const SETTING_MENU_LIST = [
 
 export function SettingScreen(): React.JSX.Element {
   return (
-    <AppLayout style={styles.layout}>
+    <AppLayout isPaddingUsed={true} style={styles.layout}>
       <AppHeader style={styles.header}>
         <AppTitle text="관리" style={styles.headerTitle} />
         <View style={styles.headerIconContainer}>

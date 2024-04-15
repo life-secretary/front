@@ -3,6 +3,7 @@ import React from 'react';
 import {StyleSheet, View, FlatList} from 'react-native';
 import {MyInfoMenuItem} from '@/components/setting/my/MyInfoMenuItem';
 import color from '@/styles/color';
+import spacing from '@/styles/spacing';
 
 const MY_INFO_MENU = [
   [
@@ -55,7 +56,7 @@ export function MyInfoMenu({user}: MyInfoMenuProps): React.JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.layoutPaddingHorizontal,
   },
   listContainer: {
     marginVertical: 20,

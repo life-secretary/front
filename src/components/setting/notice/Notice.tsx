@@ -6,6 +6,7 @@ import {AppText} from '@/components/common/AppText';
 import Accordion from 'react-native-collapsible/Accordion';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import spacing from '@/styles/spacing';
 
 const EmptyList = () => (
   <View style={styles.emptyListContainer}>
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
     borderColor: color.grey.grey100,
     paddingVertical: 12,
     backgroundColor: color.main.white,
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.layoutPaddingHorizontal,
   },
   titleContainer: {
     flexDirection: 'row',
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
     color: color.grey.grey400,
   },
   content: {
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.layoutPaddingHorizontal,
     paddingVertical: 22,
     backgroundColor: color.grey.grey100,
   },

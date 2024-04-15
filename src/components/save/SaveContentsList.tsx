@@ -7,6 +7,7 @@ import {SaveContentsItem} from '@/components/save/SaveContentsItem';
 import {SendFeedbackButton} from '@/components/home/SendFeedbackButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import spacing from '@/styles/spacing';
 
 import {removeItemAtIndex} from '@/utils';
 
@@ -101,7 +102,7 @@ export function SaveContentsList({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.layoutPaddingHorizontal,
   },
   divider: {
     marginVertical: 16,

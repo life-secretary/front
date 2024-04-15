@@ -10,11 +10,12 @@ import AppButton from '@/components/common/AppButton';
 import {SaveContentsList} from '@/components/save/SaveContentsList';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import spacing from '@/styles/spacing';
 
 import {generateRandomId} from '@/utils';
 
 interface SaveContentsItem {
-  id: string;
+  id: number;
   category: object;
   title: string;
 }
@@ -101,7 +102,7 @@ export function SaveScreen(): React.JSX.Element {
   }, [mode]);
 
   return (
-    <AppLayout isUsedPadding={false}>
+    <AppLayout>
       <AppHeader style={styles.header}>
         <AppTitle text="저장 목록" style={styles.title} />
       </AppHeader>
@@ -120,7 +121,7 @@ export function SaveScreen(): React.JSX.Element {
                 ? {color: color.grey.grey400}
                 : {color: color.grey.grey200},
             ]}
-            onPressButton={() => handleButtonPress()}
+            onPressButton={handleButtonPress}
           />
         </View>
         <AppDivider style={styles.divider} />
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.layoutPaddingHorizontal,
   },
   divider: {
     marginTop: 7,

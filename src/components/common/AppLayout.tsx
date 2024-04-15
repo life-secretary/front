@@ -12,7 +12,7 @@ import AppIcon from './AppIcon';
 export function AppLayout({
   children,
   style,
-  isPaddingUsed = true,
+  isPaddingUsed = false,
 }: any): React.JSX.Element {
   const toastWidth =
     Dimensions.get('window').width - spacing.layoutPaddingHorizontal * 2;

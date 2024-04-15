@@ -26,7 +26,7 @@ export function TodoFormModalScreen({route, navigation}: any) {
 
   return (
     <>
-      <AppLayout>
+      <AppLayout isPaddingUsed={true}>
         <AppHeader style={styles.header}>
           <AppText style={styles.headerTitle}>{headerTitle}</AppText>
           <View style={styles.button}>

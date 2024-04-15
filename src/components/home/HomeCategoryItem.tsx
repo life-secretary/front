@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 
 import {StyleSheet, Pressable} from 'react-native';
 import {AppText} from '@/components/common/AppText';
@@ -18,8 +18,6 @@ export function HomeCategoryItem({
   const handlePress = (category: string) => {
     openCategoryModal(category);
   };
-
-  console.log(item?.category);
 
   return (
     <Pressable
