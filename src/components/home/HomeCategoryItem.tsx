@@ -19,35 +19,14 @@ export function HomeCategoryItem({
     openCategoryModal(category);
   };
 
-  const setCategoryIcon = useCallback((category: string) => {
-    switch (category) {
-      case 'all':
-        return 'all';
-      case 'economy':
-        return 'economy';
-      case 'law':
-        return 'law';
-      case 'environment':
-        return 'environment';
-      case 'self-improvement':
-        return 'selfImprovement';
-      case 'health':
-        return 'health';
-      case 'culture':
-        return 'culture';
-      case 'etc':
-        return 'etc';
-      default:
-        return '';
-    }
-  }, []);
+  console.log(item?.category);
 
   return (
     <Pressable
       style={styles.container}
       onPress={() => handlePress(item?.category)}>
       <AppIcon
-        name={setCategoryIcon(item?.category)}
+        name={String(item?.category)}
         width={44}
         height={44}
         onPress={() => handlePress(item?.category)}

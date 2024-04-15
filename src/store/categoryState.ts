@@ -27,7 +27,7 @@ const mainCategoryListState = selector({
         list[2] = item;
       }
 
-      if (item?.category === 'self-improvement') {
+      if (item?.category === 'selfImprovement') {
         list[3] = item;
       }
 
