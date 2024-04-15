@@ -3,11 +3,11 @@ import React from 'react';
 import {Dimensions, StatusBar, StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
+import {AppText} from './AppText';
+import AppIcon from './AppIcon';
 import spacing from '@/styles/spacing';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
-import {AppText} from './AppText';
-import AppIcon from './AppIcon';
 
 export function AppLayout({
   children,

@@ -50,7 +50,9 @@ export function SaveContentsItem({
       <View style={styles.itemContainer}>
         <View style={styles.infoContainer}>
           <View style={styles.tagContainer}>
-            <AppText style={styles.tag}>{item?.category?.title}</AppText>
+            <AppText style={styles.tag}>
+              {item?.category?.title || '카테고리'}
+            </AppText>
           </View>
           <AppText style={styles.title} isEllipsizeMode={true}>
             {item?.title}
