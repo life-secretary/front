@@ -15,6 +15,7 @@ import AppButton from '@/components/common/AppButton';
 import AppConfirmModal from '@/components/common/modal/AppConfirmModal';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import spacing from '@/styles/spacing';
 
 import {removeItemAtIndex} from '@/utils';
 
@@ -238,7 +239,7 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.layoutPaddingHorizontal,
   },
   titleContainer: {
     marginTop: 32,

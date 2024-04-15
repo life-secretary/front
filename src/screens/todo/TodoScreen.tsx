@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {fetchData} from '@/api/api';
-import {useRecoilState, useSetRecoilState} from 'recoil';
+import {useSetRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
 
 import {StyleSheet, View, ScrollView} from 'react-native';
@@ -16,7 +16,7 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 export function TodoScreen({navigation}: any): React.JSX.Element {
-  const [todoList, setTodoList] = useRecoilState(todoListState);
+  const setTodoList = useSetRecoilState(todoListState);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const moveToScreen = (screen: string, params: object) => {
@@ -49,7 +49,7 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
   );
 
   return (
-    <AppLayout style={styles.layout}>
+    <AppLayout style={styles.layout} isPaddingUsed={true}>
       <AppHeader style={styles.header}>
         <AppTitle text="To Do" style={styles.title} />
         <View style={styles.button}>

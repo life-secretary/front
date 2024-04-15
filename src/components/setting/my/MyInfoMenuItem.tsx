@@ -7,15 +7,12 @@ import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-type SettingMenuItemProps = {
+type Props = {
   myInfoMenu: object;
   user: object;
 };
 
-export function MyInfoMenuItem({
-  myInfoMenu,
-  user,
-}: SettingMenuItemProps): React.JSX.Element {
+export function MyInfoMenuItem({myInfoMenu, user}: Props): React.JSX.Element {
   const navigation = useNavigation();
 
   const handleButtonPress = (menu: object) => {

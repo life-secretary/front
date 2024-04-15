@@ -10,6 +10,7 @@ import {SendFeedbackForm} from '@/components/setting/sendFeedback/SendFeedbackFo
 import {Notice} from '@/components/setting/notice/Notice';
 import {font} from '@/styles/font';
 import color from '@/styles/color';
+import spacing from '@/styles/spacing';
 
 export function SettingModalScreen({
   route,
@@ -18,7 +19,7 @@ export function SettingModalScreen({
   const {headerTitle, menu, user} = route.params;
 
   return (
-    <AppLayout isUsedPadding={false}>
+    <AppLayout>
       <AppHeader style={styles.header}>
         <View style={styles.button}>
           <AppIcon
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
   button: {
     position: 'absolute',
     left: 0,
-    paddingLeft: 24,
+    paddingLeft: spacing.layoutPaddingHorizontal,
   },
   divider: {
     backgroundColor: color.grey.grey100,

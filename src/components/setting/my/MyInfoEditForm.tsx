@@ -6,13 +6,15 @@ import AppButton from '@/components/common/AppButton';
 import {AppInput} from '@/components/common/AppInput';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import spacing from '@/styles/spacing';
+
 import {getFormattedDate} from '@/utils';
 
-type MyInfoEditFormProps = {
+type Props = {
   user: object;
 };
 
-export function MyInfoEditForm({user}: MyInfoEditFormProps): React.JSX.Element {
+export function MyInfoEditForm({user}: Props): React.JSX.Element {
   const [isEmpty, setIsEmpty] = React.useState(false);
   const [nickname, onChangeNickname] = useState(user?.nickname);
   const [birthdate, onChangeBirthdate] = useState(user?.birthdate);
@@ -60,14 +62,16 @@ export function MyInfoEditForm({user}: MyInfoEditFormProps): React.JSX.Element {
           }}
         />
       </View>
-      <AppButton
-        text="완료"
-        buttonStyle={styles.button}
-        textStyle={styles.buttonText}
-        isDisabled={isEmpty}
-        disabledBackgroundColor={color.grey.grey300}
-        onPressButton={handleSubmitButtonPress}
-      />
+      <View style={styles.buttonContainer}>
+        <AppButton
+          text="완료"
+          buttonStyle={styles.button}
+          textStyle={styles.buttonText}
+          isDisabled={isEmpty}
+          disabledBackgroundColor={color.grey.grey300}
+          onPressButton={handleSubmitButtonPress}
+        />
+      </View>
     </KeyboardAvoidingView>
   );
 }
@@ -75,7 +79,7 @@ export function MyInfoEditForm({user}: MyInfoEditFormProps): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.layoutPaddingHorizontal,
   },
   form: {
     flex: 1,

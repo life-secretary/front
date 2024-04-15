@@ -15,6 +15,7 @@ import {AppText} from '@/components/common/AppText';
 import AppModal from '@/components/common/modal/AppModal';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import spacing from '@/styles/spacing';
 
 export function SendFeedbackForm() {
   // const [isValid, setIsValid] = React.useState(true);
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 12,
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.layoutPaddingHorizontal,
   },
   titleContainer: {
     gap: 12,

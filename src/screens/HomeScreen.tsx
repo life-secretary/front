@@ -148,7 +148,7 @@ export function HomeScreen(): React.JSX.Element {
   }, [setCategories]);
 
   return (
-    <AppLayout isPaddingUsed={false}>
+    <AppLayout>
       <ScrollView showsVerticalScrollIndicator={false}>
         <AppHeader style={styles.header}>
           <AppTitle
