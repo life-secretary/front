@@ -26,7 +26,7 @@ export function HomeContentsListWithFilter({
 
   useEffect(() => {
     const fetchHomeContentsListByCategory = async () => {
-      const res = await fetchData('/articles/popular', {
+      const res = await fetchData('/content/popular', {
         categoryId: activeCategory?.id,
       });
 
