@@ -135,7 +135,7 @@ export function HomeScreen(): React.JSX.Element {
     }
 
     async function fetchHomeContentsListByNewest() {
-      const res = await fetchData('/articles', {sort: 'createdAt'});
+      const res = await fetchData('/content', {sort: 'createdAt'});
       const list = res.data.data.content;
 
       if (res.status === 200) {
