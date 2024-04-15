@@ -1,5 +1,9 @@
 import React, {useEffect, useState} from 'react';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {userInfoState} from '@/store/userInfoState';
 import {categoryListState, mainCategoryListState} from '@/store/categoryState';
+import {scrapListState} from '@/store/scrapState';
+import {fetchData} from '@/api/api';
 
 import type {CategoryObject} from '../models/common';
 
@@ -20,8 +24,6 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 import {generateRandomId, getFormattedDate} from '@/utils';
-import {fetchData} from '@/api/api';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
 
 const DUMMY_CAROUSEL_DATA = [
   {
@@ -100,6 +102,8 @@ export function HomeScreen(): React.JSX.Element {
   const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
   const [isContentModalVisible, setIsContentModalVisible] = useState(false);
   const setCategories = useSetRecoilState(categoryListState);
+  const setScrapList = useSetRecoilState(scrapListState);
+  const userInfo = useRecoilValue(userInfoState);
   // Login → Agreement → Survey 과정 임시 테스팅 중
   const [isDone, setIsDone] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(HOME_CATEGORIES[0]);
@@ -127,25 +131,37 @@ export function HomeScreen(): React.JSX.Element {
   };
 
   useEffect(() => {
-    async function fetchCategories() {
+    const fetchCategories = async () => {
       const res = await fetchData('/categories', null);
       if (res.status === 200) {
         setCategories(res.data.data);
       }
-    }
+    };
 
-    async function fetchHomeContentsListByNewest() {
+    const fetchScrapList = async () => {
+      const res = await fetchData('/scrap', {
+        userId: userInfo.id,
+      });
+      const list = res.data.data;
+
+      if (res.status === 200) {
+        setScrapList(list);
+      }
+    };
+
+    const fetchHomeContentsListByNewest = async () => {
       const res = await fetchData('/content', {sort: 'createdAt'});
       const list = res.data.data.content;
 
       if (res.status === 200) {
         setNewestHomeContentsList(list);
       }
-    }
+    };
 
     fetchCategories();
+    fetchScrapList();
     fetchHomeContentsListByNewest();
-  }, [setCategories]);
+  }, [setCategories, setScrapList, userInfo]);
 
   return (
     <AppLayout>

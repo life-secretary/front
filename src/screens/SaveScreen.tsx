@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {useRecoilValue} from 'recoil';
+import {scrapListState, scrapListTotalCountState} from '@/store/scrapState';
 
+import {StyleSheet, View} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppText} from '@/components/common/AppText';
@@ -52,8 +54,8 @@ export function SaveScreen(): React.JSX.Element {
   const [mode, setMode] = useState('READ'); // TODO: ENUM type 정의
   const [buttonText, setButtonText] = useState('');
   const [totalCheckedCount, setTotalCheckedCount] = React.useState(0);
-
-  const totalCount = SAVE_CONTENTS_LIST.length;
+  const scrapList = useRecoilValue(scrapListState);
+  const totalCount = useRecoilValue(scrapListTotalCountState);
 
   const switchMode = (action: string) => {
     switch (action) {
@@ -126,7 +128,7 @@ export function SaveScreen(): React.JSX.Element {
         </View>
         <AppDivider style={styles.divider} />
         <SaveContentsList
-          list={SAVE_CONTENTS_LIST}
+          list={scrapList || SAVE_CONTENTS_LIST}
           mode={mode}
           handleButtonPress={switchMode}
           handleTotalCheckedCount={(count: number) =>

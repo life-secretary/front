@@ -2,7 +2,7 @@ import {atom, selector} from 'recoil';
 
 // atom
 const todoListState = atom({
-  key: 'todoListState',
+  key: 'TodoListState',
   default: [],
 });
 

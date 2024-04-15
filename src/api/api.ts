@@ -31,7 +31,7 @@ export async function updateData(url: string, id: number | string, data: any) {
 export async function deleteData(
   url: string,
   params: object,
-  id: number | string,
+  id: number | string | number[],
 ) {
   try {
     return await axiosInstance.delete(`${url}/${id}`, {params});
