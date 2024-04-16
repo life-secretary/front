@@ -180,6 +180,7 @@ export function SaveScreen(): React.JSX.Element {
               totalCount > 0
                 ? {color: color.grey.grey400}
                 : {color: color.grey.grey200},
+              mode === 'DELETE' && {color: color.grey.grey700},
             ]}
             onPressButton={handleButtonPress}
           />
