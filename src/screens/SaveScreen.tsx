@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useRecoilValue} from 'recoil';
 import {scrapListState, scrapListTotalCountState} from '@/store/scrapState';
+import {deleteData} from '@/api/api';
 
 import {StyleSheet, View} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
@@ -9,20 +10,21 @@ import {AppText} from '@/components/common/AppText';
 import {AppTitle} from '@/components/common/AppTitle';
 import {AppDivider} from '@/components/common/AppDivider';
 import AppButton from '@/components/common/AppButton';
-import {SaveContentsList} from '@/components/save/SaveContentsList';
+import {ScrapContentsList} from '@/components/scrap/ScrapContentsList';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
 
 import {generateRandomId} from '@/utils';
+import {removeItemAtIndex} from '@/utils';
 
-interface SaveContentsItem {
+interface ScrapContentsItem {
   id: number;
   category: object;
   title: string;
 }
 
-const SAVE_CONTENTS_LIST: SaveContentsItem[] = [
+const SCRAP_CONTENTS_LIST: ScrapContentsItem[] = [
   {
     id: generateRandomId(),
     category: {key: 'economy', title: '경제'},
@@ -51,11 +53,14 @@ const SAVE_CONTENTS_LIST: SaveContentsItem[] = [
 ];
 
 export function SaveScreen(): React.JSX.Element {
-  const [mode, setMode] = useState('READ'); // TODO: ENUM type 정의
+  const [mode, setMode] = useState('READ'); // TODO: ENUM type 정의 ['READ', 'EDIT', 'DELETE']
   const [buttonText, setButtonText] = useState('');
   const [totalCheckedCount, setTotalCheckedCount] = React.useState(0);
+  const [checkedList, setCheckedList] = useState<object[]>([]);
   const scrapList = useRecoilValue(scrapListState);
-  const totalCount = useRecoilValue(scrapListTotalCountState);
+  // const totalCount = useRecoilValue(scrapListTotalCountState);
+  const dummyScrapList = SCRAP_CONTENTS_LIST;
+  const totalCount = dummyScrapList.length;
 
   const switchMode = (action: string) => {
     switch (action) {
@@ -74,13 +79,66 @@ export function SaveScreen(): React.JSX.Element {
   };
 
   const handleButtonPress = () => {
+    if (totalCount === 0) {
+      return;
+    }
+
     if (mode === 'READ') {
       switchMode('edit');
+      return;
     }
 
     if (mode === 'EDIT') {
       switchMode('read');
+      return;
     }
+
+    if (mode === 'DELETE') {
+      deleteScrapList(checkedList);
+      return;
+    }
+  };
+
+  const manipulateCheckedList = (action: string, contents: object) => {
+    if (action === 'push') {
+      pushCheckedList(contents);
+    }
+
+    if (action === 'remove') {
+      removeCheckedList(contents);
+    }
+  };
+
+  const pushCheckedList = (contents: object) => {
+    setCheckedList([...checkedList, contents]);
+  };
+
+  const removeCheckedList = (contents: object) => {
+    const itemIndex = checkedList.findIndex(item => item.id === contents.id);
+    const filteredList = removeItemAtIndex(checkedList, itemIndex);
+    setCheckedList(filteredList);
+  };
+
+  const deleteScrapList = async (list: object[]) => {
+    // 임시 코드
+    list.forEach(scrapItem => {
+      const itemIndex = dummyScrapList.findIndex(
+        item => item.id === scrapItem.id,
+      );
+
+      dummyScrapList.splice(itemIndex, 1);
+    });
+
+    setCheckedList([]);
+    switchMode('read');
+
+    // const idList = list.map((item: object) => item?.id);
+    // const res = await deleteData('/scrap', {}, idList);
+
+    // if (res.status === 200) {
+    //   setCheckedList([]);
+    //   switchMode('read');
+    // }
   };
 
   useEffect(() => {
@@ -127,9 +185,11 @@ export function SaveScreen(): React.JSX.Element {
           />
         </View>
         <AppDivider style={styles.divider} />
-        <SaveContentsList
-          list={scrapList || SAVE_CONTENTS_LIST}
+        <ScrapContentsList
+          contentsList={scrapList.length > 0 ? scrapList : dummyScrapList} // 임시 코드
+          checkedList={checkedList}
           mode={mode}
+          manipulateCheckedList={manipulateCheckedList}
           handleButtonPress={switchMode}
           handleTotalCheckedCount={(count: number) =>
             setTotalCheckedCount(count)
