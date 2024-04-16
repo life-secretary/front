@@ -1,15 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 
 import {StyleSheet, View, FlatList} from 'react-native';
 import {AppText} from '@/components/common/AppText';
 import {AppDivider} from '@/components/common/AppDivider';
-import {SaveContentsItem} from '@/components/save/SaveContentsItem';
+import {ScrapContentsItem} from '@/components/scrap/ScrapContentsItem';
 import {SendFeedbackButton} from '@/components/home/SendFeedbackButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
-
-import {removeItemAtIndex} from '@/utils';
 
 const EmptyList = () => {
   return (
@@ -26,48 +24,29 @@ const EmptyList = () => {
 };
 
 type Props = {
-  list: object[];
+  contentsList: object[];
   mode: string;
+  checkedList: object[];
   handleButtonPress: Function;
   handleTotalCheckedCount: Function;
+  manipulateCheckedList: Function;
 };
 
-export function SaveContentsList({
-  list,
+export function ScrapContentsList({
+  contentsList,
   mode,
+  checkedList,
   handleButtonPress,
   handleTotalCheckedCount,
+  manipulateCheckedList,
 }: Props): React.JSX.Element {
-  const [checkedContentsList, setCheckedContentsList] = useState<object[]>([]);
+  const totalCount = checkedList.length;
 
-  const addCheckedContentsList = (contents: object) => {
-    setCheckedContentsList([...checkedContentsList, contents]);
-  };
-
-  const deleteCheckedContentsList = (contents: object) => {
-    const itemIndex = checkedContentsList.findIndex(
-      item => item.id === contents.id,
-    );
-    const filteredList = removeItemAtIndex(checkedContentsList, itemIndex);
-    setCheckedContentsList(filteredList);
-  };
-
-  const handleCheckedContentsList = (contents: object, action: string) => {
-    switch (action) {
-      case 'ADD':
-        addCheckedContentsList(contents);
-        break;
-      case 'DELETE':
-        deleteCheckedContentsList(contents);
-        break;
-      default:
-        return;
-    }
+  const handleCheckedList = (action: string, contents: object) => {
+    manipulateCheckedList(action, contents);
   };
 
   useEffect(() => {
-    const totalCount = checkedContentsList.length;
-
     if (totalCount > 0) {
       handleButtonPress('delete');
     }
@@ -77,23 +56,30 @@ export function SaveContentsList({
     }
 
     handleTotalCheckedCount(totalCount);
-  }, [checkedContentsList, handleTotalCheckedCount, handleButtonPress, mode]);
+  }, [
+    checkedList,
+    handleTotalCheckedCount,
+    handleButtonPress,
+    mode,
+    totalCount,
+  ]);
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={list}
+        data={contentsList}
         renderItem={({item}) => (
-          <SaveContentsItem
-            item={{...item}}
+          <ScrapContentsItem
+            contents={{...item}}
             mode={mode}
-            checkedContentsList={checkedContentsList}
+            checkedList={checkedList}
             handleButtonPress={handleButtonPress}
-            handleCheckedContentsList={handleCheckedContentsList}
+            handleCheckedList={handleCheckedList}
           />
         )}
         ItemSeparatorComponent={() => <AppDivider style={styles.divider} />}
         ListEmptyComponent={<EmptyList />}
+        contentContainerStyle={styles.listContainer}
       />
     </View>
   );
@@ -106,6 +92,9 @@ const styles = StyleSheet.create({
   },
   divider: {
     marginVertical: 16,
+  },
+  listContainer: {
+    flex: 1,
   },
   emptyListContainer: {
     flex: 1,

@@ -3,31 +3,27 @@ import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {AppText} from '@/components/common/AppText';
-import AppIcon from '@/components/common/AppIcon';
+import {BookmarkButton} from './BookmarkButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-type ItemProps = {
-  item: object;
+type Props = {
+  contents: object;
   mode: string;
-  checkedContentsList: object[];
+  checkedList: object[];
   handleButtonPress: Function;
-  handleCheckedContentsList: Function;
+  handleCheckedList: Function;
 };
 
-export function SaveContentsItem({
-  item,
+export function ScrapContentsItem({
+  contents,
   mode,
-  handleCheckedContentsList,
-}: ItemProps): React.JSX.Element {
-  const [isSaved, setIsSaved] = useState(true);
+  handleCheckedList,
+}: Props): React.JSX.Element {
+  const [isScrapped, setIsScrapped] = useState(true);
 
-  const handleSaveButtonPress = (prevState: boolean) => {
-    setIsSaved(!prevState);
-  };
-
-  const handleCheckboxPress = (contents: object, action: string) => {
-    handleCheckedContentsList(contents, action);
+  const handleCheckboxPress = (action: string, data: object) => {
+    handleCheckedList(action, data);
   };
 
   return (
@@ -41,8 +37,8 @@ export function SaveContentsItem({
             disableText
             onPress={(checked: boolean) => {
               checked
-                ? handleCheckboxPress(item, 'ADD')
-                : handleCheckboxPress(item, 'DELETE');
+                ? handleCheckboxPress('push', contents)
+                : handleCheckboxPress('remove', contents);
             }}
           />
         </View>
@@ -51,28 +47,30 @@ export function SaveContentsItem({
         <View style={styles.infoContainer}>
           <View style={styles.tagContainer}>
             <AppText style={styles.tag}>
-              {item?.category?.title || '카테고리'}
+              {contents?.category?.title || '카테고리'}
             </AppText>
           </View>
           <AppText style={styles.title} isEllipsizeMode={true}>
-            {item?.title}
+            {contents?.title}
           </AppText>
         </View>
         {mode === 'READ' &&
-          (isSaved ? (
-            <AppIcon
-              name="bookmarkMedium"
-              width={42}
-              height={42}
-              styles={{fill: color.grey.grey400}}
-              onPress={() => handleSaveButtonPress(isSaved)}
+          (isScrapped ? (
+            <BookmarkButton
+              iconWidth={42}
+              iconHeight={42}
+              iconStyles={{fill: color.grey.grey400}}
+              contents={contents}
+              isScrapped={isScrapped}
+              handleScrapStatus={setIsScrapped}
             />
           ) : (
-            <AppIcon
-              name="bookmarkMedium"
-              width={42}
-              height={42}
-              onPress={() => handleSaveButtonPress(isSaved)}
+            <BookmarkButton
+              iconWidth={42}
+              iconHeight={42}
+              contents={contents}
+              isScrapped={isScrapped}
+              handleScrapStatus={setIsScrapped}
             />
           ))}
       </View>
