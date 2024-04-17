@@ -35,10 +35,8 @@ export function MyInfoModalScreen({route, navigation}: any): React.JSX.Element {
         )}
       </AppHeader>
       <View style={styles.divider} />
-      <View style={styles.container}>
-        {menu?.key === 'edit' && <MyInfoEditForm user={user} />}
-        {menu?.key === 'withdrawal' && <MyInfoWithdrawalForm />}
-      </View>
+      {menu?.key === 'edit' && <MyInfoEditForm user={user} />}
+      {menu?.key === 'withdrawal' && <MyInfoWithdrawalForm />}
     </AppLayout>
   );
 }

@@ -20,6 +20,7 @@
 		"react-native-bouncy-checkbox": "^3.0.7",
 		"react-native-collapsible": "^1.6.1",
 		"react-native-gesture-handler": "^2.15.0",
+		"react-native-keyboard-aware-scroll-view": "^0.9.5",
 		"react-native-markdown-display": "^7.0.2",
 		"react-native-modal": "^13.0.1",
 		"react-native-outside-press": "^1.2.2",

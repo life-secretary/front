@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 
-import {KeyboardAvoidingView, StyleSheet, View} from 'react-native';
+import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import AppButton from '@/components/common/AppButton';
 import {AppInput} from '@/components/common/AppInput';
 import color from '@/styles/color';
@@ -9,6 +9,7 @@ import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
 
 import {getFormattedDate} from '@/utils';
+import OutsidePressHandler from 'react-native-outside-press';
 
 type Props = {
   user: object;
@@ -19,9 +20,19 @@ export function MyInfoEditForm({user}: Props): React.JSX.Element {
   const [nickname, onChangeNickname] = useState(user?.nickname);
   const [birthdate, onChangeBirthdate] = useState(user?.birthdate);
   const navigation = useNavigation();
+  const nicknameInputRef = useRef(null);
+  const birthDateInputRef = useRef(null);
 
   const moveToBack = () => {
     navigation.goBack();
+  };
+
+  const handleInputOutsidePress = (ref: React.MutableRefObject<null>) => {
+    handleInputBlur(ref);
+  };
+
+  const handleInputBlur = (ref: React.MutableRefObject<null>) => {
+    ref?.current.blur();
   };
 
   const handleSubmitButtonPress = () => {
@@ -37,30 +48,40 @@ export function MyInfoEditForm({user}: Props): React.JSX.Element {
   }, [nickname, birthdate]);
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
       <View style={styles.form}>
-        <AppInput
-          hasLabel={true}
-          labelText="닉네임"
-          placeholder="최대 6자 내로 입력 가능해요"
-          text={nickname}
-          onChangeText={onChangeNickname}
-        />
+        <OutsidePressHandler
+          onOutsidePress={() => handleInputOutsidePress(nicknameInputRef)}>
+          <AppInput
+            ref={nicknameInputRef}
+            hasLabel={true}
+            labelText="닉네임"
+            placeholder="최대 6자 내로 입력 가능해요"
+            text={nickname}
+            onChangeText={onChangeNickname}
+          />
+        </OutsidePressHandler>
         {/* TODO: Date Picker 적용 */}
-        <AppInput
-          hasLabel={true}
-          editable={false}
-          labelText="생년월일"
-          text={getFormattedDate(new Date(birthdate), 'kor')}
-          onChangeText={onChangeBirthdate}
-          icon={{
-            name: 'arrowDown',
-            width: 24,
-            height: 24,
-            styles: {color: color.grey.grey400},
-            onPress: () => {},
-          }}
-        />
+        <OutsidePressHandler
+          onOutsidePress={() => handleInputOutsidePress(birthDateInputRef)}>
+          <AppInput
+            ref={birthDateInputRef}
+            hasLabel={true}
+            editable={false}
+            labelText="생년월일"
+            text={getFormattedDate(new Date(birthdate), 'kor')}
+            onChangeText={onChangeBirthdate}
+            icon={{
+              name: 'arrowDown',
+              width: 24,
+              height: 24,
+              styles: {color: color.grey.grey400},
+              onPress: () => {},
+            }}
+          />
+        </OutsidePressHandler>
       </View>
       <View style={styles.buttonContainer}>
         <AppButton

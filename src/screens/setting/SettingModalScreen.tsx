@@ -36,11 +36,9 @@ export function SettingModalScreen({
         )}
       </AppHeader>
       {menu?.key !== 'sendFeedback' && <View style={styles.divider} />}
-      <View style={styles.container}>
-        {menu?.key === 'my' && <MyInfoMenu user={user} />}
-        {menu?.key === 'sendFeedback' && <SendFeedbackForm />}
-        {menu?.key === 'notice' && <Notice />}
-      </View>
+      {menu?.key === 'my' && <MyInfoMenu user={user} />}
+      {menu?.key === 'sendFeedback' && <SendFeedbackForm />}
+      {menu?.key === 'notice' && <Notice />}
     </AppLayout>
   );
 }

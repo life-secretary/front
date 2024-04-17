@@ -3,12 +3,12 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   Image,
-  KeyboardAvoidingView,
   Linking,
-  Platform,
   StyleSheet,
   View,
   AppState,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import {AppInput} from '@/components/common/AppInput';
 import AppButton from '@/components/common/AppButton';
@@ -42,10 +42,6 @@ export function SendFeedbackForm() {
 
   const handleInputOutsidePress = () => {
     handleInputBlur();
-  };
-
-  const handleModalOutsidePress = () => {
-    setIsModalVisible(false);
   };
 
   const handleInputBlur = () => {
@@ -114,89 +110,85 @@ export function SendFeedbackForm() {
   }, [contents, isEmpty]);
 
   return (
-    <>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
-        <View style={styles.titleContainer}>
-          <AppText style={styles.title}>인생비서 어떠셨나요?</AppText>
-          <AppText style={styles.subTitle}>
-            필요로 하는 지식이나 서비스에 대한 의견을{'\n'}자유롭게 적어주세요
-          </AppText>
-        </View>
-        <View style={styles.form}>
-          <View>
-            <FlatList
-              data={FEEDBACK_STATUS_LIST}
-              renderItem={({item}) => (
-                <AppButton
-                  text={item.text}
-                  textStyle={[
-                    styles.statusText,
-                    item.key === feedbackStatus?.key
-                      ? styles.selectedButtonText
-                      : styles.defaultButtonText,
-                  ]}
-                  buttonStyle={[
-                    styles.statusButton,
-                    item.key === feedbackStatus?.key
-                      ? styles.selectedButton
-                      : styles.defaultButton,
-                  ]}
-                  onPressButton={() => setFeedbackStatus(item)}
-                />
-              )}
-              keyExtractor={item => item.key}
-              contentContainerStyle={styles.statusContainer}
-            />
-          </View>
-          <OutsidePressHandler onOutsidePress={handleInputOutsidePress}>
-            <AppInput
-              ref={inputRef}
-              hasLabel={false}
-              placeholder="비즈니스 이메일 작성법, 보험 가입 연령 or 이러한 점이 불편해요"
-              text={contents}
-              isMultiline={true}
-              minHeight={154}
-              inputStyles={styles.input}
-              onChangeText={onChangeContents}
-            />
-          </OutsidePressHandler>
-        </View>
-        <View style={styles.buttonContainer}>
-          <AppButton
-            text="보내기"
-            buttonStyle={styles.button}
-            textStyle={styles.buttonText}
-            isDisabled={isEmpty}
-            disabledBackgroundColor={color.grey.grey300}
-            onPressButton={handleSubmitButtonPress}
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <View style={styles.titleContainer}>
+        <AppText style={styles.title}>인생비서 어떠셨나요?</AppText>
+        <AppText style={styles.subTitle}>
+          필요로 하는 지식이나 서비스에 대한 의견을{'\n'}자유롭게 적어주세요
+        </AppText>
+      </View>
+      <View style={styles.form}>
+        <View>
+          <FlatList
+            data={FEEDBACK_STATUS_LIST}
+            renderItem={({item}) => (
+              <AppButton
+                text={item.text}
+                textStyle={[
+                  styles.statusText,
+                  item.key === feedbackStatus?.key
+                    ? styles.selectedButtonText
+                    : styles.defaultButtonText,
+                ]}
+                buttonStyle={[
+                  styles.statusButton,
+                  item.key === feedbackStatus?.key
+                    ? styles.selectedButton
+                    : styles.defaultButton,
+                ]}
+                onPressButton={() => setFeedbackStatus(item)}
+              />
+            )}
+            keyExtractor={item => item.key}
+            contentContainerStyle={styles.statusContainer}
           />
         </View>
-      </KeyboardAvoidingView>
-      <OutsidePressHandler onOutsidePress={handleModalOutsidePress}>
-        <AppModal
-          isVisible={isModalVisible}
-          backdropColor={color.dimmed.modal}
-          backdropOpacity={0.4}>
-          <View style={styles.modal}>
-            <View style={styles.modalEffectContainer}>
-              <Image
-                source={require('@/assets/gif/submitSuccess.gif')}
-                width={80}
-                height={80}
-              />
-            </View>
-            <View style={styles.modalTitleContainer}>
-              <AppText style={styles.modalTitle}>내용이 전송되었어요!</AppText>
-              <AppText style={styles.modalSubTitle}>
-                소중한 의견 반영을 위해 노력 중이에요
-              </AppText>
-            </View>
+        <OutsidePressHandler onOutsidePress={handleInputOutsidePress}>
+          <AppInput
+            ref={inputRef}
+            hasLabel={false}
+            placeholder="비즈니스 이메일 작성법, 보험 가입 연령 or 이러한 점이 불편해요"
+            text={contents}
+            isMultiline={true}
+            minHeight={154}
+            inputStyles={styles.input}
+            onChangeText={onChangeContents}
+          />
+        </OutsidePressHandler>
+      </View>
+      <View style={styles.buttonContainer}>
+        <AppButton
+          text="보내기"
+          buttonStyle={styles.button}
+          textStyle={styles.buttonText}
+          isDisabled={isEmpty}
+          disabledBackgroundColor={color.grey.grey300}
+          onPressButton={handleSubmitButtonPress}
+        />
+      </View>
+      <AppModal
+        isVisible={isModalVisible}
+        backdropColor={color.dimmed.modal}
+        backdropOpacity={0.4}>
+        <View style={styles.modal}>
+          <View style={styles.modalEffectContainer}>
+            <Image
+              source={require('@/assets/gif/submitSuccess.gif')}
+              width={80}
+              height={80}
+            />
           </View>
-        </AppModal>
-      </OutsidePressHandler>
-    </>
+          <View style={styles.modalTitleContainer}>
+            <AppText style={styles.modalTitle}>내용이 전송되었어요!</AppText>
+            <AppText style={styles.modalSubTitle}>
+              소중한 의견 반영을 위해 노력 중이에요
+            </AppText>
+          </View>
+        </View>
+      </AppModal>
+    </KeyboardAvoidingView>
   );
 }
 

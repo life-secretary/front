@@ -1,14 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 
-import {
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {AppText} from '@/components/common/AppText';
 import {AppInput} from '@/components/common/AppInput';
 import AppButton from '@/components/common/AppButton';
@@ -104,9 +99,7 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
 
   return (
     <>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
+      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
         {step === 1 && (
           <>
             <View style={styles.titleContainer}>
@@ -211,7 +204,7 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
             </View>
           </>
         )}
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
       <AppConfirmModal
         isVisible={isModalVisible}
         type="column"
@@ -286,9 +279,21 @@ const styles = StyleSheet.create({
   input: {
     minHeight: 152,
   },
-  footer: {
-    marginBottom: 31,
-    gap: 16,
+  buttonContainer: {
+    justifyContent: 'center',
+    marginBottom: 28,
+  },
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 16,
+    borderRadius: 10,
+    backgroundColor: color.main.primary,
+  },
+  buttonText: {
+    fontWeight: font.fontWeight.bold,
+    lineHeight: 19.09,
+    color: color.main.white,
   },
   noticeContainer: {
     flex: 1,
@@ -331,6 +336,10 @@ const styles = StyleSheet.create({
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 19.09,
   },
+  footer: {
+    marginBottom: 31,
+    gap: 16,
+  },
   defaultNoticeButton: {
     backgroundColor: color.grey.grey200,
   },
@@ -341,22 +350,6 @@ const styles = StyleSheet.create({
     backgroundColor: color.main.primary,
   },
   activeNoticeButtonText: {
-    color: color.main.white,
-  },
-  buttonContainer: {
-    justifyContent: 'center',
-    marginBottom: 28,
-  },
-  button: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 16,
-    borderRadius: 10,
-    backgroundColor: color.main.primary,
-  },
-  buttonText: {
-    fontWeight: font.fontWeight.bold,
-    lineHeight: 19.09,
     color: color.main.white,
   },
   modalButton: {
