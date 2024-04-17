@@ -168,53 +168,49 @@ export function TodoForm({
   ]);
 
   return (
-    <>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}>
-        <View style={styles.form}>
-          <AppInput
-            hasLabel={true}
-            labelText="분야"
-            placeholder="최대 6자 내로 입력 가능해요"
-            text={isCustomCategory ? '' : category}
-            onChangeText={(newText: string) =>
-              handleSelectCategory({key: 'custom', title: newText})
-            }
-            editable={isCustomCategory}
-            icon={{
-              name: 'arrowRight',
-              width: 36,
-              height: 36,
-              styles: {color: color.grey.grey400},
-              onPress: () => setIsVisible(true),
-            }}
-            error={isCategoryInvalid}
-            errorMsg={categoryErrorMsg}
-          />
-          <AppInput
-            hasLabel={true}
-            labelText="할 일 제목"
-            placeholder="최대 20자 내로 입력 가능해요"
-            text={title}
-            maxLength={20}
-            onChangeText={setTitle}
-            error={isTitleInvalid}
-            errorMsg={titleErrorMsg}
-          />
-        </View>
-        <View style={styles.buttonContainer}>
-          <AppButton
-            text="완료"
-            buttonStyle={styles.button}
-            textStyle={styles.buttonText}
-            isDisabled={isEmpty}
-            disabledBackgroundColor={color.grey.grey300}
-            onPressButton={handleSubmitButtonPress}
-          />
-        </View>
-      </KeyboardAvoidingView>
-    </>
+    <View style={styles.container}>
+      <View style={styles.form}>
+        <AppInput
+          hasLabel={true}
+          labelText="분야"
+          placeholder="최대 6자 내로 입력 가능해요"
+          text={isCustomCategory ? '' : category}
+          onChangeText={(newText: string) =>
+            handleSelectCategory({key: 'custom', title: newText})
+          }
+          editable={isCustomCategory}
+          icon={{
+            name: 'arrowRight',
+            width: 36,
+            height: 36,
+            styles: {color: color.grey.grey400},
+            onPress: () => setIsVisible(true),
+          }}
+          error={isCategoryInvalid}
+          errorMsg={categoryErrorMsg}
+        />
+        <AppInput
+          hasLabel={true}
+          labelText="할 일 제목"
+          placeholder="최대 20자 내로 입력 가능해요"
+          text={title}
+          maxLength={20}
+          onChangeText={setTitle}
+          error={isTitleInvalid}
+          errorMsg={titleErrorMsg}
+        />
+      </View>
+      <View style={styles.buttonContainer}>
+        <AppButton
+          text="완료"
+          buttonStyle={styles.button}
+          textStyle={styles.buttonText}
+          isDisabled={isEmpty}
+          disabledBackgroundColor={color.grey.grey300}
+          onPressButton={handleSubmitButtonPress}
+        />
+      </View>
+    </View>
   );
 }
 
