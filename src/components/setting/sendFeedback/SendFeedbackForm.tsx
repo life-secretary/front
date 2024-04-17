@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {
   FlatList,
   Image,
   KeyboardAvoidingView,
+  Linking,
   Platform,
   StyleSheet,
   View,
+  AppState,
 } from 'react-native';
 import {AppInput} from '@/components/common/AppInput';
 import AppButton from '@/components/common/AppButton';
@@ -16,14 +17,17 @@ import AppModal from '@/components/common/modal/AppModal';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
+import OutsidePressHandler from 'react-native-outside-press';
 
 export function SendFeedbackForm() {
   // const [isValid, setIsValid] = React.useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
-  const [feedbackStatus, setFeedbackStatus] = useState('');
+  const [feedbackStatus, setFeedbackStatus] = useState({});
   const [contents, onChangeContents] = useState('');
-  const navigation = useNavigation();
+  const [appState, setAppState] = useState(AppState.currentState);
+  const [isSendingSuccess, setIsSendingSuccess] = useState(false);
+  const inputRef = useRef(null);
 
   const FEEDBACK_STATUS_LIST = [
     {key: 'inconvenience', text: '불편해요'},
@@ -36,22 +40,70 @@ export function SendFeedbackForm() {
     onChangeContents('');
   };
 
-  const handleSubmitButtonPress = () => {
-    setIsModalVisible(true);
-    setTimeout(() => {
-      navigation.goBack();
-      setIsModalVisible(false);
-      resetForm();
-    }, 2000);
+  const handleInputOutsidePress = () => {
+    handleInputBlur();
   };
+
+  const handleModalOutsidePress = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleInputBlur = () => {
+    inputRef?.current.blur();
+  };
+
+  const handleSubmitButtonPress = () => {
+    sendEmail();
+  };
+
+  const handleAppStateChange = useCallback(
+    (nextAppState: any) => {
+      if (appState === 'background' && nextAppState === 'active') {
+        if (isSendingSuccess) {
+          setIsModalVisible(true);
+          setTimeout(() => {
+            resetForm();
+            setIsModalVisible(false);
+            setIsSendingSuccess(false);
+          }, 2000);
+        }
+      }
+
+      setAppState(nextAppState);
+    },
+    [appState, isSendingSuccess],
+  );
 
   /** TODO: Form Validation Check 추가
   const checkInputValidation = () => {
-  // onChange
-  // onBlur
-  // onSubmit
   };
   */
+
+  const sendEmail = () => {
+    const recipient = 'sorry0194@gmail.com'; // TODO: 추후 admin account 변경
+    const subject = feedbackStatus?.text || '인생비서 피드백';
+    const body = contents;
+
+    Linking.openURL(`mailto:${recipient}?subject=${subject}&body=${body}`)
+      .then(() => {
+        setIsSendingSuccess(true);
+      })
+      .catch(err => {
+        setIsSendingSuccess(false);
+        console.error('Error sending email: ', err);
+      });
+  };
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, [handleAppStateChange]);
 
   useEffect(() => {
     if (!contents) {
@@ -81,32 +133,35 @@ export function SendFeedbackForm() {
                   text={item.text}
                   textStyle={[
                     styles.statusText,
-                    item.key === feedbackStatus
+                    item.key === feedbackStatus?.key
                       ? styles.selectedButtonText
                       : styles.defaultButtonText,
                   ]}
                   buttonStyle={[
                     styles.statusButton,
-                    item.key === feedbackStatus
+                    item.key === feedbackStatus?.key
                       ? styles.selectedButton
                       : styles.defaultButton,
                   ]}
-                  onPressButton={() => setFeedbackStatus(item.key)}
+                  onPressButton={() => setFeedbackStatus(item)}
                 />
               )}
               keyExtractor={item => item.key}
               contentContainerStyle={styles.statusContainer}
             />
           </View>
-          <AppInput
-            hasLabel={false}
-            placeholder="비즈니스 이메일 작성법, 보험 가입 연령 or 이러한 점이 불편해요"
-            text={contents}
-            isMultiline={true}
-            minHeight={154}
-            inputStyles={styles.input}
-            onChangeText={onChangeContents}
-          />
+          <OutsidePressHandler onOutsidePress={handleInputOutsidePress}>
+            <AppInput
+              ref={inputRef}
+              hasLabel={false}
+              placeholder="비즈니스 이메일 작성법, 보험 가입 연령 or 이러한 점이 불편해요"
+              text={contents}
+              isMultiline={true}
+              minHeight={154}
+              inputStyles={styles.input}
+              onChangeText={onChangeContents}
+            />
+          </OutsidePressHandler>
         </View>
         <View style={styles.buttonContainer}>
           <AppButton
@@ -119,26 +174,28 @@ export function SendFeedbackForm() {
           />
         </View>
       </KeyboardAvoidingView>
-      <AppModal
-        isVisible={isModalVisible}
-        backdropColor={color.dimmed.modal}
-        backdropOpacity={0.4}>
-        <View style={styles.modal}>
-          <View style={styles.modalEffectContainer}>
-            <Image
-              source={require('@/assets/gif/submitSuccess.gif')}
-              width={80}
-              height={80}
-            />
+      <OutsidePressHandler onOutsidePress={handleModalOutsidePress}>
+        <AppModal
+          isVisible={isModalVisible}
+          backdropColor={color.dimmed.modal}
+          backdropOpacity={0.4}>
+          <View style={styles.modal}>
+            <View style={styles.modalEffectContainer}>
+              <Image
+                source={require('@/assets/gif/submitSuccess.gif')}
+                width={80}
+                height={80}
+              />
+            </View>
+            <View style={styles.modalTitleContainer}>
+              <AppText style={styles.modalTitle}>내용이 전송되었어요!</AppText>
+              <AppText style={styles.modalSubTitle}>
+                소중한 의견 반영을 위해 노력 중이에요
+              </AppText>
+            </View>
           </View>
-          <View style={styles.modalTitleContainer}>
-            <AppText style={styles.modalTitle}>내용이 전송되었어요!</AppText>
-            <AppText style={styles.modalSubTitle}>
-              소중한 의견 반영을 위해 노력 중이에요
-            </AppText>
-          </View>
-        </View>
-      </AppModal>
+        </AppModal>
+      </OutsidePressHandler>
     </>
   );
 }
