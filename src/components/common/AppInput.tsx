@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {forwardRef, useState} from 'react';
 
 import {StyleSheet, View, TextInput, ViewStyle} from 'react-native';
 import {AppText} from './AppText';
@@ -6,7 +6,7 @@ import AppIcon from './AppIcon';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-type AppInputProps = {
+type Props = {
   /** Whether has label or not */
   hasLabel: boolean;
   /** label text value */
@@ -44,23 +44,26 @@ type AppInputProps = {
 };
 
 // TODO: input validation check 추가
-export function AppInput({
-  text,
-  isMultiline = false,
-  minHeight,
-  placeholder,
-  placeholderTextColor,
-  hasLabel,
-  labelText,
-  maxLength,
-  disabled = false,
-  editable = true,
-  icon,
-  inputStyles,
-  error,
-  errorMsg,
-  onChangeText,
-}: AppInputProps): React.JSX.Element {
+export const AppInput = forwardRef(function AppInput(
+  {
+    text,
+    isMultiline = false,
+    minHeight,
+    placeholder,
+    placeholderTextColor,
+    hasLabel,
+    labelText,
+    maxLength,
+    disabled = false,
+    editable = true,
+    icon,
+    inputStyles,
+    error,
+    errorMsg,
+    onChangeText,
+  }: Props,
+  forwardedRef,
+): React.JSX.Element {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
@@ -79,6 +82,7 @@ export function AppInput({
           </AppText>
         )}
         <TextInput
+          ref={forwardedRef}
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor || color.grey.grey300}
           defaultValue={text}
@@ -111,7 +115,7 @@ export function AppInput({
       )}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {
