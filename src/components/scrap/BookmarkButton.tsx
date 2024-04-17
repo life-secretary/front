@@ -1,48 +1,61 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
+
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {scrapListState} from '@/store/scrapState';
+import {userInfoState} from '@/store/userInfoState';
 
 import AppIcon from '../common/AppIcon';
-import {createData, deleteData} from '@/api/api';
+import color from '@/styles/color';
+import {createData, deleteData, fetchData} from '@/api/api';
 
 type Props = {
-  iconWidth: number;
-  iconHeight: number;
-  iconStyles?: object;
   contents: object;
-  isScrapped: boolean;
-  handleScrapStatus: Function;
 };
 
-export function BookmarkButton({
-  iconWidth,
-  iconHeight,
-  iconStyles,
-  contents,
-  isScrapped,
-  handleScrapStatus,
-}: Props): React.JSX.Element {
+export function BookmarkButton({contents}: Props): React.JSX.Element {
+  const [isScrapped, setIsScrapped] = useState(true);
+  const [scrapList, setScrapList] = useRecoilState(scrapListState);
+  const userInfo = useRecoilValue(userInfoState);
+
   const handleButtonPress = () => {
-    toggleScrapStatus();
-    handleScrapStatus(!isScrapped);
+    setIsScrapped((prevState: any) => !prevState);
+    toggleScrap();
   };
 
-  const toggleScrapStatus = () => {
-    isScrapped ? scrap() : unscrap();
+  // TODO: 중복 코드 제거 필요
+  const fetchScrapList = useCallback(async () => {
+    const res = await fetchData('/scrap', {
+      userId: userInfo.id,
+    });
+    const list = res.data.data;
+
+    if (res.status === 200) {
+      setScrapList(list);
+    }
+  }, [setScrapList, userInfo.id]);
+
+  const toggleScrap = () => {
+    isScrapped ? unscrap() : scrap();
   };
 
-  const scrap = async () => {
+  const scrap = useCallback(async () => {
     await createData('/scrap', contents);
-  };
+  }, [contents]);
 
-  const unscrap = async () => {
-    await deleteData('/scrap', {}, contents?.id);
-  };
+  const unscrap = useCallback(async () => {
+    const res = await deleteData('/scrap', {}, contents?.id);
+
+    if (res.status === 200) {
+      fetchScrapList();
+    }
+  }, [contents?.id, fetchScrapList]);
 
   return (
     <AppIcon
       name="bookmarkMedium"
-      width={iconWidth}
-      height={iconHeight}
-      styles={iconStyles}
+      width={42}
+      height={42}
+      styles={isScrapped ? {fill: color.grey.grey400} : null}
       onPress={handleButtonPress}
     />
   );

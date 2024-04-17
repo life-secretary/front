@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {scrapListState, scrapListTotalCountState} from '@/store/scrapState';
-import {deleteData} from '@/api/api';
+import {deleteData, fetchData} from '@/api/api';
 
 import {StyleSheet, View} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
@@ -17,6 +17,7 @@ import spacing from '@/styles/spacing';
 
 import {generateRandomId} from '@/utils';
 import {removeItemAtIndex} from '@/utils';
+import {userInfoState} from '@/store/userInfoState';
 
 interface ScrapContentsItem {
   id: number;
@@ -57,15 +58,18 @@ export function SaveScreen(): React.JSX.Element {
   const [buttonText, setButtonText] = useState('');
   const [totalCheckedCount, setTotalCheckedCount] = React.useState(0);
   const [checkedList, setCheckedList] = useState<object[]>([]);
-  const scrapList = useRecoilValue(scrapListState);
-  // const totalCount = useRecoilValue(scrapListTotalCountState);
+  const [scrapList, setScrapList] = useRecoilState(scrapListState);
+  const [isDeleted, setIsDeleted] = useState(false);
+  const totalCount = useRecoilValue(scrapListTotalCountState);
+  const userInfo = useRecoilValue(userInfoState);
   const dummyScrapList = SCRAP_CONTENTS_LIST;
-  const totalCount = dummyScrapList.length;
+  // const totalCount = dummyScrapList.length;
 
   const switchMode = (action: string) => {
     switch (action) {
       case 'read':
         setMode('READ');
+        setIsDeleted(false);
         break;
       case 'edit':
         setMode('EDIT');
@@ -77,6 +81,13 @@ export function SaveScreen(): React.JSX.Element {
         setMode('');
     }
   };
+
+  // TODO: reset 함수 구현
+  // const reset = () => {
+  //   setCheckedList([]);
+  //   setMode('READ');
+  //   setIsDeleted(false);
+  // };
 
   const handleButtonPress = () => {
     if (totalCount === 0) {
@@ -119,26 +130,40 @@ export function SaveScreen(): React.JSX.Element {
     setCheckedList(filteredList);
   };
 
+  // TODO: 중복 코드 제거 필요
+  const fetchScrapList = async () => {
+    const res = await fetchData('/scrap', {
+      userId: userInfo.id,
+    });
+    const list = res.data.data;
+
+    if (res.status === 200) {
+      setScrapList(list);
+    }
+  };
+
   const deleteScrapList = async (list: object[]) => {
     // 임시 코드
-    list.forEach(scrapItem => {
-      const itemIndex = dummyScrapList.findIndex(
-        item => item.id === scrapItem.id,
-      );
+    // list.forEach(scrapItem => {
+    //   const itemIndex = dummyScrapList.findIndex(
+    //     item => item.id === scrapItem.id,
+    //   );
 
-      dummyScrapList.splice(itemIndex, 1);
-    });
+    //   dummyScrapList.splice(itemIndex, 1);
+    // });
 
-    setCheckedList([]);
-    switchMode('read');
+    // setCheckedList([]);
+    // switchMode('read');
 
-    // const idList = list.map((item: object) => item?.id);
-    // const res = await deleteData('/scrap', {}, idList);
+    const idList = list.map((item: object) => item?.id).join(',');
+    const res = await deleteData('/scrap', {}, idList);
 
-    // if (res.status === 200) {
-    //   setCheckedList([]);
-    //   switchMode('read');
-    // }
+    if (res.status === 200) {
+      fetchScrapList();
+      setIsDeleted(true);
+      setCheckedList([]);
+      switchMode('read');
+    }
   };
 
   useEffect(() => {
@@ -159,6 +184,10 @@ export function SaveScreen(): React.JSX.Element {
     };
 
     switchButtonText();
+
+    // return () => {
+    //   reset();
+    // };
   }, [mode]);
 
   return (
@@ -187,6 +216,7 @@ export function SaveScreen(): React.JSX.Element {
         </View>
         <AppDivider style={styles.divider} />
         <ScrapContentsList
+          isDeleted={isDeleted}
           contentsList={scrapList.length > 0 ? scrapList : dummyScrapList} // 임시 코드
           checkedList={checkedList}
           mode={mode}

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {StyleSheet, View} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -6,6 +6,10 @@ import {AppText} from '@/components/common/AppText';
 import {BookmarkButton} from './BookmarkButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import {createData, deleteData, fetchData} from '@/api/api';
+import {userInfoState} from '@/store/userInfoState';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {scrapListState} from '@/store/scrapState';
 
 type Props = {
   contents: object;
@@ -20,8 +24,6 @@ export function ScrapContentsItem({
   mode,
   handleCheckedList,
 }: Props): React.JSX.Element {
-  const [isScrapped, setIsScrapped] = useState(true);
-
   const handleCheckboxPress = (action: string, data: object) => {
     handleCheckedList(action, data);
   };
@@ -54,25 +56,7 @@ export function ScrapContentsItem({
             {contents?.title}
           </AppText>
         </View>
-        {mode === 'READ' &&
-          (isScrapped ? (
-            <BookmarkButton
-              iconWidth={42}
-              iconHeight={42}
-              iconStyles={{fill: color.grey.grey400}}
-              contents={contents}
-              isScrapped={isScrapped}
-              handleScrapStatus={setIsScrapped}
-            />
-          ) : (
-            <BookmarkButton
-              iconWidth={42}
-              iconHeight={42}
-              contents={contents}
-              isScrapped={isScrapped}
-              handleScrapStatus={setIsScrapped}
-            />
-          ))}
+        {mode === 'READ' && <BookmarkButton contents={contents} />}
       </View>
     </View>
   );
