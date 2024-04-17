@@ -24,6 +24,7 @@ const EmptyList = () => {
 };
 
 type Props = {
+  isDeleted: boolean;
   contentsList: object[];
   mode: string;
   checkedList: object[];
@@ -33,6 +34,7 @@ type Props = {
 };
 
 export function ScrapContentsList({
+  isDeleted,
   contentsList,
   mode,
   checkedList,
@@ -46,12 +48,13 @@ export function ScrapContentsList({
     manipulateCheckedList(action, contents);
   };
 
+  // TODO: 리팩토링 필요
   useEffect(() => {
     if (totalCount > 0) {
       handleButtonPress('delete');
     }
 
-    if (totalCount === 0 && mode === 'DELETE') {
+    if (totalCount === 0 && mode === 'DELETE' && !isDeleted) {
       handleButtonPress('edit');
     }
 
@@ -62,11 +65,13 @@ export function ScrapContentsList({
     handleButtonPress,
     mode,
     totalCount,
+    isDeleted,
   ]);
 
   return (
     <View style={styles.container}>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={contentsList}
         renderItem={({item}) => (
           <ScrapContentsItem
@@ -79,7 +84,6 @@ export function ScrapContentsList({
         )}
         ItemSeparatorComponent={() => <AppDivider style={styles.divider} />}
         ListEmptyComponent={<EmptyList />}
-        contentContainerStyle={styles.listContainer}
       />
     </View>
   );
@@ -92,9 +96,6 @@ const styles = StyleSheet.create({
   },
   divider: {
     marginVertical: 16,
-  },
-  listContainer: {
-    flex: 1,
   },
   emptyListContainer: {
     flex: 1,
