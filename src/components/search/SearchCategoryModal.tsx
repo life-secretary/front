@@ -338,6 +338,10 @@ const SearchCategoryModal = ({
     });
   };
 
+  const fetchContent = () => {
+    // fetch content;
+  };
+
   const onPressContentByViewButton = () => {
     console.log('조회순 버튼 클릭');
     // fetch data code
@@ -438,7 +442,7 @@ const SearchCategoryModal = ({
 
   useEffect(() => {
     setCurrentCategory(selectedCategory);
-  });
+  }, []);
 
   return (
     <AppModal
