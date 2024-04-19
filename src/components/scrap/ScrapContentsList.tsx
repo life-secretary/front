@@ -1,8 +1,11 @@
 import React, {useEffect} from 'react';
+import {useRecoilValue} from 'recoil';
+import {scrapListState, scrapListTotalCountState} from '@/store/scrapState';
 
 import {StyleSheet, View, FlatList} from 'react-native';
 import {AppText} from '@/components/common/AppText';
 import {AppDivider} from '@/components/common/AppDivider';
+import {AppSpinner} from '../common/AppSpinner';
 import {ScrapContentsItem} from '@/components/scrap/ScrapContentsItem';
 import {SendFeedbackButton} from '@/components/home/SendFeedbackButton';
 import color from '@/styles/color';
@@ -24,8 +27,8 @@ const EmptyList = () => {
 };
 
 type Props = {
+  isLoading: boolean;
   isDeleted: boolean;
-  contentsList: object[];
   mode: string;
   checkedList: object[];
   handleButtonPress: Function;
@@ -34,15 +37,17 @@ type Props = {
 };
 
 export function ScrapContentsList({
+  isLoading,
   isDeleted,
-  contentsList,
   mode,
   checkedList,
   handleButtonPress,
   handleTotalCheckedCount,
   manipulateCheckedList,
 }: Props): React.JSX.Element {
-  const totalCount = checkedList.length;
+  const scrapList = useRecoilValue(scrapListState);
+  const totalCount = useRecoilValue(scrapListTotalCountState);
+  const isEmpty = totalCount === 0;
 
   const handleCheckedList = (action: string, contents: object) => {
     manipulateCheckedList(action, contents);
@@ -50,11 +55,11 @@ export function ScrapContentsList({
 
   // TODO: 리팩토링 필요
   useEffect(() => {
-    if (totalCount > 0) {
+    if (checkedList.length > 0) {
       handleButtonPress('delete');
     }
 
-    if (totalCount === 0 && mode === 'DELETE' && !isDeleted) {
+    if (checkedList.length === 0 && mode === 'DELETE' && !isDeleted) {
       handleButtonPress('edit');
     }
 
@@ -70,21 +75,27 @@ export function ScrapContentsList({
 
   return (
     <View style={styles.container}>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={contentsList}
-        renderItem={({item}) => (
-          <ScrapContentsItem
-            contents={{...item}}
-            mode={mode}
-            checkedList={checkedList}
-            handleButtonPress={handleButtonPress}
-            handleCheckedList={handleCheckedList}
-          />
-        )}
-        ItemSeparatorComponent={() => <AppDivider style={styles.divider} />}
-        ListEmptyComponent={<EmptyList />}
-      />
+      {!isEmpty && isLoading ? (
+        <View style={styles.emptyListContainer}>
+          <AppSpinner color={color.main.primary} />
+        </View>
+      ) : (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={scrapList}
+          renderItem={({item}) => (
+            <ScrapContentsItem
+              contents={{...item}}
+              mode={mode}
+              checkedList={checkedList}
+              handleButtonPress={handleButtonPress}
+              handleCheckedList={handleCheckedList}
+            />
+          )}
+          ItemSeparatorComponent={() => <AppDivider style={styles.divider} />}
+          ListEmptyComponent={<EmptyList />}
+        />
+      )}
     </View>
   );
 }
@@ -99,9 +110,9 @@ const styles = StyleSheet.create({
   },
   emptyListContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     gap: 28,
+    marginTop: 220,
   },
   textContainer: {
     justifyContent: 'center',

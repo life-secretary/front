@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {useRecoilState, useRecoilValue} from 'recoil';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {scrapListState, scrapListTotalCountState} from '@/store/scrapState';
+import {userInfoState} from '@/store/userInfoState';
 import {deleteData, fetchData} from '@/api/api';
 
 import {StyleSheet, View} from 'react-native';
@@ -15,45 +16,10 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
 
-import {generateRandomId} from '@/utils';
 import {removeItemAtIndex} from '@/utils';
-import {userInfoState} from '@/store/userInfoState';
-
-interface ScrapContentsItem {
-  id: number;
-  category: object;
-  title: string;
-}
-
-const SCRAP_CONTENTS_LIST: ScrapContentsItem[] = [
-  {
-    id: generateRandomId(),
-    category: {key: 'economy', title: '경제'},
-    title: '콘텐츠 제목 영역1',
-  },
-  {
-    id: generateRandomId(),
-    category: {key: 'law', title: '법'},
-    title: '콘텐츠 제목 영역2',
-  },
-  {
-    id: generateRandomId(),
-    category: {key: 'eco', title: '환경'},
-    title: '콘텐츠 제목 영역3',
-  },
-  {
-    id: generateRandomId(),
-    category: {key: 'selfdev', title: '자기계발'},
-    title: '콘텐츠 제목 영역4',
-  },
-  {
-    id: generateRandomId(),
-    category: {key: 'health', title: '건강'},
-    title: '콘텐츠 제목 영역5',
-  },
-];
 
 export function SaveScreen(): React.JSX.Element {
+  const [isLoading, setIsLoading] = useState(false);
   const [mode, setMode] = useState('READ'); // TODO: ENUM type 정의 ['READ', 'EDIT', 'DELETE']
   const [buttonText, setButtonText] = useState('');
   const [totalCheckedCount, setTotalCheckedCount] = React.useState(0);
@@ -62,8 +28,6 @@ export function SaveScreen(): React.JSX.Element {
   const [isDeleted, setIsDeleted] = useState(false);
   const totalCount = useRecoilValue(scrapListTotalCountState);
   const userInfo = useRecoilValue(userInfoState);
-  const dummyScrapList = SCRAP_CONTENTS_LIST;
-  // const totalCount = dummyScrapList.length;
 
   const switchMode = (action: string) => {
     switch (action) {
@@ -131,7 +95,8 @@ export function SaveScreen(): React.JSX.Element {
   };
 
   // TODO: 중복 코드 제거 필요
-  const fetchScrapList = async () => {
+  const fetchScrapList = useCallback(async () => {
+    setIsLoading(true);
     const res = await fetchData('/scrap', {
       userId: userInfo.id,
     });
@@ -139,8 +104,9 @@ export function SaveScreen(): React.JSX.Element {
 
     if (res.status === 200) {
       setScrapList(list);
+      setIsLoading(false);
     }
-  };
+  }, [setScrapList, userInfo.id]);
 
   const deleteScrapList = async (list: object[]) => {
     // 임시 코드
@@ -165,6 +131,10 @@ export function SaveScreen(): React.JSX.Element {
       switchMode('read');
     }
   };
+
+  useEffect(() => {
+    fetchScrapList();
+  }, []);
 
   useEffect(() => {
     const switchButtonText = () => {
@@ -216,8 +186,8 @@ export function SaveScreen(): React.JSX.Element {
         </View>
         <AppDivider style={styles.divider} />
         <ScrapContentsList
+          isLoading={isLoading}
           isDeleted={isDeleted}
-          contentsList={scrapList.length > 0 ? scrapList : dummyScrapList} // 임시 코드
           checkedList={checkedList}
           mode={mode}
           manipulateCheckedList={manipulateCheckedList}
