@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -6,10 +6,6 @@ import {AppText} from '@/components/common/AppText';
 import {BookmarkButton} from './BookmarkButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
-import {createData, deleteData, fetchData} from '@/api/api';
-import {userInfoState} from '@/store/userInfoState';
-import {useRecoilState, useRecoilValue} from 'recoil';
-import {scrapListState} from '@/store/scrapState';
 
 type Props = {
   contents: object;
