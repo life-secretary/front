@@ -18,6 +18,7 @@ import {font} from '@/styles/font';
 export function TodoScreen({navigation}: any): React.JSX.Element {
   const setTodoList = useSetRecoilState(todoListState);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const moveToScreen = (screen: string, params: object) => {
     navigation.navigate(screen, params);
@@ -37,11 +38,15 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
   useFocusEffect(
     useCallback(() => {
       async function fetchTodoList() {
-        const {data} = await fetchData('/user-todos', {
+        setIsLoading(true);
+        const res = await fetchData('/user-todos', {
           userId: 1,
         });
 
-        setTodoList(data.data);
+        if (res.status === 200) {
+          setTodoList(res.data.data);
+          setIsLoading(false);
+        }
       }
 
       fetchTodoList();
@@ -68,8 +73,8 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
           onTabPress={(index: number) => handleTabChange(index)}
         />
         <ScrollView showsVerticalScrollIndicator={false}>
-          {selectedIndex === 0 && <OngoingTodoList />}
-          {selectedIndex === 1 && <CompletedTodoList />}
+          {selectedIndex === 0 && <OngoingTodoList isLoading={isLoading} />}
+          {selectedIndex === 1 && <CompletedTodoList isLoading={isLoading} />}
         </ScrollView>
       </View>
     </AppLayout>

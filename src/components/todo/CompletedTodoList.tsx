@@ -11,6 +11,7 @@ import {
   todoListTotalCountState,
 } from '@/store/todoState';
 import {useRecoilValue} from 'recoil';
+import {AppSpinner} from '../common/AppSpinner';
 
 // TODO: 별도의 컴포넌트로 분리
 const EmptyList = () => {
@@ -21,26 +22,36 @@ const EmptyList = () => {
   );
 };
 
-export function CompletedTodoList(): React.JSX.Element {
+type Props = {
+  isLoading: boolean;
+};
+
+export function CompletedTodoList({isLoading}: Props): React.JSX.Element {
   const totalTodoCount = useRecoilValue(todoListTotalCountState);
   const list = useRecoilValue(filteredTodoListState);
-  const isEmpty = list.length === 0;
+  const isEmpty = totalTodoCount === 0;
 
   return (
     <View style={styles.container}>
-      {!isEmpty ? (
-        <>
-          <TodoCount title="완료 할 일" totalTodoCount={totalTodoCount} />
-          <FlatList
-            data={list}
-            renderItem={({item}) => <TodoCard item={{...item}} />}
-            keyExtractor={item => item?.id}
-            contentContainerStyle={styles.listContainer}
-          />
-        </>
-      ) : (
-        <EmptyList />
+      {!isEmpty && isLoading && (
+        <View style={styles.emptyListContainer}>
+          <AppSpinner color={color.main.primary} />
+        </View>
       )}
+      {!isLoading &&
+        (!isEmpty ? (
+          <>
+            <TodoCount title="완료 할 일" totalTodoCount={totalTodoCount} />
+            <FlatList
+              data={list}
+              renderItem={({item}) => <TodoCard item={{...item}} />}
+              keyExtractor={item => item?.id}
+              contentContainerStyle={styles.listContainer}
+            />
+          </>
+        ) : (
+          <EmptyList />
+        ))}
     </View>
   );
 }
