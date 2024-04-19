@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
+import DatePicker from 'react-native-date-picker';
 import AppButton from '@/components/common/AppButton';
 import {AppInput} from '@/components/common/AppInput';
 import color from '@/styles/color';
@@ -10,15 +11,15 @@ import spacing from '@/styles/spacing';
 
 import {getFormattedDate} from '@/utils';
 import OutsidePressHandler from 'react-native-outside-press';
+import {userInfoState} from '@/store/userInfoState';
+import {useRecoilValue} from 'recoil';
 
-type Props = {
-  user: object;
-};
-
-export function MyInfoEditForm({user}: Props): React.JSX.Element {
-  const [isEmpty, setIsEmpty] = React.useState(false);
-  const [nickname, onChangeNickname] = useState(user?.nickname);
-  const [birthdate, onChangeBirthdate] = useState(user?.birthdate);
+export function MyInfoEditForm(): React.JSX.Element {
+  const userInfo = useRecoilValue(userInfoState);
+  const [isEmpty, setIsEmpty] = useState(false);
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+  const [nickname, onChangeNickname] = useState(userInfo?.nickname);
+  const [birthdate, onChangeBirthdate] = useState(userInfo?.birthdate);
   const navigation = useNavigation();
   const nicknameInputRef = useRef(null);
   const birthDateInputRef = useRef(null);
@@ -39,6 +40,10 @@ export function MyInfoEditForm({user}: Props): React.JSX.Element {
     moveToBack();
   };
 
+  const handleBirthdatePress = () => {
+    setIsDatePickerVisible(true);
+  };
+
   useEffect(() => {
     if (!nickname || !birthdate) {
       setIsEmpty(true);
@@ -48,52 +53,69 @@ export function MyInfoEditForm({user}: Props): React.JSX.Element {
   }, [nickname, birthdate]);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
-      <View style={styles.form}>
-        <OutsidePressHandler
-          onOutsidePress={() => handleInputOutsidePress(nicknameInputRef)}>
-          <AppInput
-            ref={nicknameInputRef}
-            hasLabel={true}
-            labelText="닉네임"
-            placeholder="최대 6자 내로 입력 가능해요"
-            text={nickname}
-            onChangeText={onChangeNickname}
+    <>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}>
+        <View style={styles.form}>
+          <OutsidePressHandler
+            onOutsidePress={() => handleInputOutsidePress(nicknameInputRef)}>
+            <AppInput
+              ref={nicknameInputRef}
+              hasLabel={true}
+              labelText="닉네임"
+              placeholder="최대 6자 내로 입력 가능해요"
+              text={nickname}
+              onChangeText={onChangeNickname}
+            />
+          </OutsidePressHandler>
+          <OutsidePressHandler
+            onOutsidePress={() => handleInputOutsidePress(birthDateInputRef)}>
+            <AppInput
+              ref={birthDateInputRef}
+              hasLabel={true}
+              editable={false}
+              labelText="생년월일"
+              text={getFormattedDate(new Date(birthdate), 'kor')}
+              onChangeText={onChangeBirthdate}
+              icon={{
+                name: 'arrowDown',
+                width: 24,
+                height: 24,
+                styles: {color: color.grey.grey400},
+                onPress: () => {
+                  handleBirthdatePress();
+                },
+              }}
+            />
+          </OutsidePressHandler>
+        </View>
+        <View style={styles.buttonContainer}>
+          <AppButton
+            text="완료"
+            buttonStyle={styles.button}
+            textStyle={styles.buttonText}
+            isDisabled={isEmpty}
+            disabledBackgroundColor={color.grey.grey300}
+            onPressButton={handleSubmitButtonPress}
           />
-        </OutsidePressHandler>
-        {/* TODO: Date Picker 적용 */}
-        <OutsidePressHandler
-          onOutsidePress={() => handleInputOutsidePress(birthDateInputRef)}>
-          <AppInput
-            ref={birthDateInputRef}
-            hasLabel={true}
-            editable={false}
-            labelText="생년월일"
-            text={getFormattedDate(new Date(birthdate), 'kor')}
-            onChangeText={onChangeBirthdate}
-            icon={{
-              name: 'arrowDown',
-              width: 24,
-              height: 24,
-              styles: {color: color.grey.grey400},
-              onPress: () => {},
-            }}
-          />
-        </OutsidePressHandler>
-      </View>
-      <View style={styles.buttonContainer}>
-        <AppButton
-          text="완료"
-          buttonStyle={styles.button}
-          textStyle={styles.buttonText}
-          isDisabled={isEmpty}
-          disabledBackgroundColor={color.grey.grey300}
-          onPressButton={handleSubmitButtonPress}
-        />
-      </View>
-    </KeyboardAvoidingView>
+        </View>
+      </KeyboardAvoidingView>
+      <DatePicker
+        modal
+        mode="date"
+        locale="kor"
+        open={isDatePickerVisible}
+        date={new Date(birthdate)}
+        onConfirm={date => {
+          setIsDatePickerVisible(false);
+          onChangeBirthdate(date);
+        }}
+        onCancel={() => {
+          setIsDatePickerVisible(false);
+        }}
+      />
+    </>
   );
 }
 

@@ -24,19 +24,13 @@ const MY_INFO_MENU = [
   ],
 ];
 
-type MyInfoMenuProps = {
-  user: object;
-};
-
-export function MyInfoMenu({user}: MyInfoMenuProps): React.JSX.Element {
+export function MyInfoMenu(): React.JSX.Element {
   return (
     <View style={styles.container}>
       <FlatList
         scrollEnabled={false}
         data={MY_INFO_MENU[0]}
-        renderItem={({item}) => (
-          <MyInfoMenuItem myInfoMenu={item} user={user} />
-        )}
+        renderItem={({item}) => <MyInfoMenuItem myInfoMenu={item} />}
         keyExtractor={item => item.key}
         contentContainerStyle={styles.listContainer}
       />
@@ -44,9 +38,7 @@ export function MyInfoMenu({user}: MyInfoMenuProps): React.JSX.Element {
       <FlatList
         scrollEnabled={false}
         data={MY_INFO_MENU[1]}
-        renderItem={({item}) => (
-          <MyInfoMenuItem myInfoMenu={item} user={user} />
-        )}
+        renderItem={({item}) => <MyInfoMenuItem myInfoMenu={item} />}
         keyExtractor={item => item.key}
         contentContainerStyle={styles.listContainer}
       />
