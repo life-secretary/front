@@ -9,10 +9,9 @@ import {font} from '@/styles/font';
 
 type Props = {
   myInfoMenu: object;
-  user: object;
 };
 
-export function MyInfoMenuItem({myInfoMenu, user}: Props): React.JSX.Element {
+export function MyInfoMenuItem({myInfoMenu}: Props): React.JSX.Element {
   const navigation = useNavigation();
 
   const handleButtonPress = (menu: object) => {
@@ -23,7 +22,6 @@ export function MyInfoMenuItem({myInfoMenu, user}: Props): React.JSX.Element {
     navigation.navigate('MyInfoModal', {
       headerTitle: menu?.title,
       menu,
-      user,
     });
   };
 
