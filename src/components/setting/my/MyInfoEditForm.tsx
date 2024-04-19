@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
@@ -13,9 +13,18 @@ import {getFormattedDate} from '@/utils';
 import OutsidePressHandler from 'react-native-outside-press';
 import {userInfoState} from '@/store/userInfoState';
 import {useRecoilValue} from 'recoil';
+import {
+  checkInappropriateKeyword,
+  checkNumber,
+  checkSpaceChar,
+  checkSpecialChar,
+  formValidation,
+} from '@/utils/formValidation';
 
 export function MyInfoEditForm(): React.JSX.Element {
   const userInfo = useRecoilValue(userInfoState);
+  const [isInvalid, setIsInvalid] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [nickname, onChangeNickname] = useState(userInfo?.nickname);
@@ -37,12 +46,53 @@ export function MyInfoEditForm(): React.JSX.Element {
   };
 
   const handleSubmitButtonPress = () => {
-    moveToBack();
+    if (checkNicknameInputValidation()) {
+      moveToBack();
+    }
   };
 
   const handleBirthdatePress = () => {
     setIsDatePickerVisible(true);
   };
+
+  const checkNicknameInputValidation = useCallback(() => {
+    // 특수문자 체크
+    if (checkSpecialChar(nickname)) {
+      setIsInvalid(true);
+      setErrorMsg(formValidation.common.specialChar.errorMsg);
+      return false;
+    }
+
+    // 공백 체크
+    if (checkSpaceChar(nickname)) {
+      setIsInvalid(true);
+      setErrorMsg(formValidation.common.spaceChar.errorMsg);
+      return false;
+    }
+
+    // 숫자 체크
+    if (checkNumber(nickname)) {
+      setIsInvalid(true);
+      setErrorMsg(formValidation.common.number.errorMsg);
+      return false;
+    }
+
+    // 부적절한 단어 체크
+    if (
+      checkInappropriateKeyword(
+        formValidation.common.inappropriate.keywords,
+        nickname,
+      )
+    ) {
+      setIsInvalid(true);
+      setErrorMsg(formValidation.common.inappropriate.errorMsg);
+      return false;
+    }
+
+    setIsInvalid(false);
+    setErrorMsg('');
+    return true;
+  }, [nickname]);
 
   useEffect(() => {
     if (!nickname || !birthdate) {
@@ -50,7 +100,9 @@ export function MyInfoEditForm(): React.JSX.Element {
     } else {
       setIsEmpty(false);
     }
-  }, [nickname, birthdate]);
+
+    checkNicknameInputValidation();
+  }, [nickname, birthdate, checkNicknameInputValidation]);
 
   return (
     <>
@@ -66,6 +118,8 @@ export function MyInfoEditForm(): React.JSX.Element {
               labelText="닉네임"
               placeholder="최대 6자 내로 입력 가능해요"
               text={nickname}
+              error={isInvalid}
+              errorMsg={errorMsg}
               onChangeText={onChangeNickname}
             />
           </OutsidePressHandler>

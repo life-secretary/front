@@ -7,6 +7,17 @@ export const formValidation = {
       keywords: ['개새끼'],
       errorMsg: '부적절한 내용을 담고 있습니다. 내용을 수정해 주세요.',
     },
+    spaceChar: {
+      errorMsg: '공백은 입력할 수 없어요.',
+    },
+    number: {
+      errorMsg: '숫자는 입력할 수 없어요.',
+    },
+  },
+  nickname: {
+    duplicate: {
+      errorMsg: '중복된 닉네임은 사용할 수 없어요.',
+    },
   },
 };
 
@@ -26,4 +37,14 @@ export const checkInappropriateKeyword = (keywords: string[], text: string) => {
     }
   });
   return result;
+};
+
+export const checkSpaceChar = (text: string) => {
+  const regExp = /\s/g;
+  return text.match(regExp);
+};
+
+export const checkNumber = (text: string) => {
+  const regExp = /\d/;
+  return text.match(regExp);
 };
