@@ -11,7 +11,7 @@ import {font} from '@/styles/font';
 import color from '@/styles/color';
 
 export function MyInfoModalScreen({route, navigation}: any): React.JSX.Element {
-  const {headerTitle, menu, user} = route.params;
+  const {headerTitle, menu} = route.params;
 
   const handleBackButtonPress = () => {
     navigation.goBack();
@@ -35,7 +35,7 @@ export function MyInfoModalScreen({route, navigation}: any): React.JSX.Element {
         )}
       </AppHeader>
       <View style={styles.divider} />
-      {menu?.key === 'edit' && <MyInfoEditForm user={user} />}
+      {menu?.key === 'edit' && <MyInfoEditForm />}
       {menu?.key === 'withdrawal' && <MyInfoWithdrawalForm />}
     </AppLayout>
   );
