@@ -32,6 +32,33 @@ const SearchHashTagModal = ({
     pressBackButton,
 }) => {
 
+    const [tabData, setTabData] = useState([
+        { 
+            id: 1, 
+            text: '콘텐츠', 
+            isPressed: true, 
+        }, 
+        { 
+            id: 2, 
+            text: '할 일', 
+            isPressed: false, 
+        },
+    ]);
+
+    const onPressTab = (number: number) => {
+        setTabData((previousValue) => {
+          return previousValue.map((item, index) => {
+            if (number === index) {
+              item.isPressed = true;
+            } else {
+              item.isPressed = false;
+            }
+    
+            return item;
+          });
+        });
+    };
+
     const contentData = [
         { id: 21, title: '이곳은 콘텐츠의 제목 영역으로 최대 24자로', category: '부동산', date: '2024.03.15', thumbnail: require('../../assets/images/thumbnailPlaceholder.jpg') },
         { id: 22, title: '이곳은 콘텐츠의 제목 영역으로 최대 25자로', category: '부동산', date: '2024.03.15', thumbnail: require('../../assets/images/thumbnailPlaceholder.jpg') },
@@ -99,36 +126,6 @@ const SearchHashTagModal = ({
     const pressRemoveSearchTextButton = () => {};
     const pressSearchButton = () => {};
 
-    // Tab
-    const pressTab = (number) => {
-        setTabData((previousValue) => {
-            return previousValue.map((item, index) => {
-                if (index === number) {
-                    item.isPressed = true;
-                } else {
-                    item.isPressed = false;
-                }
-
-                return item;
-            })
-        })
-    };
-
-    const [tabData, setTabData] = useState([
-        { 
-            id: 1, 
-            text: '콘텐츠', 
-            isPressed: true, 
-            handler: pressTab, 
-        }, 
-        { 
-            id: 2, 
-            text: '할 일', 
-            isPressed: false, 
-            handler: pressTab, 
-        },
-    ]);
-
     const currentData = () => {
         const current = tabData.find((item) => item.isPressed === true);
 
@@ -193,7 +190,10 @@ const SearchHashTagModal = ({
                             />
                         </View>
                     </View>
-                    <SearchTab tabData={tabData} />
+                    <SearchTab 
+                        tabData={tabData} 
+                        onPressTab={onPressTab}
+                    />
                 </AppHeader>
                 {getSearchResultView()}
             </View>
