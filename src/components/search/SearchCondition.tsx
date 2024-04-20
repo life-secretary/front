@@ -5,38 +5,17 @@ import AppButton from '../common/AppButton';
 
 import { getFontSize } from '../../utils/font';
 
-const SearchCondition = ({ data }) => {
+import type { ConditionData } from '../search/SearchCategoryModal';
 
-    // const data = [
-    //     { text: '조회순', handler: () => {}, },
-    //     { text: '저장순', handler: () => {}, },
-    //     { text: '최신순', handler: () => {}, },
-    // ];
+type SearchConditionProps = {
+    data: Array<ConditionData>;
+    onPressButton: Function;
+};
 
-    const [isSelected, setIsSelected] = useState(data.map((item) => false));
-
-    const onPressButton = (number: number) => {
-        setIsSelected((previousValue) => {
-            const currentValue = previousValue.map((item, index) => {
-                if (index === number) {
-                    return true;
-                }
-
-                return false;
-            });
-
-            return currentValue;
-        })
-    };
-
-    useEffect(() => {
-        setIsSelected((previousValue) => {
-            previousValue[0] = true;
-
-            return previousValue.slice();
-        })
-    }, [])
-
+const SearchCondition = ({ 
+    data,
+    onPressButton,
+}: SearchConditionProps): React.JSX.Element => {
     return (
         <View style={styles.searchConditionContainer}>
             {data.map((item, index) => {
@@ -45,9 +24,9 @@ const SearchCondition = ({ data }) => {
                     text={item.text} 
                     textStyle={[
                         styles.searchConditionText, 
-                        isSelected[index] === true ? styles.searchConditionTextSelected : {}
+                        item.isSelected === true ? styles.searchConditionTextSelected : {}
                     ]} 
-                    onPressButton={() => {item.handler(), onPressButton(index)}}
+                    onPressButton={() => onPressButton(item, index)}
                 />
             })}
         </View>

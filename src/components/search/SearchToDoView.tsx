@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {VirtualizedList, View, StyleSheet} from 'react-native';
 
 import ToDoListItem from './ToDoListItem';
 
-const SearchToDoView = ({data, headerComponent}) => {
-  const getToDoTabItem = (_data, index) => {
+type SearchToDoViewProps = {
+  data: Array<{}>; // TODO 타입 구체화
+  headerComponent: ReactNode;
+  onEndReached: () => void;
+};
+
+const SearchToDoView = ({
+  data, 
+  headerComponent,
+  onEndReached,
+}: SearchToDoViewProps): React.JSX.Element => {
+  const getToDoTabItem = (_data: any, index: any) => { // TODO 타입 구체화
     return data[index];
   };
 
@@ -12,7 +22,7 @@ const SearchToDoView = ({data, headerComponent}) => {
     return data.length;
   };
 
-  const getToDoTabKeyExtractor = (item, index) => {
+  const getToDoTabKeyExtractor = (item: any, index: any) => { // TODO 타입 구체화
     const keyName = 'todo' + item.id;
 
     return keyName;
@@ -31,6 +41,7 @@ const SearchToDoView = ({data, headerComponent}) => {
       ListFooterComponent={() => <View style={styles.toDoFooter} />}
       ItemSeparatorComponent={() => <View style={styles.separatorToDo} />}
       style={styles.toDoContainer}
+      onEndReached={onEndReached}
     />
   );
 };

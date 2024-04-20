@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {VirtualizedList, View, StyleSheet} from 'react-native';
 
 import {HomeContentsItem} from '../../components/home/homeContents/HomeContentsItem';
 
-const SearchContentView = ({data, headerComponent}) => {
-  const getContentTabItem = (_data, index) => {
+type SearchContentViewProps = {
+  data: Array<{}>; // TODO 타입 구체화
+  headerComponent: ReactNode;
+  onEndReached: () => void;
+};
+
+const SearchContentView = ({
+  data, 
+  headerComponent,
+  onEndReached,
+}: SearchContentViewProps): React.JSX.Element => {
+  const getContentTabItem = (_data: any, index: number) => { // TODO 타입 구체화
     return data[index];
   };
 
@@ -12,7 +22,7 @@ const SearchContentView = ({data, headerComponent}) => {
     return data.length;
   };
 
-  const getContentTabKeyExtractor = (item, index) => {
+  const getContentTabKeyExtractor = (item: any, index: number) => { // TODO 타입 구체화
     const keyName = 'content' + item.id;
 
     return keyName;
@@ -31,6 +41,7 @@ const SearchContentView = ({data, headerComponent}) => {
       ListFooterComponent={() => <View style={styles.contentFooter} />}
       ItemSeparatorComponent={() => <View style={styles.separatorContent} />}
       style={styles.contentContainer}
+      onEndReached={onEndReached}
     />
   );
 };
