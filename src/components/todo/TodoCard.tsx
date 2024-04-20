@@ -8,13 +8,17 @@ import AppIcon from '@/components/common/AppIcon';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 import {getFormattedDate} from '@/utils';
+import {categoryListState} from '@/store/categoryState';
+import {useRecoilValue} from 'recoil';
 
 // TODO: model에 정의
 interface TodoItem {
   id: string;
   title: string | null;
-  category: object | string;
+  categoryId: number;
+  origId: number; // 자체 제공 todo/유저 생성 todo 구분 기준
   tags: string[] | [];
+  userTag: string;
   isDone: boolean;
   createdTime: string | null;
   completedTime: string | null;
@@ -26,11 +30,13 @@ type Props = {
 };
 
 export function TodoCard({item}: Props): React.JSX.Element {
+  const categories = useRecoilValue(categoryListState);
   const navigation = useNavigation();
 
   // TODO: 실 데이터로 교체되면 임시 코드 제거
   const setTagList = () => {
     let list = [];
+    let categoryTitle: any = null;
 
     if (item?.isDone) {
       list.push('완료', '나의 할 일');
@@ -38,18 +44,27 @@ export function TodoCard({item}: Props): React.JSX.Element {
       list.push('나의 할 일');
     }
 
-    if (item?.category !== null) {
-      list.push(item?.category);
+    if (item?.userTag !== null) {
+      categoryTitle = item?.userTag;
+    } else if (item?.categoryId !== null) {
+      categoryTitle = categories.find(
+        (category: object) => category.id === item?.categoryId,
+      )?.title;
+    } else {
+      categoryTitle = null;
     }
 
+    list.push(categoryTitle);
     return list;
   };
 
   const todoItem: TodoItem = {
     id: item?.id,
     title: item?.title,
-    category: item?.category,
+    categoryId: item?.categoryId,
+    userTag: item?.userTag,
     tags: setTagList(), // TODO: 추후 실 데이터로 교체
+    origId: item?.origId,
     isDone: item?.isDone,
     createdTime: item?.createdTime,
     completedTime: item?.completedTime,
