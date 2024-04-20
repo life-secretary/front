@@ -1,6 +1,9 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
+import {useSetRecoilState} from 'recoil';
 import {bottomSheetVisibleState} from '@/store/bottomSheetState';
 import {useNavigation} from '@react-navigation/native';
+import OutsidePressHandler from 'react-native-outside-press';
+import {createData, updateData} from '@/api/api';
 
 import {StyleSheet, View} from 'react-native';
 import {AppInput} from '@/components/common/AppInput';
@@ -8,13 +11,11 @@ import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-import {createData, updateData} from '@/api/api';
 import {
   checkInappropriateKeyword,
   checkSpecialChar,
   formValidation,
 } from '@/utils/formValidation';
-import {useSetRecoilState} from 'recoil';
 
 type Props = {
   isEditMode?: boolean;
@@ -39,12 +40,22 @@ export function TodoForm({
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState(todoItem?.title || '');
   const navigation = useNavigation();
+  const categoryInputRef = useRef(null);
+  const titleInputRef = useRef(null);
 
   const isCustomCategory = selectedCategory?.key === 'custom';
 
   const resetForm = () => {
     setTitle('');
     handleSelectCategory({});
+  };
+
+  const handleCategoryInputBlur = (ref: React.MutableRefObject<null>) => {
+    ref?.current.blur();
+  };
+
+  const handleTitleInputBlur = (ref: React.MutableRefObject<null>) => {
+    ref?.current.blur();
   };
 
   const handleSubmitButtonPress = () => {
@@ -90,9 +101,28 @@ export function TodoForm({
 
   // EDIT TODO
   const editTodo = async () => {
+    let currentCategoryId: any = '';
+    let userTag: string = '';
+
+    // TODO: 리팩토링 필요
+    if (selectedCategory?.key === 'none') {
+      // 유저가 카테고리 선택 안 함
+      currentCategoryId = null;
+      userTag = '';
+    } else if (selectedCategory?.key === 'custom') {
+      // 유저가 카테고리 직접 입력
+      currentCategoryId = null;
+      userTag = selectedCategory?.title;
+    } else {
+      // 유저가 카테고리 선택
+      currentCategoryId = selectedCategory?.id;
+      userTag = '';
+    }
+
     const editedTodo = {
       title,
-      category,
+      userTag,
+      categoryId: currentCategoryId,
     };
 
     const res = await updateData('/user-todos', todoItem?.id, editedTodo);
@@ -182,35 +212,43 @@ export function TodoForm({
   return (
     <View style={styles.container}>
       <View style={styles.form}>
-        <AppInput
-          hasLabel={true}
-          labelText="분야"
-          placeholder="최대 6자 내로 입력 가능해요"
-          text={isCustomCategory ? '' : category}
-          onChangeText={(newText: string) =>
-            handleSelectCategory({key: 'custom', title: newText})
-          }
-          editable={isCustomCategory}
-          icon={{
-            name: 'arrowRight',
-            width: 36,
-            height: 36,
-            styles: {color: color.grey.grey400},
-            onPress: () => setIsVisible(true),
-          }}
-          error={isCategoryInvalid}
-          errorMsg={categoryErrorMsg}
-        />
-        <AppInput
-          hasLabel={true}
-          labelText="할 일 제목"
-          placeholder="최대 20자 내로 입력 가능해요"
-          text={title}
-          maxLength={20}
-          onChangeText={setTitle}
-          error={isTitleInvalid}
-          errorMsg={titleErrorMsg}
-        />
+        <OutsidePressHandler
+          onOutsidePress={() => handleCategoryInputBlur(categoryInputRef)}>
+          <AppInput
+            ref={categoryInputRef}
+            hasLabel={true}
+            labelText="분야"
+            placeholder="최대 6자 내로 입력 가능해요"
+            text={isCustomCategory ? selectedCategory?.title || '' : category}
+            onChangeText={(newText: string) =>
+              handleSelectCategory({key: 'custom', title: newText})
+            }
+            editable={isCustomCategory}
+            icon={{
+              name: 'arrowRight',
+              width: 36,
+              height: 36,
+              styles: {color: color.grey.grey400},
+              onPress: () => setIsVisible(true),
+            }}
+            error={isCategoryInvalid}
+            errorMsg={categoryErrorMsg}
+          />
+        </OutsidePressHandler>
+        <OutsidePressHandler
+          onOutsidePress={() => handleTitleInputBlur(titleInputRef)}>
+          <AppInput
+            ref={titleInputRef}
+            hasLabel={true}
+            labelText="할 일 제목"
+            placeholder="최대 20자 내로 입력 가능해요"
+            text={title}
+            maxLength={20}
+            onChangeText={setTitle}
+            error={isTitleInvalid}
+            errorMsg={titleErrorMsg}
+          />
+        </OutsidePressHandler>
       </View>
       <View style={styles.buttonContainer}>
         <AppButton
