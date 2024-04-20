@@ -2,7 +2,7 @@ import React, {useState, useEffect, useCallback} from 'react';
 import {bottomSheetVisibleState} from '@/store/bottomSheetState';
 import {useNavigation} from '@react-navigation/native';
 
-import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {AppInput} from '@/components/common/AppInput';
 import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
@@ -55,16 +55,28 @@ export function TodoForm({
 
   // ADD TODO
   const addTodo = async () => {
-    let currentCategory: any = '';
+    let currentCategoryId: any = '';
+    let userTag: string = '';
+
+    // TODO: 리팩토링 필요
     if (selectedCategory?.key === 'none') {
-      currentCategory = null;
+      // 유저가 카테고리 선택 안 함
+      currentCategoryId = null;
+      userTag = '';
+    } else if (selectedCategory?.key === 'custom') {
+      // 유저가 카테고리 직접 입력
+      currentCategoryId = null;
+      userTag = selectedCategory?.title;
     } else {
-      currentCategory = category;
+      // 유저가 카테고리 선택
+      currentCategoryId = selectedCategory?.id;
+      userTag = '';
     }
 
     const newTodo = {
       title,
-      category: currentCategory,
+      categoryId: +currentCategoryId,
+      userTag,
       userId: 1,
     };
 

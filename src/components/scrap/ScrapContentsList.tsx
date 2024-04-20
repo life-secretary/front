@@ -76,7 +76,7 @@ export function ScrapContentsList({
   return (
     <View style={styles.container}>
       {!isEmpty && isLoading ? (
-        <View style={styles.emptyListContainer}>
+        <View style={styles.spinnerContainer}>
           <AppSpinner color={color.main.primary} />
         </View>
       ) : (
@@ -113,6 +113,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 28,
     marginTop: 220,
+  },
+  spinnerContainer: {
+    flex: 1,
   },
   textContainer: {
     justifyContent: 'center',
