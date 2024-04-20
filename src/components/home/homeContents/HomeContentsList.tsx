@@ -1,4 +1,6 @@
 import React from 'react';
+import {useRecoilValue} from 'recoil';
+import {userInfoState} from '@/store/userInfoState';
 
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {AppText} from '@/components/common/AppText';
@@ -20,11 +22,13 @@ export function HomeContentsList({
   title,
   list,
 }: HomeContentsProps): React.JSX.Element {
+  const userInfo = useRecoilValue(userInfoState);
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         {isUsernameUsed && (
-          <AppText style={styles.username}>$username님과</AppText>
+          <AppText style={styles.username}>{userInfo.nickname}님과</AppText>
         )}
         <AppText style={styles.title}>{title}</AppText>
       </View>
