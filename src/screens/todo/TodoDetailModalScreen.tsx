@@ -18,7 +18,7 @@ import {
   bottomSheetModeState,
   bottomSheetVisibleState,
 } from '@/store/bottomSheetState';
-import {deleteData, fetchData, updateData} from '@/api/api';
+import {createData, deleteData, fetchData, updateData} from '@/api/api';
 import Toast from 'react-native-toast-message';
 import {getFormattedDate} from '@/utils';
 
@@ -73,7 +73,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
   };
 
   const handleRetryButtonPress = () => {
-    navigation.navigate('Todo');
+    retryTodo(todoItem?.id);
   };
 
   const handleCompleteButtonPress = () => {
@@ -82,14 +82,24 @@ export function TodoDetailModalScreen({navigation, route}: any) {
 
   const completeTodo = async (id: number) => {
     const completedTodo = {
-      ...todoItem,
+      title: todoItem?.title,
+      categoryId: todoItem?.categoryId,
+      userTag: todoItem?.userTag || '',
       isDone: true,
-      completedTime: getFormattedDate(new Date(), '-'),
     };
 
     const res = await updateData('/user-todos', id, completedTodo);
 
     if (res.status === 200) {
+      navigation.navigate('Todo');
+    }
+  };
+
+  const retryTodo = async (id: number) => {
+    const res = await createData(`/user-todos/retry/${id}`, {});
+
+    if (res.status === 200) {
+      // TODO: 완료 투두 리스트에 있는 해당 투두 아이템 제거 필요
       navigation.navigate('Todo');
     }
   };
