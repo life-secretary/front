@@ -9,9 +9,21 @@ import { AppText } from '../common/AppText';
 
 import { getFontSize } from '../../utils/font';
 
+type SearchTabProps = {
+    tabData: Array<TabData>;
+    onPressTab: Function;
+};
+
+type TabData = {
+    id: number;
+    text: string;
+    isPressed: boolean;
+}
+
 const SearchTab = ({
     tabData,
-}) => {
+    onPressTab,
+}: SearchTabProps): React.JSX.Element => {
     return (
         <View style={styles.tabContainer}>
             {
@@ -20,7 +32,7 @@ const SearchTab = ({
                         <Pressable 
                             key={`searchTab${index}`}
                             style={styles.tabButtonContainer} 
-                            onPress={() => item.handler(index)}
+                            onPress={() => onPressTab(index)}
                         >
                             <View style={[
                                 styles.tabButtonTextContainer, 
