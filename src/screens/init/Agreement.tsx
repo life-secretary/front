@@ -38,7 +38,7 @@ const Agreement = ({
             isVisible={isVisible}
         > 
             <View style={styles.container}>
-                <AppHeader>
+                <AppHeader style={styles.headerContainer}>
                     <AppIcon
                         name='back'
                         width={42}
@@ -81,7 +81,7 @@ const Agreement = ({
                         />
                     </View>
                 </View>
-                <View style={styles.buttonContainer}> 
+                <View style={styles.buttonContainer}>
                     <AppText style={styles.agreementText}>
                         만 14세 이상이고, 
                         <AppButton 
@@ -122,6 +122,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
     },
 
+    headerContainer: {
+        marginTop: 10
+    },
+
     logoContainer: {
         gap: 8,
         marginTop: 10,
@@ -151,19 +155,11 @@ const styles = StyleSheet.create({
     },
 
     buttonContainer: {
+        width: '100%',
         position: 'absolute',
-        bottom: 0,
+        left: 24,
+        bottom: 30,
         gap: 10,
-        zIndex: 9,
-        alignItems: 'center',
-        paddingHorizontal: 24,
-        // TODO 스타일 통일 (혼잡)
-        ...Platform.select({
-            android: {
-                paddingHorizontal: 0,
-                paddingLeft: 4,
-            }
-        })
     },
 
     agreementText: {
@@ -173,7 +169,7 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
 
         fontWeight: '500',
-        fontSize: 13,
+        fontSize: getFontSize(13),
         lineHeight: 16,
         color: '#000E24',
 
@@ -188,14 +184,15 @@ const styles = StyleSheet.create({
         color: '#000E24',
         textDecorationLine: 'underline',
 
-        marginTop: 8, // TOTO 야매 해결
+        marginTop: 8, // NOTE 야매 해결
     },
 
     startButtonText: {
         fontWeight: '600',
         fontSize: getFontSize(16),
         lineHeight: 20,
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        textAlign: 'center',
     },
     startButton: {
         paddingHorizontal: 106,
@@ -209,6 +206,7 @@ const styles = StyleSheet.create({
         fontSize: getFontSize(13),
         lineHeight: 16,
         color: '#40474F',
+        textAlign: 'center',
     },
     disagreementButtonText: {
         height: '100%',
@@ -219,7 +217,7 @@ const styles = StyleSheet.create({
         color: '#40474F',
         textDecorationLine: 'underline',
 
-        marginTop: 3, // TOTO 야매 해결
+        marginTop: 3, // NOTE 야매 해결
     },
 })
 

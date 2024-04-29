@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,9 +14,10 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		76885E4C2B9345AE94CD7767 /* Pretendard-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2F05C5710CCE4545B6439A15 /* Pretendard-ExtraLight.ttf */; };
-		7699B88040F8A987B510C191 /* libPods-front-frontTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-front-frontTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A3A43D3D3ECB4B06A9D870C4 /* Pretendard-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3E79325134B84174BD4B1B05 /* Pretendard-SemiBold.ttf */; };
+		A6B4972F2BD4E13E00CFD856 /* libPods-front-frontTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-front-frontTests.a */; };
+		A6CEB48B2BD4F6F100457E4B /* SwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CEB48A2BD4F6F100457E4B /* SwiftBridge.swift */; };
 		AC268E00E5FC4ED298EE4C0B /* Pretendard-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C4BD7EF7606944FE9E59BDEA /* Pretendard-Thin.ttf */; };
 		C3E728A6A8414F26B2F88FF1 /* PretendardVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0E71242DB3474EEE90AA1CF5 /* PretendardVariable.ttf */; };
 		CC43C745A25E40F5BE2BA28B /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9CCFDF5D76D04CDB86E3B468 /* LICENSE.txt */; };
@@ -62,6 +63,8 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = front/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-front-frontTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-front-frontTests.release.xcconfig"; path = "Target Support Files/Pods-front-frontTests/Pods-front-frontTests.release.xcconfig"; sourceTree = "<group>"; };
 		9CCFDF5D76D04CDB86E3B468 /* LICENSE.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = LICENSE.txt; path = "../src/assets/fonts/Pretendard-1.3.9/LICENSE.txt"; sourceTree = "<group>"; };
+		A6CEB4892BD4F6F000457E4B /* front-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "front-Bridging-Header.h"; sourceTree = "<group>"; };
+		A6CEB48A2BD4F6F100457E4B /* SwiftBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBridge.swift; sourceTree = "<group>"; };
 		C4BD7EF7606944FE9E59BDEA /* Pretendard-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Thin.ttf"; path = "../src/assets/fonts/Pretendard-1.3.9/Pretendard-Thin.ttf"; sourceTree = "<group>"; };
 		CB14C008DFBA481FA0632843 /* Pretendard-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Bold.ttf"; path = "../src/assets/fonts/Pretendard-1.3.9/Pretendard-Bold.ttf"; sourceTree = "<group>"; };
 		D199B04E8B91443593A37D5E /* Pretendard-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Medium.ttf"; path = "../src/assets/fonts/Pretendard-1.3.9/Pretendard-Medium.ttf"; sourceTree = "<group>"; };
@@ -73,7 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7699B88040F8A987B510C191 /* libPods-front-frontTests.a in Frameworks */,
+				A6B4972F2BD4E13E00CFD856 /* libPods-front-frontTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,6 +117,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				A6CEB48A2BD4F6F100457E4B /* SwiftBridge.swift */,
+				A6CEB4892BD4F6F000457E4B /* front-Bridging-Header.h */,
 			);
 			name = front;
 			sourceTree = "<group>";
@@ -248,12 +253,12 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1530;
 					};
 				};
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "front" */;
-			compatibilityVersion = "Xcode 12.0";
+			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -447,6 +452,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				A6CEB48B2BD4F6F100457E4B /* SwiftBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -465,6 +471,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-front-frontTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -496,6 +503,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-front-frontTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -529,7 +537,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2F552798W7;
+				DEVELOPMENT_TEAM = 986YWBXA7A;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -546,9 +554,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lifeSecratary.frontIOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lifeSecretary.IOS;
 				PRODUCT_NAME = front;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "front-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -564,7 +573,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2F552798W7;
+				DEVELOPMENT_TEAM = 986YWBXA7A;
 				INFOPLIST_FILE = front/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -576,9 +585,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.lifeSecratary.frontIOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lifeSecretary.IOS;
 				PRODUCT_NAME = front;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "front-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

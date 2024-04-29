@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { ChangeEvent, Component, useState } from 'react';
 import { 
     View, 
     StyleSheet, 
@@ -18,7 +18,7 @@ import { getFontSize } from '@/utils/font';
 
 type GetNickNameProps = {
     backButtonHandler: () => void;
-    nextButtonHandler: () => void;
+    nextButtonHandler: (nickName: string) => void;
     closeStartProcess?: () => void;
 }
 
@@ -26,13 +26,35 @@ const GetNickName = ({
     backButtonHandler,
     nextButtonHandler,
 }: GetNickNameProps): React.JSX.Element => {
+    const regExp = /[`~!@#$%^&*()_|+\-=?;:'"<>\{\}\[\]\\\/ ]/gim;
+
+    const [nickName, setNickName] = useState('');
+    const [isError, setIsError] = useState(true)
+
+    const onChangeTextInput = ({ nativeEvent }: any) => {
+        const checkHasSpecialText = new RegExp(/[`~!@#$%^&*()_|+\-=?;:'"<>\{\}\[\]\\\/ ]/, 'gim');
+
+        const { text } = nativeEvent;
+
+        if (
+            text.match(checkHasSpecialText) !== null ||
+            text.length > 6 || text.length === 0
+        ) {
+            setIsError(true);
+        } else {
+            setIsError(false);
+        }
+
+        setNickName(text);
+    };
+
     return (
         <KeyboardAvoidingView 
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.keyBoardAvoidingContainer}
         >
             <View style={styles.container}>
-                <AppHeader>
+                <AppHeader style={styles.headerContainer}>
                     <AppIcon
                         name='back'
                         width={42}
@@ -47,14 +69,16 @@ const GetNickName = ({
                     </View>
                 </View>
                 <TextInput
-                    style={styles.textInput}
+                    style={[styles.textInput, isError ? styles.textInputError : {}]}
+                    onChange={onChangeTextInput}
                 />
                 <View style={styles.buttonContainer}>
                     <AppButton 
                         text='다음'
                         textStyle={styles.nextButtonText}
-                        buttonStyle={styles.nextButton}
-                        onPressButton={nextButtonHandler}
+                        buttonStyle={[styles.nextButton, isError ? styles.nextButtonDisabled : {}]}
+                        disabled={isError}
+                        onPressButton={isError ? () => {} : () => nextButtonHandler(nickName)}
                     />
                 </View>
             </View>
@@ -72,7 +96,7 @@ const GetBirthDate = ({
             style={styles.keyBoardAvoidingContainer}
         >
             <View style={styles.container}>
-                <AppHeader>
+                <AppHeader style={styles.headerContainer}>
                     <AppIcon
                         name='back'
                         width={42}
@@ -121,7 +145,7 @@ const GetGender = ({
 
     return (
         <View style={styles.container}>
-            <AppHeader>
+            <AppHeader style={styles.headerContainer}>
                 <AppIcon
                     name='back'
                     width={42}
@@ -197,7 +221,7 @@ const GetCategory = ({
 
     return (
         <View style={styles.container}>
-            <AppHeader>
+            <AppHeader style={styles.headerContainer}>
                 <AppIcon
                     name='back'
                     width={42}
@@ -503,13 +527,26 @@ const Survey = ({
         });
     };
 
+    const [userInfo, setUserInfo] = useState({
+        nickName: ''
+    });
+
+    // nickname 저장 + [다음] 버튼
+    const onClickNextButtonInNickName = (nickName: string) => {
+        setUserInfo((previousValue) => {
+            previousValue.nickName = nickName;
+            return Object.assign({}, previousValue);
+        })
+        openOrCloseSurvey(1);
+    }
+
     const [data, setData] = useState([
         { 
             isShow: true, 
             component:  
                 <GetNickName 
                     backButtonHandler={closeModalHandler}
-                    nextButtonHandler={() => openOrCloseSurvey(1)}
+                    nextButtonHandler={onClickNextButtonInNickName}
                  />,
         },
         {
@@ -592,6 +629,7 @@ const styles = StyleSheet.create({
     headerContainer: {
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginTop: 10,
     },
 
     passButtonText: {
@@ -634,6 +672,9 @@ const styles = StyleSheet.create({
         borderColor: '#F2F4F7',
         borderRadius: 10,
     },
+    textInputError: {
+        borderColor: '#E44848',
+    },
 
     buttonContainer: {
         width: '100%',
@@ -652,7 +693,10 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
         paddingHorizontal: 106,
         borderRadius: 10,
-        backgroundColor: '#0B2A4F'
+        backgroundColor: '#0B2A4F',
+    },
+    nextButtonDisabled: {
+        opacity: 0.3
     },
 
     buttonSelectedText: {
