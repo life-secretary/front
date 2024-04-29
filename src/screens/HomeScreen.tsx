@@ -153,6 +153,9 @@ export function HomeScreen(): React.JSX.Element {
       const res = await fetchData('/content', {sort: 'createdAt'});
       const list = res.data.data.content;
 
+      // for test
+      console.log(list);
+
       if (res.status === 200) {
         setNewestHomeContentsList(list);
       }
@@ -208,7 +211,7 @@ export function HomeScreen(): React.JSX.Element {
           <SendFeedbackButton />
         </View>
       </ScrollView>
-      {/* <Login isVisible={!isDone} closeAllProcess={closeAllProcess} /> */}
+      <Login isVisible={!isDone} closeAllProcess={closeAllProcess} />
       <SearchCategoryModal
         isVisible={isCategoryModalVisible}
         closeCategoryModal={closeCategoryModal}
