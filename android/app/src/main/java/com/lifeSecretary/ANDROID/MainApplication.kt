@@ -1,4 +1,4 @@
-package com.front
+package com.lifeSecretary.ANDROID
 
 import android.app.Application
 import com.facebook.react.PackageList

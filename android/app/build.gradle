@@ -74,9 +74,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.front"
+    namespace "com.lifeSecretary.ANDROID"
     defaultConfig {
-        applicationId "com.front"
+        applicationId "com.lifeSecretary.ANDROID"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

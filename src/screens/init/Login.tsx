@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 
 import { AppText } from '@/components/common/AppText';
@@ -9,6 +9,22 @@ import AppButton from '@/components/common/AppButton';
 import { getFontSize } from '@/utils/font';
 
 import Agreement from '../init/Agreement';
+
+import { 
+    login,
+    getProfile,
+    KakaoProfile,
+    KakaoOAuthToken
+} from '@react-native-seoul/kakao-login';
+import { 
+    GoogleSignin,
+    GoogleSigninButton,
+} from '@react-native-google-signin/google-signin';
+
+// @ref[google oauth] https://github.com/react-native-google-signin/google-signin
+
+// Test
+import axios from 'axios';
 
 type LoginProps = {
     isVisible: boolean;
@@ -23,14 +39,45 @@ const Login = ({
     const [isLogin, setIsLogin] = useState(false);
     const [isStartModalOpen, setIsStartModalOpen] = useState(false);
 
+    const [kakaoToken, setKakaoToken] = useState<KakaoOAuthToken>();
+    const [kakaoProfile, setKakaoProfile] = useState<KakaoProfile>(); // id, nickname 사용가능
+
+    const signInWithKakao = async(): Promise<void> => {
+        try {
+            const token: KakaoOAuthToken = await login();
+            const profile: KakaoProfile = await getProfile();
+            
+            setKakaoToken(token);
+            setKakaoProfile(profile);
+            setIsLogin(true);
+            setIsStartModalOpen(true);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const signInWithGoogle = async(): Promise<void> => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+
+            // TODO Client ID 적용 시간 걸려서 잠시 hold
+            // console.log('userInfo', userInfo);
+            setIsLogin(true);
+            setIsStartModalOpen(true);
+        } catch(error) {
+            console.log('error', error);
+        }
+    }
+
     const onPressKakaoLoginButton = () => {
-        setIsLogin(true);
-        setIsStartModalOpen(true);
+        console.log('카카오 로그인 테스트');
+        signInWithKakao();
     };
 
     const onPressGoogleLoginButton = () => {
-        setIsLogin(true);
-        setIsStartModalOpen(true);
+        console.log('구글 로그인 테스트');
+        signInWithGoogle();
     };
 
     const onPressAppleLoginButton = () => {
