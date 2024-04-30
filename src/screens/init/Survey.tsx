@@ -22,6 +22,11 @@ type SurveyProccessProps = {
         year: string;
         month: string;
         day: string;
+        gender: string;
+        categories: string[];
+        occupations: string[];
+        hasMarriage: boolean;
+        hasChildren: boolean;
     };
     backButtonHandler: () => void;
     nextButtonHandler: Function;
@@ -183,6 +188,7 @@ const GetBirthDate = ({
         return !!year.length && !!month.length && !!day.length;
     };
 
+    // NOTE 왜 업데이트가 안되지..?
     useEffect(() => {
         if (userInfo) {
             setYear(userInfo.year);
@@ -220,6 +226,7 @@ const GetBirthDate = ({
                         value={year}
                         onChange={onChangeYearText}
                         style={styles.textBirth}
+                        autoFocus={true}
                     />
                     <AppText style={styles.textBirth}>년 </AppText>
                     <TextInput
@@ -255,20 +262,49 @@ const GetBirthDate = ({
 };
 
 const GetGender = ({
+    userInfo,
     backButtonHandler,
     nextButtonHandler,
 }: SurveyProccessProps): React.JSX.Element => {
-
     const [containerWidth, setContainerWidth] = useState(0);
+    const [data, setData] = useState([
+        { name: '선택안함', id: '', selected: true },
+        { name: '남성', id: 'M', selected: false },
+        { name: '여성', id: 'F', selected: false },
+    ]);
 
     const margins = 25;
     const numColumns = 3;
 
-    const data = [
-        { name: '선택안함', selected: true },
-        { name: '남성', selected: false },
-        { name: '여성', selected: false },
-    ];
+    const onPressGenderButton = (index: number) => {
+        setData((previousValue) => {
+            return previousValue.map((item, idx) => {
+                if (index === idx) {
+                    item.selected = true;
+                } else {
+                    item.selected = false;
+                }
+
+                return item;
+            })
+        });
+    };
+
+    useEffect(() => {
+        if (userInfo) {
+            setData((previousValue) => {
+                return previousValue.map((item) => {
+                    if (item.id === userInfo.gender) {
+                        item.selected = true;
+                    } else {
+                        item.selected = false;
+                    }
+
+                    return item;
+                });
+            });
+        }
+    }, [userInfo]);
 
     return (
         <View style={styles.container}>
@@ -293,7 +329,7 @@ const GetGender = ({
                     marginBottom: 32,
                   }}
                 onLayout={e => setContainerWidth(e.nativeEvent.layout.width)}
-                renderItem={({item}) => {
+                renderItem={({item, index}) => {
                     return (
                         <AppButton 
                             text={item.name}
@@ -304,6 +340,7 @@ const GetGender = ({
                                 },
                                 item.selected ? styles.buttonSelected : styles.buttonUnselected
                             ]}
+                            onPressButton={() => onPressGenderButton(index)}
                         />
                     );
                 }}
@@ -315,7 +352,7 @@ const GetGender = ({
                     text='다음'
                     textStyle={styles.nextButtonText}
                     buttonStyle={styles.nextButton}
-                    onPressButton={nextButtonHandler}
+                    onPressButton={() => nextButtonHandler(data)}
                 />
             </View>
         </View>
@@ -323,28 +360,73 @@ const GetGender = ({
 };
 
 const GetCategory = ({
+    userInfo,
     backButtonHandler,
     nextButtonHandler,
 }: SurveyProccessProps): React.JSX.Element => {
-
     const [containerWidth, setContainerWidth] = useState(0);
+    const [data, setData] = useState([
+        { name: '경제', id: '', selected: true },
+        { name: '법', id: '', selected: false },
+        { name: '금융', id: '', selected: false },
+        { name: '세금', id: '', selected: false },
+        { name: '부동산', id: '', selected: false },
+        { name: '건강', id: '', selected: false },
+        { name: '환경', id: '', selected: false },
+        { name: '문화', id: '', selected: false },
+        { name: '자기 계발', id: '', selected: false },
+        { name: '여행', id: '', selected: false },
+        { name: '모두 해당', id: '', selected: false },
+    ]);
 
     const margins = 12;
     const numColumns = 2;
 
-    const data = [
-        { name: '경제', selected: true },
-        { name: '법', selected: false },
-        { name: '금융', selected: false },
-        { name: '세금', selected: false },
-        { name: '부동산', selected: false },
-        { name: '건강', selected: false },
-        { name: '환경', selected: false },
-        { name: '문화', selected: false },
-        { name: '자기 계발', selected: false },
-        { name: '여행', selected: false },
-        { name: '모두 해당', selected: false },
-    ];
+    const onPressCategoryButton = (index: number) => {
+        setData((previousValue) => {
+            return previousValue.map((item, idx, array) => {
+                if (index === array.length - 1) {
+                    if (array[array.length - 1].selected === false) {
+                        return { ...item, selected: true }; 
+                    } else {
+                        return { ...item, selected: false }; 
+                    }
+                }
+
+                if (idx === index) {
+                    item.selected = !item.selected;
+                }
+
+                return item;
+            });
+        });
+    };
+
+    const checkCategorySelect = () => {
+        return data.reduce((prev, curr) => {
+            return prev || curr.selected;
+        }, false);
+    };
+
+    useEffect(() => {
+        if (userInfo) {
+            setData((previousValue) => {
+                const newData = previousValue.map((item) => {
+                    return {...item, selected: false};
+                });
+
+                userInfo.categories.forEach((id) => {
+                    const item = newData.find((category) => category.id === id);
+                    
+                    if (item) {
+                        item.selected = true;
+                    }
+                });
+
+                return newData;
+            });
+        }
+    }, [userInfo]);
 
     return (
         <View style={styles.container}>
@@ -369,7 +451,7 @@ const GetCategory = ({
                     marginBottom: 12,
                   }}
                 onLayout={e => setContainerWidth(e.nativeEvent.layout.width)}
-                renderItem={({item}) => {
+                renderItem={({item, index}) => {
                     return (
                         <AppButton 
                             text={item.name}
@@ -380,6 +462,7 @@ const GetCategory = ({
                                 },
                                 item.selected ? styles.buttonSelected : styles.buttonUnselected
                             ]}
+                            onPressButton={() => onPressCategoryButton(index)}
                         />
                     );
                 }}
@@ -390,8 +473,8 @@ const GetCategory = ({
                 <AppButton 
                     text='다음'
                     textStyle={styles.nextButtonText}
-                    buttonStyle={styles.nextButton}
-                    onPressButton={nextButtonHandler}
+                    buttonStyle={[styles.nextButton, !checkCategorySelect() ? styles.nextButtonDisabled : {}]}
+                    onPressButton={!checkCategorySelect() ? () => {} : () => nextButtonHandler(data)}
                 />
             </View>
         </View>
@@ -399,25 +482,70 @@ const GetCategory = ({
 };
 
 const GetOccupation = ({
+    userInfo,
     backButtonHandler,
     nextButtonHandler,
     closeStartProcess,
 }: SurveyProccessProps): React.JSX.Element => {
-
     const [containerWidth, setContainerWidth] = useState(0);
+    const [data, setData] = useState([
+        { name: '학생', id: '', selected: true },
+        { name: '직장인', id: '', selected: false },
+        { name: '개인 사업', id: '', selected: false },
+        { name: '취업 준비생', id: '', selected: false },
+        { name: '군인', id: '', selected: false },
+        { name: '프리랜서', id: '', selected: false },
+        { name: '해당 없음', id: '', selected: false },
+    ]);
 
     const margins = 12;
     const numColumns = 2;
 
-    const data = [
-        { name: '학생', selected: true },
-        { name: '직장인', selected: false },
-        { name: '개인 사업', selected: false },
-        { name: '취업 준비생', selected: false },
-        { name: '군인', selected: false },
-        { name: '프리랜서', selected: false },
-        { name: '해당 없음', selected: false },
-    ];
+    const onPressOccupationButton = (index: number) => {
+        setData((previousValue) => {
+            return previousValue.map((item, idx, array) => {
+                if (index === array.length - 1) {
+                    if (array[array.length - 1].selected === false) {
+                        return { ...item, selected: true }; 
+                    } else {
+                        return { ...item, selected: false }; 
+                    }
+                }
+
+                if (idx === index) {
+                    item.selected = !item.selected;
+                }
+
+                return item;
+            });
+        });
+    };
+
+    const checkOccupationSelect = () => {
+        return data.reduce((prev, curr) => {
+            return prev || curr.selected;
+        }, false);
+    };
+
+    useEffect(() => {
+        if (userInfo) {
+            setData((previousValue) => {
+                const newData = previousValue.map((item) => {
+                    return {...item, selected: false};
+                });
+
+                userInfo.categories.forEach((id) => {
+                    const item = newData.find((category) => category.id === id);
+                    
+                    if (item) {
+                        item.selected = true;
+                    }
+                });
+
+                return newData;
+            });
+        }
+    }, [userInfo]);
 
     return (
         <View style={styles.container}>
@@ -447,7 +575,7 @@ const GetOccupation = ({
                     marginBottom: 12,
                   }}
                 onLayout={e => setContainerWidth(e.nativeEvent.layout.width)}
-                renderItem={({item}) => {
+                renderItem={({item, index}) => {
                     return (
                         <AppButton 
                             text={item.name}
@@ -458,6 +586,7 @@ const GetOccupation = ({
                                 },
                                 item.selected ? styles.buttonSelected : styles.buttonUnselected
                             ]}
+                            onPressButton={() => onPressOccupationButton(index)}
                         />
                     );
                 }}
@@ -468,8 +597,8 @@ const GetOccupation = ({
                 <AppButton 
                     text='다음'
                     textStyle={styles.nextButtonText}
-                    buttonStyle={styles.nextButton}
-                    onPressButton={nextButtonHandler}
+                    buttonStyle={[styles.nextButton, !checkOccupationSelect() ? styles.nextButtonDisabled : {}]}
+                    onPressButton={!checkOccupationSelect() ? () => {} : () => nextButtonHandler(data)}
                 />
             </View>
         </View>
@@ -477,25 +606,92 @@ const GetOccupation = ({
 };
 
 const GetMarriage = ({
+    userInfo,
     backButtonHandler,
     nextButtonHandler,
     closeStartProcess,
 }: SurveyProccessProps): React.JSX.Element => {
-
     const [containerWidth, setContainerWidth] = useState(0);
+    const [dataMarriage, setDataMarriage] = useState([
+        { name: '미혼', id: false, selected: true },
+        { name: '기혼', id: true, selected: false },
+    ]);
+    const [dataChildren, setDataChildren] = useState([
+        { name: '없어요', id: false, selected: true },
+        { name: '있어요', id: true, selected: false },
+    ]);
 
     const margins = 12;
     const numColumns = 2;
 
-    const dataMarriage = [
-        { name: '미혼', selected: true },
-        { name: '기혼', selected: false },
-    ];
+    const onPressMarriageButton = (index: number) => {
+        setDataMarriage((previousValue) => {
+            return previousValue.map((item, idx) => {
+                if (index === idx) {
+                    item.selected = true;
+                } else {
+                    item.selected = false;
+                }
 
-    const dataChildren = [
-        { name: '없어요', selected: true },
-        { name: '있어요', selected: false },
-    ];
+                return item;
+            });
+        });
+    };
+
+    const onPressChildrenButton = (index: number) => {
+        setDataChildren((previousValue) => {
+            return previousValue.map((item, idx) => {
+                if (index === idx) {
+                    item.selected = true;
+                } else {
+                    item.selected = false;
+                }
+
+                return item;
+            });
+        });
+    };
+
+    const checkAllDataSelect = () => {
+        const marriageCheck = dataMarriage
+            .reduce((prev, curr) => {
+                return prev || curr.selected;
+            }, true);
+        const childrenCheck = dataChildren
+            .reduce((prev, curr) => {
+                return prev || curr.selected;
+            }, true);
+
+        return marriageCheck && childrenCheck
+    };
+
+    useEffect(() => {
+        if (userInfo) {
+            setDataMarriage((previousValue) => {
+                return previousValue.map((item) => {
+                    if (item.id === userInfo.hasMarriage) {
+                        item.selected = true;
+                    } else {
+                        item.selected = false;
+                    }
+
+                    return item;
+                });
+            });
+
+            setDataChildren((previousValue) => {
+                return previousValue.map((item) => {
+                    if (item.id === userInfo.hasChildren) {
+                        item.selected = true;
+                    } else {
+                        item.selected = false;
+                    }
+
+                    return item;
+                });
+            });
+        }
+    }, [userInfo]);
 
     return (
         <View style={styles.container}>
@@ -527,7 +723,7 @@ const GetMarriage = ({
                         marginBottom: 12,
                     }}
                     onLayout={e => setContainerWidth(e.nativeEvent.layout.width)}
-                    renderItem={({item}) => {
+                    renderItem={({item, index}) => {
                         return (
                             <AppButton 
                                 text={item.name}
@@ -538,6 +734,7 @@ const GetMarriage = ({
                                     },
                                     item.selected ? styles.buttonSelected : styles.buttonUnselected
                                 ]}
+                                onPressButton={() => onPressMarriageButton(index)}
                             />
                         );
                     }}
@@ -559,7 +756,7 @@ const GetMarriage = ({
                         marginBottom: 12,
                     }}
                     onLayout={e => setContainerWidth(e.nativeEvent.layout.width)}
-                    renderItem={({item}) => {
+                    renderItem={({item, index}) => {
                         return (
                             <AppButton 
                                 text={item.name}
@@ -570,6 +767,7 @@ const GetMarriage = ({
                                     },
                                     item.selected ? styles.buttonSelected : styles.buttonUnselected
                                 ]}
+                                onPressButton={() => onPressChildrenButton(index)}
                             />
                         );
                     }}
@@ -586,8 +784,8 @@ const GetMarriage = ({
                 <AppButton 
                     text='다음'
                     textStyle={styles.nextButtonText}
-                    buttonStyle={styles.nextButton}
-                    onPressButton={nextButtonHandler}
+                    buttonStyle={[styles.nextButton, !checkAllDataSelect() ? styles.nextButtonDisabled : {}]}
+                    onPressButton={!checkAllDataSelect() ? () => {} : () => nextButtonHandler({ dataMarriage, dataChildren })}
                 />
             </View>
         </View>
@@ -659,9 +857,14 @@ const Survey = ({
         year: '',
         month: '',
         day: '',
+        gender: '',
+        categories: [],
+        occupations: [],
+        hasMarriage: false,
+        hasChildren: false,
     });
 
-    // nickname 저장 + [다음] 버튼
+    // [다음] 버튼 - nickname 저장
     const onClickNextButtonInNickName = (nickName: string) => {
         setUserInfo((previousValue) => {
             previousValue.nickName = nickName;
@@ -670,7 +873,7 @@ const Survey = ({
         openOrCloseSurvey(1);
     };
 
-    // year/month/day 저장 + [다음] 버튼
+    // [다음] 버튼 - year/month/day 저장
     const onClickNextButtonBirthDate = (birthDate: {
         year: string;
         month: string;
@@ -686,6 +889,55 @@ const Survey = ({
         });
         openOrCloseSurvey(2);
     };
+
+    // [다음] 버튼 - gender 저장
+    const onClickNextButtonGender = (genderData: any) => {
+        const data = genderData.find((item: any) => item.selected === true);
+
+        setUserInfo((previousValue) => {
+            previousValue.gender = data.id;
+            return Object.assign({}, previousValue);
+        });
+        openOrCloseSurvey(3);
+    };
+
+    // [다음] 버튼 - category 저장
+    const onClickNextButtonCategory = (categoryData: any) => {
+        setUserInfo((previousValue) => {
+            const categories = categoryData
+                .map((item: any) => item.id)
+                .filter((item: any) => item !== '');
+            previousValue.categories = categories;
+            return Object.assign({}, previousValue);
+        });
+        openOrCloseSurvey(4);
+    };
+
+    // [다음 버튼] - occupation 저장
+    const onClickNextButtonOccupation = (occupationData: any) => {
+        setUserInfo((previousValue) => {
+            const occupations = occupationData
+                .map((item: any) => item.id)
+                .filter((item: any) => item !== '');
+            previousValue.occupations = occupations;
+            return Object.assign({}, previousValue);
+        });
+        openOrCloseSurvey(5);
+    };
+
+    // [다음 버튼] - marriage/children 저장
+    const onClickNextButtonMarriage = (marriageData: any) => {
+        const { dataMarriage, dataChildren } = marriageData;
+        const marriage = dataMarriage.find((item: any) => item.selected === true).id;
+        const children = dataChildren.find((item: any) => item.selected === true).id;
+
+        setUserInfo((previousValue) => {
+            previousValue.hasMarriage = marriage;
+            previousValue.hasChildren = children;
+            return Object.assign({}, previousValue);
+        });
+        openOrCloseSurvey(6);
+    }
 
     const [data, setData] = useState([
         { 
@@ -710,24 +962,27 @@ const Survey = ({
             isShow: false,
             component: 
                 <GetGender 
-                    backButtonHandler={() => openOrCloseSurvey(2)}
-                    nextButtonHandler={() => openOrCloseSurvey(3)}
+                    userInfo={userInfo}
+                    backButtonHandler={() => openOrCloseSurvey(1)}
+                    nextButtonHandler={onClickNextButtonGender}
                 />
         },
         {
             isShow: false,
             component: 
                 <GetCategory 
-                    backButtonHandler={() => openOrCloseSurvey(3)}
-                    nextButtonHandler={() => openOrCloseSurvey(4)}
+                    userInfo={userInfo}
+                    backButtonHandler={() => openOrCloseSurvey(2)}
+                    nextButtonHandler={onClickNextButtonCategory}
                 />
         },
         {
             isShow: false,
             component: 
                 <GetOccupation 
-                    backButtonHandler={() => openOrCloseSurvey(4)}
-                    nextButtonHandler={() => openOrCloseSurvey(5)}
+                    userInfo={userInfo}
+                    backButtonHandler={() => openOrCloseSurvey(3)}
+                    nextButtonHandler={onClickNextButtonOccupation}
                     closeStartProcess={closeStartProcess}
                 />
         },
@@ -735,8 +990,9 @@ const Survey = ({
             isShow: false,
             component: 
                 <GetMarriage 
-                    backButtonHandler={() => openOrCloseSurvey(5)}
-                    nextButtonHandler={() => openOrCloseSurvey(6)}
+                    userInfo={userInfo}
+                    backButtonHandler={() => openOrCloseSurvey(4)}
+                    nextButtonHandler={onClickNextButtonMarriage}
                     closeStartProcess={closeStartProcess}
                 />
         },
@@ -744,11 +1000,15 @@ const Survey = ({
             isShow: false,
             component: 
                 <Welcome 
-                    backButtonHandler={() => openOrCloseSurvey(6)}
+                    backButtonHandler={() => openOrCloseSurvey(5)}
                     nextButtonHandler={closeStartProcess}
                 />
         }
     ]);
+
+    // useEffect(() => {
+    //     console.log('userInfo', userInfo);
+    // }, [userInfo]);
 
     return (
         <AppModal
