@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Component, useState } from 'react';
+import React, { ChangeEvent, Component, useEffect, useState, useRef } from 'react';
 import { 
     View, 
     StyleSheet, 
@@ -16,18 +16,23 @@ import AppButton from '@/components/common/AppButton';
 
 import { getFontSize } from '@/utils/font';
 
-type GetNickNameProps = {
+type SurveyProccessProps = {
+    userInfo?: {
+        nickName: string;
+        year: string;
+        month: string;
+        day: string;
+    };
     backButtonHandler: () => void;
-    nextButtonHandler: (nickName: string) => void;
+    nextButtonHandler: Function;
     closeStartProcess?: () => void;
 }
 
 const GetNickName = ({
+    userInfo,
     backButtonHandler,
     nextButtonHandler,
-}: GetNickNameProps): React.JSX.Element => {
-    const regExp = /[`~!@#$%^&*()_|+\-=?;:'"<>\{\}\[\]\\\/ ]/gim;
-
+}: SurveyProccessProps): React.JSX.Element => {
     const [nickName, setNickName] = useState('');
     const [isError, setIsError] = useState(true)
 
@@ -47,6 +52,13 @@ const GetNickName = ({
 
         setNickName(text);
     };
+
+    useEffect(() => {
+        if (userInfo) {
+            setNickName(userInfo.nickName);
+            setIsError(false);
+        }
+    }, [userInfo]);
 
     return (
         <KeyboardAvoidingView 
@@ -69,8 +81,10 @@ const GetNickName = ({
                     </View>
                 </View>
                 <TextInput
-                    style={[styles.textInput, isError ? styles.textInputError : {}]}
+                    value={nickName}
                     onChange={onChangeTextInput}
+                    style={[styles.textInput, isError ? styles.textInputError : {}]}
+                    autoFocus={true}
                 />
                 <View style={styles.buttonContainer}>
                     <AppButton 
@@ -87,9 +101,97 @@ const GetNickName = ({
 };
 
 const GetBirthDate = ({
+    userInfo,
     backButtonHandler,
     nextButtonHandler,
-}: GetNickNameProps): React.JSX.Element => {
+}: SurveyProccessProps): React.JSX.Element => {
+    const currentDate = new Date();
+    const yearRef = useRef(null);
+    const monthRef = useRef(null);
+    const dayRef = useRef(null);
+
+    const [year, setYear] = useState(''); 
+    const [month, setMonth] = useState('');
+    const [day, setDay] = useState('');
+    const [isError, setIsError] = useState(true);
+
+    const onChangeYearText = ({ nativeEvent }: any) => {
+        const { text } = nativeEvent;
+        const currentYear = currentDate.getFullYear();
+
+        if (((text.length === 4) && (Number(text) >= Number(currentYear))) ||
+            ((text.length === 4) && (Number(text) <= Number(currentYear) - 150)) ||
+            (0 < text.length && text.length < 4)
+        ) {
+            setIsError(true);
+        } else {
+            setIsError(false);
+
+            if (text.length === 4 && monthRef.current) {
+                monthRef.current.focus();
+            }
+        }
+
+        setYear(text.slice(0, 4));
+    };
+
+    const onChangeMonthText = ({ nativeEvent }: any) => {
+        const { text } = nativeEvent;
+
+        if (((text.length === 2) && (text[0] > 1)) ||
+            (0 < text.length && text.length < 2)
+        ) {
+            setIsError(true);
+        } else {
+            setIsError(false);
+
+            if (text.length === 2 && dayRef.current) {
+                dayRef.current.focus();
+            }
+        }
+
+        if (text.length === 0 && yearRef.current) {
+            yearRef.current.focus();
+        }
+
+        if (text[0] > 1) {
+            setMonth(('0' + text).slice(0, 2));
+        } else {
+            setMonth(text.slice(0, 2));
+        }
+    };
+
+    const onChangeDayText = ({ nativeEvent }: any) => {
+        const { text } = nativeEvent;
+
+        if (((text.length === 2) && (text[0] > 3)) ||
+        (0 < text.length && text.length < 2)
+        ) {
+            setIsError(true);
+        } else {
+            setIsError(false);
+        }
+
+        if (text.length === 0 && monthRef.current) {
+            monthRef.current.focus();
+        }
+
+        setDay(text.slice(0, 2));
+    };
+
+    const allTextInputFull = () => {
+        return !!year.length && !!month.length && !!day.length;
+    };
+
+    useEffect(() => {
+        if (userInfo) {
+            setYear(userInfo.year);
+            setMonth(userInfo.month);
+            setDay(userInfo.day);
+            setIsError(false);
+        }
+    }, [userInfo]);
+
     return (
         <KeyboardAvoidingView 
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -110,16 +212,41 @@ const GetBirthDate = ({
                         <AppText style={styles.subTitleText}>나이에 맞는 정보를 제공해드리기 위해 필요해요</AppText>
                     </View>
                 </View>
-                <TextInput
-                    keyboardType='numeric'
-                    style={styles.textInput}
-                />
+                <View style={[styles.textInputBirth, isError ? styles.textInputError : {}]}>
+                    <TextInput
+                        ref={yearRef}
+                        keyboardType='numeric'
+                        placeholder='0000'
+                        value={year}
+                        onChange={onChangeYearText}
+                        style={styles.textBirth}
+                    />
+                    <AppText style={styles.textBirth}>년 </AppText>
+                    <TextInput
+                        ref={monthRef}
+                        keyboardType='numeric'
+                        placeholder='00'
+                        value={month}
+                        onChange={onChangeMonthText}
+                        style={styles.textBirth}
+                    />
+                    <AppText style={styles.textBirth}>월 </AppText>
+                    <TextInput
+                        ref={dayRef}
+                        keyboardType='numeric'
+                        placeholder='00'
+                        value={day}
+                        onChange={onChangeDayText}
+                        style={styles.textBirth}
+                    />
+                    <AppText style={styles.textBirth}>일 </AppText>
+                </View>
                 <View style={styles.buttonContainer}>
                     <AppButton 
                         text='다음'
                         textStyle={styles.nextButtonText}
-                        buttonStyle={styles.nextButton}
-                        onPressButton={nextButtonHandler}
+                        buttonStyle={[styles.nextButton, (isError || !allTextInputFull()) ? styles.nextButtonDisabled : {}]}
+                        onPressButton={(isError || !allTextInputFull()) ? () => {} : () => nextButtonHandler({year, month, day})}
                     />
                 </View>
             </View>
@@ -130,7 +257,7 @@ const GetBirthDate = ({
 const GetGender = ({
     backButtonHandler,
     nextButtonHandler,
-}: GetNickNameProps): React.JSX.Element => {
+}: SurveyProccessProps): React.JSX.Element => {
 
     const [containerWidth, setContainerWidth] = useState(0);
 
@@ -198,7 +325,7 @@ const GetGender = ({
 const GetCategory = ({
     backButtonHandler,
     nextButtonHandler,
-}: GetNickNameProps): React.JSX.Element => {
+}: SurveyProccessProps): React.JSX.Element => {
 
     const [containerWidth, setContainerWidth] = useState(0);
 
@@ -275,7 +402,7 @@ const GetOccupation = ({
     backButtonHandler,
     nextButtonHandler,
     closeStartProcess,
-}: GetNickNameProps): React.JSX.Element => {
+}: SurveyProccessProps): React.JSX.Element => {
 
     const [containerWidth, setContainerWidth] = useState(0);
 
@@ -353,7 +480,7 @@ const GetMarriage = ({
     backButtonHandler,
     nextButtonHandler,
     closeStartProcess,
-}: GetNickNameProps): React.JSX.Element => {
+}: SurveyProccessProps): React.JSX.Element => {
 
     const [containerWidth, setContainerWidth] = useState(0);
 
@@ -470,7 +597,7 @@ const GetMarriage = ({
 const Welcome = ({
     backButtonHandler,
     nextButtonHandler,
-}: GetNickNameProps): React.JSX.Element => {
+}: SurveyProccessProps): React.JSX.Element => {
     return (
         <View style={styles.container}>
             <AppHeader style={styles.headerContainer}>
@@ -528,7 +655,10 @@ const Survey = ({
     };
 
     const [userInfo, setUserInfo] = useState({
-        nickName: ''
+        nickName: '',
+        year: '',
+        month: '',
+        day: '',
     });
 
     // nickname 저장 + [다음] 버튼
@@ -536,15 +666,33 @@ const Survey = ({
         setUserInfo((previousValue) => {
             previousValue.nickName = nickName;
             return Object.assign({}, previousValue);
-        })
+        });
         openOrCloseSurvey(1);
-    }
+    };
+
+    // year/month/day 저장 + [다음] 버튼
+    const onClickNextButtonBirthDate = (birthDate: {
+        year: string;
+        month: string;
+        day: string;
+    }) => {
+        const { year, month, day } = birthDate
+
+        setUserInfo((previousValue) => {
+            previousValue.year = year;
+            previousValue.month = month;
+            previousValue.day = day;
+            return Object.assign({}, previousValue);
+        });
+        openOrCloseSurvey(2);
+    };
 
     const [data, setData] = useState([
         { 
             isShow: true, 
             component:  
-                <GetNickName 
+                <GetNickName
+                    userInfo={userInfo} 
                     backButtonHandler={closeModalHandler}
                     nextButtonHandler={onClickNextButtonInNickName}
                  />,
@@ -553,8 +701,9 @@ const Survey = ({
             isShow: false,
             component:
                 <GetBirthDate 
-                    backButtonHandler={() => openOrCloseSurvey(1)}
-                    nextButtonHandler={() => openOrCloseSurvey(2)}
+                    userInfo={userInfo} 
+                    backButtonHandler={() => openOrCloseSurvey(0)}
+                    nextButtonHandler={onClickNextButtonBirthDate}
                 />
         },
         {
@@ -667,13 +816,30 @@ const styles = StyleSheet.create({
         textAlign: 'center',
 
         paddingVertical: 10,
-        paddingHorizontal: 66,
+        paddingHorizontal: 44,
         borderWidth: 1.5,
         borderColor: '#F2F4F7',
         borderRadius: 10,
     },
     textInputError: {
         borderColor: '#E44848',
+    },
+
+    textInputBirth: {
+        width: '100%', 
+        flexDirection: 'row', 
+        justifyContent: 'center',
+
+        paddingVertical: 10,
+        paddingHorizontal: 44,
+        borderWidth: 1.5,
+        borderColor: '#F2F4F7',
+        borderRadius: 10,
+    },
+    textBirth: {
+        fontWeight: '600',
+        fontSize: getFontSize(26),
+        lineHeight: 32,
     },
 
     buttonContainer: {
