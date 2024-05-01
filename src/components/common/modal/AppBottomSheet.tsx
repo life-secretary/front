@@ -9,11 +9,8 @@ import {
 } from '@gorhom/bottom-sheet';
 
 import {BottomSheetDefaultBackdropProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
-import {useRecoilState, useRecoilValue} from 'recoil';
-import {
-  bottomSheetModeState,
-  bottomSheetVisibleState,
-} from '@/store/bottomSheetState';
+import {useRecoilState} from 'recoil';
+import {bottomSheetVisibleState} from '@/store/bottomSheetState';
 
 type AppBottomSheetProps = {
   snapPointsArr?: string[];
@@ -27,9 +24,7 @@ const AppBottomSheet = ({
   contentsStyle,
 }: AppBottomSheetProps) => {
   const [isVisible, setIsVisible] = useRecoilState(bottomSheetVisibleState);
-  const mode = useRecoilValue(bottomSheetModeState);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  // TODO: dynamic value로 변경
   const snapPoints = useMemo(() => snapPointsArr, [snapPointsArr]);
 
   const openBottomSheet = () => {
@@ -45,7 +40,7 @@ const AppBottomSheet = ({
       props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps,
     ) => {
       const handlePress = () => {
-        // setIsVisible(false);
+        setIsVisible(false);
       };
 
       return (
@@ -58,7 +53,7 @@ const AppBottomSheet = ({
         />
       );
     },
-    [],
+    [setIsVisible],
   );
 
   useEffect(() => {
