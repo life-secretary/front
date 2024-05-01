@@ -1,4 +1,5 @@
 import React from 'react';
+import {categoryListState} from '@/store/categoryState';
 
 import {StyleSheet, View, Image} from 'react-native';
 import {AppText} from '@/components/common/AppText';
@@ -6,15 +7,17 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 import {getFormattedDate} from '@/utils';
+import {useRecoilValue} from 'recoil';
 
 type Props = {
   item: object;
 };
 
 export function HomeContentsItem({item}: Props): React.JSX.Element {
+  const categories = useRecoilValue(categoryListState);
+
   const skeletonThumbnail = require('@/assets/images/thumbnailPlaceholder.jpg');
 
-  // TODO: category, createdDate 데이터 필요
   return (
     <View style={styles.container}>
       <View style={styles.thumbnailContainer}>
@@ -32,11 +35,14 @@ export function HomeContentsItem({item}: Props): React.JSX.Element {
         </View>
         <View style={styles.row}>
           <AppText style={styles.subTitle}>
-            {item?.category?.title || '카테고리'}
+            {categories.find(category => category.id === item?.categoryId)
+              ?.title || '카테고리'}
           </AppText>
           <AppText style={[styles.subTitle, styles.separator]}>|</AppText>
           <AppText style={styles.subTitle}>
-            {getFormattedDate(new Date(item?.createdDate || null), '.')}
+            {item?.createdTime
+              ? getFormattedDate(new Date(item?.createdTime), '.')
+              : getFormattedDate(new Date(item?.createdDate), '.')}
           </AppText>
         </View>
       </View>
