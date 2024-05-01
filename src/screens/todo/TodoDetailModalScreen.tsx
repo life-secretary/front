@@ -1,8 +1,14 @@
 import React, {useState, useEffect, useCallback, useMemo} from 'react';
 import {useRecoilState, useSetRecoilState} from 'recoil';
+import {
+  bottomSheetModeState,
+  bottomSheetVisibleState,
+} from '@/store/bottomSheetState';
+import {createData, deleteData, fetchData, updateData} from '@/api/api';
 
 import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppText} from '@/components/common/AppText';
 import AppIcon from '@/components/common/AppIcon';
@@ -13,14 +19,6 @@ import {TodoDetail} from '@/components/todo/detail/TodoDetail';
 import {SubTodoList} from '@/components/todo/detail/SubTodoList';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
-
-import {
-  bottomSheetModeState,
-  bottomSheetVisibleState,
-} from '@/store/bottomSheetState';
-import {createData, deleteData, fetchData, updateData} from '@/api/api';
-import Toast from 'react-native-toast-message';
-import {getFormattedDate} from '@/utils';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;
