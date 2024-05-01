@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 import {StyleSheet, Pressable, View} from 'react-native';
 import {AppText} from '@/components/common/AppText';
@@ -7,34 +7,31 @@ import {font} from '@/styles/font';
 
 type Props = {
   item: object;
-  activeCategory: object;
-  handleActiveCategory: Function;
+  homeContentsFilter: object;
+  handleHomeContentsFilter: Function;
 };
 
 export function HomeContentsCategoryItem({
   item,
-  activeCategory,
-  handleActiveCategory,
+  homeContentsFilter,
+  handleHomeContentsFilter,
 }: Props): React.JSX.Element {
-  const [isActive, setIsActive] = useState(false);
-
-  const handleCategoryPress = (category: object) => {
-    setIsActive(!isActive);
-    handleActiveCategory(category);
+  const handleHomeContentsFilterPress = (filter: object) => {
+    handleHomeContentsFilter(filter);
   };
 
   return (
-    <Pressable onPress={() => handleCategoryPress(item)}>
+    <Pressable onPress={() => handleHomeContentsFilterPress(item)}>
       <View
         style={[
-          activeCategory?.category === item?.category
+          homeContentsFilter?.category === item?.category
             ? styles.pressedButton
             : styles.defaultButton,
           styles.button,
         ]}>
         <AppText
           style={[
-            activeCategory?.category === item?.category
+            homeContentsFilter?.category === item?.category
               ? styles.pressedText
               : styles.defaultText,
             styles.text,
