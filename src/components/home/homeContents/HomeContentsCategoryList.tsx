@@ -1,30 +1,32 @@
 import React, {useCallback} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
+import {useRecoilState} from 'recoil';
+import {homeContentsFilterState} from '@/store/homeContentsState';
 
 import {StyleSheet, FlatList} from 'react-native';
 import {HomeContentsCategoryItem} from '@/components/home/homeContents/HomeContentsCategoryItem';
 
 type Props = {
   categories: object[];
-  activeCategory: object;
-  setActiveCategory: Function;
 };
 
 export function HomeContentsCategoryList({
   categories,
-  activeCategory,
-  setActiveCategory,
 }: Props): React.JSX.Element {
-  const handleActiveCategory = (category: object) => {
-    setActiveCategory(category);
+  const [homeContentsFilter, setHomeContentsFilter] = useRecoilState(
+    homeContentsFilterState,
+  );
+
+  const handleHomeContentsFilter = (category: object) => {
+    setHomeContentsFilter(category);
   };
 
   useFocusEffect(
     useCallback(() => {
       return () => {
-        setActiveCategory(categories[0]);
+        setHomeContentsFilter(categories[0]);
       };
-    }, [categories, setActiveCategory]),
+    }, [categories, setHomeContentsFilter]),
   );
 
   return (
@@ -34,8 +36,8 @@ export function HomeContentsCategoryList({
       renderItem={({item}) => (
         <HomeContentsCategoryItem
           item={{...item}}
-          activeCategory={activeCategory}
-          handleActiveCategory={handleActiveCategory}
+          homeContentsFilter={homeContentsFilter}
+          handleHomeContentsFilter={handleHomeContentsFilter}
         />
       )}
       keyExtractor={item => item?.id}

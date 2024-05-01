@@ -1,4 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
+import {
+  filteredHomeContentsListState,
+  homeContentsFilterState,
+} from '@/store/homeContentsState';
 
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {AppText} from '@/components/common/AppText';
@@ -9,46 +13,52 @@ import {font} from '@/styles/font';
 
 import {fetchData} from '@/api/api';
 import spacing from '@/styles/spacing';
+import {useRecoilState, useRecoilValue} from 'recoil';
 
 type Props = {
   categories: object[];
   title: string;
-  list: object[];
 };
 
 export function HomeContentsListWithFilter({
   categories,
   title,
-  list,
 }: Props): React.JSX.Element {
-  const [activeCategory, setActiveCategory] = useState(categories[0]);
-  const [contentsList, setContentsList] = useState([]);
+  const homeContentsFilter = useRecoilValue(homeContentsFilterState);
+  const [filteredHomeContentsList, setFilteredHomeContentsList] =
+    useRecoilState(filteredHomeContentsListState);
 
   useEffect(() => {
-    const fetchHomeContentsListByCategory = async () => {
+    const getHomeContentsFilter = () => {
+      if (homeContentsFilter?.category === 'all') {
+        return null;
+      }
+
+      return homeContentsFilter;
+    };
+
+    const fetchHomeContentsListByFilter = async () => {
       const res = await fetchData('/content/popular', {
-        categoryId: activeCategory?.id,
+        categoryId: getHomeContentsFilter()?.id,
+        size: 5,
       });
 
       if (res.status === 200) {
-        const data = res.data.data.slice(0, 5);
-        data.length > 0 ? setContentsList(data) : setContentsList(list); // 임시 코드
+        const list = res.data.data;
+
+        setFilteredHomeContentsList(list);
       }
     };
 
-    fetchHomeContentsListByCategory();
-  }, [activeCategory, list]);
+    fetchHomeContentsListByFilter();
+  }, [homeContentsFilter, categories, setFilteredHomeContentsList]);
 
   return (
     <View style={styles.container}>
       <AppText style={styles.listTitle}>{title}</AppText>
-      <HomeContentsCategoryList
-        categories={categories}
-        activeCategory={activeCategory}
-        setActiveCategory={setActiveCategory}
-      />
+      <HomeContentsCategoryList categories={categories} />
       <FlatList
-        data={contentsList}
+        data={filteredHomeContentsList}
         renderItem={({item, index}) => (
           <View style={styles.contents}>
             <AppText style={styles.contentsNo}>{index + 1}</AppText>

@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
 import {categoryListState, mainCategoryListState} from '@/store/categoryState';
 import {scrapListState} from '@/store/scrapState';
+import {newestHomeContentsListState} from '@/store/homeContentsState';
 import {fetchData} from '@/api/api';
 
 import type {CategoryObject} from '../models/common';
@@ -93,7 +94,7 @@ const DUMMY_LIST = [
 export function HomeScreen(): React.JSX.Element {
   const mainCategories = useRecoilValue(mainCategoryListState);
   const HOME_CATEGORIES = [
-    {id: generateRandomId(), category: 'all', title: '전체'},
+    {id: 0, category: 'all', title: '전체'},
     ...mainCategories,
     {id: generateRandomId(), category: 'etc', title: '기타'},
   ];
@@ -107,7 +108,9 @@ export function HomeScreen(): React.JSX.Element {
   // Login → Agreement → Survey 과정 임시 테스팅 중
   const [isDone, setIsDone] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(HOME_CATEGORIES[0]);
-  const [newestHomeContentsList, setNewestHomeContentsList] = useState([]);
+  const [newestHomeContentsList, setNewestHomeContentsList] = useRecoilState(
+    newestHomeContentsListState,
+  );
 
   const openCategoryModal = (category: CategoryObject) => {
     setSelectedCategory(category);
@@ -153,9 +156,6 @@ export function HomeScreen(): React.JSX.Element {
       const res = await fetchData('/content', {sort: 'createdAt'});
       const list = res.data.data.content;
 
-      // for test
-      console.log(list);
-
       if (res.status === 200) {
         setNewestHomeContentsList(list);
       }
@@ -164,7 +164,7 @@ export function HomeScreen(): React.JSX.Element {
     fetchCategories();
     fetchScrapList();
     fetchHomeContentsListByNewest();
-  }, [setCategories, setScrapList, userInfo]);
+  }, [setCategories, setNewestHomeContentsList, setScrapList, userInfo]);
 
   return (
     <AppLayout>
@@ -195,7 +195,6 @@ export function HomeScreen(): React.JSX.Element {
           />
           <HomeContentsListWithFilter
             categories={HOME_CATEGORIES}
-            list={DUMMY_LIST}
             title={'인기 많은 콘텐츠'}
           />
           <HomeContentsList
