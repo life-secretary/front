@@ -4,8 +4,10 @@ import {userInfoState} from '@/store/userInfoState';
 import {categoryListState, mainCategoryListState} from '@/store/categoryState';
 import {scrapListState} from '@/store/scrapState';
 import {
+  homeCarouselContentsListState,
   homeContentsListReadBySimilarUsersState,
   newestHomeContentsListState,
+,
 } from '@/store/homeContentsState';
 import {fetchData} from '@/api/api';
 
@@ -29,7 +31,7 @@ import {font} from '@/styles/font';
 
 import {generateRandomId, getFormattedDate} from '@/utils';
 
-const DUMMY_CAROUSEL_DATA = [
+const DUMMY_CAROUSEL_LIST = [
   {
     id: 'c1',
     tag: '경제',
@@ -76,6 +78,8 @@ export function HomeScreen(): React.JSX.Element {
   const [newestHomeContentsList, setNewestHomeContentsList] = useRecoilState(
     newestHomeContentsListState,
   );
+  const [homeCarouselContentsList, setHomeCarouselContentsList] =
+    useRecoilState(homeCarouselContentsListState);
   const [
     homeContentsListReadBySimilarUsers,
     setHomeContentsListReadBySimilarUsers,
@@ -130,6 +134,15 @@ export function HomeScreen(): React.JSX.Element {
       }
     };
 
+    const fetchHomeCarouselContentsList = async () => {
+      const res = await fetchData('/content/main', {});
+      const list = res.data.data;
+
+      if (res.status === 200) {
+        setHomeCarouselContentsList(list);
+      }
+    };
+
     const fetchHomeContentsListReadBySimilarUsers = async () => {
       const res = await fetchData('/content/similar-users/reads', {
         userId: userInfo.id,
@@ -145,9 +158,12 @@ export function HomeScreen(): React.JSX.Element {
     fetchCategories();
     fetchScrapList();
     fetchHomeContentsListByNewest();
+    fetchHomeCarouselContentsList();
     fetchHomeContentsListReadBySimilarUsers();
   }, [
+    
     setCategories,
+    setHomeCarouselContentsList,
     setHomeContentsListReadBySimilarUsers,
     setNewestHomeContentsList,
     setScrapList,
@@ -173,7 +189,11 @@ export function HomeScreen(): React.JSX.Element {
             openCategoryModal={openCategoryModal}
           />
           <HomeImageCarousel
-            data={DUMMY_CAROUSEL_DATA}
+            data={
+              homeCarouselContentsList.length > 0
+                ? homeCarouselContentsList
+                : DUMMY_CAROUSEL_LIST
+            }
             openContentModal={openContentModal}
           />
           <HomeContentsList
