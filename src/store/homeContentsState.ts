@@ -20,6 +20,11 @@ export const newestHomeContentsListState = atom({
   default: [],
 });
 
+export const homeCarouselContentsListState = atom({
+  key: 'HomeCarouselContentsListState',
+  default: [],
+});
+
 export const homeContentsListReadBySimilarUsersState = atom({
   key: 'HomeContentsListReadBySimilarUsersState',
   default: [],

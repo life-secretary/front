@@ -78,6 +78,7 @@ export function HomeImageCarousel({
           width={width}
           height={height}
           autoPlay={true}
+          autoPlayInterval={8000}
           data={data}
           scrollAnimationDuration={3000}
           panGestureHandlerProps={{
