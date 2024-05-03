@@ -3,7 +3,10 @@ import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
 import {categoryListState, mainCategoryListState} from '@/store/categoryState';
 import {scrapListState} from '@/store/scrapState';
-import {newestHomeContentsListState} from '@/store/homeContentsState';
+import {
+  homeContentsListReadBySimilarUsersState,
+  newestHomeContentsListState,
+} from '@/store/homeContentsState';
 import {fetchData} from '@/api/api';
 
 import type {CategoryObject} from '../models/common';
@@ -111,6 +114,10 @@ export function HomeScreen(): React.JSX.Element {
   const [newestHomeContentsList, setNewestHomeContentsList] = useRecoilState(
     newestHomeContentsListState,
   );
+  const [
+    homeContentsListReadBySimilarUsers,
+    setHomeContentsListReadBySimilarUsers,
+  ] = useRecoilState(homeContentsListReadBySimilarUsersState);
 
   const openCategoryModal = (category: CategoryObject) => {
     setSelectedCategory(category);
@@ -161,10 +168,31 @@ export function HomeScreen(): React.JSX.Element {
       }
     };
 
+    const fetchHomeContentsListReadBySimilarUsers = async () => {
+      const res = await fetchData('/content/similar-users/reads', {
+        userId: userInfo.id,
+      });
+
+      console.log('res', res);
+
+      // const list = res.data.data.content;
+
+      // if (res.status === 200) {
+      //   setHomeContentsListReadBySimilarUsers(list);
+      // }
+    };
+
     fetchCategories();
     fetchScrapList();
     fetchHomeContentsListByNewest();
-  }, [setCategories, setNewestHomeContentsList, setScrapList, userInfo]);
+    fetchHomeContentsListReadBySimilarUsers();
+  }, [
+    setCategories,
+    setHomeContentsListReadBySimilarUsers,
+    setNewestHomeContentsList,
+    setScrapList,
+    userInfo,
+  ]);
 
   return (
     <AppLayout>
@@ -191,7 +219,7 @@ export function HomeScreen(): React.JSX.Element {
           <HomeContentsList
             isUsernameUsed={true}
             title={'유사한 사용자가 읽고 있어요'}
-            list={DUMMY_LIST}
+            list={homeContentsListReadBySimilarUsers}
           />
           <HomeContentsListWithFilter
             categories={HOME_CATEGORIES}

@@ -19,3 +19,8 @@ export const newestHomeContentsListState = atom({
   key: 'NewestHomeContentsListState',
   default: [],
 });
+
+export const homeContentsListReadBySimilarUsersState = atom({
+  key: 'HomeContentsListReadBySimilarUsersState',
+  default: [],
+});
