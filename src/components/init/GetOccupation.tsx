@@ -1,24 +1,14 @@
 import React, { ChangeEvent, Component, useEffect, useState, useRef } from 'react';
-import { 
-    View, 
-    StyleSheet, 
-    TextInput,
-    KeyboardAvoidingView,
-    Platform,
-    FlatList,
-    Image,
-} from 'react-native';
+import { View, FlatList } from 'react-native';
 
 import { AppText } from '@/components/common/AppText';
 import { AppHeader } from '@/components/common/AppHeader';
-import AppModal from '@/components/common/modal/AppModal';
 import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
 
-import { getFontSize } from '@/utils/font';
-
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userInfoState } from '@/store/login';
+import { surveyOccupationListState } from '@/store/occupation';
 
 import { styles } from '../../screens/init/Survey';
 import type { SurveyProccessProps } from '../../screens/init/Survey';
@@ -28,17 +18,10 @@ const GetOccupation = ({
     nextButtonHandler,
     closeStartProcess,
 }: SurveyProccessProps): React.JSX.Element => {
+    const occupationList = useRecoilValue(surveyOccupationListState);
     const [userInfo, setUserInfo] = useRecoilState(userInfoState);
     const [containerWidth, setContainerWidth] = useState(0);
-    const [data, setData] = useState([
-        { name: '학생', id: '', selected: true },
-        { name: '직장인', id: '', selected: false },
-        { name: '개인 사업', id: '', selected: false },
-        { name: '취업 준비생', id: '', selected: false },
-        { name: '군인', id: '', selected: false },
-        { name: '프리랜서', id: '', selected: false },
-        { name: '해당 없음', id: '', selected: false },
-    ]);
+    const [data, setData] = useState(occupationList);
 
     const margins = 12;
     const numColumns = 2;
@@ -84,7 +67,7 @@ const GetOccupation = ({
 
     useEffect(() => {
         setData((previousValue) => {
-            const newData = previousValue.map((item) => {
+            const newData = occupationList.map((item) => {
                 return {...item, selected: false};
             });
 
@@ -131,7 +114,7 @@ const GetOccupation = ({
                 renderItem={({item, index}) => {
                     return (
                         <AppButton 
-                            text={item.name}
+                            text={item.title}
                             textStyle={item.selected ? styles.buttonSelectedText : styles.buttonUnselectedText}
                             buttonStyle={[
                                 {

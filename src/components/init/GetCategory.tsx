@@ -9,7 +9,9 @@ import { AppHeader } from '@/components/common/AppHeader';
 import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { surveyCategoryListState } from '@/store/categoryState';
+import { mainCategoryListState } from '@/store/categoryState';
 import { userInfoState } from '@/store/login';
 
 import { styles } from '../../screens/init/Survey';
@@ -19,21 +21,10 @@ const GetCategory = ({
     backButtonHandler,
     nextButtonHandler,
 }: SurveyProccessProps): React.JSX.Element => {
+    const categoryList = useRecoilValue(surveyCategoryListState);
     const [userInfo, setUserInfo] = useRecoilState(userInfoState);
     const [containerWidth, setContainerWidth] = useState(0);
-    const [data, setData] = useState([
-        { name: '경제', id: '', selected: true },
-        { name: '법', id: '', selected: false },
-        { name: '금융', id: '', selected: false },
-        { name: '세금', id: '', selected: false },
-        { name: '부동산', id: '', selected: false },
-        { name: '건강', id: '', selected: false },
-        { name: '환경', id: '', selected: false },
-        { name: '문화', id: '', selected: false },
-        { name: '자기 계발', id: '', selected: false },
-        { name: '여행', id: '', selected: false },
-        { name: '모두 해당', id: '', selected: false },
-    ]);
+    const [data, setData] = useState(categoryList);
 
     const margins = 12;
     const numColumns = 2;
@@ -78,23 +69,21 @@ const GetCategory = ({
     };
 
     useEffect(() => {
-        if (userInfo) {
-            setData((previousValue) => {
-                const newData = previousValue.map((item) => {
-                    return {...item, selected: false};
-                });
-
-                userInfo.interests.forEach((id) => {
-                    const item = newData.find((category) => category.id === id);
-                    
-                    if (item) {
-                        item.selected = true;
-                    }
-                });
-
-                return newData;
+        setData((previousValue) => {
+            const newData = categoryList.map((item) => {
+                return {...item, selected: false};
             });
-        }
+
+            userInfo.interests.forEach((id) => {
+                const item = newData.find((category) => category.id === id);
+                
+                if (item) {
+                    item.selected = true;
+                }
+            });
+
+            return newData;
+        });
     }, []);
 
     return (
@@ -123,7 +112,7 @@ const GetCategory = ({
                 renderItem={({item, index}) => {
                     return (
                         <AppButton 
-                            text={item.name}
+                            text={item.title}
                             textStyle={item.selected ? styles.buttonSelectedText : styles.buttonUnselectedText}
                             buttonStyle={[
                                 {

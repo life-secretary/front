@@ -44,4 +44,23 @@ const mainCategoryListState = selector({
   },
 });
 
-export {categoryListState, mainCategoryListState};
+const surveyCategoryListState = selector({
+  key: 'SurveyCategoryListState',
+  get: ({ get }) => {
+    const categories = get(categoryListState);
+    const convertedCategories = categories.map((item: CategoryObject) => {
+      return {
+        ...item,
+        id: String(item.id),
+        selected: false,
+      };
+    });
+    
+    return [
+      ...convertedCategories,
+      { title: '모두 해당', id: '', selected: false }
+    ];
+  }
+});
+
+export {categoryListState, mainCategoryListState, surveyCategoryListState};

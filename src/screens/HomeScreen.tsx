@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
 import {categoryListState, mainCategoryListState} from '@/store/categoryState';
+import {occupationListState} from '@/store/occupation';
 import {scrapListState} from '@/store/scrapState';
 import {
   homeCarouselContentsListState,
@@ -10,7 +11,7 @@ import {
 } from '@/store/homeContentsState';
 import {fetchData} from '@/api/api';
 
-import type {CategoryObject} from '../models/common';
+import type {CategoryObject, OccupationObject} from '../models/common';
 
 import {StyleSheet, ScrollView, View} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
@@ -69,6 +70,7 @@ export function HomeScreen(): React.JSX.Element {
   const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
   const [isContentModalVisible, setIsContentModalVisible] = useState(false);
   const setCategories = useSetRecoilState(categoryListState);
+  const setOccupationList = useSetRecoilState(occupationListState);
   const setScrapList = useSetRecoilState(scrapListState);
   const userInfo = useRecoilValue(userInfoState);
   // Login → Agreement → Survey 과정 임시 테스팅 중
@@ -110,6 +112,13 @@ export function HomeScreen(): React.JSX.Element {
       const res = await fetchData('/categories', null);
       if (res.status === 200) {
         setCategories(res.data.data);
+      }
+    };
+
+    const fetchOccupations = async () => {
+      const res = await fetchData('/occupation', {});
+      if (res.status === 200) {
+        setOccupationList(res.data.data);
       }
     };
 
@@ -155,6 +164,7 @@ export function HomeScreen(): React.JSX.Element {
     };
 
     fetchCategories();
+    fetchOccupations();
     fetchScrapList();
     fetchHomeContentsListByNewest();
     fetchHomeCarouselContentsList();
