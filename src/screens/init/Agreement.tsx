@@ -62,21 +62,20 @@ const Agreement = ({
                 <View>
                     <View style={{
                         position: 'absolute',
-                        // zIndex: -1,
+                        left: -20,
                     }}>
                         <Image 
-                            source={require('@/assets/images/personalChecklist.png')}
+                            source={require('@/assets/gif/personal_goals_checklist.gif')}
                             style={styles.imageNote}
                         />
                     </View>
                     <View style={{
                         position: 'absolute',
-                        // top: 180,
-                        right: -30,
-                        zIndex: -1
+                        right: -65,
+                        zIndex: 1,
                     }}>
                         <Image 
-                            source={require('@/assets/images/curiosityChild.png')}
+                            source={require('@/assets/gif/curiosity_child.gif')}
                             style={styles.imagePerson}
                         />
                     </View>

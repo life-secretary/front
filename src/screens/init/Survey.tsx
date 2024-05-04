@@ -5,7 +5,8 @@ import {
     TextInput,
     KeyboardAvoidingView,
     Platform,
-    FlatList
+    FlatList,
+    Image,
 } from 'react-native';
 
 import { AppText } from '@/components/common/AppText';
@@ -812,6 +813,29 @@ const Welcome = ({
                     <AppText style={styles.welcomeText}>오신것을 환영합니다</AppText>
                 </View>
             </View>
+            <View>
+                <View style={{
+                    position: 'absolute',
+                    left: -10,
+                    top: -30,
+                }}>
+                    <Image 
+                        source={require('@/assets/gif/happy_birthday.gif')}
+                        style={styles.imageBirthDay}
+                    />
+                </View>
+                <View style={{
+                    position: 'absolute',
+                    left: '-15%',
+                    top: 100,
+                    zIndex: 1,
+                }}>
+                    <Image 
+                        source={require('@/assets/gif/people_using_robots.gif')}
+                        style={styles.imagePersonRobot}
+                    />
+                </View>
+            </View>
             <View style={styles.buttonContainer}>
                 <AppButton 
                     text='시작하기'
@@ -1158,6 +1182,15 @@ const styles = StyleSheet.create({
         fontSize: getFontSize(14),
         lineHeight: 17,
         color: '#526070'
+    },
+
+    imageBirthDay: {
+        width: 348,
+        height: 348,
+    },
+    imagePersonRobot: {
+        width: 388,
+        height: 262,
     },
 
     welcomeText: {
