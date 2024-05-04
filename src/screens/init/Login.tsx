@@ -9,7 +9,6 @@ import Agreement from '../init/Agreement';
 
 import { getFontSize } from '@/utils/font';
 
-import { createData } from '@/api/api';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '@/store/login';
 
@@ -26,9 +25,6 @@ import {
 
 // @ref[google oauth] https://github.com/react-native-google-signin/google-signin
 
-// Test
-import axios from 'axios';
-
 type LoginProps = {
     isVisible: boolean;
     closeAllProcess: () => void;
@@ -38,7 +34,6 @@ const Login = ({
     isVisible,
     closeAllProcess,
 }: LoginProps): React.JSX.Element => {
-
     const [isLogin, setIsLogin] = useState(false);
     const [isStartModalOpen, setIsStartModalOpen] = useState(false);
     const [userInfo, setUserInfo] = useRecoilState(userInfoState);

@@ -3,3 +3,8 @@ export type CategoryObject = {
     category: string;
     title: string;
 };
+
+export type OccupationObject = {
+    id: number;
+    title: string;
+};
