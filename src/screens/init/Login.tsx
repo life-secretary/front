@@ -5,10 +5,13 @@ import { AppText } from '@/components/common/AppText';
 import AppModal from '@/components/common/modal/AppModal';
 import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
+import Agreement from '../init/Agreement';
 
 import { getFontSize } from '@/utils/font';
 
-import Agreement from '../init/Agreement';
+import { createData } from '@/api/api';
+import { useRecoilState } from 'recoil';
+import { userInfoState } from '@/store/login';
 
 import { 
     login,
@@ -38,17 +41,29 @@ const Login = ({
 
     const [isLogin, setIsLogin] = useState(false);
     const [isStartModalOpen, setIsStartModalOpen] = useState(false);
+    const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
     const [kakaoToken, setKakaoToken] = useState<KakaoOAuthToken>();
     const [kakaoProfile, setKakaoProfile] = useState<KakaoProfile>(); // id, nickname 사용가능
 
     const signInWithKakao = async(): Promise<void> => {
+        console.log('카카오 로그인 테스트');
         try {
             const token: KakaoOAuthToken = await login();
             const profile: KakaoProfile = await getProfile();
             
             setKakaoToken(token);
             setKakaoProfile(profile);
+
+            setUserInfo((previousValue: any) => {
+                const newValue = Object.assign({}, previousValue);
+
+                newValue.provider = 'KAKAO';
+                newValue.providerId = token.idToken;
+
+                return newValue;
+            })
+
             setIsLogin(true);
             setIsStartModalOpen(true);
         } catch (error) {
@@ -57,12 +72,22 @@ const Login = ({
     };
 
     const signInWithGoogle = async(): Promise<void> => {
+        console.log('구글 로그인 테스트');
         try {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
 
             // TODO Client ID 적용 시간 걸려서 잠시 hold
             // console.log('userInfo', userInfo);
+            setUserInfo((previousValue: any) => {
+                const newValue = Object.assign({}, previousValue);
+
+                newValue.provider = 'GOOGLE';
+                newValue.providerId = ''; // TODO
+
+                return newValue;
+            });
+
             setIsLogin(true);
             setIsStartModalOpen(true);
         } catch(error) {
@@ -71,12 +96,10 @@ const Login = ({
     }
 
     const onPressKakaoLoginButton = () => {
-        console.log('카카오 로그인 테스트');
         signInWithKakao();
     };
 
     const onPressGoogleLoginButton = () => {
-        console.log('구글 로그인 테스트');
         signInWithGoogle();
     };
 
