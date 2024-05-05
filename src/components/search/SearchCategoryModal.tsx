@@ -14,9 +14,10 @@ import SearchTab from '../../components/search/SearchTab';
 import SearchContentView from '../../components/search/SearchContentView';
 import SearchToDoView from '../../components/search/SearchToDoView';
 
-import {getFontSize} from '../../utils/font';
+import { getFontSize } from '../../utils/font';
+import { getSort, getNewData, getNewConditionData } from '@/utils/search';
 
-import {fetchData} from '@/api/api';
+import { fetchData } from '@/api/api';
 
 export type ConditionData = {
   text: string;
@@ -76,33 +77,32 @@ const SearchCategoryModal = ({
 }: SearchCategoryModal): React.JSX.Element => {
   const [category, setCategory] = useState(selectedCategory);
   const isLoading = useRef<boolean>(false);
-  const pageContent = useRef<number>(0);
-  const pageToDo = useRef<number>(0);
 
-  // NOTICE: date format을 YYYY-MM-DD로 수정
-  const [contentData, setContentData] = useState([]);
-  const [toDoData, setToDoData] = useState([]);
   const [isCategoryDownModalVisible, setIsCategoryDownModalVisible] = useState(false);
-
-  // 일단 분리
-  const [sortConditionContent, setSortConditionContent] = useState<Array<string>>(['viewCount', 'desc']);
-  const [sortConditionToDo, setSortConditionTodo] = useState<Array<string>>(['viewCount', 'desc']); // TODO api 완성되면 붙이기
 
   const [tabData, setTabData] = useState([
     {id: 1, text: '콘텐츠', isPressed: true},
     {id: 2, text: '할 일', isPressed: false},
   ]);
 
+  // content
+  const pageContent = useRef<number>(0);
   const [searchConditionContentData, setSearchConditionContentData] = useState<Array<ConditionData>>([
     {text: '조회순', type: 'viewCount', orderType: 'desc', isSelected: true},
     {text: '저장순', type: 'scrapCount', orderType: 'desc', isSelected: false},
     {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
   ]);
+  const [contentData, setContentData] = useState([]);
 
+  // todo
+  const pageToDo = useRef<number>(0);
   const [searchConditionToDoData, setSearchConditionToDoData] = useState<Array<ConditionData>>([
     {text: '조회순', type: 'viewCount', orderType: 'desc', isSelected: true},
     {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
   ]);
+  const [toDoData, setToDoData] = useState([]);
+
+  // NOTICE: date format을 YYYY-MM-DD로 수정
 
   const onPressTab = (number: number) => {
     setTabData((previousValue) => {
@@ -113,63 +113,78 @@ const SearchCategoryModal = ({
           item.isPressed = false;
         }
 
+        if (index === 0) {
+          resetContentCondition();
+        } else {
+          resetToDoCondition();
+        }
+
         return item;
       });
     });
   };
 
-  const getNewSelectedConditionData = (data: Array<ConditionData>, index: number): Array<ConditionData> => {
-    return data.map((item, idx) => {
-      if (index === idx) {
-        item.isSelected = true;
-      } else {
-        item.isSelected = false;
-      }
-
-      return item;
+  const resetContentCondition = () => {
+    setSearchConditionContentData((previousValue) => {
+      return getNewConditionData(previousValue, 0);
     });
   };
 
-  const getNewSortCondition = (previousData: Array<string>, data: ConditionData) => {
-    if ((previousData[0] === data.type) && (previousData[1] === data.orderType)) {
-      return previousData;
-    }
-
-    return [data.type, data.orderType];
+  const resetToDoCondition = () => {
+    setSearchConditionToDoData((previousValue) => {
+      return getNewConditionData(previousValue, 0);
+    });
   };
 
   // content condition
   const onPressContentViewConditionButton = (data: ConditionData, index: number): void => {
     setSearchConditionContentData((previousValue) => {
-      return getNewSelectedConditionData(previousValue, index);
+      return getNewConditionData(previousValue, index);
     });
-
-    setSortConditionContent((previousValue) => {
-      return getNewSortCondition(previousValue, data);
-    });
+    setContentData([]);
+    pageContent.current = 0;
   };
 
   // todo condition
   const onPressToDoViewConditionButton = (data: ConditionData, index: number): void => {
     setSearchConditionToDoData((previousValue) => {
-      return getNewSelectedConditionData(previousValue, index);
+      return getNewConditionData(previousValue, index);
     });
-
-    setSortConditionTodo((previousValue) => {
-      return getNewSortCondition(previousValue, data);
-    });
+    setContentData([]);
+    pageContent.current = 0;
   };
 
-  const fetchContent = () => {
+  const currentContentSort = () => {
+    return getSort(searchConditionContentData);
+  };
+
+  const currentToDoSort = () => {
+    return getSort(searchConditionToDoData);
+  };
+
+  const fetchContent = ({
+    contentCategoryId,
+    contentPage,
+    contentSize,
+    contentSort,
+  }: any) => {
+    const categoryId = contentCategoryId ? contentCategoryId : category.id;
+    const page = contentPage ? contentPage : pageContent.current;
+    const size = contentSize ? contentSize : 10;
+    const sort = contentSort ? contentSort : currentContentSort();
+
     fetchData('/content', { 
-      categoryId: category.id, //NOTE 4 로 테스트
-      page: pageContent, // 임시 고정 TODO 무한 스크롤 구현 필요
-      size: 10,
-      sort: sortConditionContent,
+      categoryId, //NOTE 4 로 테스트
+      page,
+      size,
+      sort,
     })
       .then((response) => {
         const { data : { data } } = response;
-        setContentData(data.content);
+        
+        setContentData((previousValue) => {
+          return getNewData(previousValue, data.content);
+        });
       })
       .catch((error) => {
         console.log('error', error);
@@ -179,13 +194,30 @@ const SearchCategoryModal = ({
       });
   };
 
-  const fetchToDo = () => {
+  const fetchToDo = ({
+    todoCategoryId,
+    todoPage,
+    todoSize,
+    todoSort,
+  }: any) => {
+    const categoryId = todoCategoryId ? todoCategoryId : category.id;
+    const page = todoPage ? todoPage : pageToDo.current;
+    const size = todoSize ? todoSize : 10;
+    const sort = todoSort ? todoSort : currentToDoSort();
+
+    // api 개발되면 주석 제거
     // fetchData('/todo', {
-    //   // TODO 검색 조건 붙이기
+    //   categoryId,
+    //   page,
+    //   size,
+    //   sort,
     // })
     //   .then((response) => {
     //     const { data : { data } } = response;
-    //     setToDoData(data.todo); // TODO key 확인 필요
+        
+    //     setToDoData((previousValue) => {
+    //       return getNewData(previousValue, data.todo);
+    //     });
     //   })
     //   .catch((error) => {
     //     console.log('error', error);
@@ -199,7 +231,7 @@ const SearchCategoryModal = ({
     if ((contentData.length >= 10) && isLoading.current === false) {
       isLoading.current = true;
       pageContent.current += 1;
-      fetchContent();
+      fetchContent({});
     }
   };
 
@@ -207,7 +239,7 @@ const SearchCategoryModal = ({
     if ((toDoData.length >= 10 && isLoading.current === false)) {
       isLoading.current = true;
       pageToDo.current += 1;
-      fetchToDo();
+      fetchToDo({});
     }
   };
 
@@ -229,12 +261,12 @@ const SearchCategoryModal = ({
   };
 
   useEffect(() => {
-    fetchToDo();
-  }, [category, sortConditionToDo]);
+    fetchToDo({});
+  }, [category, searchConditionToDoData]);
 
   useEffect(() => {
-    fetchContent();
-  }, [category, sortConditionContent]);
+    fetchContent({});
+  }, [category, searchConditionContentData]);
 
   // 카테고리 변경시 적용
   useEffect(() => {
@@ -244,22 +276,9 @@ const SearchCategoryModal = ({
   // 모달 열렸을 때 검색 조건 초기화
   useEffect(() => {
     onPressTab(0);
-    // content
-    setSearchConditionContentData((previousValue) => {
-      return getNewSelectedConditionData(previousValue, 0);
-    });
-    setSortConditionContent((previousValue) => {
-      return getNewSortCondition(previousValue, searchConditionContentData[0]);
-    });
-
-    // todo
-    setSearchConditionToDoData((previousValue) => {
-      return getNewSelectedConditionData(previousValue, 0);
-    });
-    setSortConditionTodo((previousValue) => {
-      return getNewSortCondition(previousValue, searchConditionToDoData[0]);
-    });
-  }, [isVisible])
+    resetContentCondition(); // content
+    resetToDoCondition(); // todo
+  }, [isVisible]);
 
   return (
     <AppModal
