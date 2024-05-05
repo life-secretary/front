@@ -7,16 +7,27 @@ import AppButton from '../../components/common/AppButton';
 
 import { getFontSize } from '../../utils/font';
 
+import type { RecentSearchWord, PopularSearchWord } from '@/store/search';
+
+type SearchWordViewProps = {
+    isRecentSearchListOpen: boolean;
+    recentSearchData: Array<RecentSearchWord>;
+    popularSearchData: Array<PopularSearchWord>;
+    pressMoreListButton: () => void;
+    removeAllRecentSearchItems: () => void;
+    removeRecentSearchItem: (id: number) => void;
+    height: number;
+};
+
 const SearchWordView = ({ 
     isRecentSearchListOpen = false,
-    recentSearchItemRef,
     recentSearchData,
     popularSearchData,
-    pressMoreListButton = () => {},
-    removeAllRecentSearchItems = () => {},
-    removeRecentSearchItem = ( id ) => {},
+    pressMoreListButton,
+    removeAllRecentSearchItems,
+    removeRecentSearchItem,
     height,
-}) => {
+}: SearchWordViewProps) => {
 
     const constants = {
         recentSearchInitialCount: 4,
@@ -41,17 +52,16 @@ const SearchWordView = ({
                 <View>
                     <View style={[
                             styles.recentSearchItemList, 
-                            { height },
+                            { height: height <= 0 ? 35 : height }, // 임시 코드
                         ]}>
                         {
                             // 최근 검색어 있는 화면
-                            recentSearchData.length > 0 ? 
+                            recentSearchData && (recentSearchData.length > 0) ? 
                             recentSearchData.map((item, index) => {
                                 return (
                                     <View 
                                         key={`recentSearch${index}`} 
                                         collapsable={false} 
-                                        ref={recentSearchItemRef} 
                                         style={styles.recentSearchItemContainer}
                                     >
                                         <AppText style={styles.recentSearchText}>{item.title}</AppText>
@@ -100,7 +110,7 @@ const SearchWordView = ({
                     return (
                         <View key={`popularSearch${index}`} style={styles.popularSearchTextContainer}>
                             <AppText style={styles.popularSearchIndexText}>{index + 1}</AppText>
-                            <AppText style={styles.popularSearchTitleText}>{item.title}</AppText>
+                            <AppText style={styles.popularSearchTitleText}>{item.searchText}</AppText>
                         </View>
                     );
                 })}

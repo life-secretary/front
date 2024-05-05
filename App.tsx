@@ -17,9 +17,14 @@ import {SettingModalScreen} from './src/screens/setting/SettingModalScreen';
 import {MyInfoModalScreen} from './src/screens/setting/MyInfoModalScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 // import Content from './src/components/contentDetail/ContentModal';
 
+const queryClient = new QueryClient();
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -56,17 +61,19 @@ function RootStack() {
 
 function App(): React.JSX.Element {
   return (
-    <RecoilRoot>
-      <EventProvider>
-        <GestureHandlerRootView style={styles.container}>
-          <SafeAreaProvider>
-            <NavigationContainer>
-              <RootStack />
-            </NavigationContainer>
-          </SafeAreaProvider>
-        </GestureHandlerRootView>
-      </EventProvider>
-    </RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <EventProvider>
+          <GestureHandlerRootView style={styles.container}>
+            <SafeAreaProvider>
+              <NavigationContainer>
+                <RootStack />
+              </NavigationContainer>
+            </SafeAreaProvider>
+          </GestureHandlerRootView>
+        </EventProvider>
+      </RecoilRoot>
+    </QueryClientProvider>
   );
 }
 
