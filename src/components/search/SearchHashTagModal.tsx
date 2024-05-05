@@ -16,7 +16,7 @@ import SearchToDoView from '../../components/search/SearchToDoView';
 
 import { getFontSize } from '../../utils/font';
 
-const HashTagResultHeader = ({ data, hashTag }) => {
+const HashTagResultHeader = ({ data, hashTag }: any) => {
 
     return (
         <View style={styles.searchResultHeader}>
@@ -30,19 +30,11 @@ const SearchHashTagModal = ({
     isVisible,
     hashTag,
     pressBackButton,
-}) => {
+}: any) => {
 
     const [tabData, setTabData] = useState([
-        { 
-            id: 1, 
-            text: '콘텐츠', 
-            isPressed: true, 
-        }, 
-        { 
-            id: 2, 
-            text: '할 일', 
-            isPressed: false, 
-        },
+        { id: 1, text: '콘텐츠', isPressed: true }, 
+        { id: 2, text: '할 일', isPressed: false },
     ]);
 
     const onPressTab = (number: number) => {
@@ -132,36 +124,6 @@ const SearchHashTagModal = ({
         return current;
     };
 
-    const getSearchResultView = () => {
-        const currentTab = currentData()?.id;
-        const headerContent = <HashTagResultHeader data={contentData} hashTag={hashTag} />;
-        const headerToDo = <HashTagResultHeader data={toDoData} hashTag={hashTag} />;
-
-        switch(currentTab) {
-            case 1:
-                return (
-                    <SearchContentView 
-                        data={contentData} 
-                        headerComponent={headerContent} 
-                    />
-                );
-            case 2:
-                return (
-                    <SearchToDoView 
-                        data={toDoData} 
-                        headerComponent={headerToDo} 
-                    />
-                );
-            default:
-                return (
-                    <SearchContentView 
-                        data={contentData} 
-                        headerComponent={headerContent} 
-                    />
-                );
-        }
-    };
-
     return (
         <AppModal
             isVisible={isVisible}
@@ -196,7 +158,30 @@ const SearchHashTagModal = ({
                         onPressTab={onPressTab}
                     />
                 </AppHeader>
-                {getSearchResultView()}
+                {
+                    currentData()?.id === 1 ?
+                    <SearchContentView 
+                        data={contentData} 
+                        headerComponent={
+                            <HashTagResultHeader 
+                                data={contentData} 
+                                hashTag={hashTag} 
+                            />
+                        } 
+                        onEndReached={() => {}} // 검색 페이지 참고
+                    />
+                    :
+                    <SearchToDoView 
+                        data={toDoData} 
+                        headerComponent={
+                            <HashTagResultHeader 
+                                data={toDoData} 
+                                hashTag={hashTag} 
+                            />
+                        }
+                        onEndReached={() => {}} // 검색 페이지 참고
+                    />
+                }
             </View>
         </AppModal>
     );

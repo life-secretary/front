@@ -28,6 +28,20 @@ const SearchWordView = ({
     removeRecentSearchItem,
     height,
 }: SearchWordViewProps) => {
+    const getDate = () => {
+        const date = new Date();
+        const month = String(date.getMonth() + 1);
+        const day = String(date.getDate());
+        const hours = String(date.getHours());
+        const minutes = String(date.getMinutes());
+
+        const viewMonth = month.length === 1 ? '0' + month : month;
+        const viewDay = day.length === 1 ? '0' + day : day;
+        const viewHours = hours.length === 1 ? '0' + hours : hours;
+        const viewMinutes = minutes.length === 1 ? '0' + minutes : minutes;
+
+        return `${viewMonth}월 ${viewDay}일 ${viewHours}:${viewMinutes} 기준`;
+    };
 
     const constants = {
         recentSearchInitialCount: 4,
@@ -104,7 +118,7 @@ const SearchWordView = ({
             <View style={styles.popularSearchContainer}>
                 <View style={styles.searchContainer}>
                     <AppText style={styles.searchMainTitle}>인기 검색어</AppText>
-                    <AppText style={styles.searchSubTitle}>{'01월 14일 02:00 기준'}</AppText>
+                    <AppText style={styles.searchSubTitle}>{getDate()}</AppText>
                 </View>
                 {popularSearchData.map((item, index) => {
                     return (

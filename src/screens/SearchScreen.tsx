@@ -13,7 +13,8 @@ import SearchWordView from '../components/search/SearchWordView';
 import SearchContentView from '../components/search/SearchContentView';
 import SearchToDoView from '../components/search/SearchToDoView';
 
-import {getFontSize} from '../utils/font';
+import { getFontSize } from '../utils/font';
+import { getSort, getNewData, getNewConditionData } from '@/utils/search';
 
 import { fetchData, createData } from '@/api/api';
 
@@ -98,16 +99,6 @@ const SearchScreen = () => {
     setPopularSearchData(data);
   };
 
-  const getSort = (data: any) => {
-    const condition = data.find((item: any) => item.isSelected);
-
-    if (!condition) {
-      return ['viewCount', 'desc'];
-    }
-
-    return [condition.type, condition.orderType];
-  }
-
   const currentContentSort = () => {
     return getSort(searchConditionContentData);
   };
@@ -130,18 +121,6 @@ const SearchScreen = () => {
     });
   };
 
-  const getNewSelectedConditionData = (data: Array<ConditionData>, index: number): Array<ConditionData> => {
-    return data.map((item, idx) => {
-      if (index === idx) {
-        item.isSelected = true;
-      } else {
-        item.isSelected = false;
-      }
-
-      return item;
-    });
-  };
-
   // content condition
   const onPressContentViewConditionButton = (data: ConditionData, index: number): void => {
     setSearchConditionContentData((previousValue) => {
@@ -153,7 +132,7 @@ const SearchScreen = () => {
         contentSort,
       });
 
-      return getNewSelectedConditionData(previousValue, index);
+      return getNewConditionData(previousValue, index);
     });
   };
 
@@ -168,7 +147,7 @@ const SearchScreen = () => {
         toDoSort,
       });
 
-      return getNewSelectedConditionData(previousValue, index);
+      return getNewConditionData(previousValue, index);
     });
   };
 
@@ -193,21 +172,7 @@ const SearchScreen = () => {
         const { data : { data } } = response;
 
         setContentData((previousValue) => {
-          let newValue: any = [];
-
-          if (previousValue.length === 0) {
-            newValue = data.content;
-          } else {
-            data.content.forEach((content: any) => {
-              const targetItem = previousValue.find((item: any) => item.id === content.id);
-  
-              if (!targetItem) {
-                newValue.push(content);
-              }
-            });
-          }
-
-          return newValue;
+          return getNewData(previousValue, data.content);
         });
       })
       .catch((error) => {
@@ -239,21 +204,7 @@ const SearchScreen = () => {
         const { data : { data } } = response;
 
         setToDoData((previousValue) => {
-          let newValue: any = [];
-
-          if (previousValue.length === 0) {
-            newValue = data.todo;
-          } else {
-            data.todo.forEach((todo: ToDoItem) => {
-              const targetItem = previousValue.find((item: ToDoItem) => item.id === todo.id);
-  
-              if (!targetItem) {
-                newValue.push(todo);
-              }
-            });
-          }
-
-          return newValue;
+          return getNewData(previousValue, data.todo);
         });
       })
       .catch((error) => {
@@ -424,16 +375,17 @@ const SearchScreen = () => {
     setIsRecentSearchListOpen(true);
   };
 
+  // 검색 결과 페이지 진입시 검색 조건 초기화
   useEffect(() => {
     onPressTab(0);
     // content
     setSearchConditionContentData((previousValue) => {
-      return getNewSelectedConditionData(previousValue, 0);
+      return getNewConditionData(previousValue, 0);
     });
 
     // todo
     setSearchConditionToDoData((previousValue) => {
-      return getNewSelectedConditionData(previousValue, 0);
+      return getNewConditionData(previousValue, 0);
     });
   }, [isSearchResultPage]);
 
