@@ -7,7 +7,6 @@ import {
   homeCarouselContentsListState,
   homeContentsListReadBySimilarUsersState,
   newestHomeContentsListState,
-,
 } from '@/store/homeContentsState';
 import {fetchData} from '@/api/api';
 
@@ -161,7 +160,6 @@ export function HomeScreen(): React.JSX.Element {
     fetchHomeCarouselContentsList();
     fetchHomeContentsListReadBySimilarUsers();
   }, [
-    
     setCategories,
     setHomeCarouselContentsList,
     setHomeContentsListReadBySimilarUsers,
