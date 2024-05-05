@@ -5,25 +5,43 @@ import {AppText} from '../common/AppText';
 import {getFontSize} from '../../utils/font';
 import AppIcon from '../common/AppIcon';
 
+import { useRecoilValue } from 'recoil';
+import { categoryListState } from '@/store/categoryState';
+
+import type { CategoryObject } from '@/models/common';
+import type { ToDoItem } from '@/models/todo';
+
 export type ToDoListItemProps = {
   /** 아이템 내 카테고리 존재 여부 */
   hasMainCategory?: boolean;
 
   /** 아이템 data object */
-  item: any; // TODO 응답값 확인 후 타입 확정 필요
+  item: ToDoItem;
 };
 
 const ToDoListItem = ({
   hasMainCategory = true,
   item,
 }: any): React.JSX.Element => {
+  const categories = useRecoilValue(categoryListState);
+
+  const getCategoryName = (categoryId: number | null) => {
+    const category: any = categories.find((item: CategoryObject) => item.id === categoryId);
+
+    if (!categoryId || !category) {
+      return '';
+    }
+
+    return category.title;
+  };
+
   return (
     <View style={styles.toDoListItemContainer}>
       <View style={styles.toDoListItemTextContainer}>
         <View style={styles.toDoListItemTextWrapper}>
           {hasMainCategory ? (
             <AppText style={styles.toDoListItemCategory}>
-              {item.category}
+              {getCategoryName(item.categoryId)}
             </AppText>
           ) : (
             <></>

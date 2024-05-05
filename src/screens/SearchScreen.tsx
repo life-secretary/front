@@ -22,6 +22,7 @@ import type { ConditionData } from '../components/search/SearchCategoryModal';
 import { useRecoilState } from 'recoil';
 import { recentSearchWordState, popularSearchWordState, PopularSearchWord } from '@/store/search';
 import { getPopularSearchWordListQuery } from '@/api/search';
+import { ToDoItem } from '@/models/todo';
 
 const HeaderSearchResult = ({
   data, 
@@ -47,20 +48,36 @@ const SearchScreen = () => {
   const [isRecentSearchListOpen, setIsRecentSearchListOpen] = useState(false);
 
   const isLoading = useRef<boolean>(false);
-  const pageContent = useRef<number>(0);
-  const pageToDo = useRef<number>(0);
 
-  const [contentData, setContentData] = useState([]);
-  const [toDoData, setToDoData] = useState([]);
+  const [tabData, setTabData] = useState([
+    {id: 1, text: '콘텐츠', isPressed: true},
+    {id: 2, text: '할 일', isPressed: false},
+  ]);
 
   // 검색
   const [searchText, setSearchText] = useState('');
 
-  // 일단 분리
-  const [sortConditionContent, setSortConditionContent] = useState<Array<string>>(['viewCount', 'desc']);
-  const [sortConditionToDo, setSortConditionTodo] = useState<Array<string>>(['viewCount', 'desc']); // TODO api 완성되면 붙이기
+  // content
+  const pageContent = useRef<number>(0);
+  const [searchConditionContentData, setSearchConditionContentData] = useState<Array<ConditionData>>([
+    {text: '조회순', type: 'viewCount', orderType: 'desc', isSelected: true},
+    {text: '저장순', type: 'scrapCount', orderType: 'desc', isSelected: false},
+    {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
+  ]);
+  const [contentData, setContentData] = useState([]);
 
+  // todo
+  const pageToDo = useRef<number>(0);
+  const [searchConditionToDoData, setSearchConditionToDoData] = useState<Array<ConditionData>>([
+    {text: '조회순', type: 'viewCount', orderType: 'desc', isSelected: true},
+    {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
+  ]);
+  const [toDoData, setToDoData] = useState([]);
+
+  // 최근 검색어
   const [recentSearchData, setRecentSearchesData] = useRecoilState(recentSearchWordState);
+  
+  // 인기 검색어
   const [popularSearchData, setPopularSearchData] = useRecoilState(popularSearchWordState);
   const { 
     data:popularSearchWordList, 
@@ -68,22 +85,6 @@ const SearchScreen = () => {
     isFetched:isPopularSearchWordListFetched,
     isRefetching:isPopularSearchWordListRefetching,
   } = getPopularSearchWordListQuery();
-
-  const [tabData, setTabData] = useState([
-    {id: 1, text: '콘텐츠', isPressed: true},
-    {id: 2, text: '할 일', isPressed: false},
-  ]);
-
-  const [searchConditionContentData, setSearchConditionContentData] = useState<Array<ConditionData>>([
-    {text: '조회순', type: 'viewCount', orderType: 'desc', isSelected: true},
-    {text: '저장순', type: 'scrapCount', orderType: 'desc', isSelected: false},
-    {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
-  ]);
-
-  const [searchConditionToDoData, setSearchConditionToDoData] = useState<Array<ConditionData>>([
-    {text: '조회순', type: 'viewCount', orderType: 'desc', isSelected: true},
-    {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
-  ]);
 
   const initPopularSearchData = () => {
     if (!isPopularSearchWordListFetched || !isPopularSearchWordListSuccess || !popularSearchWordList) {
@@ -95,6 +96,24 @@ const SearchScreen = () => {
       .slice(0, 10);
 
     setPopularSearchData(data);
+  };
+
+  const getSort = (data: any) => {
+    const condition = data.find((item: any) => item.isSelected);
+
+    if (!condition) {
+      return ['viewCount', 'desc'];
+    }
+
+    return [condition.type, condition.orderType];
+  }
+
+  const currentContentSort = () => {
+    return getSort(searchConditionContentData);
+  };
+
+  const currentToDoSort = () => {
+    return getSort(searchConditionToDoData);
   };
 
   const onPressTab = (number: number) => {
@@ -123,43 +142,73 @@ const SearchScreen = () => {
     });
   };
 
-  const getNewSortCondition = (previousData: Array<string>, data: ConditionData) => {
-    if ((previousData[0] === data.type) && (previousData[1] === data.orderType)) {
-      return previousData;
-    }
-
-    return [data.type, data.orderType];
-  };
-
   // content condition
   const onPressContentViewConditionButton = (data: ConditionData, index: number): void => {
     setSearchConditionContentData((previousValue) => {
-      return getNewSelectedConditionData(previousValue, index);
-    });
+      const contentSort = [previousValue[index].type, previousValue[index].orderType];
 
-    setSortConditionContent((previousValue) => {
-      return getNewSortCondition(previousValue, data);
+      pageContent.current = 0;
+      setContentData([]);
+      fetchContent({
+        contentSort,
+      });
+
+      return getNewSelectedConditionData(previousValue, index);
     });
   };
 
   // todo condition
   const onPressToDoViewConditionButton = (data: ConditionData, index: number): void => {
     setSearchConditionToDoData((previousValue) => {
-      return getNewSelectedConditionData(previousValue, index);
-    });
+      const toDoSort = [previousValue[index].type, previousValue[index].orderType];
 
-    setSortConditionTodo((previousValue) => {
-      return getNewSortCondition(previousValue, data);
+      pageContent.current = 0;
+      setContentData([]);
+      fetchToDo({
+        toDoSort,
+      });
+
+      return getNewSelectedConditionData(previousValue, index);
     });
   };
 
-  const fetchContent = () => {
-    fetchData('/content', { 
-      // TODO 검색 조건 붙이기 (컨텐츠 검색 api 아직)
+  const fetchContent = ({
+    contentTitle,
+    contentPage,
+    contentSize,
+    contentSort,
+  }: any) => {
+    const title = contentTitle ? contentTitle : searchText;
+    const page = contentPage ? contentPage : pageContent.current;
+    const size = contentSize ? contentSize : 10;
+    const sort = contentSort ? contentSort : currentContentSort();
+
+    fetchData('/content/search', { 
+      title,
+      page,
+      size,
+      sort,   
     })
       .then((response) => {
         const { data : { data } } = response;
-        setContentData(data.content);
+
+        setContentData((previousValue) => {
+          let newValue: any = [];
+
+          if (previousValue.length === 0) {
+            newValue = data.content;
+          } else {
+            data.content.forEach((content: any) => {
+              const targetItem = previousValue.find((item: any) => item.id === content.id);
+  
+              if (!targetItem) {
+                newValue.push(content);
+              }
+            });
+          }
+
+          return newValue;
+        });
       })
       .catch((error) => {
         console.log('error', error);
@@ -169,13 +218,43 @@ const SearchScreen = () => {
       });
   };
 
-  const fetchToDo = () => {
-    fetchData('/todo', {
-      // TODO 검색 조건 붙이기 (투두 검색 api 아직)
+  const fetchToDo = ({
+    toDoTitle,
+    toDoPage,
+    toDoSize,
+    toDoSort,
+  }: any) => {
+    const title = toDoTitle ? toDoTitle : searchText;
+    const page = toDoPage ? toDoPage : pageToDo.current;
+    const size = toDoSize ? toDoSize : 10;
+    const sort = toDoSort ? toDoSort : currentToDoSort();
+
+    fetchData('/todo/search', {
+      title,
+      page,
+      size,
+      sort,
     })
       .then((response) => {
         const { data : { data } } = response;
-        setToDoData(data.todo); // TODO key 확인 필요
+
+        setToDoData((previousValue) => {
+          let newValue: any = [];
+
+          if (previousValue.length === 0) {
+            newValue = data.todo;
+          } else {
+            data.todo.forEach((todo: ToDoItem) => {
+              const targetItem = previousValue.find((item: ToDoItem) => item.id === todo.id);
+  
+              if (!targetItem) {
+                newValue.push(todo);
+              }
+            });
+          }
+
+          return newValue;
+        });
       })
       .catch((error) => {
         console.log('error', error);
@@ -189,7 +268,7 @@ const SearchScreen = () => {
     if ((contentData.length >= 10) && isLoading.current === false) {
       isLoading.current = true;
       pageContent.current += 1;
-      fetchContent();
+      fetchContent({});
     }
   };
 
@@ -197,7 +276,7 @@ const SearchScreen = () => {
     if ((toDoData.length >= 10 && isLoading.current === false)) {
       isLoading.current = true;
       pageToDo.current += 1;
-      fetchToDo();
+      fetchToDo({});
     }
   };
 
@@ -236,11 +315,6 @@ const SearchScreen = () => {
       return copiedValue;
     });
 
-    const recentSearchListHeight = recentSearchItemHeight * currentDataLength;
-
-    setRecentSearchListHeight(recentSearchListHeight);
-    setIsSearchResultPage(true);
-
     // 검색 로그 기록
     createData(
       '/search-logs',
@@ -248,7 +322,18 @@ const SearchScreen = () => {
     )
     .then((response) => {
       // console.log(response);
-    })
+    });
+
+    if (currentData()?.id === 1) {
+      fetchContent({});
+    } else {
+      fetchToDo({});
+    }
+
+    const recentSearchListHeight = recentSearchItemHeight * currentDataLength;
+
+    setRecentSearchListHeight(recentSearchListHeight);
+    setIsSearchResultPage(true);
   };
 
   const pressRemoveSearchTextButton = () => {
@@ -345,16 +430,10 @@ const SearchScreen = () => {
     setSearchConditionContentData((previousValue) => {
       return getNewSelectedConditionData(previousValue, 0);
     });
-    setSortConditionContent((previousValue) => {
-      return getNewSortCondition(previousValue, searchConditionContentData[0]);
-    });
 
     // todo
     setSearchConditionToDoData((previousValue) => {
       return getNewSelectedConditionData(previousValue, 0);
-    });
-    setSortConditionTodo((previousValue) => {
-      return getNewSortCondition(previousValue, searchConditionToDoData[0]);
     });
   }, [isSearchResultPage]);
 
