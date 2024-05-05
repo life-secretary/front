@@ -56,44 +56,6 @@ const DUMMY_CAROUSEL_DATA = [
   },
 ];
 
-const DUMMY_LIST = [
-  {
-    id: generateRandomId(),
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: {category: 'economy', title: '경제'},
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-    createdDate: '2024-01-01',
-  },
-  {
-    id: generateRandomId(),
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: {category: 'economy', title: '경제'},
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-    createdDate: '2024-01-11',
-  },
-  {
-    id: generateRandomId(),
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: {category: 'economy', title: '경제'},
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-    createdDate: '2024-02-05',
-  },
-  {
-    id: generateRandomId(),
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: {category: 'economy', title: '경제'},
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-    createdDate: '2024-02-22',
-  },
-  {
-    id: generateRandomId(),
-    title: '이곳은 콘텐츠의 제목 영역으로 최대 24자까지 노출됩니다.',
-    category: {category: 'economy', title: '경제'},
-    thumbnail: require('@/assets/images/thumbnailPlaceholder.jpg'),
-    createdDate: '2024-03-01',
-  },
-];
-
 export function HomeScreen(): React.JSX.Element {
   const mainCategories = useRecoilValue(mainCategoryListState);
   const HOME_CATEGORIES = [
@@ -173,13 +135,11 @@ export function HomeScreen(): React.JSX.Element {
         userId: userInfo.id,
       });
 
-      console.log('res', res);
+      const list = res.data.data;
 
-      // const list = res.data.data.content;
-
-      // if (res.status === 200) {
-      //   setHomeContentsListReadBySimilarUsers(list);
-      // }
+      if (res.status === 200) {
+        setHomeContentsListReadBySimilarUsers(list);
+      }
     };
 
     fetchCategories();
