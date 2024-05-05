@@ -12,35 +12,13 @@ import AppIcon from '../common/AppIcon';
 
 const SearchTextInput = ({
     isSearchResultPage,
+    searchText,
     defaultValue = '',
     changeSearchText,
     submitSearchText,
     pressRemoveSearchTextButton,
     pressSearchButton,
-}): React.JSX.Element => {
-
-    const [text, setText] = useState(defaultValue);
-
-    const changeText = (text) => {
-        setText(text);
-
-        changeSearchText(text);
-    };
-
-    const submitText = (event) => {
-        submitSearchText(event);
-    };
-
-    const pressRemoveTextIcon = () => {
-        setText('');
-
-        pressRemoveSearchTextButton();
-    };
-
-    const pressSearchIcon = () => {
-        pressSearchButton();
-    };
-
+}: any): React.JSX.Element => {
     return (
         <KeyboardAvoidingView behavior={'padding'}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -51,21 +29,21 @@ const SearchTextInput = ({
                             placeholder='키워드를 입력해보세요' 
                             style={[styles.searchTextInput, isSearchResultPage ? styles.searchTextResultInput : {}]} 
                             placeholderTextColor={'#CBD3DC'}
-                            value={text}
-                            onChangeText={changeText}
-                            onSubmitEditing={submitText}
+                            value={searchText}
+                            onChangeText={changeSearchText}
+                            onSubmitEditing={submitSearchText}
                             returnKeyType='search'
                             underlineColorAndroid='transparent'
                         />
                     </View>
                     <View style={styles.searchIconWrapper}>
                         {
-                            (text.length !== 0) ? 
+                            (searchText.length !== 0) ? 
                             <AppIcon 
                                 name='closeFillLight'
                                 width={36}
                                 height={36}
-                                onPress={pressRemoveTextIcon}
+                                onPress={pressRemoveSearchTextButton}
                             />
                             :
                             <></>
@@ -74,7 +52,7 @@ const SearchTextInput = ({
                             name='search'
                             width={36}
                             height={36}
-                            onPress={pressSearchIcon}
+                            onPress={pressSearchButton}
                         />
                     </View>
                 </View>

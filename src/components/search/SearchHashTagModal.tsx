@@ -183,6 +183,7 @@ const SearchHashTagModal = ({
                             <SearchTextInput 
                                 isSearchResultPage={true}
                                 defaultValue={hashTag}
+                                searchText={''} // TODO 해시태그 검색시 고정?!
                                 changeSearchText={changeSearchText}
                                 submitSearchText={submitSearchText}
                                 pressRemoveSearchTextButton={pressRemoveSearchTextButton}

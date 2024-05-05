@@ -15,15 +15,19 @@ import SearchToDoView from '../components/search/SearchToDoView';
 
 import {getFontSize} from '../utils/font';
 
-import {fetchData} from '@/api/api';
+import { fetchData, createData } from '@/api/api';
 
 import type { ConditionData } from '../components/search/SearchCategoryModal';
+
+import { useRecoilState } from 'recoil';
+import { recentSearchWordState, popularSearchWordState, PopularSearchWord } from '@/store/search';
+import { getPopularSearchWordListQuery } from '@/api/search';
 
 const HeaderSearchResult = ({
   data, 
   searchData,
   onPressButton,
-}) => {
+}: any) => {
   return (
     <View style={styles.searchResultHeader}>
       <AppText style={styles.searchResultText}>
@@ -38,8 +42,7 @@ const HeaderSearchResult = ({
 };
 
 const SearchScreen = () => {
-  const recentSearchItemRef = useRef(null);
-  const [recentSearchItemHeight, setRecentSearchItemHeight] = useState(0);
+  const [recentSearchItemHeight, setRecentSearchItemHeight] = useState(38);
   const [recentSearchListHeight, setRecentSearchListHeight] = useState(0);
   const [isRecentSearchListOpen, setIsRecentSearchListOpen] = useState(false);
 
@@ -50,32 +53,21 @@ const SearchScreen = () => {
   const [contentData, setContentData] = useState([]);
   const [toDoData, setToDoData] = useState([]);
 
+  // 검색
+  const [searchText, setSearchText] = useState('');
+
   // 일단 분리
   const [sortConditionContent, setSortConditionContent] = useState<Array<string>>(['viewCount', 'desc']);
   const [sortConditionToDo, setSortConditionTodo] = useState<Array<string>>(['viewCount', 'desc']); // TODO api 완성되면 붙이기
 
-  const [recentSearchData, setRecentSearchesData] = useState([
-    {id: 1, title: '최근 검색어가 이곳에 표시'},
-    {id: 2, title: '바로 지울 수 있어요'},
-    {id: 3, title: '뭘 검색할까요'},
-    {id: 4, title: '금리'},
-    {id: 5, title: '4대보험'},
-    {id: 6, title: '전세 자금 대출'},
-    {id: 7, title: '연말정산'},
-  ]);
-
-  const [popularSearchData, setPopularSearchData] = useState([
-    {id: 11, title: '4대보험'},
-    {id: 12, title: '전세 자금 대출'},
-    {id: 13, title: '연말정산'},
-    {id: 14, title: '분리수거 방법'},
-    {id: 15, title: '자취'},
-    {id: 16, title: '신용카드'},
-    {id: 17, title: '신용점수 관리'},
-    {id: 18, title: '건강검진'},
-    {id: 19, title: '사회초년생'},
-    {id: 20, title: '퇴사'},
-  ]);
+  const [recentSearchData, setRecentSearchesData] = useRecoilState(recentSearchWordState);
+  const [popularSearchData, setPopularSearchData] = useRecoilState(popularSearchWordState);
+  const { 
+    data:popularSearchWordList, 
+    isSuccess:isPopularSearchWordListSuccess,
+    isFetched:isPopularSearchWordListFetched,
+    isRefetching:isPopularSearchWordListRefetching,
+  } = getPopularSearchWordListQuery();
 
   const [tabData, setTabData] = useState([
     {id: 1, text: '콘텐츠', isPressed: true},
@@ -92,6 +84,18 @@ const SearchScreen = () => {
     {text: '조회순', type: 'viewCount', orderType: 'desc', isSelected: true},
     {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
   ]);
+
+  const initPopularSearchData = () => {
+    if (!isPopularSearchWordListFetched || !isPopularSearchWordListSuccess || !popularSearchWordList) {
+      return;
+    }
+
+    const data = popularSearchWordList
+      .sort((prev: PopularSearchWord, curr: PopularSearchWord) => curr.searchCount - prev.searchCount)
+      .slice(0, 10);
+
+    setPopularSearchData(data);
+  };
 
   const onPressTab = (number: number) => {
     setTabData((previousValue) => {
@@ -204,32 +208,65 @@ const SearchScreen = () => {
   const [isSearchResultPage, setIsSearchResultPage] = useState(false);
 
   // 검색 기능
-  // TODO 검색과 동시에 UI 변경
   const pressSearchButton = () => {
+    let currentDataLength = 4;
+
+    if (searchText.length === 0) {
+      console.log('입력된 검색어가 없습니다.');
+      return;
+    }
+
+    setRecentSearchesData((previousValue) => {
+      const copiedValue = [...previousValue];
+      const duplicatedText = previousValue.find((item) => item.title === searchText);
+
+      if (!duplicatedText && copiedValue.length === 10) {
+        copiedValue.pop();
+      }
+
+      if (!duplicatedText) {
+        copiedValue.unshift({
+          id: Math.random(),
+          title: searchText,
+        });
+      }
+
+      currentDataLength = (4 <= copiedValue.length) ? 4 : copiedValue.length;
+
+      return copiedValue;
+    });
+
+    const recentSearchListHeight = recentSearchItemHeight * currentDataLength;
+
+    setRecentSearchListHeight(recentSearchListHeight);
     setIsSearchResultPage(true);
 
-    // useState test
-    // console.log('search 버튼 클릭');
-    // setRecentSearchesData((previousValue) => {
-    //     return previousValue.concat({ id: previousValue.length + 1, title: '안녕하세요' });
-    // });
+    // 검색 로그 기록
+    createData(
+      '/search-logs',
+      { userId: 0, searchText } // TODO userId store 에서 가져오기
+    )
+    .then((response) => {
+      // console.log(response);
+    })
   };
 
   const pressRemoveSearchTextButton = () => {
     setIsSearchResultPage(false);
+    setSearchText('');
   };
 
-  const changeSearchText = (text) => {
+  const changeSearchText = (text: string) => {
     // 검색창에 텍스트가 없을시 검색어 화면으로 돌아오기
     if (text.length === 0) {
       setIsSearchResultPage(false);
     }
+
+    setSearchText(text);
   };
 
-  const submitSearchText = ({nativeEvent: {text, eventCount, target}}) => {
-    console.log('text', text);
-    console.log('eventCount', eventCount);
-    console.log('target', target);
+  const submitSearchText = ({ nativeEvent }: any) => {
+
   };
 
   const currentData = () => {
@@ -239,7 +276,7 @@ const SearchScreen = () => {
   };
 
   // 최근 검색어 아이템 개별 [x] 제거 기능
-  const removeRecentSearchItem = (id) => {
+  const removeRecentSearchItem = (id: number) => {
     /**
      * 열려 있는 경우
      *
@@ -253,7 +290,7 @@ const SearchScreen = () => {
      *
      */
 
-    setRecentSearchesData(previousData => {
+    setRecentSearchesData((previousData) => {
       const currentData = previousData.filter(item => item.id !== id);
       const currentDataLength = currentData.length;
       const recentSearchListHeight = recentSearchItemHeight * currentDataLength;
@@ -274,19 +311,6 @@ const SearchScreen = () => {
   const removeAllRecentSearchItems = () => {
     setRecentSearchesData([]);
     setRecentSearchListHeight(recentSearchItemHeight);
-  };
-
-  const getRecentSearchItemHeight = () => {
-    // ERROR
-    // recentSearchItemRef.current 가 null 인 경우 있음.
-    // height 값이 일정하지 않은 이유 모르겠음.
-    recentSearchItemRef.current.measureInWindow((x, y, width, height) => {
-      const recentSearchListHeight =
-        height * constants.recentSearchInitialCount;
-
-      setRecentSearchItemHeight(height);
-      setRecentSearchListHeight(recentSearchListHeight);
-    });
   };
 
   // 최근 검색어 [리스트 더보기] 토글 기능
@@ -316,10 +340,6 @@ const SearchScreen = () => {
   };
 
   useEffect(() => {
-    getRecentSearchItemHeight();
-  }, []);
-
-  useEffect(() => {
     onPressTab(0);
     // content
     setSearchConditionContentData((previousValue) => {
@@ -336,7 +356,11 @@ const SearchScreen = () => {
     setSortConditionTodo((previousValue) => {
       return getNewSortCondition(previousValue, searchConditionToDoData[0]);
     });
-  }, [isSearchResultPage])
+  }, [isSearchResultPage]);
+
+  useEffect(() => {
+    initPopularSearchData();
+  }, [isPopularSearchWordListFetched, isPopularSearchWordListRefetching]);
 
   return (
     <View style={styles.container}>
@@ -351,6 +375,7 @@ const SearchScreen = () => {
           )}
           <SearchTextInput
             isSearchResultPage={isSearchResultPage}
+            searchText={searchText}
             changeSearchText={changeSearchText}
             submitSearchText={submitSearchText}
             pressRemoveSearchTextButton={pressRemoveSearchTextButton}
@@ -371,7 +396,6 @@ const SearchScreen = () => {
         // 검색어
         <SearchWordView
           isRecentSearchListOpen={isRecentSearchListOpen}
-          recentSearchItemRef={recentSearchItemRef}
           recentSearchData={recentSearchData}
           popularSearchData={popularSearchData}
           pressMoreListButton={pressMoreListButton}
@@ -436,7 +460,7 @@ const styles = StyleSheet.create({
         paddingTop: 5,
       },
     }),
-    paddingBottom: 100, // TODO 해결 필요
+    height: '100%',
     backgroundColor: '#FFFFFF',
   },
   header: {
