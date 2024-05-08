@@ -1,6 +1,6 @@
+import Todo from '@/models/Todo';
 import {atom, selector} from 'recoil';
 
-// atom
 const todoListState = atom({
   key: 'TodoListState',
   default: [],
@@ -18,11 +18,11 @@ const filteredTodoListState = selector({
     const list = get(todoListState);
 
     if (filter === '진행 중') {
-      return list.filter(item => !item?.isDone);
+      return list.filter((item: Todo) => !item.isDone);
     }
 
     if (filter === '완료') {
-      return list.filter(item => item?.isDone);
+      return list.filter((item: Todo) => item.isDone);
     }
   },
 });
@@ -34,11 +34,11 @@ const todoListTotalCountState = selector({
     const list = get(todoListState);
 
     if (filter === '진행 중') {
-      return list.filter(item => !item?.isDone).length;
+      return list.filter((item: Todo) => !item.isDone).length;
     }
 
     if (filter === '완료') {
-      return list.filter(item => item?.isDone).length;
+      return list.filter((item: Todo) => item.isDone).length;
     }
   },
 });

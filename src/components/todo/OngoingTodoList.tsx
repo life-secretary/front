@@ -13,6 +13,8 @@ import {
 } from '@/store/todoState';
 import {AppSpinner} from '../common/AppSpinner';
 
+import Todo from '@/models/Todo';
+
 // TODO: Empty 컴포넌트화
 const EmptyList = () => {
   return (
@@ -46,8 +48,8 @@ export function OngoingTodoList({isLoading}: Props): React.JSX.Element {
             <TodoCount title="나의 할 일" totalTodoCount={totalTodoCount} />
             <FlatList
               data={list}
-              renderItem={({item}) => <TodoCard item={{...item}} />}
-              keyExtractor={item => item?.id}
+              renderItem={({item}) => <TodoCard item={item} />}
+              keyExtractor={(item: Todo) => String(item.id)}
               contentContainerStyle={styles.listContainer}
             />
           </>

@@ -7,9 +7,12 @@ import {AddSubTodoButton} from '@/components/todo/detail/AddSubTodoButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
+import Todo from '@/models/Todo';
+import SubTodo from '@/models/SubTodo';
+
 type Props = {
-  todoItem: object;
-  subTodoList: object[];
+  todoItem: Todo;
+  subTodoList: SubTodo[];
   isCompleteMode: boolean;
 };
 
@@ -40,7 +43,7 @@ export function SubTodoList({
             isCompleteMode={isCompleteMode}
           />
         )}
-        keyExtractor={item => item?.id}
+        keyExtractor={item => String(item.id)}
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={EmptyList}
       />
