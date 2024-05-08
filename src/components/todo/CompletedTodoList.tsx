@@ -13,6 +13,8 @@ import {
 import {useRecoilValue} from 'recoil';
 import {AppSpinner} from '../common/AppSpinner';
 
+import Todo from '@/models/Todo';
+
 // TODO: 별도의 컴포넌트로 분리
 const EmptyList = () => {
   return (
@@ -44,8 +46,8 @@ export function CompletedTodoList({isLoading}: Props): React.JSX.Element {
             <TodoCount title="완료 할 일" totalTodoCount={totalTodoCount} />
             <FlatList
               data={list}
-              renderItem={({item}) => <TodoCard item={{...item}} />}
-              keyExtractor={item => item?.id}
+              renderItem={({item}) => <TodoCard item={item} />}
+              keyExtractor={(item: Todo) => String(item.id)}
               contentContainerStyle={styles.listContainer}
             />
           </>

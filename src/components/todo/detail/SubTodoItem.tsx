@@ -16,9 +16,12 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 import OutsidePressHandler from 'react-native-outside-press';
 
+import Todo from '@/models/Todo';
+import SubTodo from '@/models/SubTodo';
+
 type ItemProps = {
-  todoItem: object;
-  subTodoItem: object;
+  todoItem: Todo;
+  subTodoItem: SubTodo;
   isCompleteMode: boolean;
 };
 
@@ -27,15 +30,15 @@ export function SubTodoItem({
   subTodoItem,
   isCompleteMode,
 }: ItemProps): React.JSX.Element {
-  const [title, onChangeTitle] = useState(subTodoItem?.title || '');
-  const [isChecked, setIsChecked] = useState(subTodoItem?.isDone || false);
+  const [title, onChangeTitle] = useState(subTodoItem.title || '');
+  const [isChecked, setIsChecked] = useState(subTodoItem.isDone || false);
   const [isEditable, setIsEditable] = useState(false);
   const inputRef = useRef(null);
 
   const itemWidth =
     Dimensions.get('window').width - spacing.layoutPaddingHorizontal * 2;
 
-  const parentTodoId = todoItem?.id;
+  const parentTodoId = todoItem.id;
   const isInputActive = isEditable && !isCompleteMode;
 
   const handleOutsidePress = () => {
@@ -52,11 +55,11 @@ export function SubTodoItem({
   };
 
   const handleCheckboxPress = (status: boolean) => {
-    editSubTodo(subTodoItem?.id, status);
+    editSubTodo(subTodoItem.id, status);
     setIsChecked(status);
   };
 
-  const editSubTodo = async (subTodoId: string, isDone?: boolean) => {
+  const editSubTodo = async (subTodoId: number, isDone?: boolean) => {
     const editedSubTodo = {
       title,
       isDone,
@@ -69,15 +72,15 @@ export function SubTodoItem({
     );
   };
 
-  const deleteSubTodo = async (subTodoId: string) => {
+  const deleteSubTodo = async (subTodoId: number) => {
     await deleteData(`/user-todos/${parentTodoId}/sub`, {}, subTodoId);
   };
 
-  const handleInputSubmit = (id: string) => {
+  const handleInputSubmit = (id: number) => {
     editSubTodo(id);
   };
 
-  const handleDeleteButtonPress = (id: string) => {
+  const handleDeleteButtonPress = (id: number) => {
     deleteSubTodo(id);
   };
 
@@ -98,7 +101,7 @@ export function SubTodoItem({
                     onChangeText={onChangeTitle}
                     onPressIn={handleInputPress}
                     onBlur={handleInputBlur}
-                    onSubmitEditing={() => handleInputSubmit(subTodoItem?.id)}
+                    onSubmitEditing={() => handleInputSubmit(subTodoItem.id)}
                   />
                 </OutsidePressHandler>
               </View>
