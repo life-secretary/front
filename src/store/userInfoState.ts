@@ -4,7 +4,7 @@ const FAKE_USER = {
   id: 1,
   email: 'hongkildong@gmail.com',
   nickname: '홍길동',
-  birthdate: new Date(),
+  birthdate: '1999-01-19',
   gender: 'M',
   married: false,
   hasChild: false,
