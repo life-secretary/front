@@ -1,7 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
-import {categoryListState, mainCategoryListState} from '@/store/categoryState';
+import {
+  categoryListState,
+  homeCategoryListState,
+  mainCategoryListState,
+} from '@/store/categoryState';
 import {occupationListState} from '@/store/occupation';
 import {scrapListState} from '@/store/scrapState';
 import {
@@ -62,23 +66,17 @@ const DUMMY_CAROUSEL_LIST = [
 ];
 
 export function HomeScreen(): React.JSX.Element {
-  const mainCategories = useRecoilValue(mainCategoryListState);
-  // TODO: category state 가공 로직 리팩토링
-  const HOME_CATEGORIES = [
-    {id: 0, category: 'all', title: '전체'},
-    ...mainCategories,
-  ];
-
   // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
   const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
   const [isContentModalVisible, setIsContentModalVisible] = useState(false);
   const setCategories = useSetRecoilState(categoryListState);
   const setOccupationList = useSetRecoilState(occupationListState);
   const setScrapList = useSetRecoilState(scrapListState);
+  const homeCategories = useRecoilValue(homeCategoryListState);
   const userInfo = useRecoilValue(userInfoState);
   // Login → Agreement → Survey 과정 임시 테스팅 중
   const [isDone, setIsDone] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(HOME_CATEGORIES[0]);
+  const [selectedCategory, setSelectedCategory] = useState(homeCategories[0]);
   const [newestHomeContentList, setNewestHomeContentList] = useRecoilState(
     newestHomeContentListState,
   );
@@ -113,60 +111,84 @@ export function HomeScreen(): React.JSX.Element {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const res = await fetchData('/categories', null);
-      if (res.status === 200) {
-        setCategories(res.data.data);
+      try {
+        const res = await fetchData('/categories', null);
+        if (res.status === 200) {
+          setCategories(res.data.data);
+        }
+      } catch (err) {
+        console.error(err);
       }
     };
 
     const fetchOccupations = async () => {
-      const res = await fetchData('/occupation', {});
-      if (res.status === 200) {
-        setOccupationList(res.data.data);
+      try {
+        const res = await fetchData('/occupation', {});
+        if (res.status === 200) {
+          setOccupationList(res.data.data);
+        }
+      } catch (err) {
+        console.error(err);
       }
     };
 
     const fetchScrapList = async () => {
-      const res = await fetchData('/scrap', {
-        userId: userInfo.id,
-      });
-      const list = res.data.data;
+      try {
+        const res = await fetchData('/scrap', {
+          userId: userInfo.id,
+        });
+        const list = res.data.data;
 
-      if (res.status === 200) {
-        setScrapList(list);
+        if (res.status === 200) {
+          setScrapList(list);
+        }
+      } catch (err) {
+        console.error(err);
       }
     };
 
     const fetchHomeContentListByNewest = async () => {
-      const res = await fetchData('/content', {
-        sort: 'createdAt',
-        size: HOME_CONTENT_SIZE,
-      });
-      const list = res.data.data.content;
+      try {
+        const res = await fetchData('/content', {
+          sort: 'createdAt',
+          size: HOME_CONTENT_SIZE,
+        });
+        const list = res.data.data.content;
 
-      if (res.status === 200) {
-        setNewestHomeContentList(list);
+        if (res.status === 200) {
+          setNewestHomeContentList(list);
+        }
+      } catch (err) {
+        console.error(err);
       }
     };
 
     const fetchHomeCarouselContentList = async () => {
-      const res = await fetchData('/content/main', {});
-      const list = res.data.data;
+      try {
+        const res = await fetchData('/content/main', {});
+        const list = res.data.data;
 
-      if (res.status === 200) {
-        setHomeCarouselContentList(list);
+        if (res.status === 200) {
+          setHomeCarouselContentList(list);
+        }
+      } catch (err) {
+        console.error(err);
       }
     };
 
     const fetchHomeContentListReadBySimilarUsers = async () => {
-      const res = await fetchData('/content/similar-users/reads', {
-        userId: userInfo.id,
-      });
+      try {
+        const res = await fetchData('/content/similar-users/reads', {
+          userId: userInfo.id,
+        });
 
-      const list = res.data.data;
+        const list = res.data.data;
 
-      if (res.status === 200) {
-        setHomeContentListReadBySimilarUsers(list);
+        if (res.status === 200) {
+          setHomeContentListReadBySimilarUsers(list);
+        }
+      } catch (err) {
+        console.error(err);
       }
     };
 
@@ -201,10 +223,7 @@ export function HomeScreen(): React.JSX.Element {
           </View>
         </AppHeader>
         <View style={styles.section}>
-          <HomeCategoryList
-            categories={HOME_CATEGORIES}
-            openCategoryModal={openCategoryModal}
-          />
+          <HomeCategoryList openCategoryModal={openCategoryModal} />
           <HomeImageCarousel
             data={
               homeCarouselContentList.length > 0
@@ -218,10 +237,7 @@ export function HomeScreen(): React.JSX.Element {
             title={'유사한 사용자가 읽고 있어요'}
             list={homeContentListReadBySimilarUsers}
           />
-          <HomeContentListWithFilter
-            categories={HOME_CATEGORIES}
-            title={'인기 많은 콘텐츠'}
-          />
+          <HomeContentListWithFilter title={'인기 많은 콘텐츠'} />
           <HomeContentList
             title={'최근 업데이트 되었어요'}
             list={newestHomeContentList}
@@ -239,7 +255,6 @@ export function HomeScreen(): React.JSX.Element {
       <SearchCategoryModal
         isVisible={isCategoryModalVisible}
         closeCategoryModal={closeCategoryModal}
-        categories={HOME_CATEGORIES}
         selectedCategory={selectedCategory}
       />
       <ContentModal

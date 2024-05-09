@@ -1,6 +1,7 @@
 import {atom, selector} from 'recoil';
 
 import type {CategoryObject} from '../models/common';
+import {generateRandomId} from '@/utils';
 
 const categoryListState = atom({
   key: 'CategoryListState',
@@ -48,9 +49,21 @@ const mainCategoryListState = selector({
   },
 });
 
+const homeCategoryListState = selector({
+  key: 'HomeCategoryListState',
+  get: ({get}) => {
+    const categories = get(mainCategoryListState);
+    return [
+      {id: 0, category: 'all', title: '전체'},
+      ...categories,
+      {id: generateRandomId(), category: 'etc', title: '기타'},
+    ];
+  },
+});
+
 const surveyCategoryListState = selector({
   key: 'SurveyCategoryListState',
-  get: ({ get }) => {
+  get: ({get}) => {
     const categories = get(categoryListState);
     const convertedCategories = categories.map((item: CategoryObject) => {
       return {
@@ -59,12 +72,17 @@ const surveyCategoryListState = selector({
         selected: false,
       };
     });
-    
+
     return [
       ...convertedCategories,
-      { title: '모두 해당', id: '', selected: false }
+      {title: '모두 해당', id: '', selected: false},
     ];
-  }
+  },
 });
 
-export {categoryListState, mainCategoryListState, surveyCategoryListState};
+export {
+  categoryListState,
+  mainCategoryListState,
+  homeCategoryListState,
+  surveyCategoryListState,
+};
