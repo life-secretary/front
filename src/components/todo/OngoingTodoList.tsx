@@ -1,17 +1,17 @@
 import React from 'react';
-
-import {StyleSheet, View, FlatList} from 'react-native';
-import {AppText} from '@/components/common/AppText';
-import {TodoCard} from '@/components/todo/TodoCard';
-import {TodoCount} from '@/components/todo/TodoCount';
-import color from '@/styles/color';
-import {font} from '@/styles/font';
 import {useRecoilValue} from 'recoil';
 import {
   filteredTodoListState,
   todoListTotalCountState,
 } from '@/store/todoState';
-import {AppSpinner} from '../common/AppSpinner';
+
+import {StyleSheet, View, FlatList} from 'react-native';
+import {AppText} from '@/components/common/AppText';
+import {AppSpinner} from '@/components/common/AppSpinner';
+import {TodoCard} from '@/components/todo/TodoCard';
+import {TodoCount} from '@/components/todo/TodoCount';
+import color from '@/styles/color';
+import {font} from '@/styles/font';
 
 import Todo from '@/models/Todo';
 

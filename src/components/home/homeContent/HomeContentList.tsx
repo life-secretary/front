@@ -5,23 +5,25 @@ import {userInfoState} from '@/store/userInfoState';
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {AppText} from '@/components/common/AppText';
 import {AppDivider} from '@/components/common/AppDivider';
-import {HomeContentsItem} from '@/components/home/homeContents/HomeContentsItem';
+import {HomeContentItem} from '@/components/home/homeContent/HomeContentItem';
 import {ViewMoreButton} from '@/components/home/ViewMoreButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
 
-type HomeContentsProps = {
+import HomeContent from '@/models/HomeContent';
+
+type Props = {
   isUsernameUsed?: boolean;
   title: string;
-  list: object[];
+  list: HomeContent[];
 };
 
-export function HomeContentsList({
+export function HomeContentList({
   isUsernameUsed = false,
   title,
   list,
-}: HomeContentsProps): React.JSX.Element {
+}: Props): React.JSX.Element {
   const userInfo = useRecoilValue(userInfoState);
 
   return (
@@ -35,7 +37,7 @@ export function HomeContentsList({
       <FlatList
         ItemSeparatorComponent={() => <AppDivider style={styles.divider} />}
         data={list}
-        renderItem={({item}) => <HomeContentsItem item={{...item}} />}
+        renderItem={({item}) => <HomeContentItem homeContentItem={item} />}
       />
       <ViewMoreButton />
     </View>

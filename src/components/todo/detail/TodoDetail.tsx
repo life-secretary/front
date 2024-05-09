@@ -7,8 +7,11 @@ import {font} from '@/styles/font';
 
 import {getFormattedDate} from '@/utils';
 
+import Todo from '@/models/Todo';
+import SubTodo from '@/models/SubTodo';
+
 type Props = {
-  todoItem: object;
+  todoItem: Todo;
   isCompleteMode: boolean;
 };
 
@@ -42,8 +45,8 @@ export function TodoDetail({
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <View style={styles.tagRow}>
-          {todoItem?.tags &&
-            todoItem?.tags.map((tag: string) => (
+          {todoItem.tagList &&
+            todoItem.tagList.map((tag: string) => (
               <View style={[styles.tagContainer, setTagContainerStyles(tag)]}>
                 <AppText style={[styles.tag, setTagTextStyles(tag)]}>
                   {tag}
@@ -56,16 +59,16 @@ export function TodoDetail({
       <View style={styles.infoContainer}>
         <View style={styles.infoRow}>
           <AppText style={[styles.infoText, styles.defaultText]}>할일</AppText>
-          {todoItem?.subTodoList && todoItem?.subTodoList.length > 0 ? (
+          {todoItem.subTodoList && todoItem.subTodoList.length > 0 ? (
             <View style={styles.todoRow}>
               <AppText style={[styles.infoText, styles.completedText]}>
                 {
-                  todoItem?.subTodoList.filter((item: object) => item?.isDone)
+                  todoItem.subTodoList.filter((item: SubTodo) => item.isDone)
                     .length
                 }
               </AppText>
               <AppText style={[styles.infoText, styles.defaultText]}>
-                /{todoItem?.subTodoList.length}개
+                /{todoItem.subTodoList.length}개
               </AppText>
             </View>
           ) : (
@@ -78,7 +81,7 @@ export function TodoDetail({
               생성
             </AppText>
             <AppText style={[styles.infoText, styles.defaultText]}>
-              {getFormattedDate(new Date(todoItem?.createdTime), '.')}
+              {getFormattedDate(new Date(todoItem.createdTime), '.')}
             </AppText>
           </View>
           {isCompleteMode && (
@@ -91,7 +94,7 @@ export function TodoDetail({
                   완료
                 </AppText>
                 <AppText style={[styles.infoText, styles.defaultText]}>
-                  {getFormattedDate(new Date(todoItem?.completedTime), '.')}
+                  {getFormattedDate(new Date(todoItem.completedTime), '.')}
                 </AppText>
               </View>
             </>

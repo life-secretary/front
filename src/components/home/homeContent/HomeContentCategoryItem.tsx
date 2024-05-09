@@ -7,31 +7,31 @@ import {font} from '@/styles/font';
 
 type Props = {
   item: object;
-  homeContentsFilter: object;
-  handleHomeContentsFilter: Function;
+  homeContentFilter: object;
+  handleHomeContentFilter: Function;
 };
 
-export function HomeContentsCategoryItem({
+export function HomeContentCategoryItem({
   item,
-  homeContentsFilter,
-  handleHomeContentsFilter,
+  homeContentFilter,
+  handleHomeContentFilter,
 }: Props): React.JSX.Element {
-  const handleHomeContentsFilterPress = (filter: object) => {
-    handleHomeContentsFilter(filter);
+  const handleHomeContentFilterPress = (filter: object) => {
+    handleHomeContentFilter(filter);
   };
 
   return (
-    <Pressable onPress={() => handleHomeContentsFilterPress(item)}>
+    <Pressable onPress={() => handleHomeContentFilterPress(item)}>
       <View
         style={[
-          homeContentsFilter?.category === item?.category
+          homeContentFilter?.category === item?.category
             ? styles.pressedButton
             : styles.defaultButton,
           styles.button,
         ]}>
         <AppText
           style={[
-            homeContentsFilter?.category === item?.category
+            homeContentFilter?.category === item?.category
               ? styles.pressedText
               : styles.defaultText,
             styles.text,
