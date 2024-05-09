@@ -1,4 +1,8 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import OutsidePressHandler from 'react-native-outside-press';
+import {useRecoilValue} from 'recoil';
+import {userInfoState} from '@/store/userInfoState';
 
 import {
   FlatList,
@@ -17,17 +21,20 @@ import AppModal from '@/components/common/modal/AppModal';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
-import OutsidePressHandler from 'react-native-outside-press';
+
+import {createData} from '@/api/api';
 
 export function SendFeedbackForm() {
   // const [isValid, setIsValid] = React.useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
-  const [feedbackStatus, setFeedbackStatus] = useState({});
-  const [contents, onChangeContents] = useState('');
-  const [appState, setAppState] = useState(AppState.currentState);
-  const [isSendingSuccess, setIsSendingSuccess] = useState(false);
+  const [feedbackStatus, setFeedbackStatus] = useState({key: null, text: ''});
+  const [content, onChangeContent] = useState('');
+  // const [appState, setAppState] = useState(AppState.currentState);
+  // const [isSendingSuccess, setIsSendingSuccess] = useState(false);
+  const userInfo = useRecoilValue(userInfoState);
   const inputRef = useRef(null);
+  const navigation = useNavigation();
 
   const FEEDBACK_STATUS_LIST = [
     {key: 'inconvenience', text: '불편해요'},
@@ -36,8 +43,8 @@ export function SendFeedbackForm() {
   ];
 
   const resetForm = () => {
-    setFeedbackStatus('');
-    onChangeContents('');
+    setFeedbackStatus({key: null, text: ''});
+    onChangeContent('');
   };
 
   const handleInputOutsidePress = () => {
@@ -49,65 +56,86 @@ export function SendFeedbackForm() {
   };
 
   const handleSubmitButtonPress = () => {
-    sendEmail();
+    sendFeedback();
+    // sendEmail();
   };
 
-  const handleAppStateChange = useCallback(
-    (nextAppState: any) => {
-      if (appState === 'background' && nextAppState === 'active') {
-        if (isSendingSuccess) {
-          setIsModalVisible(true);
-          setTimeout(() => {
-            resetForm();
-            setIsModalVisible(false);
-            setIsSendingSuccess(false);
-          }, 2000);
-        }
-      }
+  const sendFeedback = async () => {
+    const newFeedback = {
+      title: feedbackStatus.text || '인생비서 피드백',
+      message: content,
+      userId: userInfo.id,
+    };
 
-      setAppState(nextAppState);
-    },
-    [appState, isSendingSuccess],
-  );
+    const res = await createData('/inquiry', newFeedback);
+
+    if (res.status === 200) {
+      setIsModalVisible(true);
+      setTimeout(() => {
+        resetForm();
+        setIsModalVisible(false);
+        navigation.navigate('Home');
+      }, 2000);
+    }
+  };
+
+  // NOTICE: 이메일 전송 관련 로직 주석 처리
+  // const handleAppStateChange = useCallback(
+  //   (nextAppState: any) => {
+  //     if (appState === 'background' && nextAppState === 'active') {
+  //       if (isSendingSuccess) {
+  //         setIsModalVisible(true);
+  //         setTimeout(() => {
+  //           resetForm();
+  //           setIsModalVisible(false);
+  //           setIsSendingSuccess(false);
+  //         }, 2000);
+  //       }
+  //     }
+
+  //     setAppState(nextAppState);
+  //   },
+  //   [appState, isSendingSuccess],
+  // );
 
   /** TODO: Form Validation Check 추가
   const checkInputValidation = () => {
   };
   */
 
-  const sendEmail = () => {
-    const recipient = 'sorry0194@gmail.com'; // TODO: 추후 admin account 변경
-    const subject = feedbackStatus?.text || '인생비서 피드백';
-    const body = contents;
+  // const sendEmail = () => {
+  //   const recipient = 'sorry0194@gmail.com'; // TODO: 추후 admin account 변경
+  //   const subject = feedbackStatus?.text || '인생비서 피드백';
+  //   const body = content;
 
-    Linking.openURL(`mailto:${recipient}?subject=${subject}&body=${body}`)
-      .then(() => {
-        setIsSendingSuccess(true);
-      })
-      .catch(err => {
-        setIsSendingSuccess(false);
-        console.error('Error sending email: ', err);
-      });
-  };
+  //   Linking.openURL(`mailto:${recipient}?subject=${subject}&body=${body}`)
+  //     .then(() => {
+  //       setIsSendingSuccess(true);
+  //     })
+  //     .catch(err => {
+  //       setIsSendingSuccess(false);
+  //       console.error('Error sending email: ', err);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   const subscription = AppState.addEventListener(
+  //     'change',
+  //     handleAppStateChange,
+  //   );
+
+  //   return () => {
+  //     subscription.remove();
+  //   };
+  // }, [handleAppStateChange]);
 
   useEffect(() => {
-    const subscription = AppState.addEventListener(
-      'change',
-      handleAppStateChange,
-    );
-
-    return () => {
-      subscription.remove();
-    };
-  }, [handleAppStateChange]);
-
-  useEffect(() => {
-    if (!contents) {
+    if (!content) {
       setIsEmpty(true);
     } else {
       setIsEmpty(false);
     }
-  }, [contents, isEmpty]);
+  }, [content, isEmpty]);
 
   return (
     <KeyboardAvoidingView
@@ -150,11 +178,11 @@ export function SendFeedbackForm() {
             ref={inputRef}
             hasLabel={false}
             placeholder="비즈니스 이메일 작성법, 보험 가입 연령 or 이러한 점이 불편해요"
-            text={contents}
+            text={content}
             isMultiline={true}
             minHeight={154}
             inputStyles={styles.input}
-            onChangeText={onChangeContents}
+            onChangeText={onChangeContent}
           />
         </OutsidePressHandler>
       </View>
