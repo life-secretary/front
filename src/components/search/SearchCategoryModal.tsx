@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {View, StyleSheet, TouchableOpacity } from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 
 import type {CategoryObject} from '../../models/common';
 
@@ -14,14 +14,16 @@ import SearchTab from '../../components/search/SearchTab';
 import SearchContentView from '../../components/search/SearchContentView';
 import SearchToDoView from '../../components/search/SearchToDoView';
 
-import { getFontSize } from '../../utils/font';
-import { getSort, getNewData, getNewConditionData } from '@/utils/search';
+import {getFontSize} from '../../utils/font';
+import {getSort, getNewData, getNewConditionData} from '@/utils/search';
 
-import { fetchData } from '@/api/api';
+import {fetchData} from '@/api/api';
+import {useRecoilValue} from 'recoil';
+import {homeCategoryListState} from '@/store/categoryState';
 
 export type ConditionData = {
   text: string;
-  type: 'viewCount' | 'scrapCount' | 'createdAt'; 
+  type: 'viewCount' | 'scrapCount' | 'createdAt';
   orderType: 'desc' | 'asc';
   isSelected: boolean;
 };
@@ -36,7 +38,6 @@ type DropDownCategoryProps = {
 type SearchCategoryModal = {
   isVisible: boolean;
   closeCategoryModal: () => void;
-  categories: CategoryObject[];
   selectedCategory: CategoryObject;
 };
 
@@ -55,9 +56,7 @@ const DropDownCategory = ({
               key={item.id}
               text={item.title}
               textStyle={styles.categoryListText}
-              onPressButton={() =>
-                onPressListItemButton(item)
-              }
+              onPressButton={() => onPressListItemButton(item)}
             />
           );
         })}
@@ -72,13 +71,14 @@ const DropDownCategory = ({
 const SearchCategoryModal = ({
   isVisible,
   closeCategoryModal,
-  categories,
   selectedCategory,
 }: SearchCategoryModal): React.JSX.Element => {
+  const categories = useRecoilValue(homeCategoryListState);
   const [category, setCategory] = useState(selectedCategory);
   const isLoading = useRef<boolean>(false);
 
-  const [isCategoryDownModalVisible, setIsCategoryDownModalVisible] = useState(false);
+  const [isCategoryDownModalVisible, setIsCategoryDownModalVisible] =
+    useState(false);
 
   const [tabData, setTabData] = useState([
     {id: 1, text: '콘텐츠', isPressed: true},
@@ -87,7 +87,9 @@ const SearchCategoryModal = ({
 
   // content
   const pageContent = useRef<number>(0);
-  const [searchConditionContentData, setSearchConditionContentData] = useState<Array<ConditionData>>([
+  const [searchConditionContentData, setSearchConditionContentData] = useState<
+    Array<ConditionData>
+  >([
     {text: '조회순', type: 'viewCount', orderType: 'desc', isSelected: true},
     {text: '저장순', type: 'scrapCount', orderType: 'desc', isSelected: false},
     {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
@@ -96,7 +98,9 @@ const SearchCategoryModal = ({
 
   // todo
   const pageToDo = useRef<number>(0);
-  const [searchConditionToDoData, setSearchConditionToDoData] = useState<Array<ConditionData>>([
+  const [searchConditionToDoData, setSearchConditionToDoData] = useState<
+    Array<ConditionData>
+  >([
     {text: '조회순', type: 'viewCount', orderType: 'desc', isSelected: true},
     {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
   ]);
@@ -105,7 +109,7 @@ const SearchCategoryModal = ({
   // NOTICE: date format을 YYYY-MM-DD로 수정
 
   const onPressTab = (number: number) => {
-    setTabData((previousValue) => {
+    setTabData(previousValue => {
       return previousValue.map((item, index) => {
         if (number === index) {
           item.isPressed = true;
@@ -125,20 +129,23 @@ const SearchCategoryModal = ({
   };
 
   const resetContentCondition = () => {
-    setSearchConditionContentData((previousValue) => {
+    setSearchConditionContentData(previousValue => {
       return getNewConditionData(previousValue, 0);
     });
   };
 
   const resetToDoCondition = () => {
-    setSearchConditionToDoData((previousValue) => {
+    setSearchConditionToDoData(previousValue => {
       return getNewConditionData(previousValue, 0);
     });
   };
 
   // content condition
-  const onPressContentViewConditionButton = (data: ConditionData, index: number): void => {
-    setSearchConditionContentData((previousValue) => {
+  const onPressContentViewConditionButton = (
+    data: ConditionData,
+    index: number,
+  ): void => {
+    setSearchConditionContentData(previousValue => {
       return getNewConditionData(previousValue, index);
     });
     setContentData([]);
@@ -146,8 +153,11 @@ const SearchCategoryModal = ({
   };
 
   // todo condition
-  const onPressToDoViewConditionButton = (data: ConditionData, index: number): void => {
-    setSearchConditionToDoData((previousValue) => {
+  const onPressToDoViewConditionButton = (
+    data: ConditionData,
+    index: number,
+  ): void => {
+    setSearchConditionToDoData(previousValue => {
       return getNewConditionData(previousValue, index);
     });
     setContentData([]);
@@ -173,20 +183,22 @@ const SearchCategoryModal = ({
     const size = contentSize ? contentSize : 10;
     const sort = contentSort ? contentSort : currentContentSort();
 
-    fetchData('/content', { 
+    fetchData('/content', {
       categoryId, //NOTE 4 로 테스트
       page,
       size,
       sort,
     })
-      .then((response) => {
-        const { data : { data } } = response;
-        
-        setContentData((previousValue) => {
+      .then(response => {
+        const {
+          data: {data},
+        } = response;
+
+        setContentData(previousValue => {
           return getNewData(previousValue, data.content);
         });
       })
-      .catch((error) => {
+      .catch(error => {
         console.log('error', error);
       })
       .finally(() => {
@@ -194,12 +206,7 @@ const SearchCategoryModal = ({
       });
   };
 
-  const fetchToDo = ({
-    todoCategoryId,
-    todoPage,
-    todoSize,
-    todoSort,
-  }: any) => {
+  const fetchToDo = ({todoCategoryId, todoPage, todoSize, todoSort}: any) => {
     const categoryId = todoCategoryId ? todoCategoryId : category.id;
     const page = todoPage ? todoPage : pageToDo.current;
     const size = todoSize ? todoSize : 10;
@@ -214,7 +221,7 @@ const SearchCategoryModal = ({
     // })
     //   .then((response) => {
     //     const { data : { data } } = response;
-        
+
     //     setToDoData((previousValue) => {
     //       return getNewData(previousValue, data.todo);
     //     });
@@ -228,7 +235,7 @@ const SearchCategoryModal = ({
   };
 
   const onContentPageEndReached = () => {
-    if ((contentData.length >= 10) && isLoading.current === false) {
+    if (contentData.length >= 10 && isLoading.current === false) {
       isLoading.current = true;
       pageContent.current += 1;
       fetchContent({});
@@ -236,7 +243,7 @@ const SearchCategoryModal = ({
   };
 
   const onToDoPageEndReached = () => {
-    if ((toDoData.length >= 10 && isLoading.current === false)) {
+    if (toDoData.length >= 10 && isLoading.current === false) {
       isLoading.current = true;
       pageToDo.current += 1;
       fetchToDo({});
@@ -253,9 +260,7 @@ const SearchCategoryModal = ({
     setIsCategoryDownModalVisible(previousValue => !previousValue);
   };
 
-  const onPressCategoryNameButton = (
-    category: CategoryObject
-  ) => {
+  const onPressCategoryNameButton = (category: CategoryObject) => {
     setCategory(category);
     setIsCategoryDownModalVisible(false);
   };
@@ -317,10 +322,7 @@ const SearchCategoryModal = ({
               </View>
             </View>
           </View>
-          <SearchTab 
-            tabData={tabData} 
-            onPressTab={onPressTab}
-          />
+          <SearchTab tabData={tabData} onPressTab={onPressTab} />
         </AppHeader>
         {/** TODO fix 야매 DropDown */}
         {isCategoryDownModalVisible && (
@@ -332,26 +334,33 @@ const SearchCategoryModal = ({
         )}
         {/** sort conditions */}
         <View style={styles.searchConditionContainer}>
-          <SearchCondition 
-            data={currentData()?.id === 1 ? searchConditionContentData : searchConditionToDoData} 
-            onPressButton={currentData()?.id === 1 ? onPressContentViewConditionButton : onPressToDoViewConditionButton}
+          <SearchCondition
+            data={
+              currentData()?.id === 1
+                ? searchConditionContentData
+                : searchConditionToDoData
+            }
+            onPressButton={
+              currentData()?.id === 1
+                ? onPressContentViewConditionButton
+                : onPressToDoViewConditionButton
+            }
           />
         </View>
         {/** list */}
-        {
-          currentData()?.id === 1 ?
-            <SearchContentView 
-              data={contentData} 
-              headerComponent={<></>} 
-              onEndReached={onContentPageEndReached}
-            />
-          :
-            <SearchToDoView 
-              data={toDoData} 
-              headerComponent={<></>} 
-              onEndReached={onToDoPageEndReached}
-            />
-        }
+        {currentData()?.id === 1 ? (
+          <SearchContentView
+            data={contentData}
+            headerComponent={<></>}
+            onEndReached={onContentPageEndReached}
+          />
+        ) : (
+          <SearchToDoView
+            data={toDoData}
+            headerComponent={<></>}
+            onEndReached={onToDoPageEndReached}
+          />
+        )}
       </View>
     </AppModal>
   );

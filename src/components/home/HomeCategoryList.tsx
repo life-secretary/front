@@ -1,4 +1,6 @@
 import React from 'react';
+import {useRecoilValue} from 'recoil';
+import {homeCategoryListState} from '@/store/categoryState';
 
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {HomeCategoryItem} from '@/components/home/HomeCategoryItem';
@@ -8,14 +10,14 @@ import spacing from '@/styles/spacing';
 import type {CategoryObject} from '@/models/common';
 
 type Props = {
-  categories: CategoryObject[];
   openCategoryModal: Function;
 };
 
 export function HomeCategoryList({
-  categories,
   openCategoryModal,
 }: Props): React.JSX.Element {
+  const categories = useRecoilValue(homeCategoryListState);
+
   return (
     <View style={styles.container}>
       <FlatList
