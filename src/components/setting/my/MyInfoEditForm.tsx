@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
+import {updateData} from '@/api/api';
 
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import DatePicker from 'react-native-date-picker';
@@ -45,14 +46,27 @@ export function MyInfoEditForm(): React.JSX.Element {
     ref?.current.blur();
   };
 
+  const handleBirthdatePress = () => {
+    setIsDatePickerVisible(true);
+  };
+
   const handleSubmitButtonPress = () => {
     if (checkNicknameInputValidation()) {
-      moveToBack();
+      editUserInfo();
     }
   };
 
-  const handleBirthdatePress = () => {
-    setIsDatePickerVisible(true);
+  const editUserInfo = async () => {
+    const newUserInfo = {
+      nickname,
+      birthdate,
+    };
+
+    const res = await updateData('/user', userInfo.id, newUserInfo);
+
+    if (res.status === 200) {
+      moveToBack();
+    }
   };
 
   const checkNicknameInputValidation = useCallback(() => {
@@ -163,7 +177,7 @@ export function MyInfoEditForm(): React.JSX.Element {
         date={new Date(birthdate)}
         onConfirm={date => {
           setIsDatePickerVisible(false);
-          onChangeBirthdate(date);
+          onChangeBirthdate(getFormattedDate(date, '-'));
         }}
         onCancel={() => {
           setIsDatePickerVisible(false);
