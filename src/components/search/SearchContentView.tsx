@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import {VirtualizedList, View, StyleSheet} from 'react-native';
 
-import {HomeContentsItem} from '../../components/home/homeContents/HomeContentsItem';
+import {HomeContentsItem} from '../home/homeContent/HomeContentItem';
 
 type SearchContentViewProps = {
   data: Array<{}>; // TODO 타입 구체화

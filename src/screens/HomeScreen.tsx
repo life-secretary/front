@@ -5,10 +5,10 @@ import {categoryListState, mainCategoryListState} from '@/store/categoryState';
 import {occupationListState} from '@/store/occupation';
 import {scrapListState} from '@/store/scrapState';
 import {
-  homeCarouselContentsListState,
-  homeContentsListReadBySimilarUsersState,
-  newestHomeContentsListState,
-} from '@/store/homeContentsState';
+  homeCarouselContentListState,
+  homeContentListReadBySimilarUsersState,
+  newestHomeContentListState,
+} from '@/store/homeContentState';
 import {fetchData} from '@/api/api';
 
 import type {CategoryObject, OccupationObject} from '../models/common';
@@ -19,9 +19,9 @@ import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
 import AppIcon from '@/components/common/AppIcon';
 import {HomeCategoryList} from '@/components/home/HomeCategoryList';
-import {HomeContentsListWithFilter} from '@/components/home/homeContents/HomeContentsListWithFilter';
+import {HomeContentListWithFilter} from '@/components/home/homeContent/HomeContentListWithFilter';
 import {HomeImageCarousel} from '@/components/home/HomeImageCarousel';
-import {HomeContentsList} from '@/components/home/homeContents/HomeContentsList';
+import {HomeContentList} from '@/components/home/homeContent/HomeContentList';
 import {SendFeedbackButton} from '@/components/home/SendFeedbackButton';
 import Login from './init/Login';
 import SearchCategoryModal from '@/components/search/SearchCategoryModal';
@@ -76,15 +76,18 @@ export function HomeScreen(): React.JSX.Element {
   // Login → Agreement → Survey 과정 임시 테스팅 중
   const [isDone, setIsDone] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(HOME_CATEGORIES[0]);
-  const [newestHomeContentsList, setNewestHomeContentsList] = useRecoilState(
-    newestHomeContentsListState,
+  const [newestHomeContentList, setNewestHomeContentList] = useRecoilState(
+    newestHomeContentListState,
   );
-  const [homeCarouselContentsList, setHomeCarouselContentsList] =
-    useRecoilState(homeCarouselContentsListState);
+  const [homeCarouselContentList, setHomeCarouselContentList] = useRecoilState(
+    homeCarouselContentListState,
+  );
   const [
-    homeContentsListReadBySimilarUsers,
-    setHomeContentsListReadBySimilarUsers,
-  ] = useRecoilState(homeContentsListReadBySimilarUsersState);
+    homeContentListReadBySimilarUsers,
+    setHomeContentListReadBySimilarUsers,
+  ] = useRecoilState(homeContentListReadBySimilarUsersState);
+
+  const HOME_CONTENT_SIZE = 5;
 
   const openCategoryModal = (category: CategoryObject) => {
     setSelectedCategory(category);
@@ -133,25 +136,28 @@ export function HomeScreen(): React.JSX.Element {
       }
     };
 
-    const fetchHomeContentsListByNewest = async () => {
-      const res = await fetchData('/content', {sort: 'createdAt'});
+    const fetchHomeContentListByNewest = async () => {
+      const res = await fetchData('/content', {
+        sort: 'createdAt',
+        size: HOME_CONTENT_SIZE,
+      });
       const list = res.data.data.content;
 
       if (res.status === 200) {
-        setNewestHomeContentsList(list);
+        setNewestHomeContentList(list);
       }
     };
 
-    const fetchHomeCarouselContentsList = async () => {
+    const fetchHomeCarouselContentList = async () => {
       const res = await fetchData('/content/main', {});
       const list = res.data.data;
 
       if (res.status === 200) {
-        setHomeCarouselContentsList(list);
+        setHomeCarouselContentList(list);
       }
     };
 
-    const fetchHomeContentsListReadBySimilarUsers = async () => {
+    const fetchHomeContentListReadBySimilarUsers = async () => {
       const res = await fetchData('/content/similar-users/reads', {
         userId: userInfo.id,
       });
@@ -159,21 +165,21 @@ export function HomeScreen(): React.JSX.Element {
       const list = res.data.data;
 
       if (res.status === 200) {
-        setHomeContentsListReadBySimilarUsers(list);
+        setHomeContentListReadBySimilarUsers(list);
       }
     };
 
     fetchCategories();
     fetchOccupations();
     fetchScrapList();
-    fetchHomeContentsListByNewest();
-    fetchHomeCarouselContentsList();
-    fetchHomeContentsListReadBySimilarUsers();
+    fetchHomeContentListByNewest();
+    fetchHomeCarouselContentList();
+    fetchHomeContentListReadBySimilarUsers();
   }, [
     setCategories,
-    setHomeCarouselContentsList,
-    setHomeContentsListReadBySimilarUsers,
-    setNewestHomeContentsList,
+    setHomeCarouselContentList,
+    setHomeContentListReadBySimilarUsers,
+    setNewestHomeContentList,
     setScrapList,
     userInfo,
   ]);
@@ -198,24 +204,24 @@ export function HomeScreen(): React.JSX.Element {
           />
           <HomeImageCarousel
             data={
-              homeCarouselContentsList.length > 0
-                ? homeCarouselContentsList
+              homeCarouselContentList.length > 0
+                ? homeCarouselContentList
                 : DUMMY_CAROUSEL_LIST
             }
             openContentModal={openContentModal}
           />
-          <HomeContentsList
+          <HomeContentList
             isUsernameUsed={true}
             title={'유사한 사용자가 읽고 있어요'}
-            list={homeContentsListReadBySimilarUsers}
+            list={homeContentListReadBySimilarUsers}
           />
-          <HomeContentsListWithFilter
+          <HomeContentListWithFilter
             categories={HOME_CATEGORIES}
             title={'인기 많은 콘텐츠'}
           />
-          <HomeContentsList
+          <HomeContentList
             title={'최근 업데이트 되었어요'}
-            list={newestHomeContentsList}
+            list={newestHomeContentList}
           />
         </View>
         <View style={styles.footer}>

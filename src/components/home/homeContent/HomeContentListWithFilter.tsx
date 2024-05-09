@@ -1,71 +1,86 @@
 import React, {useEffect} from 'react';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {
-  filteredHomeContentsListState,
-  homeContentsFilterState,
-} from '@/store/homeContentsState';
+  filteredHomeContentListState,
+  homeContentFilterState,
+} from '@/store/homeContentState';
+
+import {fetchData} from '@/api/api';
 
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {AppText} from '@/components/common/AppText';
-import {HomeContentsCategoryList} from '@/components/home/homeContents/HomeContentsCategoryList';
+import {HomeContentCategoryList} from '@/components/home/homeContent/HomeContentCategoryList';
 import {ViewMoreButton} from '@/components/home/ViewMoreButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
-
-import {fetchData} from '@/api/api';
 import spacing from '@/styles/spacing';
-import {useRecoilState, useRecoilValue} from 'recoil';
+
+type HomeContentItemByFilterType = {
+  index: number;
+  title: string;
+};
+
+function HomeContentItemByFilter({
+  index,
+  title,
+}: HomeContentItemByFilterType): React.JSX.Element {
+  return (
+    <View style={styles.contents}>
+      <AppText style={styles.contentsNo}>{index + 1}</AppText>
+      <AppText isEllipsizeMode={true} style={styles.contentsTitle}>
+        {title}
+      </AppText>
+    </View>
+  );
+}
 
 type Props = {
   categories: object[];
   title: string;
 };
 
-export function HomeContentsListWithFilter({
+export function HomeContentListWithFilter({
   categories,
   title,
 }: Props): React.JSX.Element {
-  const homeContentsFilter = useRecoilValue(homeContentsFilterState);
-  const [filteredHomeContentsList, setFilteredHomeContentsList] =
-    useRecoilState(filteredHomeContentsListState);
+  const homeContentFilter = useRecoilValue(homeContentFilterState);
+  const [filteredHomeContentList, setFilteredHomeContentList] = useRecoilState(
+    filteredHomeContentListState,
+  );
 
   useEffect(() => {
-    const getHomeContentsFilter = () => {
-      if (homeContentsFilter?.category === 'all') {
+    const getHomeContentFilter = () => {
+      if (homeContentFilter?.category === 'all') {
         return null;
       }
 
-      return homeContentsFilter;
+      return homeContentFilter;
     };
 
-    const fetchHomeContentsListByFilter = async () => {
+    const fetchHomeContentListByFilter = async () => {
       const res = await fetchData('/content/popular', {
-        categoryId: getHomeContentsFilter()?.id,
+        categoryId: getHomeContentFilter()?.id,
         size: 5,
       });
 
       if (res.status === 200) {
         const list = res.data.data;
 
-        setFilteredHomeContentsList(list);
+        setFilteredHomeContentList(list);
       }
     };
 
-    fetchHomeContentsListByFilter();
-  }, [homeContentsFilter, categories, setFilteredHomeContentsList]);
+    fetchHomeContentListByFilter();
+  }, [homeContentFilter, categories, setFilteredHomeContentList]);
 
   return (
     <View style={styles.container}>
       <AppText style={styles.listTitle}>{title}</AppText>
-      <HomeContentsCategoryList categories={categories} />
+      <HomeContentCategoryList categories={categories} />
       <FlatList
-        data={filteredHomeContentsList}
+        data={filteredHomeContentList}
         renderItem={({item, index}) => (
-          <View style={styles.contents}>
-            <AppText style={styles.contentsNo}>{index + 1}</AppText>
-            <AppText isEllipsizeMode={true} style={styles.contentsTitle}>
-              {item?.title}
-            </AppText>
-          </View>
+          <HomeContentItemByFilter index={index} title={item.title} />
         )}
         contentContainerStyle={styles.listContainer}
       />

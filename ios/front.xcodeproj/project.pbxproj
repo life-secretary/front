@@ -559,7 +559,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lifesecretary.app;
 				PRODUCT_NAME = front;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = LifeSecAdHocProfile;
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = LifeSecAdHocProfile;
 				SWIFT_OBJC_BRIDGING_HEADER = "front-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -594,7 +594,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lifesecretary.app;
 				PRODUCT_NAME = front;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = LifeSecAdHocProfile;
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = LifeSecAdHocProfile;
 				SWIFT_OBJC_BRIDGING_HEADER = "front-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
