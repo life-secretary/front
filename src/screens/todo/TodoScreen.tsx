@@ -1,8 +1,9 @@
 import React, {useCallback, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {fetchData} from '@/api/api';
-import {useSetRecoilState} from 'recoil';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
+import {userInfoState} from '@/store/userInfoState';
 
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
@@ -19,6 +20,7 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
   const setTodoList = useSetRecoilState(todoListState);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const userInfo = useRecoilValue(userInfoState);
 
   const moveToScreen = (screen: string, params: object) => {
     navigation.navigate(screen, params);
@@ -40,7 +42,7 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
       async function fetchTodoList() {
         setIsLoading(true);
         const res = await fetchData('/user-todos', {
-          userId: 1,
+          userId: userInfo.id,
         });
 
         if (res.status === 200) {
@@ -50,7 +52,7 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
       }
 
       fetchTodoList();
-    }, [setTodoList]),
+    }, [setTodoList, userInfo.id]),
   );
 
   return (

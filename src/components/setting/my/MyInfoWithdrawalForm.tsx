@@ -1,5 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
+import {useRecoilValue} from 'recoil';
+import {userInfoState} from '@/store/userInfoState';
+
+import {deleteData} from '@/api/api';
 
 import {FlatList, StyleSheet, View} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -50,6 +54,7 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
   const [isNoticeChecked, setIsNoticeChecked] = useState(false);
   const [checkedList, setCheckedList] = useState<CheckboxItem[]>([]);
   const [contents, onChangeContents] = useState('');
+  const userInfo = useRecoilValue(userInfoState);
   const navigation = useNavigation();
 
   const CHECKBOX_LIST = [
@@ -87,6 +92,18 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
 
   const handleNextButtonPress = () => {
     setStep(2);
+  };
+
+  const handleWithdrawalButtonPress = () => {
+    withdrawUser();
+  };
+
+  const withdrawUser = async () => {
+    const res = await deleteData('/user', {}, userInfo.id);
+
+    if (res.status === 200) {
+      handleModalVisible(true);
+    }
   };
 
   useEffect(() => {
@@ -198,7 +215,7 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
                   buttonStyle={[styles.noticeButton, styles.activeNoticeButton]}
                   isDisabled={!isNoticeChecked}
                   disabledBackgroundColor={color.grey.grey300}
-                  onPressButton={() => handleModalVisible(true)}
+                  onPressButton={handleWithdrawalButtonPress}
                 />
               </View>
             </View>
