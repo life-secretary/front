@@ -32,6 +32,8 @@ import {font} from '@/styles/font';
 import {getFormattedDate} from '@/utils';
 import {getFontSize} from '@/utils/font';
 
+import {HOME_CONTENT_SIZE} from '@/constants';
+
 const DUMMY_CAROUSEL_LIST = [
   {
     id: 'c1',
@@ -87,8 +89,6 @@ export function HomeScreen(): React.JSX.Element {
     homeContentListReadBySimilarUsers,
     setHomeContentListReadBySimilarUsers,
   ] = useRecoilState(homeContentListReadBySimilarUsersState);
-
-  const HOME_CONTENT_SIZE = 5;
 
   const openCategoryModal = (category: CategoryObject) => {
     setSelectedCategory(category);

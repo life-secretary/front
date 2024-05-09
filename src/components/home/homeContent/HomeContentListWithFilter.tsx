@@ -17,6 +17,8 @@ import spacing from '@/styles/spacing';
 
 import {getFontSize} from '@/utils/font';
 
+import {HOME_CONTENT_SIZE} from '@/constants';
+
 type HomeContentItemByFilterType = {
   index: number;
   title: string;
@@ -62,7 +64,7 @@ export function HomeContentListWithFilter({
     const fetchHomeContentListByFilter = async () => {
       const res = await fetchData('/content/popular', {
         categoryId: getHomeContentFilter()?.id,
-        size: 5,
+        size: HOME_CONTENT_SIZE,
       });
 
       if (res.status === 200) {
