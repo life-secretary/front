@@ -17,10 +17,7 @@ import {SettingModalScreen} from './src/screens/setting/SettingModalScreen';
 import {MyInfoModalScreen} from './src/screens/setting/MyInfoModalScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 
 // import Content from './src/components/contentDetail/ContentModal';
 
@@ -44,7 +41,7 @@ function RootStack() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Group>
-        <Stack.Screen name="Home" component={HomeTabs} />
+        <Stack.Screen name="HomeTab" component={HomeTabs} />
       </Stack.Group>
       <Stack.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <Stack.Screen
