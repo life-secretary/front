@@ -38,6 +38,10 @@ const mainCategoryListState = selector({
       if (item?.category === 'culture') {
         list[5] = item;
       }
+
+      if (item?.category === 'etc') {
+        list[6] = item;
+      }
     });
 
     return list;

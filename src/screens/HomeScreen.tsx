@@ -29,7 +29,7 @@ import ContentModal from '@/components/contentDetail/ContentModal';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-import {generateRandomId, getFormattedDate} from '@/utils';
+import {getFormattedDate} from '@/utils';
 
 const DUMMY_CAROUSEL_LIST = [
   {
@@ -60,10 +60,10 @@ const DUMMY_CAROUSEL_LIST = [
 
 export function HomeScreen(): React.JSX.Element {
   const mainCategories = useRecoilValue(mainCategoryListState);
+  // TODO: category state 가공 로직 리팩토링
   const HOME_CATEGORIES = [
     {id: 0, category: 'all', title: '전체'},
     ...mainCategories,
-    {id: generateRandomId(), category: 'etc', title: '기타'},
   ];
 
   // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
