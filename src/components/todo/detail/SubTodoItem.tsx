@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {deleteData, updateData} from '@/api/api';
 
 import {
@@ -18,6 +18,11 @@ import OutsidePressHandler from 'react-native-outside-press';
 
 import Todo from '@/models/Todo';
 import SubTodo from '@/models/SubTodo';
+import {
+  checkInappropriateKeyword,
+  checkSpecialChar,
+  formValidation,
+} from '@/utils/formValidation';
 
 type ItemProps = {
   todoItem: Todo;
@@ -33,6 +38,8 @@ export function SubTodoItem({
   const [title, onChangeTitle] = useState(subTodoItem.title || '');
   const [isChecked, setIsChecked] = useState(subTodoItem.isDone || false);
   const [isEditable, setIsEditable] = useState(false);
+  const [isTitleInvalid, setIsTitleInvalid] = useState(false);
+  const [titleErrorMsg, setTitleErrorMsg] = useState('');
   const inputRef = useRef(null);
 
   const itemWidth =
@@ -50,6 +57,10 @@ export function SubTodoItem({
   };
 
   const handleInputBlur = () => {
+    if (isTitleInvalid) {
+      return;
+    }
+
     inputRef?.current.blur();
     setIsEditable(false);
   };
@@ -58,6 +69,34 @@ export function SubTodoItem({
     editSubTodo(subTodoItem.id, status);
     setIsChecked(status);
   };
+
+  const checkTitleInputValidation = useCallback(() => {
+    if (!title) {
+      setIsTitleInvalid(true);
+      return false;
+    }
+
+    if (checkSpecialChar(title)) {
+      setIsTitleInvalid(true);
+      setTitleErrorMsg(formValidation.common.specialChar.errorMsg);
+      return false;
+    }
+
+    if (
+      checkInappropriateKeyword(
+        formValidation.common.inappropriate.keywords,
+        title,
+      )
+    ) {
+      setIsTitleInvalid(true);
+      setTitleErrorMsg(formValidation.common.inappropriate.errorMsg);
+      return false;
+    }
+
+    setIsTitleInvalid(false);
+    setTitleErrorMsg('');
+    return true;
+  }, [title]);
 
   const editSubTodo = async (subTodoId: number, isDone?: boolean) => {
     const editedSubTodo = {
@@ -77,12 +116,20 @@ export function SubTodoItem({
   };
 
   const handleInputSubmit = (id: number) => {
+    if (isTitleInvalid) {
+      return;
+    }
+
     editSubTodo(id);
   };
 
   const handleDeleteButtonPress = (id: number) => {
     deleteSubTodo(id);
   };
+
+  useEffect(() => {
+    checkTitleInputValidation();
+  }, [checkTitleInputValidation]);
 
   return (
     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -91,13 +138,21 @@ export function SubTodoItem({
           <View style={styles.titleContainer}>
             <View style={styles.titleWrapper}>
               <AppIcon name="hamburger" width={24} height={24} />
-              <View style={isInputActive && styles.inputContainer}>
+              <View
+                style={[
+                  isInputActive && styles.inputContainer,
+                  isTitleInvalid && styles.error,
+                ]}>
+                {isTitleInvalid && (
+                  <AppIcon name="warning" width={20} height={20} />
+                )}
                 <OutsidePressHandler onOutsidePress={handleOutsidePress}>
                   <TextInput
                     ref={inputRef}
                     value={title}
                     style={[styles.input, isInputActive && styles.activeText]}
                     editable={isInputActive}
+                    maxLength={18}
                     onChangeText={onChangeTitle}
                     onPressIn={handleInputPress}
                     onBlur={handleInputBlur}
@@ -169,6 +224,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flex: 1,
+    flexDirection: 'row',
+    width: '100%',
     borderBottomWidth: 1,
     borderColor: color.grey.grey500,
   },
@@ -181,6 +238,9 @@ const styles = StyleSheet.create({
   },
   activeText: {
     color: color.grey.grey700,
+  },
+  error: {
+    borderColor: color.state.error,
   },
   divider: {
     borderWidth: 1,
