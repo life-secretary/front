@@ -6,7 +6,7 @@ import {StyleSheet, View, FlatList} from 'react-native';
 import {AppText} from '@/components/common/AppText';
 import {AppDivider} from '@/components/common/AppDivider';
 import {AppSpinner} from '../common/AppSpinner';
-import {ScrapContentsItem} from '@/components/scrap/ScrapContentsItem';
+import {ScrapContentItem} from '@/components/scrap/ScrapContentItem';
 import {SendFeedbackButton} from '@/components/home/SendFeedbackButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
@@ -36,7 +36,7 @@ type Props = {
   manipulateCheckedList: Function;
 };
 
-export function ScrapContentsList({
+export function ScrapContentList({
   isLoading,
   isDeleted,
   mode,
@@ -84,8 +84,8 @@ export function ScrapContentsList({
           showsVerticalScrollIndicator={false}
           data={scrapList}
           renderItem={({item}) => (
-            <ScrapContentsItem
-              contents={{...item}}
+            <ScrapContentItem
+              content={item}
               mode={mode}
               checkedList={checkedList}
               handleButtonPress={handleButtonPress}
