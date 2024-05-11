@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {scrapListState, scrapListTotalCountState} from '@/store/scrapState';
 import {userInfoState} from '@/store/userInfoState';
 import {deleteData, fetchData} from '@/api/api';
@@ -11,7 +11,7 @@ import {AppText} from '@/components/common/AppText';
 import {AppTitle} from '@/components/common/AppTitle';
 import {AppDivider} from '@/components/common/AppDivider';
 import AppButton from '@/components/common/AppButton';
-import {ScrapContentsList} from '@/components/scrap/ScrapContentsList';
+import {ScrapContentList} from '@/components/scrap/ScrapContentList';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
@@ -109,18 +109,6 @@ export function SaveScreen(): React.JSX.Element {
   }, [setScrapList, userInfo.id]);
 
   const deleteScrapList = async (list: object[]) => {
-    // 임시 코드
-    // list.forEach(scrapItem => {
-    //   const itemIndex = dummyScrapList.findIndex(
-    //     item => item.id === scrapItem.id,
-    //   );
-
-    //   dummyScrapList.splice(itemIndex, 1);
-    // });
-
-    // setCheckedList([]);
-    // switchMode('read');
-
     const idList = list.map((item: object) => item?.id).join(',');
     const res = await deleteData('/scrap', {}, idList);
 
@@ -185,7 +173,7 @@ export function SaveScreen(): React.JSX.Element {
           />
         </View>
         <AppDivider style={styles.divider} />
-        <ScrapContentsList
+        <ScrapContentList
           isLoading={isLoading}
           isDeleted={isDeleted}
           checkedList={checkedList}

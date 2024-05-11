@@ -1,25 +1,29 @@
 import React from 'react';
+import {useRecoilValue} from 'recoil';
+import {categoryListState} from '@/store/categoryState';
 
 import {StyleSheet, View} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {AppText} from '@/components/common/AppText';
 import {BookmarkButton} from './BookmarkButton';
+
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 type Props = {
-  contents: object;
+  content: object;
   mode: string;
   checkedList: object[];
   handleButtonPress: Function;
   handleCheckedList: Function;
 };
 
-export function ScrapContentsItem({
-  contents,
+export function ScrapContentItem({
+  content,
   mode,
   handleCheckedList,
 }: Props): React.JSX.Element {
+  const categories = useRecoilValue(categoryListState);
   const handleCheckboxPress = (action: string, data: object) => {
     handleCheckedList(action, data);
   };
@@ -35,8 +39,8 @@ export function ScrapContentsItem({
             disableText
             onPress={(checked: boolean) => {
               checked
-                ? handleCheckboxPress('push', contents)
-                : handleCheckboxPress('remove', contents);
+                ? handleCheckboxPress('push', content)
+                : handleCheckboxPress('remove', content);
             }}
           />
         </View>
@@ -45,14 +49,17 @@ export function ScrapContentsItem({
         <View style={styles.infoContainer}>
           <View style={styles.tagContainer}>
             <AppText style={styles.tag}>
-              {contents?.category?.title || '카테고리'}
+              {
+                categories.find(category => category.id === content.categoryId)
+                  ?.title
+              }
             </AppText>
           </View>
           <AppText style={styles.title} isEllipsizeMode={true}>
-            {contents?.title}
+            {content?.title}
           </AppText>
         </View>
-        {mode === 'READ' && <BookmarkButton contents={contents} />}
+        {mode === 'READ' && <BookmarkButton contents={content} />}
       </View>
     </View>
   );
