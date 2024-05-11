@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
-import AppIcon from '@/components/common/AppIcon';
+// import AppIcon from '@/components/common/AppIcon';
 import {MyInfoSection} from '@/components/setting/my/MyInfoSection';
 import {SettingMenu} from '@/components/setting/SettingMenu';
 import color from '@/styles/color';
@@ -68,7 +68,8 @@ export function SettingScreen(): React.JSX.Element {
       <AppHeader style={styles.header}>
         <AppTitle text="관리" style={styles.headerTitle} />
         <View style={styles.headerIconContainer}>
-          <AppIcon name="notificationOn" width={42} height={42} />
+          {/* TODO: 알림 기능 2차 개발 예정 */}
+          {/* <AppIcon name="notificationOn" width={42} height={42} /> */}
         </View>
       </AppHeader>
       <View style={styles.container}>

@@ -193,7 +193,8 @@ export function HomeScreen(): React.JSX.Element {
             style={styles.headerTitle}
           />
           <View style={styles.headerIconContainer}>
-            <AppIcon name="notificationOn" width={42} height={42} />
+            {/* TODO: 알림 기능 2차 개발 예정 */}
+            {/* <AppIcon name="notificationOn" width={42} height={42} /> */}
             <AppIcon name="balancer" width={42} height={42} />
           </View>
         </AppHeader>
