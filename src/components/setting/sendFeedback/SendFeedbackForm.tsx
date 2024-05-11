@@ -74,7 +74,7 @@ export function SendFeedbackForm() {
       setTimeout(() => {
         resetForm();
         setIsModalVisible(false);
-        navigation.navigate('Home');
+        navigation.goBack();
       }, 2000);
     }
   };
