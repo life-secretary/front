@@ -45,9 +45,10 @@ export function AddSubTodoButton({
 const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 53,
-    backgroundColor: 'transparent',
+    position: 'absolute',
+    marginLeft: -50,
+    left: '50%',
+    bottom: 53,
   },
   button: {
     flexDirection: 'row',

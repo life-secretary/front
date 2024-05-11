@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingHorizontal: 24,
-    paddingTop: 24,
+    paddingVertical: 24,
     backgroundColor: color.main.white,
   },
   listContainer: {
