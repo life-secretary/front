@@ -1,5 +1,5 @@
 import React from 'react';
-import {categoryListState, mainCategoryListState} from '@/store/categoryState';
+import {mainCategoryListState} from '@/store/categoryState';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 
 import {FlatList, Pressable, StyleSheet, View} from 'react-native';
@@ -21,7 +21,7 @@ export function TodoCategorySelect({
   const CATEGORY_SELECT_OPTIONS = [
     {id: 0, key: 'none', title: '선택안함'},
     ...categories,
-    {id: categories.length + 1, key: 'custom', title: '직접입력'},
+    {id: null, key: 'custom', title: '직접입력'},
   ];
 
   const handleSelectOption = (option: object) => {

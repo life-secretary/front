@@ -59,16 +59,16 @@ export function TodoDetail({
       <View style={styles.infoContainer}>
         <View style={styles.infoRow}>
           <AppText style={[styles.infoText, styles.defaultText]}>할일</AppText>
-          {todoItem.subTodoList && todoItem.subTodoList.length > 0 ? (
+          {todoItem.subs && todoItem.subs.length > 0 ? (
             <View style={styles.todoRow}>
               <AppText style={[styles.infoText, styles.completedText]}>
                 {
-                  todoItem.subTodoList.filter((item: SubTodo) => item.isDone)
+                  todoItem.subs.filter((subTodo: SubTodo) => subTodo.isDone)
                     .length
                 }
               </AppText>
               <AppText style={[styles.infoText, styles.defaultText]}>
-                /{todoItem.subTodoList.length}개
+                /{todoItem.subs.length}개
               </AppText>
             </View>
           ) : (

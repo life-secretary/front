@@ -7,7 +7,7 @@ type Todo = {
   userTag?: string;
   tagList?: string[];
   isDone: boolean;
-  subTodoList?: object[];
+  subs?: object[];
   createdTime: string;
   completedTime?: string;
 };

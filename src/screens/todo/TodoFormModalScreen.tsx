@@ -79,7 +79,7 @@ export function TodoFormModalScreen({route, navigation}: any) {
           )}
         </KeyboardAvoidingView>
       </AppLayout>
-      <AppBottomSheet snapPointsArr={['65%']}>
+      <AppBottomSheet snapPointsArr={['70%']}>
         <TodoCategorySelect
           handleSelectCategory={(arg: object) => setSelectedCategory(arg)}
         />

@@ -8,8 +8,6 @@ import AppIcon from '@/components/common/AppIcon';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 import {getFormattedDate} from '@/utils';
-import {categoryListState} from '@/store/categoryState';
-import {useRecoilValue} from 'recoil';
 
 import Todo from '@/models/Todo';
 import SubTodo from '@/models/SubTodo';
@@ -19,13 +17,11 @@ type Props = {
 };
 
 export function TodoCard({item}: Props): React.JSX.Element {
-  const categories = useRecoilValue(categoryListState);
   const navigation = useNavigation();
 
-  // TODO: 실 데이터로 교체되면 임시 코드 제거
   const setTagList = () => {
     let list = [];
-    let categoryTitle: any = null;
+    let categoryTitle = '';
 
     if (item?.isDone) {
       list.push('완료');
@@ -35,12 +31,10 @@ export function TodoCard({item}: Props): React.JSX.Element {
       list.push('나의 할 일');
     }
 
-    if (item?.userTag !== null) {
-      categoryTitle = item?.userTag;
-    } else if (item?.categoryId !== null) {
-      categoryTitle = categories.find(
-        (category: object) => category?.id === item?.categoryId,
-      )?.title;
+    if (item.userTag !== null) {
+      categoryTitle = item.userTag;
+    } else if (item?.category) {
+      categoryTitle = item.category?.title;
     } else {
       categoryTitle = null;
     }
@@ -55,12 +49,12 @@ export function TodoCard({item}: Props): React.JSX.Element {
     title: item?.title,
     categoryId: item?.categoryId,
     userTag: item?.userTag,
-    tagList: setTagList(), // TODO: 추후 실 데이터로 교체
+    tagList: setTagList(),
     origId: item?.origId,
     isDone: item?.isDone,
     createdTime: item?.createdTime,
     completedTime: item?.completedTime,
-    subTodoList: item?.subTodoList, // TODO: 할 일 데이터에 세부 항목 리스트 데이터 포함 요청
+    subs: item?.subs,
   };
 
   const moveToScreen = (screen: string, params: object) => {
@@ -123,17 +117,16 @@ export function TodoCard({item}: Props): React.JSX.Element {
         <View style={styles.cardInfoRow}>
           <View style={styles.cardTodoRow}>
             <AppText style={[styles.cardInfoText, styles.light]}>할일 </AppText>
-            {todoItem.subTodoList && todoItem.subTodoList.length > 0 ? (
+            {todoItem.subs && todoItem.subs.length > 0 ? (
               <>
                 <AppText style={[styles.cardInfoText, styles.dark]}>
                   {
-                    todoItem.subTodoList.filter(
-                      (subTodoItem: SubTodo) => subTodoItem.isDone,
-                    ).length
+                    todoItem.subs.filter((subTodo: SubTodo) => subTodo.isDone)
+                      .length
                   }
                 </AppText>
                 <AppText style={[styles.cardInfoText, styles.light]}>
-                  /{todoItem.subTodoList.length}
+                  /{todoItem.subs.length}
                 </AppText>
               </>
             ) : (
@@ -143,8 +136,8 @@ export function TodoCard({item}: Props): React.JSX.Element {
           </View>
           <AppText style={[styles.cardInfoText, styles.cardDate]}>
             생성{' '}
-            {todoItem?.createdTime &&
-              getFormattedDate(new Date(todoItem?.createdTime), '.')}
+            {todoItem.createdTime &&
+              getFormattedDate(new Date(todoItem.createdTime), '.')}
           </AppText>
         </View>
       </View>

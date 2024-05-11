@@ -3,6 +3,9 @@ type SubTodo = {
   parentId?: number;
   title: string;
   isDone: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 };
 
 export default SubTodo;
