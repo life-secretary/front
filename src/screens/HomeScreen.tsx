@@ -180,6 +180,7 @@ export function HomeScreen(): React.JSX.Element {
     setHomeCarouselContentList,
     setHomeContentListReadBySimilarUsers,
     setNewestHomeContentList,
+    setOccupationList,
     setScrapList,
     userInfo,
   ]);
