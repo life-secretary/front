@@ -49,6 +49,7 @@ interface CheckboxItem {
 
 export function MyInfoWithdrawalForm(): React.JSX.Element {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
   const [step, setStep] = useState(1);
   const [isNoticeChecked, setIsNoticeChecked] = useState(false);
@@ -126,7 +127,14 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
     } else {
       setIsEmpty(false);
     }
-  }, [checkedList, isEmpty]);
+
+    // 기타 선택 여부 판단
+    if (checkedList.findIndex(item => item.key === 'etc') !== -1) {
+      setIsEditable(true);
+    } else {
+      setIsEditable(false);
+    }
+  }, [checkedList]);
 
   return (
     <>
@@ -161,6 +169,8 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
                 text={reasonText}
                 isMultiline={true}
                 minHeight={152}
+                disabled={!isEditable}
+                editable={isEditable}
                 onChangeText={onChangeReasonText}
               />
             </View>
