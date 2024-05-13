@@ -29,6 +29,7 @@ interface StateColor {
 }
 
 interface ShadowColor {
+  bottomTab: string;
   box: string;
 }
 
@@ -64,6 +65,7 @@ const color: ColorPalette = {
 
   // Shadow Colors
   shadow: {
+    bottomTab: '#002357',
     box: '#CBD3DC80',
   },
 

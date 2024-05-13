@@ -44,6 +44,12 @@ import {default as logoKakao} from './login/icon_kakao.svg';
 import {default as logoGoogle} from './login/icon_google.svg';
 import {default as logoApple} from './login/icon_apple.svg';
 import {default as warning} from './icon_warning.svg';
+import {default as homeTab} from './bottomTab/icon_home.svg';
+import {default as searchTab} from './bottomTab/icon_search.svg';
+import {default as todoTab} from './bottomTab/icon_todo.svg';
+import {default as scrapTab} from './bottomTab/icon_scrap.svg';
+import {default as settingTab} from './bottomTab/icon_setting.svg';
+import color from '@/styles/color';
 
 // TODO: iconName 키 타입 string -> string literal 변경하기
 export type IconsData = {
@@ -316,6 +322,36 @@ const Icons: IconsData = {
     file: warning,
     defaultStroke: '',
     defaultFill: '',
+  },
+  homeTab: {
+    type: 'fill',
+    file: homeTab,
+    defaultStroke: color.grey.grey400,
+    defaultFill: color.main.white,
+  },
+  searchTab: {
+    type: 'fill',
+    file: searchTab,
+    defaultStroke: color.grey.grey400,
+    defaultFill: color.main.white,
+  },
+  todoTab: {
+    type: 'stroke',
+    file: todoTab,
+    defaultStroke: color.grey.grey400,
+    defaultFill: '',
+  },
+  scrapTab: {
+    type: 'fill',
+    file: scrapTab,
+    defaultStroke: color.grey.grey400,
+    defaultFill: color.main.white,
+  },
+  settingTab: {
+    type: 'fill',
+    file: settingTab,
+    defaultStroke: color.grey.grey400,
+    defaultFill: color.main.white,
   },
 };
 

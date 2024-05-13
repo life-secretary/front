@@ -18,7 +18,7 @@ import spacing from '@/styles/spacing';
 
 import {removeItemAtIndex} from '@/utils';
 
-export function SaveScreen(): React.JSX.Element {
+export function ScrapScreen(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState(false);
   const [mode, setMode] = useState('READ'); // TODO: ENUM type 정의 ['READ', 'EDIT', 'DELETE']
   const [buttonText, setButtonText] = useState('');
