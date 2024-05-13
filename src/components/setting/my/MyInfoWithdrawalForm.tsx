@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useRecoilValue} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
 
-import {deleteData} from '@/api/api';
+import {createData, deleteData} from '@/api/api';
 
 import {FlatList, StyleSheet, View} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -53,11 +53,11 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
   const [step, setStep] = useState(1);
   const [isNoticeChecked, setIsNoticeChecked] = useState(false);
   const [checkedList, setCheckedList] = useState<CheckboxItem[]>([]);
-  const [contents, onChangeContents] = useState('');
+  const [reasonText, onChangeReasonText] = useState('');
   const userInfo = useRecoilValue(userInfoState);
   const navigation = useNavigation();
 
-  const CHECKBOX_LIST = [
+  const WITHDRAWAL_REASON_LIST = [
     {key: 'notOften', text: '자주 사용하지 않아요'},
     {key: 'inconvenience', text: '앱이 사용하기 불편해요'},
     {key: 'lack', text: '원하는 내용이 많이 부족해요'},
@@ -73,12 +73,12 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
     setIsModalVisible(status);
   };
 
-  const handleCheckboxPress = (status: boolean, item: object) => {
+  const handleCheckboxPress = (isChecked: boolean, item: object) => {
     const itemIndex = checkedList.findIndex(
       checkedItem => checkedItem.key === item?.key,
     );
 
-    if (status) {
+    if (isChecked) {
       setCheckedList([...checkedList, item]);
     } else {
       const newCheckedList = removeItemAtIndex(checkedList, itemIndex);
@@ -95,7 +95,21 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
   };
 
   const handleWithdrawalButtonPress = () => {
-    withdrawUser();
+    sendWithdrawalReason().then(res => {
+      if (res.status === 200) {
+        withdrawUser();
+      }
+    });
+  };
+
+  const sendWithdrawalReason = async () => {
+    const reason = {
+      userId: userInfo.id,
+      reason: reasonText,
+    };
+
+    const res = await createData('/withdrawal-reasons', reason);
+    return res;
   };
 
   const withdrawUser = async () => {
@@ -128,7 +142,7 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
               <View style={styles.listContainer}>
                 <FlatList
                   scrollEnabled={false}
-                  data={CHECKBOX_LIST}
+                  data={WITHDRAWAL_REASON_LIST}
                   renderItem={({item}) => {
                     return (
                       <CheckboxItem
@@ -144,10 +158,10 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
               <AppInput
                 hasLabel={false}
                 placeholder="인생비서팀에게 전하고 싶은 의견을 남겨주세요"
-                text={contents}
+                text={reasonText}
                 isMultiline={true}
                 minHeight={152}
-                onChangeText={onChangeContents}
+                onChangeText={onChangeReasonText}
               />
             </View>
             <View style={styles.buttonContainer}>
