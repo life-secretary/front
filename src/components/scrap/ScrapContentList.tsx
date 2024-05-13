@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: spacing.layoutPaddingHorizontal,
+    paddingBottom: 60,
   },
   divider: {
     marginVertical: 16,
