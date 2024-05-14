@@ -23,25 +23,13 @@ const ToDoListItem = ({
   hasMainCategory = true,
   item,
 }: any): React.JSX.Element => {
-  const categories = useRecoilValue(categoryListState);
-
-  const getCategoryName = (categoryId: number | null) => {
-    const category: any = categories.find((item: CategoryObject) => item.id === categoryId);
-
-    if (!categoryId || !category) {
-      return '';
-    }
-
-    return category.title;
-  };
-
   return (
     <View style={styles.toDoListItemContainer}>
       <View style={styles.toDoListItemTextContainer}>
         <View style={styles.toDoListItemTextWrapper}>
           {hasMainCategory ? (
             <AppText style={styles.toDoListItemCategory}>
-              {getCategoryName(item.categoryId)}
+              {item.category.title}
             </AppText>
           ) : (
             <></>
