@@ -129,8 +129,6 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
       withdrawalReasons.additionalComment = reasonText;
     }
 
-    console.log(withdrawalReasons);
-
     const res = await createData('/withdrawal-reasons', withdrawalReasons);
 
     return res;
