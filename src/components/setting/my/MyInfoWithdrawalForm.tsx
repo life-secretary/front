@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useRecoilValue} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
 
-import {createData, deleteData} from '@/api/api';
+import {createData, deleteData, fetchData} from '@/api/api';
 
 import {FlatList, StyleSheet, View} from 'react-native';
+import OutsidePressHandler from 'react-native-outside-press';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {AppText} from '@/components/common/AppText';
@@ -35,17 +36,27 @@ export function CheckboxItem({
         fillColor={color.main.primary}
         iconStyle={styles.checkbox}
         innerIconStyle={styles.checkbox}
-        onPress={(isChecked: boolean) => onPress(isChecked, item)}
+        onPress={(isChecked: boolean) => {
+          onPress(isChecked, item);
+        }}
       />
-      <AppText style={styles.itemText}>{item?.text}</AppText>
+      <AppText style={styles.itemText}>{item?.reason || item?.text}</AppText>
     </View>
   );
 }
 
-interface CheckboxItem {
-  key: string;
-  text: string;
-}
+type CheckboxItem = {
+  id: number;
+  reason: string;
+};
+
+/*
+  회원 탈퇴 사유 유형
+  {id: 1, reason: '자주 사용하지 않아요'},
+  {id: 2, reason: '앱이 사용하기 불편해요'},
+  {id: 3, reason: '원하는 내용이 많이 부족해요'},
+  {id: 4, reason: '기타'},
+*/
 
 export function MyInfoWithdrawalForm(): React.JSX.Element {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -53,42 +64,47 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
   const [isEmpty, setIsEmpty] = useState(false);
   const [step, setStep] = useState(1);
   const [isNoticeChecked, setIsNoticeChecked] = useState(false);
-  const [checkedList, setCheckedList] = useState<CheckboxItem[]>([]);
+  const [withdrawalReasonTypeList, setWithdrawalReasonTypeList] = useState([]);
+  const [checkedReasonList, setCheckedReasonList] = useState<CheckboxItem[]>(
+    [],
+  );
   const [reasonText, onChangeReasonText] = useState('');
   const userInfo = useRecoilValue(userInfoState);
   const navigation = useNavigation();
-
-  const WITHDRAWAL_REASON_LIST = [
-    {key: 'notOften', text: '자주 사용하지 않아요'},
-    {key: 'inconvenience', text: '앱이 사용하기 불편해요'},
-    {key: 'lack', text: '원하는 내용이 많이 부족해요'},
-    {key: 'etc', text: '기타'},
-  ];
+  const inputRef = useRef(null);
 
   const NOTICE_CHECKBOX = {
     key: 'notice',
     text: '유의사항을 확인하였으며, 위 내용에 동의합니다',
   };
 
+  const handleInputOutsidePress = () => {
+    handleInputBlur();
+  };
+
+  const handleInputBlur = () => {
+    inputRef?.current.blur();
+  };
+
   const handleModalVisible = (status: boolean) => {
     setIsModalVisible(status);
   };
 
-  const handleCheckboxPress = (isChecked: boolean, item: object) => {
-    const itemIndex = checkedList.findIndex(
-      checkedItem => checkedItem.key === item?.key,
+  const handleCheckboxPress = (isChecked: boolean, item: CheckboxItem) => {
+    const itemIndex = checkedReasonList.findIndex(
+      checkedItem => checkedItem.id === item.id,
     );
 
     if (isChecked) {
-      setCheckedList([...checkedList, item]);
+      setCheckedReasonList([...checkedReasonList, item]);
     } else {
-      const newCheckedList = removeItemAtIndex(checkedList, itemIndex);
-      setCheckedList([...newCheckedList]);
+      const newCheckedList = removeItemAtIndex(checkedReasonList, itemIndex);
+      setCheckedReasonList([...newCheckedList]);
     }
   };
 
-  const handleNoticeCheckboxPress = (status: boolean) => {
-    setIsNoticeChecked(status);
+  const handleNoticeCheckboxPress = (isChecked: boolean) => {
+    setIsNoticeChecked(isChecked);
   };
 
   const handleNextButtonPress = () => {
@@ -104,12 +120,19 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
   };
 
   const sendWithdrawalReason = async () => {
-    const reason = {
+    const withdrawalReasons: any = {
       userId: userInfo.id,
-      reason: reasonText,
+      reasonTypeIds: checkedReasonList.map(item => item.id),
     };
 
-    const res = await createData('/withdrawal-reasons', reason);
+    if (isEditable) {
+      withdrawalReasons.additionalComment = reasonText;
+    }
+
+    console.log(withdrawalReasons);
+
+    const res = await createData('/withdrawal-reasons', withdrawalReasons);
+
     return res;
   };
 
@@ -122,19 +145,31 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
   };
 
   useEffect(() => {
-    if (!checkedList || checkedList.length === 0) {
+    if (!checkedReasonList || checkedReasonList.length === 0) {
       setIsEmpty(true);
     } else {
       setIsEmpty(false);
     }
 
-    // 기타 선택 여부 판단
-    if (checkedList.findIndex(item => item.key === 'etc') !== -1) {
+    // '기타' 선택 여부 판단
+    if (checkedReasonList.findIndex(item => item.id === 4) !== -1) {
       setIsEditable(true);
     } else {
       setIsEditable(false);
     }
-  }, [checkedList]);
+  }, [checkedReasonList]);
+
+  useEffect(() => {
+    const fetchWithdrawalTypeList = async () => {
+      const res = await fetchData('/withdrawal-reasons/types', null);
+
+      if (res.status === 200) {
+        setWithdrawalReasonTypeList(res.data.data);
+      }
+    };
+
+    fetchWithdrawalTypeList();
+  }, []);
 
   return (
     <>
@@ -150,29 +185,29 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
               <View style={styles.listContainer}>
                 <FlatList
                   scrollEnabled={false}
-                  data={WITHDRAWAL_REASON_LIST}
+                  data={withdrawalReasonTypeList}
                   renderItem={({item}) => {
                     return (
-                      <CheckboxItem
-                        item={{...item}}
-                        onPress={handleCheckboxPress}
-                      />
+                      <CheckboxItem item={item} onPress={handleCheckboxPress} />
                     );
                   }}
                   keyExtractor={item => item.key}
                   contentContainerStyle={styles.checkboxContainer}
                 />
               </View>
-              <AppInput
-                hasLabel={false}
-                placeholder="인생비서팀에게 전하고 싶은 의견을 남겨주세요"
-                text={reasonText}
-                isMultiline={true}
-                minHeight={152}
-                disabled={!isEditable}
-                editable={isEditable}
-                onChangeText={onChangeReasonText}
-              />
+              <OutsidePressHandler onOutsidePress={handleInputOutsidePress}>
+                <AppInput
+                  ref={inputRef}
+                  hasLabel={false}
+                  placeholder="인생비서팀에게 전하고 싶은 의견을 남겨주세요"
+                  text={reasonText}
+                  isMultiline={true}
+                  minHeight={152}
+                  disabled={!isEditable}
+                  editable={isEditable}
+                  onChangeText={onChangeReasonText}
+                />
+              </OutsidePressHandler>
             </View>
             <View style={styles.buttonContainer}>
               <AppButton
