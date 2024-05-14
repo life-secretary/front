@@ -1,28 +1,40 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, FlatList, VirtualizedList} from 'react-native';
-import type {AppModalProps} from '../common/modal/AppModal';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, FlatList, VirtualizedList } from 'react-native';
+import type { AppModalProps } from '../common/modal/AppModal';
+import { useRecoilValue } from 'recoil';
 
-import {AppHeader} from '../common/AppHeader';
-import {AppText} from '../common/AppText';
+import { AppHeader } from '../common/AppHeader';
+import { AppText } from '../common/AppText';
 import AppIcon from '../common/AppIcon';
 import AppButton from '../common/AppButton';
 import AppModal from '../common/modal/AppModal';
-
 import ToDoListItem from '../search/ToDoListItem';
 import SearchHashTagModal from '../search/SearchHashTagModal';
 
 import Markdown from 'react-native-markdown-display';
-import {getFontSize} from '../../utils/font';
+import { getFontSize } from '../../utils/font';
+import { getFormattedDate } from '@/utils';
+import { markdownStyle } from '@/styles/content';
+
+import { categoryListState } from '@/store/categoryState';
+import { userInfoState } from '@/store/userInfoState';
+import { fetchData, createData, deleteData } from '@/api/api';
 
 type ContentModalProps = Partial<AppModalProps> & {
+  content: any;
   isVisible: boolean;
   closeContentModal: () => void;
 };
 
 const ContentModal = ({
+  content,
   isVisible = false,
   closeContentModal,
 }: ContentModalProps): React.JSX.Element => {
+  const categories = useRecoilValue(categoryListState);
+  const userInfo = useRecoilValue(userInfoState);
+  const [item, setItem] = useState<any>([]);
+  const [todos, setTodos] = useState<any>([]);
   const constants = {
     MODAL_BACKDROP_COLOR: 'white',
     MODAL_BACKDROP_OPACITY: 1,
@@ -43,70 +55,132 @@ const ContentModal = ({
 
   // ![20대_예산수립_1](https://github.com/life-secretary/front/assets/80025242/ab8bfe44-3f92-4d3d-a3ff-73c9671fbe8a) → 렌더 비용으로 잠깐 빼놓음
 
-  const markdown = `
-![20대_예산수립_1](https://github.com/life-secretary/front/assets/80025242/ab8bfe44-3f92-4d3d-a3ff-73c9671fbe8a)
-
-## 중간 타이틀 영역
-    
-#### 청년 우대형 주택청약종합저축은 기존 주택청약의 혜택에 1.5%의 우대금리를 추가로 제공합니다.
-    
-#### 만일 2년 이상 가입한 경우 납입 원금 5천만원 한도 내에서 최대 10년간 우대금리를 적용받을 수가 있는데요.
-    
-#### 보통 주택청약이 붙는 이율이 10년 이상 납입되었을 경우 2.8%라면, 청년 우대형 청약통장의 경우는 1개월 ~1년은, 1~2년에 따라 금리가 변동되며 ~10년은 4.3%로 기존의 일반청약통장 대비하여 거의 2배에 달하는 이자를 제공한다고 보시면 됩니다.
-    
-#### 청년 우대형 주택청약종합저축은 기존 주택청약의 혜택에 1.5%의 우대금리를 추가로 제공합니다.
-    
-#### 만일 2년 이상 가입한 경우 납입 원금 5천만원 한도 내에서 최대 10년간 우대금리를 적용받을 수가 있는데요.
-    
-#### 보통 주택청약이 붙는 이율이 10년 이상 납입되었을 경우 2.8%라면, 청년 우대형 청약통장의 경우는 1개월 ~1년은, 1~2년에 따라 금리가 변동되며 ~10년은 4.3%로 기존의 일반청약통장 대비하여 거의 2배에 달하는 이자를 제공한다고 보시면 됩니다. (공백 포함 542 공백 제외 418)
-    
-#### 청년 우대형 주택청약종합저축은 기존 주택청약의 혜택에 1.5%의 우대금리를 추가로 제공합니다.
-    
-#### 만일 2년 이상 가입한 경우 납입 원금 5천만원 한도 내에서 최대 10년간 우대금리를 적용받을 수가 있는데요.
-    
-#### 보통 주택청약이 붙는 이율이 10년 이상 납입되었을 경우 2.8%라면, 청년 우대형 청약통장의 경우는 1개월 ~1년은, 1~2년에 따라 금리가 변동되며 ~10년은 4.3%로 기존의 일반청약통장 대비하여 거의 2배에 달하는 이자를 제공한다고 보시면 됩니다. (공백 포함 825 공백 제외 635)`;
-
-  const markdownStyle = {
-    body: {
-      paddingHorizontal: 24,
-      marginBottom: 18,
-    },
-    image: {
-      marginBottom: 18,
-    },
-    heading2: {
-      fontWeight: '600',
-      fontSize: getFontSize(18),
-      lineHeight: 21,
-      color: '#000E24',
-      marginBottom: 18,
-    },
-    heading4: {
-      fontWeight: '400',
-      fontSize: getFontSize(17),
-      lineHeight: 26,
-      color: '#40474F',
-      marginBottom: 18,
-    },
+  const getItem = (_data: any, index: number) => {
+    /**
+     * TODO 데이터 fetch 후 할당 필요
+     * FlatList 상태값 유지 확인 단위 테스트 필요
+     * 데이터 관리 방법 생각
+     */
+    return item[0];
   };
 
-  const data = [
-    {
-      id: '1',
-      markdown,
-      hashTags: [
-        '해시태그',
-        '콘텐츠키워드',
-        '클릭시이동',
-        '디폴트값설정필요',
-        '키워드이곳에',
-      ],
-      todolist: [
-        {id: 1, title: '연금 보험 계좌 만들기'},
-        {id: 2, title: '할일의 글자수는 최대 20자 제한임다'},
-        {id: 3, title: '4대보험 가입내역 확인하기'},
-        {id: 4, title: '국민연금 납입금액 확인하기'},
-      ],
+  const getItemCount = (_data: any) => {
+    return item.length;
+  };
+
+  // bookMarkButton [Content]
+  const [isContentBookMarked, setIsContentBookMarked] = useState(false);
+
+  const onPressContentBookMarkButton = () => {
+    setIsContentBookMarked(previousValue => {
+      const newValue = !previousValue;
+
+      if (newValue === true) {
+        createData('/scrap', {
+          title: content.title,
+          categoryId: content.categoryId,
+          contentId: content.id,
+          userId: userInfo.id,
+        })
+          .then((response) => {
+            const { data: { data } } = response;
+            // console.log('data', data);
+            // TODO 토스트 팝업 띄우기
+          })
+          .catch((error) => {
+            console.log('스크랩 성공', error);
+          });
+      } else {
+        deleteData('/scrap', {}, content.id)
+          .then((response) => {
+            const { data: { data } } = response;
+            // console.log('data', data);
+            // TODO 토스트 팝업 띄우기
+          })
+          .catch((error) => {
+            console.log('스크랩 삭제', error);
+          })
+      }
+
+      return newValue;
+    });
+  };
+
+  // hashTag [Content]
+  const [isHashTagModalVisible, setIsHashTagModalVisible] = useState(false);
+  const [pressedHashTag, setPressedHashTag] = useState('');
+  const [hashTagContent, setHashTagContent] = useState([]);
+
+  const onPressHashTag = (hashtag: string) => {
+    setPressedHashTag(hashtag);
+    // TODO 무한 스크롤
+    fetchData(`/content/search`, {
+      hashtag,
+      page: 0,
+      size: 10,
+      sort: 'viewCount,desc'
+    })
+      .then((response) => {
+        const { data : { data } } = response;
+
+        console.log('hash tag data', data.content);
+        setHashTagContent(data.content);
+      })
+      .catch((error) => {
+        console.log('error', error);
+      })
+    setIsHashTagModalVisible(true);
+  };
+
+  const onPressHashTagModalBackButton = () => {
+    setPressedHashTag('');
+    setIsHashTagModalVisible(false);
+  };
+
+  // bookMarkButton [RelatedContent]
+  const [isRelatedContent, setIsRelatedContent] = useState<any>([]);
+
+  const onPressRelatedContentBookMarkButton = (index: number) => {
+    setIsRelatedContent((previousValue: any) => {
+      const previousBookMarkStatus = previousValue[index].isBookMarked;
+      previousValue[index].isBookMarked = !previousBookMarkStatus;
+
+      return previousValue.slice();
+    });
+  };
+
+  useEffect(() => {
+    if (!content || !content.todos) {
+      return;
+    }
+
+    console.log('content', content);
+
+    const category: any = categories.find((item: any) => 
+      item.id === Number(content.categoryId)
+    );
+    const todos: any = [];
+
+    console.log('content.todos', content.todos);
+
+    if (!todos.length) {
+      content.todos.forEach(async(item: any) => {
+        const { data: { data } } = await fetchData(`/todo/${item.id}`, {});
+        setTodos((previousValue: any) => {
+          const newValue = [...previousValue];
+          newValue.push(data);
+          return newValue;
+        });
+      });
+    }
+
+    const item = {
+      id: content.id,
+      title: content.title,
+      content: content.content,
+      hashtags: content.hashtags,
+      createdTime: content.createdTime,
+      category: category ? category.title : '카테고리',
       contents: [
         {id: 5, title: '이곳은 콘텐츠의 제목이 되는 영역'},
         {id: 6, title: '콘텐츠 제목은 아마도 최대 26자 제한으로 정함'},
@@ -126,58 +200,13 @@ const ContentModal = ({
             '테스트 문구 추가해서 ui 검토 테스트 문구 추가해서 ui 검토 테스트 문구 추가해서 ui 검토 테스트 문구 추가해서 ui 검토',
         },
       ],
-    },
-  ];
+    };
 
-  const getItem = (_data: any, index: number) => {
-    /**
-     * TODO 데이터 fetch 후 할당 필요
-     * FlatList 상태값 유지 확인 단위 테스트 필요
-     * 데이터 관리 방법 생각
-     */
-    return data[0];
-  };
-
-  const getItemCount = (_data: any) => {
-    return data.length;
-  };
-
-  // bookMarkButton [Content]
-  const [isContentBookMarked, setIsContentBookMarked] = useState(false);
-
-  const onPressContentBookMarkButton = () => {
-    setIsContentBookMarked(previousValue => !previousValue);
-  };
-
-  // hashTag [Content]
-  const [isHashTagModalVisible, setIsHashTagModalVisible] = useState(false);
-  const [pressedHashTag, setPressedHashTag] = useState('');
-
-  const onPressHashTag = (index: number) => {
-    setPressedHashTag(data[0].hashTags[index]);
-    setIsHashTagModalVisible(true);
-  };
-
-  const onPressHashTagModalBackButton = () => {
-    setPressedHashTag('');
-    setIsHashTagModalVisible(false);
-  };
-
-  // bookMarkButton [RelatedContent]
-  const customRelatedContent = data[0].contents.map(item =>
-    Object.assign(item, {isBookMarked: false}),
-  );
-  const [isRelatedContent, setIsRelatedContent] =
-    useState(customRelatedContent);
-
-  const onPressRelatedContentBookMarkButton = (index: number) => {
-    setIsRelatedContent(previousValue => {
-      const previousBookMarkStatus = previousValue[index].isBookMarked;
-      previousValue[index].isBookMarked = !previousBookMarkStatus;
-
-      return previousValue.slice();
-    });
-  };
+    setItem([item]);
+    setIsRelatedContent(item.contents.map((item: any) =>
+      Object.assign(item, {isBookMarked: false}),
+    ));
+  }, [content]);
 
   return (
     <AppModal
@@ -217,173 +246,177 @@ const ContentModal = ({
             </View>
           </View>
         </AppHeader>
-        <VirtualizedList
-          getItem={getItem}
-          getItemCount={getItemCount}
-          renderItem={({item, index}) => {
-            return (
-              <View>
-                {/** Header */}
-                <View style={styles.mainCategoryWrapper}>
-                  <AppButton
-                    isDisabled={true}
-                    text={'부동산'}
-                    textStyle={styles.mainCategory}
-                    buttonStyle={styles.mainCategoryPressable}
-                    disabledBackgroundColor="#0B2A4F"
-                  />
-                </View>
-                <AppText style={styles.title}>
-                  {'2월에 신청하는 새로운 청약통장'}
-                </AppText>
-                <AppText style={styles.date}>{'2024.01.08'}</AppText>
-                {/** Article */}
-                <Markdown style={markdownStyle}>{item.markdown}</Markdown>
-                {/** HashTag */}
-                <View style={styles.hashTagWrapper}>
-                  {data[0].hashTags.map((item, index) => {
-                    return (
-                      <AppButton
-                        key={`hashTag${index}`}
-                        text={`#${item}`}
-                        textStyle={styles.hashTag}
-                        buttonStyle={styles.hashTagPressable}
-                        // TODO pressedColor 통일되면 props 제거 가능
-                        pressedBackgroundColor={'#11111166'}
-                        onPressButton={() => onPressHashTag(index)}
-                      />
-                    );
-                  })}
-                </View>
-                <View style={styles.separator} />
-                {/** Section1 : 연관된 할 일 추가하기 */}
-                <FlatList
-                  data={data[0].todolist}
-                  keyExtractor={item => {
-                    return String(item.id);
-                  }}
-                  initialNumToRender={8}
-                  ListHeaderComponent={() => {
-                    return (
-                      <View style={styles.basicTitleWrapper}>
-                        <AppText style={styles.basicTitle}>
-                          연관된 할 일 추가하기
-                        </AppText>
-                        <AppButton
-                          text={'전체추가하기'}
-                          textStyle={styles.todoListAddAllButton}
-                          buttonStyle={{}}
-                          onPressButton={() => {}}
-                        />
-                      </View>
-                    );
-                  }}
-                  renderItem={({item, index, separators}) => {
-                    return <ToDoListItem hasMainCategory={false} item={item} />;
-                  }}
-                  ItemSeparatorComponent={() => {
-                    return <View style={{paddingBottom: 14}} />;
-                  }}
-                  style={{
-                    paddingHorizontal: 24,
-                  }}
-                />
-                <View style={styles.separator} />
-                {/** Section2 : 연관 콘텐츠 추천 */}
-                <View
-                  style={{
-                    paddingHorizontal: 24,
-                  }}>
-                  <View style={styles.basicTitleWrapper}>
-                    <AppText style={styles.basicTitle}>
-                      연관 콘텐츠 추천
-                    </AppText>
-                  </View>
-                  {/** 가공된 데이터 사용 */}
-                  {isRelatedContent.map((item, index, data) => {
-                    return (
-                      <View
-                        key={`content${index}`}
-                        style={[
-                          styles.contentWrapper,
-                          {
-                            borderBottomWidth:
-                              index === data.length - 1 ? 0 : 1,
-                            marginBottom: index === data.length - 1 ? 0 : 10,
-                            paddingBottom: index === data.length - 1 ? 5 : 8,
-                          },
-                        ]}>
-                        <View style={styles.contentTitleWrapper}>
-                          <AppText style={styles.contentTitle}>
-                            {item.title}
-                          </AppText>
-                        </View>
-                        <View style={styles.contentSaveButtonWrapper}>
-                          <AppIcon
-                            name="bookmarkMedium"
-                            width={42}
-                            height={42}
-                            onPress={() =>
-                              onPressRelatedContentBookMarkButton(index)
-                            }
-                            styles={item.isBookMarked ? {fill: '#A1ACB9'} : {}}
-                          />
-                        </View>
-                      </View>
-                    );
-                  })}
-                </View>
-                <View style={styles.separator} />
-                {/** Section3 : 문의 및 의견 보내기 */}
-                <View
-                  style={{
-                    paddingHorizontal: 24,
-                    paddingBottom: 40,
-                  }}>
-                  <AppText style={styles.askButtonTitle}>
-                    이번 콘텐츠는 어떠신가요?
-                  </AppText>
-                  <AppText style={styles.askButtonSubTitle}>
-                    더 나은 콘텐츠를 제작하는데 큰 도움이 됩니다
-                  </AppText>
-                  <View style={styles.askButtonWrapper}>
+        {
+          item.length &&
+          <VirtualizedList
+            getItem={getItem}
+            getItemCount={getItemCount}
+            renderItem={({item, index}) => {
+              return (
+                <View>
+                  {/** Header */}
+                  <View style={styles.mainCategoryWrapper}>
                     <AppButton
-                      text={'문의 및 의견 보내기'}
-                      // 📌 임시
-                      textStyle={styles.askButtonText}
-                      buttonStyle={styles.askButton}
-                      // TODO pressedColor 통일되면 props 제거 가능
-                      pressedBackgroundColor={'#11111166'}
-                      onPressButton={() => {}}
+                      isDisabled={true}
+                      text={item.category}
+                      textStyle={styles.mainCategory}
+                      buttonStyle={styles.mainCategoryPressable}
+                      disabledBackgroundColor="#0B2A4F"
                     />
                   </View>
-                </View>
-                {/** Section4 : 안내 사항 */}
-                <View style={styles.notificationWrapper}>
-                  {data[0].notification.map((item, index) => {
-                    return (
-                      <AppText
-                        key={`notification${index}`}
-                        style={styles.notificationText}>
-                        &#183; {item.title}
+                  <AppText style={styles.title}>
+                    {item.title}
+                  </AppText>
+                  <AppText style={styles.date}>{getFormattedDate(new Date(item.createdTime), '.')}</AppText>
+                  {/** Article */}
+                  <Markdown style={markdownStyle()}>{item.content}</Markdown>
+                  {/** HashTag */}
+                  <View style={styles.hashTagWrapper}>
+                    {item.hashtags.map((item: any, index: number) => {
+                      return (
+                        <AppButton
+                          key={`hashTag${index}`}
+                          text={`#${item}`}
+                          textStyle={styles.hashTag}
+                          buttonStyle={styles.hashTagPressable}
+                          // TODO pressedColor 통일되면 props 제거 가능
+                          pressedBackgroundColor={'#11111166'}
+                          onPressButton={() => onPressHashTag(item)}
+                        />
+                      );
+                    })}
+                  </View>
+                  <View style={styles.separator} />
+                  {/** Section1 : 연관된 할 일 추가하기 */}
+                  <FlatList
+                    data={todos}
+                    keyExtractor={item => {
+                      return String(item.id);
+                    }}
+                    initialNumToRender={8}
+                    ListHeaderComponent={() => {
+                      return (
+                        <View style={styles.basicTitleWrapper}>
+                          <AppText style={styles.basicTitle}>
+                            연관된 할 일 추가하기
+                          </AppText>
+                          <AppButton
+                            text={'전체추가하기'}
+                            textStyle={styles.todoListAddAllButton}
+                            buttonStyle={{}}
+                            onPressButton={() => {}}
+                          />
+                        </View>
+                      );
+                    }}
+                    renderItem={({item, index, separators}) => {
+                      return <ToDoListItem hasMainCategory={false} item={item} />;
+                    }}
+                    ItemSeparatorComponent={() => {
+                      return <View style={{paddingBottom: 14}} />;
+                    }}
+                    style={{
+                      paddingHorizontal: 24,
+                    }}
+                  />
+                  <View style={styles.separator} />
+                  {/** Section2 : 연관 콘텐츠 추천 */}
+                  <View
+                    style={{
+                      paddingHorizontal: 24,
+                    }}>
+                    <View style={styles.basicTitleWrapper}>
+                      <AppText style={styles.basicTitle}>
+                        연관 콘텐츠 추천
                       </AppText>
-                    );
-                  })}
+                    </View>
+                    {/** 가공된 데이터 사용 */}
+                    {isRelatedContent.map((item: any, index: number, array: any) => {
+                      return (
+                        <View
+                          key={`content${index}`}
+                          style={[
+                            styles.contentWrapper,
+                            {
+                              borderBottomWidth:
+                                index === array.length - 1 ? 0 : 1,
+                              marginBottom: index === array.length - 1 ? 0 : 10,
+                              paddingBottom: index === array.length - 1 ? 5 : 8,
+                            },
+                          ]}>
+                          <View style={styles.contentTitleWrapper}>
+                            <AppText style={styles.contentTitle}>
+                              {item.title}
+                            </AppText>
+                          </View>
+                          <View style={styles.contentSaveButtonWrapper}>
+                            <AppIcon
+                              name="bookmarkMedium"
+                              width={42}
+                              height={42}
+                              onPress={() =>
+                                onPressRelatedContentBookMarkButton(index)
+                              }
+                              styles={item.isBookMarked ? {fill: '#A1ACB9'} : {}}
+                            />
+                          </View>
+                        </View>
+                      );
+                    })}
+                  </View>
+                  <View style={styles.separator} />
+                  {/** Section3 : 문의 및 의견 보내기 */}
+                  <View
+                    style={{
+                      paddingHorizontal: 24,
+                      paddingBottom: 40,
+                    }}>
+                    <AppText style={styles.askButtonTitle}>
+                      이번 콘텐츠는 어떠신가요?
+                    </AppText>
+                    <AppText style={styles.askButtonSubTitle}>
+                      더 나은 콘텐츠를 제작하는데 큰 도움이 됩니다
+                    </AppText>
+                    <View style={styles.askButtonWrapper}>
+                      <AppButton
+                        text={'문의 및 의견 보내기'}
+                        // 📌 임시
+                        textStyle={styles.askButtonText}
+                        buttonStyle={styles.askButton}
+                        // TODO pressedColor 통일되면 props 제거 가능
+                        pressedBackgroundColor={'#11111166'}
+                        onPressButton={() => {}}
+                      />
+                    </View>
+                  </View>
+                  {/** Section4 : 안내 사항 */}
+                  {/* <View style={styles.notificationWrapper}>
+                    {item[0].notification.map((item: any, index: number) => {
+                      return (
+                        <AppText
+                          key={`notification${index}`}
+                          style={styles.notificationText}>
+                          &#183; {item.title}
+                        </AppText>
+                      );
+                    })}
+                  </View> */}
                 </View>
-              </View>
-            );
-          }}
-          // 🤔 여기는 number 가능
-          keyExtractor={item => {
-            return item.id;
-          }}
-          initialNumToRender={1}
-        />
+              );
+            }}
+            // 🤔 여기는 number 가능
+            keyExtractor={item => {
+              return item.id;
+            }}
+            initialNumToRender={1}
+          />
+        }
       </View>
       {/** HashTagModal */}
       <SearchHashTagModal
         isVisible={isHashTagModalVisible}
         hashTag={pressedHashTag}
+        content={hashTagContent}
         pressBackButton={onPressHashTagModalBackButton}
       />
     </AppModal>

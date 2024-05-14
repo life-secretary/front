@@ -11,9 +11,9 @@ import {
 import AppIcon from '../common/AppIcon';
 
 const SearchTextInput = ({
+    disabled = false,
     isSearchResultPage,
     searchText,
-    defaultValue = '',
     changeSearchText,
     submitSearchText,
     pressRemoveSearchTextButton,
@@ -25,7 +25,7 @@ const SearchTextInput = ({
                 <View style={styles.searchTextInputContainer}>
                     <View style={styles.searchTextInputWrapper}>
                         <TextInput
-                            editable
+                            editable={!disabled}
                             placeholder='키워드를 입력해보세요' 
                             style={[styles.searchTextInput, isSearchResultPage ? styles.searchTextResultInput : {}]} 
                             placeholderTextColor={'#CBD3DC'}
@@ -36,25 +36,28 @@ const SearchTextInput = ({
                             underlineColorAndroid='transparent'
                         />
                     </View>
-                    <View style={styles.searchIconWrapper}>
-                        {
-                            (searchText.length !== 0) ? 
+                    {
+                        !disabled &&
+                        <View style={styles.searchIconWrapper}>
+                            {
+                                (searchText.length !== 0) ? 
+                                <AppIcon 
+                                    name='closeFillLight'
+                                    width={36}
+                                    height={36}
+                                    onPress={pressRemoveSearchTextButton}
+                                />
+                                :
+                                <></>
+                            }
                             <AppIcon 
-                                name='closeFillLight'
+                                name='search'
                                 width={36}
                                 height={36}
-                                onPress={pressRemoveSearchTextButton}
+                                onPress={pressSearchButton}
                             />
-                            :
-                            <></>
-                        }
-                        <AppIcon 
-                            name='search'
-                            width={36}
-                            height={36}
-                            onPress={pressSearchButton}
-                        />
-                    </View>
+                        </View>
+                    }
                 </View>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
