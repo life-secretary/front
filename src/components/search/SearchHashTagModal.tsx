@@ -31,6 +31,7 @@ const SearchHashTagModal = ({
     hashTag,
     content,
     pressBackButton,
+    onContentPageEndReached,
 }: any) => {
 
     // const [tabData, setTabData] = useState([
@@ -157,7 +158,7 @@ const SearchHashTagModal = ({
                             hashTag={hashTag} 
                         />
                     } 
-                    onEndReached={() => {}} // 검색 페이지 참고
+                    onEndReached={onContentPageEndReached}  
                 />
             </View>
         </AppModal>

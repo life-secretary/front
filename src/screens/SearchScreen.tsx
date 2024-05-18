@@ -23,7 +23,6 @@ import type { ConditionData } from '../components/search/SearchCategoryModal';
 import { useRecoilState } from 'recoil';
 import { recentSearchWordState, popularSearchWordState, PopularSearchWord } from '@/store/search';
 import { getPopularSearchWordListQuery } from '@/api/search';
-import { ToDoItem } from '@/models/Todo';
 
 const HeaderSearchResult = ({
   data, 
@@ -99,14 +98,6 @@ const SearchScreen = () => {
     setPopularSearchData(data);
   };
 
-  const currentContentSort = () => {
-    return getSort(searchConditionContentData);
-  };
-
-  const currentToDoSort = () => {
-    return getSort(searchConditionToDoData);
-  };
-
   const onPressTab = (number: number) => {
     setTabData((previousValue) => {
       return previousValue.map((item, index) => {
@@ -160,7 +151,7 @@ const SearchScreen = () => {
     const title = contentTitle ? contentTitle : searchText;
     const page = contentPage ? contentPage : pageContent.current;
     const size = contentSize ? contentSize : 10;
-    const sort = contentSort ? contentSort : currentContentSort();
+    const sort = contentSort ? contentSort : getSort(searchConditionContentData);
 
     fetchData('/content/search', { 
       title,
@@ -179,7 +170,7 @@ const SearchScreen = () => {
         console.log('error', error);
       })
       .finally(() => {
-        isLoading.current === false;
+        isLoading.current = false;
       });
   };
 
@@ -192,7 +183,7 @@ const SearchScreen = () => {
     const title = toDoTitle ? toDoTitle : searchText;
     const page = toDoPage ? toDoPage : pageToDo.current;
     const size = toDoSize ? toDoSize : 10;
-    const sort = toDoSort ? toDoSort : currentToDoSort();
+    const sort = toDoSort ? toDoSort : getSort(searchConditionToDoData);
 
     fetchData('/todo/search', {
       title,
@@ -211,7 +202,7 @@ const SearchScreen = () => {
         console.log('error', error);
       })
       .finally(() => {
-        isLoading.current === false;
+        isLoading.current = false;
       });
   };
 

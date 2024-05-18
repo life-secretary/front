@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, FlatList, VirtualizedList } from 'react-native';
 import type { AppModalProps } from '../common/modal/AppModal';
 import { useRecoilValue } from 'recoil';
@@ -15,6 +15,7 @@ import Markdown from 'react-native-markdown-display';
 import { getFontSize } from '../../utils/font';
 import { getFormattedDate } from '@/utils';
 import { markdownStyle } from '@/styles/content';
+import { getNewData } from '@/utils/search';
 
 import { categoryListState } from '@/store/categoryState';
 import { userInfoState } from '@/store/userInfoState';
@@ -107,34 +108,61 @@ const ContentModal = ({
   };
 
   // hashTag [Content]
+  const pageHashTagContent = useRef<number>(0);
+  const isHashTagLoading = useRef<boolean>(false);
   const [isHashTagModalVisible, setIsHashTagModalVisible] = useState(false);
   const [pressedHashTag, setPressedHashTag] = useState('');
   const [hashTagContent, setHashTagContent] = useState([]);
 
-  const onPressHashTag = (hashtag: string) => {
-    setPressedHashTag(hashtag);
-    // TODO 무한 스크롤
+  const fetchHashTagContent = ({
+    hashTagContentText,
+    hashTagContentPage,
+    hashTagContentSize,
+    hashTagContentSort,
+  }: any) => {
+    const hashtag = hashTagContentText ? hashTagContentText : pressedHashTag;
+    const page = hashTagContentPage ? hashTagContentPage : pageHashTagContent.current;
+    const size = hashTagContentSize ? hashTagContentSize : 10;
+    const sort = hashTagContentSort ? hashTagContentSort : 'viewCount,desc';
+
     fetchData(`/content/search`, {
       hashtag,
-      page: 0,
-      size: 10,
-      sort: 'viewCount,desc'
+      page,
+      size,
+      sort,
     })
-      .then((response) => {
-        const { data : { data } } = response;
+    .then((response) => {
+      const { data : { data } } = response;
 
-        console.log('hash tag data', data.content);
-        setHashTagContent(data.content);
+      setHashTagContent((previousValue) => {
+        return getNewData(previousValue, data.content);
       })
-      .catch((error) => {
-        console.log('error', error);
-      })
+    })
+    .catch((error) => {
+      console.log('error', error);
+    })
+    .finally(() => {
+      isHashTagLoading.current = false;
+    });
+  }
+
+  const onPressHashTag = (hashtag: string) => {
+    setPressedHashTag(hashtag);
+    fetchHashTagContent({ hashTagContentText: hashtag });
     setIsHashTagModalVisible(true);
   };
 
   const onPressHashTagModalBackButton = () => {
     setPressedHashTag('');
     setIsHashTagModalVisible(false);
+  };
+
+  const onHashTagContentPageEndReached = () => {
+    if ((hashTagContent.length >= 10) && isHashTagLoading.current === false) {
+      isHashTagLoading.current = true;
+      pageHashTagContent.current += 1;
+      fetchHashTagContent({});
+    }
   };
 
   // bookMarkButton [RelatedContent]
@@ -290,8 +318,8 @@ const ContentModal = ({
                   {/** Section1 : 연관된 할 일 추가하기 */}
                   <FlatList
                     data={todos}
-                    keyExtractor={item => {
-                      return String(item.id);
+                    keyExtractor={(item, index) => {
+                      return 'similar_todo' + index;
                     }}
                     initialNumToRender={8}
                     ListHeaderComponent={() => {
@@ -405,8 +433,8 @@ const ContentModal = ({
               );
             }}
             // 🤔 여기는 number 가능
-            keyExtractor={item => {
-              return item.id;
+            keyExtractor={(item, index) => {
+              return 'similar_content' + index;
             }}
             initialNumToRender={1}
           />
@@ -418,6 +446,7 @@ const ContentModal = ({
         hashTag={pressedHashTag}
         content={hashTagContent}
         pressBackButton={onPressHashTagModalBackButton}
+        onContentPageEndReached={onHashTagContentPageEndReached}
       />
     </AppModal>
   );
