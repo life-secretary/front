@@ -20,7 +20,7 @@ export function AppLayout({
     Dimensions.get('window').width - spacing.layoutPaddingHorizontal * 2;
 
   const toastConfig = {
-    success: ({props}: object) => (
+    success: ({ props }: any) => (
       <View style={[styles.toast, {width: toastWidth}]}>
         <View style={styles.iconContainer}>
           <AppIcon

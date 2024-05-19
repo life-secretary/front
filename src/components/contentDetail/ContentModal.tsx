@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View, FlatList, VirtualizedList } from 'react-native';
+import { StyleSheet, View, FlatList, VirtualizedList, Share } from 'react-native';
 import type { AppModalProps } from '../common/modal/AppModal';
 import { useRecoilValue } from 'recoil';
 
@@ -10,6 +10,7 @@ import AppButton from '../common/AppButton';
 import AppModal from '../common/modal/AppModal';
 import ToDoListItem from '../search/ToDoListItem';
 import SearchHashTagModal from '../search/SearchHashTagModal';
+import Toast from 'react-native-toast-message';
 
 import Markdown from 'react-native-markdown-display';
 import { getFontSize } from '../../utils/font';
@@ -54,8 +55,6 @@ const ContentModal = ({
    * 구분해서 공통 컴포넌트 생성하면 좋겠다
    */
 
-  // ![20대_예산수립_1](https://github.com/life-secretary/front/assets/80025242/ab8bfe44-3f92-4d3d-a3ff-73c9671fbe8a) → 렌더 비용으로 잠깐 빼놓음
-
   const getItem = (_data: any, index: number) => {
     /**
      * TODO 데이터 fetch 후 할당 필요
@@ -85,8 +84,17 @@ const ContentModal = ({
         })
           .then((response) => {
             const { data: { data } } = response;
-            // console.log('data', data);
-            // TODO 토스트 팝업 띄우기
+            
+            if (data) {
+              Toast.show({
+                type: 'success',
+                props: { text: '콘텐츠를 저장했어요' },
+                position: 'bottom',
+                bottomOffset: 20,
+                visibilityTime: 2000,
+                autoHide: true,
+              });
+            }
           })
           .catch((error) => {
             console.log('스크랩 성공', error);
@@ -94,9 +102,17 @@ const ContentModal = ({
       } else {
         deleteData('/scrap', {}, content.id)
           .then((response) => {
-            const { data: { data } } = response;
-            // console.log('data', data);
-            // TODO 토스트 팝업 띄우기
+            const { data } = response;
+            if (data.status === 'SUCCESS') {
+              Toast.show({
+                type: 'success',
+                props: { text: '콘텐츠 저장을 취소했어요' },
+                position: 'bottom',
+                bottomOffset: 20,
+                visibilityTime: 2000,
+                autoHide: true,
+              });
+            }
           })
           .catch((error) => {
             console.log('스크랩 삭제', error);
@@ -105,6 +121,10 @@ const ContentModal = ({
 
       return newValue;
     });
+  };
+
+  const onPressContentUploadButton = async() => {
+    
   };
 
   // hashTag [Content]
@@ -139,7 +159,7 @@ const ContentModal = ({
       })
     })
     .catch((error) => {
-      console.log('error', error);
+      console.log('콘텐츠 해시태그 검색', error);
     })
     .finally(() => {
       isHashTagLoading.current = false;
@@ -192,14 +212,7 @@ const ContentModal = ({
     console.log('content.todos', content.todos);
 
     if (!todos.length) {
-      content.todos.forEach(async(item: any) => {
-        const { data: { data } } = await fetchData(`/todo/${item.id}`, {});
-        setTodos((previousValue: any) => {
-          const newValue = [...previousValue];
-          newValue.push(data);
-          return newValue;
-        });
-      });
+      setTodos([...content.todos]);
     }
 
     const item = {
@@ -263,7 +276,12 @@ const ContentModal = ({
               />
             </View>
             <View style={styles.headerRight}>
-              <AppIcon name="upload" width={36} height={36} />
+              <AppIcon 
+                name="upload" 
+                width={36} 
+                height={36} 
+                onPress={onPressContentUploadButton}
+              />
               <AppIcon
                 name="bookmarkLarge"
                 width={36}
