@@ -71,55 +71,69 @@ const ContentModal = ({
   // bookMarkButton [Content]
   const [isContentBookMarked, setIsContentBookMarked] = useState(false);
 
+  const postScrap = ({
+    title,
+    categoryId,
+    contentId,
+  }: any) => {
+    return createData('/scrap', {
+      title,
+      categoryId,
+      contentId,
+      userId: userInfo.id,
+    })
+    .then((response) => {
+      const { data: { data } } = response;
+      
+      if (data) {
+        Toast.show({
+          type: 'success',
+          props: { text: '콘텐츠를 저장했어요' },
+          position: 'bottom',
+          bottomOffset: 20,
+          visibilityTime: 2000,
+          autoHide: true,
+        });
+      }
+    })
+    .catch((error) => {
+      console.log('스크랩 성공 에러', error);
+    });
+  };
+
+  const deleteScrap = (id: number) => {
+    return deleteData('/scrap', {}, id)
+    .then((response) => {
+      const { data } = response;
+      if (data.status === 'SUCCESS') {
+        Toast.show({
+          type: 'success',
+          props: { text: '콘텐츠 저장을 취소했어요' },
+          position: 'bottom',
+          bottomOffset: 20,
+          visibilityTime: 2000,
+          autoHide: true,
+        });
+      }
+    })
+    .catch((error) => {
+      console.log('스크랩 삭제 에러', error);
+    })
+  };
+
   const onPressContentBookMarkButton = () => {
     setIsContentBookMarked(previousValue => {
-      const newValue = !previousValue;
-
-      if (newValue === true) {
-        createData('/scrap', {
+      if (previousValue === false) {
+        postScrap({
           title: content.title,
           categoryId: content.categoryId,
           contentId: content.id,
-          userId: userInfo.id,
-        })
-          .then((response) => {
-            const { data: { data } } = response;
-            
-            if (data) {
-              Toast.show({
-                type: 'success',
-                props: { text: '콘텐츠를 저장했어요' },
-                position: 'bottom',
-                bottomOffset: 20,
-                visibilityTime: 2000,
-                autoHide: true,
-              });
-            }
-          })
-          .catch((error) => {
-            console.log('스크랩 성공 에러', error);
-          });
+        });
       } else {
-        deleteData('/scrap', {}, content.id)
-          .then((response) => {
-            const { data } = response;
-            if (data.status === 'SUCCESS') {
-              Toast.show({
-                type: 'success',
-                props: { text: '콘텐츠 저장을 취소했어요' },
-                position: 'bottom',
-                bottomOffset: 20,
-                visibilityTime: 2000,
-                autoHide: true,
-              });
-            }
-          })
-          .catch((error) => {
-            console.log('스크랩 삭제 에러', error);
-          })
+        deleteScrap(content.id);
       }
 
-      return newValue;
+      return !previousValue;
     });
   };
 
@@ -256,12 +270,23 @@ const ContentModal = ({
   // bookMarkButton [RelatedContent]
   const [relatedContent, setRelatedContent] = useState<any>([]);
 
-  const onPressRelatedContentBookMarkButton = (index: number) => {
+  const onPressRelatedContentBookMarkButton = (item: any, index: number) => {
     setRelatedContent((previousValue: any) => {
+      const newValue = [...previousValue];
       const previousBookMarkStatus = previousValue[index].isBookMarked;
-      previousValue[index].isBookMarked = !previousBookMarkStatus;
+      newValue[index].isBookMarked = !previousBookMarkStatus;
 
-      return previousValue.slice();
+      if (previousBookMarkStatus === false) {
+        postScrap({
+          title: item.title,
+          categoryId: item.categoryId,
+          contentId: item.id,
+        });
+      } else {
+        deleteScrap(item.id);
+      }
+
+      return newValue;
     });
   };
 
@@ -316,6 +341,7 @@ const ContentModal = ({
     })
     .then((response) => {
       const { data: { data } } = response;
+      console.log('연관 컨텐츠', data);
 
       setRelatedContent(data.content
         .map((item: any) => ({
@@ -481,7 +507,7 @@ const ContentModal = ({
                                 width={42}
                                 height={42}
                                 onPress={() =>
-                                  onPressRelatedContentBookMarkButton(index)
+                                  onPressRelatedContentBookMarkButton(item, index)
                                 }
                                 styles={item.isBookMarked ? {fill: '#A1ACB9'} : {}}
                               />
