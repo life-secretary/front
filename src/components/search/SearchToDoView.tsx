@@ -32,7 +32,7 @@ const SearchToDoView = ({
     <VirtualizedList
       initialNumToRender={8}
       renderItem={({item}) => {
-        return <ToDoListItem hasMainCategory={true} item={item} />;
+        return <ToDoListItem hasMainCategory={true} item={item} onPressAddItem={() => {}} />;
       }}
       keyExtractor={getToDoTabKeyExtractor}
       getItemCount={getToDoTabItemCount}

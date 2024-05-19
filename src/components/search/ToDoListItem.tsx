@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, TouchableHighlight} from 'react-native';
+import {StyleSheet, View, TouchableHighlight, Pressable} from 'react-native';
 
 import {AppText} from '../common/AppText';
 import {getFontSize} from '../../utils/font';
@@ -9,19 +9,20 @@ import { useRecoilValue } from 'recoil';
 import { categoryListState } from '@/store/categoryState';
 
 import type { CategoryObject } from '@/models/common';
-import type { ToDoItem } from '@/models/Todo';
+import type Todo from '@/models/todo';
 
 export type ToDoListItemProps = {
   /** 아이템 내 카테고리 존재 여부 */
   hasMainCategory?: boolean;
 
   /** 아이템 data object */
-  item: ToDoItem;
+  item: Todo;
 };
 
 const ToDoListItem = ({
   hasMainCategory = true,
   item,
+  onPressAddItem,
 }: any): React.JSX.Element => {
   return (
     <View style={styles.toDoListItemContainer}>
@@ -48,13 +49,12 @@ const ToDoListItem = ({
 
       {/** NOTE TouchableHighlight + icon = Pressable Button 변경 가능성 있음 */}
       <View style={styles.toDoListItemButtonContainer}>
-        <TouchableHighlight
-          activeOpacity={0.95}
-          underlayColor="#E7EDF3" // TODO 상수로 관리
-          style={styles.todoListItemButtonHighlight}
-          onPress={() => {}}>
-          <AppIcon name="addCircle" width={42} height={42} />
-        </TouchableHighlight>
+        <AppIcon 
+          name="addCircle" 
+          width={42} 
+          height={42} 
+          onPress={onPressAddItem}
+        />
       </View>
     </View>
   );
@@ -119,14 +119,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-  },
-  todoListItemButtonHighlight: {
-    width: '100%',
-    justifyContent: 'center',
     alignItems: 'center',
-
-    borderTopEndRadius: 10,
-    borderBottomRightRadius: 10,
   },
 });
 
