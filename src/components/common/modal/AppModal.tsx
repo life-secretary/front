@@ -50,6 +50,14 @@ const AppModal = ({
         <AppText style={styles.toastText}>{props?.text}</AppText>
       </View>
     ),
+    error: ({ props }: any) => (
+      <View style={[styles.toast, {width: toastWidth}]}>
+        <View style={styles.iconContainer}>
+          {/** TODO 실패 아이콘 삽입 */}
+        </View>
+        <AppText style={styles.toastText}>{props?.text}</AppText>
+      </View>
+    ),
   };
 
   return (

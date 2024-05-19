@@ -97,7 +97,7 @@ const ContentModal = ({
             }
           })
           .catch((error) => {
-            console.log('스크랩 성공', error);
+            console.log('스크랩 성공 에러', error);
           });
       } else {
         deleteData('/scrap', {}, content.id)
@@ -115,7 +115,7 @@ const ContentModal = ({
             }
           })
           .catch((error) => {
-            console.log('스크랩 삭제', error);
+            console.log('스크랩 삭제 에러', error);
           })
       }
 
@@ -124,7 +124,8 @@ const ContentModal = ({
   };
 
   const onPressContentUploadButton = async() => {
-    
+    // TODO share 기능 붙이기
+    // ERROR await Share.share({ url: item[0].url }); 
   };
 
   // hashTag [Content]
@@ -159,7 +160,7 @@ const ContentModal = ({
       })
     })
     .catch((error) => {
-      console.log('콘텐츠 해시태그 검색', error);
+      console.log('콘텐츠 해시태그 검색 에러', error);
     })
     .finally(() => {
       isHashTagLoading.current = false;
@@ -185,11 +186,78 @@ const ContentModal = ({
     }
   };
 
+  // addToDo [RelatedTodo]
+  const addToDoItem = (item: any) => {
+    createData('/todo/save', {
+      id: item.id,
+      userId: userInfo.id,
+    })
+    .then((response) => {
+      const { data : { data } } = response;
+      
+      if (data) {
+        Toast.show({
+          type: 'success',
+          props: { text: '할일을 저장했어요' },
+          position: 'bottom',
+          bottomOffset: 20,
+          visibilityTime: 2000,
+          autoHide: true,
+        });
+      }
+    })
+    .catch((error) => {
+      console.log('할 일 생성 에러', error);
+      Toast.show({
+        type: 'error',
+        props: { text: '할일 저장에 실패했어요' },
+        position: 'bottom',
+        bottomOffset: 20,
+        visibilityTime: 2000,
+        autoHide: true,
+      });
+    });
+  };
+
+  // addToDos [RelatedTodo]
+  const addToDoItems = () => {
+    Promise.all(todos.map((item: any) => 
+      createData('/todo/save', {
+        id: item.id,
+        userId: userInfo.id,
+    })))
+    .then((response) => {
+      const { data }: any = response[0];
+      
+      if (data.status === 'SUCCESS') {
+        Toast.show({
+          type: 'success',
+          props: { text: '할일을 모두 저장했어요' },
+          position: 'bottom',
+          bottomOffset: 20,
+          visibilityTime: 2000,
+          autoHide: true,
+        });
+      }
+    })
+    .catch((error) => {
+      console.log('할 일 생성 에러', error);
+      Toast.show({
+        type: 'error',
+        props: { text: '할일 모두 저장에 실패했어요' },
+        position: 'bottom',
+        bottomOffset: 20,
+        visibilityTime: 2000,
+        autoHide: true,
+      });
+    });
+  };
+
   // bookMarkButton [RelatedContent]
-  const [isRelatedContent, setIsRelatedContent] = useState<any>([]);
+  const [relatedContent, setRelatedContent] = useState<any>([]);
 
   const onPressRelatedContentBookMarkButton = (index: number) => {
-    setIsRelatedContent((previousValue: any) => {
+    setRelatedContent((previousValue: any) => {
       const previousBookMarkStatus = previousValue[index].isBookMarked;
       previousValue[index].isBookMarked = !previousBookMarkStatus;
 
@@ -202,32 +270,27 @@ const ContentModal = ({
       return;
     }
 
-    console.log('content', content);
+    // console.log('content', content);
 
     const category: any = categories.find((item: any) => 
       item.id === Number(content.categoryId)
     );
     const todos: any = [];
 
-    console.log('content.todos', content.todos);
+    // console.log('content.todos', content.todos);
 
     if (!todos.length) {
-      setTodos([...content.todos]);
+      setTodos([...content.todos ]);
     }
 
     const item = {
       id: content.id,
       title: content.title,
+      url: content.contentUrl,
       content: content.content,
       hashtags: content.hashtags,
       createdTime: content.createdTime,
       category: category ? category.title : '카테고리',
-      contents: [
-        {id: 5, title: '이곳은 콘텐츠의 제목이 되는 영역'},
-        {id: 6, title: '콘텐츠 제목은 아마도 최대 26자 제한으로 정함'},
-        {id: 7, title: '관련 키워드가 포함한 검색 결과 노출'},
-        {id: 8, title: '이곳은 썸네일 없이 가는 것도 괜찮을듯'},
-      ],
       notification: [
         {
           id: 9,
@@ -244,9 +307,27 @@ const ContentModal = ({
     };
 
     setItem([item]);
-    setIsRelatedContent(item.contents.map((item: any) =>
-      Object.assign(item, {isBookMarked: false}),
-    ));
+    // NOTE 임시 연관 컨텐츠 -> 카테고리 컨텐츠 검색 
+    fetchData('/content', {
+      categoryId: content.categoryId,
+      page: 0,
+      size: 5,
+      sort: ['viewCount', 'desc']
+    })
+    .then((response) => {
+      const { data: { data } } = response;
+
+      setRelatedContent(data.content
+        .map((item: any) => ({
+          ...item, isBookMarked: false,
+        }))
+        .filter((item: any) => item.id !== content.id)
+        // 현재 컨텐츠 제외하고 연관 컨텐츠 노출
+    )
+    })
+    .catch((error) => {
+      console.log('연관된 컨텐츠 조회 에러', error);
+    });
   }, [content]);
 
   return (
@@ -334,81 +415,83 @@ const ContentModal = ({
                   </View>
                   <View style={styles.separator} />
                   {/** Section1 : 연관된 할 일 추가하기 */}
-                  <FlatList
-                    data={todos}
-                    keyExtractor={(item, index) => {
-                      return 'similar_todo' + index;
-                    }}
-                    initialNumToRender={8}
-                    ListHeaderComponent={() => {
+                  <View style={{ paddingHorizontal: 24 }}>
+                    <View style={styles.basicTitleWrapper}>
+                      <AppText style={styles.basicTitle}>
+                        연관된 할 일 추가하기
+                      </AppText>
+                      <AppButton
+                        text={'전체추가하기'}
+                        textStyle={styles.todoListAddAllButton}
+                        buttonStyle={{}}
+                        onPressButton={addToDoItems}
+                      />
+                    </View>
+                  </View>
+                  {todos.length ?
+                    todos.map((item: any, index: number, array: any) => {
                       return (
-                        <View style={styles.basicTitleWrapper}>
-                          <AppText style={styles.basicTitle}>
-                            연관된 할 일 추가하기
-                          </AppText>
-                          <AppButton
-                            text={'전체추가하기'}
-                            textStyle={styles.todoListAddAllButton}
-                            buttonStyle={{}}
-                            onPressButton={() => {}}
+                        <View 
+                          key={`similar_todo${index}`}
+                          style={{ 
+                            paddingHorizontal: 24,
+                            paddingBottom: index === array.length - 1 ? 0 : 14,
+                          }}
+                          >
+                          <ToDoListItem 
+                            hasMainCategory={false} 
+                            item={item} 
+                            onPressAddItem={() => addToDoItem(item)} 
                           />
                         </View>
-                      );
-                    }}
-                    renderItem={({item, index, separators}) => {
-                      return <ToDoListItem hasMainCategory={false} item={item} />;
-                    }}
-                    ItemSeparatorComponent={() => {
-                      return <View style={{paddingBottom: 14}} />;
-                    }}
-                    style={{
-                      paddingHorizontal: 24,
-                    }}
-                  />
+                      )
+                    })
+                    :
+                    <AppText>연관된 할 일이 존재하지 않습니다</AppText>
+                  }
                   <View style={styles.separator} />
                   {/** Section2 : 연관 콘텐츠 추천 */}
-                  <View
-                    style={{
-                      paddingHorizontal: 24,
-                    }}>
+                  <View style={{ paddingHorizontal: 24 }}>
                     <View style={styles.basicTitleWrapper}>
                       <AppText style={styles.basicTitle}>
                         연관 콘텐츠 추천
                       </AppText>
                     </View>
-                    {/** 가공된 데이터 사용 */}
-                    {isRelatedContent.map((item: any, index: number, array: any) => {
-                      return (
-                        <View
-                          key={`content${index}`}
-                          style={[
-                            styles.contentWrapper,
-                            {
-                              borderBottomWidth:
-                                index === array.length - 1 ? 0 : 1,
-                              marginBottom: index === array.length - 1 ? 0 : 10,
-                              paddingBottom: index === array.length - 1 ? 5 : 8,
-                            },
-                          ]}>
-                          <View style={styles.contentTitleWrapper}>
-                            <AppText style={styles.contentTitle}>
-                              {item.title}
-                            </AppText>
+                    {relatedContent.length ? 
+                      relatedContent.map((item: any, index: number, array: any) => {
+                        return (
+                          <View
+                            key={`content${index}`}
+                            style={[
+                              styles.contentWrapper,
+                              {
+                                borderBottomWidth: index === array.length - 1 ? 0 : 1,
+                                marginBottom: index === array.length - 1 ? 0 : 10,
+                                paddingBottom: index === array.length - 1 ? 5 : 8,
+                              },
+                            ]}>
+                            <View style={styles.contentTitleWrapper}>
+                              <AppText style={styles.contentTitle}>
+                                {item.title}
+                              </AppText>
+                            </View>
+                            <View style={styles.contentSaveButtonWrapper}>
+                              <AppIcon
+                                name="bookmarkMedium"
+                                width={42}
+                                height={42}
+                                onPress={() =>
+                                  onPressRelatedContentBookMarkButton(index)
+                                }
+                                styles={item.isBookMarked ? {fill: '#A1ACB9'} : {}}
+                              />
+                            </View>
                           </View>
-                          <View style={styles.contentSaveButtonWrapper}>
-                            <AppIcon
-                              name="bookmarkMedium"
-                              width={42}
-                              height={42}
-                              onPress={() =>
-                                onPressRelatedContentBookMarkButton(index)
-                              }
-                              styles={item.isBookMarked ? {fill: '#A1ACB9'} : {}}
-                            />
-                          </View>
-                        </View>
-                      );
-                    })}
+                        );
+                      })
+                      :
+                      <AppText>연관된 컨텐츠가 존재하지 않습니다</AppText>
+                    }
                   </View>
                   <View style={styles.separator} />
                   {/** Section3 : 문의 및 의견 보내기 */}
@@ -485,6 +568,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    gap: 6,
   },
 
   // TODO font style 상수로 관리
