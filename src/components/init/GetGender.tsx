@@ -33,31 +33,17 @@ const GetGender = ({
     const onPressGenderButton = (index: number) => { 
         setData((previousValue) => {
             const newValue = previousValue.map((item, idx) => {
-                if (index === idx) {
-                    item.selected = true;
-                } else {
-                    item.selected = false;
-                }
-
+                item.selected = index === idx;
                 return item;
             });
 
             setUserInfo((previousValue) => {
                 const gender = newValue.find((item) => item.selected);
-                    
-                if (gender) {
-                    return {
-                        ...previousValue,
-                        gender: gender.id,
-                    }
-                }
-
                 return {
                     ...previousValue,
-                    gender: '',
+                    gender: gender ? gender.id : '',
                 };
             });
-
             return newValue;
         });
     };

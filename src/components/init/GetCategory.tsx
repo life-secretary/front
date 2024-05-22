@@ -11,7 +11,6 @@ import AppButton from '@/components/common/AppButton';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { surveyCategoryListState } from '@/store/categoryState';
-import { mainCategoryListState } from '@/store/categoryState';
 import { userInfoState } from '@/store/login';
 
 import { styles } from '../../screens/init/Survey';

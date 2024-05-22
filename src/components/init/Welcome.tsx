@@ -11,11 +11,38 @@ import AppButton from '@/components/common/AppButton';
 
 import { styles } from '../../screens/init/Survey';
 import type { SurveyProccessProps } from '../../screens/init/Survey';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '@/store/login';
+import { createData } from '@/api/api';
+import Toast from 'react-native-toast-message';
 
 const Welcome = ({
     backButtonHandler,
     nextButtonHandler,
 }: SurveyProccessProps): React.JSX.Element => {
+    const userInfo = useRecoilValue(userInfoState);
+    const createUserInfo = async (info: object) => {
+        const res = await createData('/signUp', info);
+        console.log(res)
+        if (res.status === 200) {
+            nextButtonHandler();
+        } else {
+            Toast.show({
+                type: 'error',
+                text1: 'sign up fail',
+                text2: "error" + res.status
+            });
+        }
+    };
+
+    function signup() {
+        const { year, month, day } = userInfo;
+        const birthDate = `${year}-${month}-${day}`;
+        const newInfo = { ...userInfo, birthDate };
+        console.log("signup", userInfo)
+        createUserInfo(newInfo)
+    }
+    
     return (
         <View style={styles.container}>
             <AppHeader style={styles.headerContainer}>
@@ -60,7 +87,7 @@ const Welcome = ({
                     text='시작하기'
                     textStyle={styles.nextButtonText}
                     buttonStyle={styles.nextButton}
-                    onPressButton={nextButtonHandler}
+                    onPressButton={signup}
                 />
             </View>
         </View>
