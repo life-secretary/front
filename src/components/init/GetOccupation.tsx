@@ -29,16 +29,18 @@ const GetOccupation = ({
     const onPressOccupationButton = (index: number) => {
         setData((previousValue) => {
             const newValue = previousValue.map((item, idx, array) => {
+                const lastOneSelected = array[array.length - 1].selected
                 if (index === array.length - 1) {
-                    if (array[array.length - 1].selected === false) {
-                        return { ...item, selected: true }; 
-                    } else {
-                        return { ...item, selected: false }; 
+                    if (!lastOneSelected) {
+                        return { ...item, selected: idx === array.length - 1 }
                     }
                 }
 
                 if (idx === index) {
                     item.selected = !item.selected;
+                    if (lastOneSelected) {
+                        array[array.length - 1].selected = false
+                    }
                 }
 
                 return item;
@@ -92,11 +94,11 @@ const GetOccupation = ({
                     height={42}
                     onPress={backButtonHandler}
                 />
-                <AppButton 
+                {/* <AppButton 
                     text='건너뛰기'
                     textStyle={styles.passButtonText}
                     onPressButton={closeStartProcess}
-                />
+                /> */}
             </AppHeader>
             <View>
                 <View style={styles.textContainer}>

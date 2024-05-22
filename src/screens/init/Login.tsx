@@ -54,7 +54,7 @@ const Login = ({
                 const newValue = Object.assign({}, previousValue);
 
                 newValue.provider = 'KAKAO';
-                newValue.providerId = token.idToken;
+                newValue.providerId = profile.id;
 
                 return newValue;
             })
@@ -150,23 +150,6 @@ const Login = ({
                         }}
                         onPressButton={onPressGoogleLoginButton}
                     />
-                    <AppButton 
-                        text='Apple 로그인'
-                        textStyle={styles.buttonAppleText}
-                        buttonStyle={styles.buttonApple}
-                        startIcon={{
-                            name: 'logoApple',
-                            width: 15,
-                            height: 16,
-                        }}
-                        onPressButton={onPressAppleLoginButton}
-                    />
-                    <View style={styles.loginHelpTextContainer}>
-                        <AppButton 
-                            text='로그인에 어려움이 있나요?'
-                            textStyle={styles.loginHelpText}
-                        />
-                    </View>
                 </View>
             </View>
             <Agreement 
@@ -180,7 +163,7 @@ const Login = ({
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
+        height: '80%',
         alignItems: 'center'
     },
 
@@ -202,6 +185,7 @@ const styles = StyleSheet.create({
     },
 
     buttonContainer: {
+        width: '90%',
         position: 'absolute',
         bottom: 0,
         gap: 10,
@@ -211,12 +195,13 @@ const styles = StyleSheet.create({
 
     buttonKakao: {
         width: '100%',
+        height: 51,
 
         flexDirection: 'row',
         gap: 12,
 
-        paddingHorizontal: 106,
-        paddingVertical: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
         borderRadius: 10,
         backgroundColor: '#FEE500'
     },
@@ -229,12 +214,13 @@ const styles = StyleSheet.create({
 
     buttonGoogle: {
         width: '100%',
+        height: 51,
 
         flexDirection: 'row',
         gap: 12,
 
-        paddingHorizontal: 106,
-        paddingVertical: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
         borderRadius: 10,
         borderWidth: 1.5,
         borderColor: '#E5E5E5',
@@ -246,42 +232,6 @@ const styles = StyleSheet.create({
         color: '#202020'
     },
 
-    buttonApple: {
-        width: '100%',
-
-        flexDirection: 'row',
-        gap: 12,
-
-        paddingHorizontal: 106,
-        paddingVertical: 16,
-        borderRadius: 10,
-        backgroundColor: '#202020'
-    },
-    buttonAppleText: {
-        fontWeight: '500',
-        fontSize: getFontSize(16),
-        lineHeight: 20,
-        color: '#FFFFFF'
-    }, 
-
-    loginHelpTextContainer: {
-        paddingVertical: 20,
-        ...Platform.select({
-            ios: {
-                paddingTop: 20,
-                paddingBottom: 35,   
-            }
-        })
-    },
-    loginHelpText: {
-        textAlign: 'center',
-
-        fontWeight: '400',
-        fontSize: getFontSize(13),
-        lineHeight: 16,
-        color: '#40474F',
-        textDecorationLine: 'underline',
-    },
 });
 
 export default Login;

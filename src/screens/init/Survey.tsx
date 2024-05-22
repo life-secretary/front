@@ -154,9 +154,8 @@ export const styles = StyleSheet.create({
     },
 
     headerContainer: {
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 10,
+        marginTop: 25,
+        left: -10,
     },
 
     passButtonText: {
