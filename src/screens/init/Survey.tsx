@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 import AppModal from '@/components/common/modal/AppModal';
 
 import { getFontSize } from '@/utils/font';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { userInfoState } from '@/store/login';
 
 import GetNickName from '@/components/init/GetNickName';
@@ -15,6 +15,10 @@ import GetCategory from '@/components/init/GetCategory';
 import GetOccupation from '@/components/init/GetOccupation';
 import GetMarriage from '@/components/init/GetMarriage';
 import Welcome from '@/components/init/Welcome';
+import { fetchData } from '@/api/api';
+import { categoryListState } from '@/store/categoryState';
+import { occupationListState } from '@/store/occupation';
+import Toast from 'react-native-toast-message';
 
 export type SurveyProccessProps = {
     userInfo?: {
@@ -45,6 +49,8 @@ const Survey = ({
     closeStartProcess,
 }: SurveyProps): React.JSX.Element => {
     const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+    const setCategories = useSetRecoilState(categoryListState);
+    const setOccupationList = useSetRecoilState(occupationListState);
 
     const openOrCloseSurvey = (number: number) => {
         setData((previousData) => {
@@ -62,10 +68,29 @@ const Survey = ({
         });
     };
 
+    const fetchCategories = async () => {
+        const res = await fetchData('/categories', null);
+        if (res.status === 200) {
+            setCategories(res.data.data);
+        }
+    };
+
+    const fetchOccupations = async () => {
+        const res = await fetchData('/occupation', {});
+        if (res.status === 200) {
+            setOccupationList(res.data.data);
+        }
+    };
+
     const onClickWelcomeButton = () => {
-        // signUp api 요청 보내기
+        // login api 요청 보내기
         closeStartProcess();
     };
+    
+    useEffect(() => {
+      fetchCategories()
+      fetchOccupations()
+    }, [])
 
     const [data, setData] = useState([
         { 
@@ -137,6 +162,7 @@ const Survey = ({
                     item.isShow && item.component
                 );
             })}
+            <Toast />
         </AppModal>
     );
 };
