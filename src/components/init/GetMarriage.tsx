@@ -146,11 +146,11 @@ const GetMarriage = ({
                     height={42}
                     onPress={backButtonHandler}
                 />
-                <AppButton 
+                {/* <AppButton 
                     text='건너뛰기'
                     textStyle={styles.passButtonText}
                     onPressButton={closeStartProcess}
-                />
+                /> */}
             </AppHeader>
             <View>
                 <View style={styles.textContainer}>

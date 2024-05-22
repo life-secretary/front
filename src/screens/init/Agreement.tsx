@@ -100,6 +100,7 @@ const Agreement = ({
                         <AppButton 
                             text=' 비동의'
                             textStyle={styles.disagreementButtonText}
+                            onPressButton={closeModalHandler}
                         />
                         합니다.
                     </AppText>
@@ -122,7 +123,8 @@ const styles = StyleSheet.create({
     },
 
     headerContainer: {
-        marginTop: 10
+        marginTop: 25,
+        left: -10,
     },
 
     logoContainer: {

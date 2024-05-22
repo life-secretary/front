@@ -71,7 +71,7 @@ const surveyCategoryListState = selector({
 
     return [
       ...convertedCategories,
-      {title: '모두 해당', id: '', selected: false},
+      // { title: '상관없음', id: '', selected: false }
     ];
   },
 });

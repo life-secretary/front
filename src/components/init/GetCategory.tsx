@@ -32,14 +32,6 @@ const GetCategory = ({
     const onPressCategoryButton = (index: number) => {
         setData((previousValue) => {
             const newValue = previousValue.map((item, idx, array) => {
-                if (index === array.length - 1) {
-                    if (array[array.length - 1].selected === false) {
-                        return { ...item, selected: true }; 
-                    } else {
-                        return { ...item, selected: false }; 
-                    }
-                }
-
                 if (idx === index) {
                     item.selected = !item.selected;
                 }
