@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     minHeight: 42,
     justifyContent: 'center',
     marginTop: 12,
+    marginBottom: 27,
   },
   headerTitle: {
     fontSize: 20,
