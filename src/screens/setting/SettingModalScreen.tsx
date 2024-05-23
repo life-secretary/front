@@ -16,7 +16,7 @@ export function SettingModalScreen({
   route,
   navigation,
 }: any): React.JSX.Element {
-  const {headerTitle, menu, user} = route.params;
+  const {headerTitle, menu} = route.params;
 
   return (
     <AppLayout>
@@ -36,7 +36,7 @@ export function SettingModalScreen({
         )}
       </AppHeader>
       {menu?.key !== 'sendFeedback' && <View style={styles.divider} />}
-      {menu?.key === 'my' && <MyInfoMenu user={user} />}
+      {menu?.key === 'my' && <MyInfoMenu />}
       {menu?.key === 'sendFeedback' && <SendFeedbackForm />}
       {menu?.key === 'notice' && <Notice />}
     </AppLayout>

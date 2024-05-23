@@ -1,5 +1,7 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
+import {useRecoilValue} from 'recoil';
+import {userInfoState} from '@/store/userInfoState';
 
 import {StyleSheet, View} from 'react-native';
 import {AppText} from '@/components/common/AppText';
@@ -9,26 +11,24 @@ import {font} from '@/styles/font';
 
 type UserInfoSectionProps = {
   settingMenu: object;
-  user: object;
 };
 
 export function MyInfoSection({
   settingMenu,
-  user,
 }: UserInfoSectionProps): React.JSX.Element {
   const navigation = useNavigation();
+  const userInfo = useRecoilValue(userInfoState);
 
   const handleButtonPress = () => {
     navigation.navigate('SettingModal', {
       headerTitle: settingMenu?.title,
       menu: settingMenu,
-      user,
     });
   };
 
   return (
     <View style={styles.container}>
-      <AppText style={styles.username}>{user?.nickname}</AppText>
+      <AppText style={styles.username}>{userInfo?.nickname}</AppText>
       <AppButton
         text="내 정보"
         textStyle={styles.buttonText}
