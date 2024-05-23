@@ -1,12 +1,13 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import {
   Dimensions,
   ImageBackground,
   ImageRequireSource,
+  View,
   Pressable,
   StyleSheet,
-  View,
+  PanResponder,
 } from 'react-native';
 import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
 import {AppText} from '@/components/common/AppText';
@@ -19,19 +20,11 @@ type SlideType = {
   tag: string;
   title: string;
   thumbnail: ImageRequireSource;
-  totalSlideCount: number;
-  currentSlideIndex: number;
 };
 
-function Slide({
-  tag,
-  title,
-  thumbnail,
-  totalSlideCount,
-  currentSlideIndex,
-}: SlideType): React.JSX.Element {
+function Slide({tag, title, thumbnail}: SlideType): React.JSX.Element {
   return (
-    <View style={[styles.slide]}>
+    <View style={styles.slide}>
       <ImageBackground
         source={thumbnail}
         resizeMode="cover"
@@ -42,13 +35,6 @@ function Slide({
             <AppText style={styles.tag}>{tag}</AppText>
           </View>
           <AppText style={styles.title}>{title}</AppText>
-        </View>
-        <View style={styles.slideIndicator}>
-          <AppText style={[styles.slideIndex, styles.indexText]}>
-            {currentSlideIndex}{' '}
-            <AppText style={[styles.slash, styles.indexText]}>/</AppText>{' '}
-            {totalSlideCount}
-          </AppText>
         </View>
       </ImageBackground>
     </View>
@@ -65,37 +51,91 @@ export function HomeImageCarousel({
   data,
   openContentModal,
 }: Props): React.JSX.Element {
+  const [isSwiped, setIsSwiped] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const HORRIZONTAL_PADDING = spacing.layoutPaddingHorizontal * 2;
   const width = Dimensions.get('window').width - HORRIZONTAL_PADDING;
   const height = 466;
-  const ref = React.useRef<ICarouselInstance>(null);
+  const ref = useRef<ICarouselInstance>(null);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: (e, gestureState) => true,
+      onMoveShouldSetPanResponder: (e, gestureState) => true,
+      onPanResponderGrant: (e, gestureState) => {
+        const {dx, dy} = gestureState;
+
+        // 수평 swipe 감지
+        if (Math.abs(dx) > Math.abs(dy)) {
+          setIsSwiped(true);
+        } else {
+          // tap 감지
+          setIsSwiped(false);
+        }
+      },
+      onPanResponderMove: (e, gestureState) => {
+        const {dx, dy} = gestureState;
+
+        // 수평 swipe 감지
+        if (Math.abs(dx) > Math.abs(dy)) {
+          setIsSwiped(true);
+        } else {
+          // tap 감지
+          setIsSwiped(false);
+        }
+      },
+      onPanResponderRelease: (e, gestureState) => {
+        setIsSwiped(false);
+      },
+    }),
+  ).current;
+
   return (
-    <Pressable onPress={openContentModal}>
-      <View style={styles.container}>
-        <Carousel
-          ref={ref}
-          loop
-          width={width}
-          height={height}
-          autoPlay={true}
-          autoPlayInterval={8000}
-          data={data}
-          scrollAnimationDuration={3000}
-          panGestureHandlerProps={{
-            activeOffsetX: [-10, 10],
-          }}
-          renderItem={({item, index}) => (
-            <Slide
-              tag={item?.tag}
-              title={item?.title}
-              thumbnail={item?.thumbnail}
-              totalSlideCount={data.length}
-              currentSlideIndex={index + 1}
-            />
-          )}
-        />
+    <View style={styles.container} {...panResponder.panHandlers}>
+      <Carousel
+        ref={ref}
+        loop
+        width={width}
+        height={height}
+        autoPlay={true}
+        autoPlayInterval={8000}
+        data={data}
+        scrollAnimationDuration={1000}
+        panGestureHandlerProps={{
+          activeOffsetX: [-10, 10],
+        }}
+        onSnapToItem={index => {
+          setCurrentIndex(index);
+        }}
+        renderItem={({item}) => {
+          return (
+            <Pressable
+              style={styles.slide}
+              onPress={() => {
+                if (isSwiped) {
+                  return;
+                }
+
+                openContentModal();
+              }}>
+              <Slide
+                tag={item?.tag}
+                title={item?.title}
+                thumbnail={item?.thumbnail}
+              />
+            </Pressable>
+          );
+        }}
+      />
+      {/* TODO: current index 싱크 맞추기 */}
+      <View style={styles.slideIndicator}>
+        <AppText style={[styles.slideIndex, styles.indexText]}>
+          {currentIndex + 1}{' '}
+          <AppText style={[styles.slash, styles.indexText]}>/</AppText>{' '}
+          {data.length}
+        </AppText>
       </View>
-    </Pressable>
+    </View>
   );
 }
 
@@ -145,6 +185,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
     bottom: 20,
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: 6,
+    backgroundColor: '#000E2466',
+    overflow: 'hidden',
   },
   indexText: {
     fontSize: 12,
@@ -153,11 +198,6 @@ const styles = StyleSheet.create({
   slideIndex: {
     alignItems: 'center',
     color: color.main.white,
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: 6,
-    backgroundColor: '#000E2466',
-    overflow: 'hidden',
   },
   slash: {
     color: '#FFFFFF66',
