@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {useRecoilValue} from 'recoil';
 import {bottomSheetVisibleState} from '@/store/bottomSheetState';
-import {categoryListState} from '@/store/categoryState';
 
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import {AppText} from '../../components/common/AppText';
@@ -18,7 +17,6 @@ import {font} from '@/styles/font';
 export function TodoFormModalScreen({route, navigation}: any) {
   const {headerTitle, form, todoItem, isEditMode} = route.params;
   const isVisible = useRecoilValue(bottomSheetVisibleState);
-  const categories = useRecoilValue(categoryListState);
 
   // TODO: 리팩토링 필요
   const setDefaulCategory = () => {
@@ -27,15 +25,11 @@ export function TodoFormModalScreen({route, navigation}: any) {
         return {id: null, key: 'custom', title: todoItem?.userTag};
       }
 
-      if (todoItem?.categoryId) {
-        const category = categories.find(
-          item => item.id === todoItem?.categoryId,
-        );
-
+      if (todoItem?.category) {
         return {
-          id: todoItem?.categoryId,
-          key: category?.category,
-          title: category?.title,
+          id: todoItem.category?.id,
+          key: todoItem.category?.category,
+          title: todoItem.category?.title,
         };
       }
     }

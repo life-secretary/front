@@ -122,7 +122,7 @@ export function TodoForm({
     const editedTodo = {
       title,
       userTag,
-      categoryId: currentCategoryId,
+      categoryId: currentCategoryId && +currentCategoryId,
     };
 
     const res = await updateData('/user-todos', todoItem?.id, editedTodo);
@@ -221,7 +221,7 @@ export function TodoForm({
             placeholder="최대 6자 내로 입력 가능해요"
             text={isCustomCategory ? selectedCategory?.title || '' : category}
             onChangeText={(newText: string) =>
-              handleSelectCategory({key: 'custom', title: newText})
+              handleSelectCategory({id: null, key: 'custom', title: newText})
             }
             editable={isCustomCategory}
             icon={{

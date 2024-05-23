@@ -23,7 +23,7 @@ import type { ConditionData } from '../components/search/SearchCategoryModal';
 import { useRecoilState } from 'recoil';
 import { recentSearchWordState, popularSearchWordState, PopularSearchWord } from '@/store/search';
 import { getPopularSearchWordListQuery } from '@/api/search';
-import { ToDoItem } from '@/models/todo';
+import { ToDoItem } from '@/models/Todo';
 
 const HeaderSearchResult = ({
   data, 
