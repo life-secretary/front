@@ -10,12 +10,6 @@ import {SettingMenu} from '@/components/setting/SettingMenu';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
-const DUMMY_USER = {
-  userId: '1',
-  nickname: '홍길동',
-  birthdate: '2002-09-10',
-};
-
 const MY_MENU = {
   key: 'my',
   title: '내 정보',
@@ -74,7 +68,7 @@ export function SettingScreen(): React.JSX.Element {
       </AppHeader>
       <View style={styles.container}>
         <View style={styles.section}>
-          <MyInfoSection user={DUMMY_USER} settingMenu={MY_MENU} />
+          <MyInfoSection settingMenu={MY_MENU} />
         </View>
         <SettingMenu settingMenuList={SETTING_MENU_LIST[0]} />
         <View style={styles.divider} />
