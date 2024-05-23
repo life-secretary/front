@@ -6,6 +6,7 @@ import {default as addDark} from './icon_add_dark.svg';
 import {default as addLight} from './icon_add_light.svg';
 import {default as angleDown} from './icon_angle_down.svg';
 import {default as angleUp} from './icon_angle_up.svg';
+import {default as angleRight} from './icon_angle_right.svg';
 import {default as arrowDown} from './icon_arrow_down.svg';
 import {default as arrowLeft} from './icon_arrow_left.svg';
 import {default as arrowRight} from './icon_arrow_right.svg';
@@ -49,6 +50,7 @@ import {default as searchTab} from './bottomTab/icon_search.svg';
 import {default as todoTab} from './bottomTab/icon_todo.svg';
 import {default as scrapTab} from './bottomTab/icon_scrap.svg';
 import {default as settingTab} from './bottomTab/icon_setting.svg';
+
 import color from '@/styles/color';
 
 // TODO: iconName 키 타입 string -> string literal 변경하기
@@ -91,6 +93,12 @@ const Icons: IconsData = {
     type: 'stroke',
     file: angleUp,
     defaultStroke: '#000E24',
+    defaultFill: '',
+  },
+  angleRight: {
+    type: 'stroke',
+    file: angleRight,
+    defaultStroke: color.main.primary,
     defaultFill: '',
   },
   // arrow icon dark color : #000E24

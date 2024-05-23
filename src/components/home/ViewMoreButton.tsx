@@ -14,7 +14,7 @@ export function ViewMoreButton(): React.JSX.Element {
       textStyle={styles.buttonText}
       buttonStyle={styles.button}
       endIcon={{
-        name: 'arrowRight',
+        name: 'angleRight',
         width: 24,
         height: 24,
       }}
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 36,
     paddingVertical: 15,
-    borderRadius: 6,
+    borderRadius: 10,
     gap: 4,
     backgroundColor: color.grey.grey100,
   },
