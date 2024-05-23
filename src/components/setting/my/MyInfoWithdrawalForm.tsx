@@ -36,6 +36,8 @@ export function CheckboxItem({
         fillColor={color.main.primary}
         iconStyle={styles.checkbox}
         innerIconStyle={styles.checkbox}
+        bounceEffectIn={1}
+        bounceEffectOut={1}
         onPress={(isChecked: boolean) => {
           onPress(isChecked, item);
         }}
@@ -223,8 +225,10 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
           <>
             <View style={styles.titleContainer}>
               <AppText style={styles.subTitle}>
-                인생비서를 떠나신다니 아쉬워요{'\n'}이래 유의사항 동의 시,
-                탈퇴가 완료 처리됩니다
+                인생비서를 떠나신다니 아쉬워요
+              </AppText>
+              <AppText style={styles.subTitle}>
+                아래 유의사항 동의 시, 탈퇴가 완료 처리됩니다
               </AppText>
             </View>
             <View style={styles.noticeContainer}>
@@ -323,6 +327,7 @@ const styles = StyleSheet.create({
     lineHeight: 19.09,
     letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey500,
+    paddingBottom: 4,
   },
   form: {
     flex: 1,
@@ -337,6 +342,7 @@ const styles = StyleSheet.create({
   checkbox: {
     borderWidth: 1.5,
     borderRadius: 5,
+    borderBlockColor: color.main.primary,
   },
   itemContainer: {
     minHeight: 36,
