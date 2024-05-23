@@ -23,20 +23,27 @@ export function TodoCard({item}: Props): React.JSX.Element {
     let list = [];
     let categoryTitle = '';
 
+    // 완료 상태
     if (item?.isDone) {
       list.push('완료');
     }
 
+    // 사용자가 만든 할 일 구분
     if (item.hasOwnProperty('origId')) {
       list.push('나의 할 일');
     }
 
-    if (item.userTag !== null) {
+    // 선택한 분야
+    if (item.userTag) {
       categoryTitle = item.userTag;
-    } else if (item?.category) {
+    } else if (item.category) {
       categoryTitle = item.category?.title;
     } else {
-      categoryTitle = null;
+      categoryTitle = '';
+    }
+
+    if (!categoryTitle) {
+      return list;
     }
 
     list.push(categoryTitle);
@@ -47,7 +54,7 @@ export function TodoCard({item}: Props): React.JSX.Element {
   const todoItem: Todo = {
     id: item?.id,
     title: item?.title,
-    categoryId: item?.categoryId,
+    category: item?.category,
     userTag: item?.userTag,
     tagList: setTagList(),
     origId: item?.origId,
@@ -88,10 +95,7 @@ export function TodoCard({item}: Props): React.JSX.Element {
   };
 
   return (
-    <Pressable
-      onPress={() => {
-        handleCardPress();
-      }}>
+    <Pressable onPress={() => handleCardPress()}>
       <View style={styles.cardContainer}>
         <View style={styles.cardTagsRow}>
           {todoItem.tagList &&
@@ -111,6 +115,7 @@ export function TodoCard({item}: Props): React.JSX.Element {
             width={36}
             height={36}
             styles={{color: color.grey.grey400}}
+            onPress={() => handleCardPress()}
           />
         </View>
         <AppDivider />

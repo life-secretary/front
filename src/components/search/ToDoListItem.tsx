@@ -9,7 +9,7 @@ import { useRecoilValue } from 'recoil';
 import { categoryListState } from '@/store/categoryState';
 
 import type { CategoryObject } from '@/models/common';
-import type { ToDoItem } from '@/models/todo';
+import type { ToDoItem } from '@/models/Todo';
 
 export type ToDoListItemProps = {
   /** 아이템 내 카테고리 존재 여부 */
