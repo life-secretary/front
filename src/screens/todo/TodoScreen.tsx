@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
   header: {
     minHeight: 42,
     justifyContent: 'center',
+    marginTop: 12,
   },
   title: {
     fontSize: 20,

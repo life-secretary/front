@@ -192,7 +192,7 @@ export function ScrapScreen(): React.JSX.Element {
 const styles = StyleSheet.create({
   header: {
     justifyContent: 'center',
-    marginTop: 16,
+    marginTop: 12,
   },
   container: {
     flex: 1,
