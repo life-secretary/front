@@ -141,9 +141,9 @@ export function SubTodoItem({
               <View
                 style={[
                   isInputActive && styles.inputContainer,
-                  isTitleInvalid && styles.error,
+                  isInputActive && isTitleInvalid && styles.error,
                 ]}>
-                {isTitleInvalid && (
+                {isInputActive && isTitleInvalid && (
                   <AppIcon name="warning" width={20} height={20} />
                 )}
                 <OutsidePressHandler onOutsidePress={handleOutsidePress}>
@@ -167,7 +167,7 @@ export function SubTodoItem({
             <BouncyCheckbox
               size={18}
               fillColor={color.grey.grey500}
-              iconStyle={styles.checkbox}
+              iconStyle={[styles.checkbox, isChecked && [styles.checked]]}
               disableText={true}
               disabled={isCompleteMode}
               isChecked={isChecked}
@@ -234,10 +234,10 @@ const styles = StyleSheet.create({
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 19.09,
     letterSpacing: font.letterSpacing.medium,
-    color: color.main.black,
+    color: color.grey.grey700,
   },
   activeText: {
-    color: color.grey.grey700,
+    color: color.grey.grey500,
   },
   error: {
     borderColor: color.state.error,
@@ -255,7 +255,10 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     borderWidth: 1.5,
-    marginHorizontal: 12,
+    borderColor: color.grey.grey500,
+  },
+  checked: {
+    borderWidth: 0,
   },
   deleteButton: {
     gap: 4,
