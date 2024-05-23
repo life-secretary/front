@@ -55,15 +55,17 @@ export function ScrapContentList({
 
   // TODO: 리팩토링 필요
   useEffect(() => {
-    if (checkedList.length > 0) {
+    const totalCheckedCount = checkedList.length;
+
+    if (totalCheckedCount > 0) {
       handleButtonPress('delete');
     }
 
-    if (checkedList.length === 0 && mode === 'DELETE' && !isDeleted) {
+    if (totalCheckedCount === 0 && mode === 'DELETE' && !isDeleted) {
       handleButtonPress('edit');
     }
 
-    handleTotalCheckedCount(totalCount);
+    handleTotalCheckedCount(totalCheckedCount);
   }, [
     checkedList,
     handleTotalCheckedCount,
