@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontWeight: '500',
     fontSize: getFontSize(15),
-    lineHeight: 18,
+    lineHeight: 21,
     color: '#526070',
   },
 
