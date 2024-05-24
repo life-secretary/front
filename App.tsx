@@ -77,7 +77,6 @@ function HomeTabs({navigation}) {
               styles={
                 focused
                   ? {
-                      fill: color.main.primary,
                       color: color.main.primary,
                     }
                   : null
