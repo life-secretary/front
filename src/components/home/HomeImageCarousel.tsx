@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 
 import {
   Dimensions,
@@ -14,6 +14,8 @@ import {AppText} from '@/components/common/AppText';
 import spacing from '@/styles/spacing';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+
+import {getFontSize} from '@/utils/font';
 
 // TODO: type 재정의 필요
 type SlideType = {
@@ -164,7 +166,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   tag: {
-    fontSize: 13,
+    fontSize: getFontSize(13),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 15.51,
     color: color.main.primary,
@@ -175,7 +177,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   title: {
-    fontSize: 24,
+    fontSize: getFontSize(24),
     fontWeight: font.fontWeight.bold,
     lineHeight: 36,
     color: color.main.white,
@@ -192,7 +194,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   indexText: {
-    fontSize: 12,
+    fontSize: getFontSize(12),
     fontWeight: '500',
   },
   slideIndex: {

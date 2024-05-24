@@ -6,6 +6,8 @@ import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
+import {getFontSize} from '@/utils/font';
+
 export function SendFeedbackButton(): React.JSX.Element {
   const navigation = useNavigation();
 
@@ -32,7 +34,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: getFontSize(14),
     fontWeight: font.fontWeight.bold,
     lineHeight: 16.71,
     color: color.main.white,

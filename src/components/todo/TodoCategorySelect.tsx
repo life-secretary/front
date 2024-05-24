@@ -1,12 +1,14 @@
 import React from 'react';
-import {mainCategoryListState} from '@/store/categoryState';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {mainCategoryListState} from '@/store/categoryState';
+import {bottomSheetVisibleState} from '@/store/bottomSheetState';
 
 import {FlatList, Pressable, StyleSheet, View} from 'react-native';
 import {AppText} from '@/components/common/AppText';
 import {font} from '@/styles/font';
 import color from '@/styles/color';
-import {bottomSheetVisibleState} from '@/store/bottomSheetState';
+
+import {getFontSize} from '@/utils/font';
 
 type Props = {
   handleSelectCategory: Function;
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 20,
-    fontSize: 20,
+    fontSize: getFontSize(20),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 21,
     letterSpacing: font.letterSpacing.medium,
@@ -71,7 +73,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   optionText: {
-    fontSize: 18,
+    fontSize: getFontSize(18),
     fontWeight: font.fontWeight.medium,
     lineHeight: 21.48,
     letterSpacing: font.letterSpacing.medium,

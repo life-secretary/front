@@ -18,6 +18,7 @@ import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
 
 import {removeItemAtIndex} from '@/utils';
+import {getFontSize} from '@/utils/font';
 
 type checkboxItemProps = {
   item: object;
@@ -316,7 +317,7 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   title: {
-    fontSize: 20,
+    fontSize: getFontSize(20),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 32,
     letterSpacing: font.letterSpacing.medium,
@@ -351,7 +352,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   itemText: {
-    fontSize: 15,
+    fontSize: getFontSize(15),
     fontWeight: font.fontWeight.medium,
     lineHeight: 17.9,
     color: color.grey.grey700,
@@ -394,7 +395,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   noticeText: {
-    fontSize: 15,
+    fontSize: getFontSize(15),
     fontWeight: font.fontWeight.medium,
     lineHeight: 20,
     letterSpacing: font.letterSpacing.medium,
@@ -440,7 +441,7 @@ const styles = StyleSheet.create({
   },
   modalButtonText: {
     textAlign: 'center',
-    fontSize: 15,
+    fontSize: getFontSize(15),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 17.9,
     color: color.main.white,

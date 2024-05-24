@@ -30,6 +30,7 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 import {getFormattedDate} from '@/utils';
+import {getFontSize} from '@/utils/font';
 
 const DUMMY_CAROUSEL_LIST = [
   {
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: getFontSize(18),
     fontWeight: font.fontWeight.bold,
     lineHeight: 21.48,
     color: color.grey.grey500,
@@ -276,7 +277,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     textAlign: 'center',
-    fontSize: 15,
+    fontSize: getFontSize(15),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 21,
     color: color.grey.grey400,

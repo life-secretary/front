@@ -10,6 +10,8 @@ import {BookmarkButton} from './BookmarkButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
+import {getFontSize} from '@/utils/font';
+
 type Props = {
   content: object;
   mode: string;
@@ -89,7 +91,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     backgroundColor: color.grey.grey100,
     overflow: 'hidden',
-    fontSize: 12,
+    fontSize: getFontSize(12),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 14.32,
     color: color.grey.grey400,

@@ -5,6 +5,7 @@ import {AppText} from '@/components/common/AppText';
 import AppIcon from '@/components/common/AppIcon';
 import {font} from '@/styles/font';
 import color from '@/styles/color';
+import {getFontSize} from '@/utils/font';
 
 type Props = {
   item: object;
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 13,
+    fontSize: getFontSize(13),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 15.51,
     color: color.grey.grey700,

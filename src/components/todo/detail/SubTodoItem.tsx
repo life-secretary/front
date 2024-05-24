@@ -8,21 +8,23 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import OutsidePressHandler from 'react-native-outside-press';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import spacing from '@/styles/spacing';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
-import OutsidePressHandler from 'react-native-outside-press';
 
-import Todo from '@/models/Todo';
-import SubTodo from '@/models/SubTodo';
 import {
   checkInappropriateKeyword,
   checkSpecialChar,
   formValidation,
 } from '@/utils/formValidation';
+import {getFontSize} from '@/utils/font';
+
+import Todo from '@/models/Todo';
+import SubTodo from '@/models/SubTodo';
 
 type ItemProps = {
   todoItem: Todo;
@@ -230,7 +232,7 @@ const styles = StyleSheet.create({
     borderColor: color.grey.grey500,
   },
   input: {
-    fontSize: 16,
+    fontSize: getFontSize(16),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 19.09,
     letterSpacing: font.letterSpacing.medium,
@@ -268,7 +270,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.state.error,
   },
   deleteButtonText: {
-    fontSize: 12,
+    fontSize: getFontSize(12),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 14.32,
     letterSpacing: font.letterSpacing.medium,

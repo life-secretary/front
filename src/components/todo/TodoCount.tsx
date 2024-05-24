@@ -5,6 +5,8 @@ import {AppText} from '@/components/common/AppText';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
+import {getFontSize} from '@/utils/font';
+
 type Props = {
   title: string;
   totalTodoCount: number | undefined;
@@ -38,7 +40,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontSize: 14,
+    fontSize: getFontSize(14),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 16.71,
     letterSpacing: font.letterSpacing.medium,

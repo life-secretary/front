@@ -9,6 +9,8 @@ import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
+import {getFontSize} from '@/utils/font';
+
 type UserInfoSectionProps = {
   settingMenu: object;
 };
@@ -50,7 +52,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.grey.grey100,
   },
   username: {
-    fontSize: 24,
+    fontSize: getFontSize(24),
     fontWeight: font.fontWeight.bold,
     lineHeight: 28.64,
     letterSpacing: font.letterSpacing.medium,
@@ -62,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.grey.grey600,
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: getFontSize(14),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 16.71,
     color: color.main.white,

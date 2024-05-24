@@ -16,6 +16,8 @@ import {CompletedTodoList} from '@/components/todo/CompletedTodoList';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
+import {getFontSize} from '@/utils/font';
+
 export function TodoScreen({navigation}: any): React.JSX.Element {
   const setTodoList = useSetRecoilState(todoListState);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   title: {
-    fontSize: 20,
+    fontSize: getFontSize(20),
     fontWeight: font.fontWeight.bold,
     lineHeight: 23.87,
     letterSpacing: font.letterSpacing.medium,

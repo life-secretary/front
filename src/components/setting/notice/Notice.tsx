@@ -1,15 +1,17 @@
 import React, {useEffect, useState} from 'react';
+
 import {fetchData} from '@/api/api';
 
 import {ScrollView, StyleSheet, View} from 'react-native';
+import Accordion from 'react-native-collapsible/Accordion';
 import AppIcon from '@/components/common/AppIcon';
 import {AppText} from '@/components/common/AppText';
-import Accordion from 'react-native-collapsible/Accordion';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
 
 import {getFormattedDate} from '@/utils';
+import {getFontSize} from '@/utils/font';
 
 const EmptyList = () => (
   <View style={styles.emptyListContainer}>
@@ -126,14 +128,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    fontSize: 14,
+    fontSize: getFontSize(14),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 22,
     color: color.grey.grey700,
   },
   headerText: {
     paddingVertical: 4,
-    fontSize: 14,
+    fontSize: getFontSize(14),
     fontWeight: font.fontWeight.medium,
     lineHeight: 16.71,
     color: color.grey.grey400,
@@ -144,7 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.grey.grey100,
   },
   contentText: {
-    fontSize: 14,
+    fontSize: getFontSize(14),
     fontWeight: font.fontWeight.medium,
     lineHeight: 21,
     letterSpacing: font.letterSpacing.medium,

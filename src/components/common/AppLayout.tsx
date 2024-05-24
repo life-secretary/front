@@ -9,6 +9,8 @@ import spacing from '@/styles/spacing';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
+import {getFontSize} from '@/utils/font';
+
 export function AppLayout({
   children,
   style,
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000E24B2',
   },
   toastText: {
-    fontSize: 14,
+    fontSize: getFontSize(14),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 16.71,
     color: color.main.white,

@@ -8,6 +8,7 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 import {getFormattedDate} from '@/utils';
+import {getFontSize} from '@/utils/font';
 
 import HomeContent from '@/models/HomeContent';
 
@@ -81,14 +82,14 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   title: {
-    fontSize: 15,
+    fontSize: getFontSize(15),
     fontWeight: font.fontWeight.medium,
     lineHeight: 17.9,
     letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey700,
   },
   subTitle: {
-    fontSize: 12,
+    fontSize: getFontSize(12),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 14.32,
     color: color.grey.grey400,

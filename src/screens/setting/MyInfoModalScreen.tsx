@@ -10,6 +10,8 @@ import {MyInfoWithdrawalForm} from '@/components/setting/my/MyInfoWithdrawalForm
 import {font} from '@/styles/font';
 import color from '@/styles/color';
 
+import {getFontSize} from '@/utils/font';
+
 export function MyInfoModalScreen({route, navigation}: any): React.JSX.Element {
   const {headerTitle, menu} = route.params;
 
@@ -55,7 +57,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: getFontSize(20),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 23.87,
     color: color.grey.grey700,
