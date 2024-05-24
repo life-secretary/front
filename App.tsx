@@ -219,6 +219,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabBar: {
+    height: 85,
     paddingTop: 10,
     borderRadius: 24,
     position: 'absolute',

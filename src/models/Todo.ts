@@ -2,7 +2,7 @@ type Todo = {
   id: number;
   origId?: number;
   title: string;
-  categoryId: number;
+  categoryId?: number;
   category?: object;
   userTag?: string;
   tagList?: string[];

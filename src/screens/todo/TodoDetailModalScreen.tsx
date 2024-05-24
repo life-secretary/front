@@ -19,6 +19,7 @@ import {TodoDetail} from '@/components/todo/detail/TodoDetail';
 import {SubTodoList} from '@/components/todo/detail/SubTodoList';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+
 import {getFontSize} from '@/utils/font';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
@@ -51,16 +52,17 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     setIsBottomSheetVisible(false);
   };
 
-  const deleteTodo = async () => {
-    const res = await deleteData('/user-todos', {}, todoId);
+  const deleteTodo = async (id: number) => {
+    const res = await deleteData('/user-todos', {}, id);
 
     if (res.status === 200) {
+      handleModalVisible(false);
       navigation.navigate('Todo');
       Toast.show({
         type: 'success',
         props: {text: '할 일이 삭제되었어요'},
         position: 'bottom',
-        bottomOffset: 20,
+        bottomOffset: 16,
         visibilityTime: 2000,
         autoHide: true,
       });
@@ -68,15 +70,15 @@ export function TodoDetailModalScreen({navigation, route}: any) {
   };
 
   const handleDeleteButtonPress = () => {
-    deleteTodo();
+    deleteTodo(todoId);
   };
 
   const handleRetryButtonPress = () => {
-    retryTodo(todoItem?.id);
+    retryTodo(todoId);
   };
 
   const handleCompleteButtonPress = () => {
-    completeTodo(todoItem?.id);
+    completeTodo(todoId);
   };
 
   const completeTodo = async (id: number) => {

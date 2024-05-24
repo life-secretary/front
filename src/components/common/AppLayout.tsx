@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 14,
+    marginBottom: 85, // bottom tab height
     gap: 6,
     borderRadius: 10,
     backgroundColor: '#000E24B2',
