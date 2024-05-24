@@ -14,6 +14,8 @@ import {TodoCategorySelect} from '@/components/todo/TodoCategorySelect';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
+import {getFontSize} from '@/utils/font';
+
 export function TodoFormModalScreen({route, navigation}: any) {
   const {headerTitle, form, todoItem, isEditMode} = route.params;
   const isVisible = useRecoilValue(bottomSheetVisibleState);
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
     marginBottom: 27,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: getFontSize(20),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 23.87,
     color: color.grey.grey700,

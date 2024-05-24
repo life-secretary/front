@@ -1,8 +1,10 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import OutsidePressHandler from 'react-native-outside-press';
 import {useRecoilValue} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
+
+import {createData} from '@/api/api';
 
 import {
   FlatList,
@@ -22,7 +24,7 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
 
-import {createData} from '@/api/api';
+import {getFontSize} from '@/utils/font';
 
 export function SendFeedbackForm() {
   // const [isValid, setIsValid] = React.useState(true);
@@ -230,7 +232,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   title: {
-    fontSize: 24,
+    fontSize: getFontSize(24),
     fontWeight: font.fontWeight.bold,
     lineHeight: 28.64,
     letterSpacing: font.letterSpacing.medium,
@@ -265,7 +267,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.main.secondary,
   },
   statusText: {
-    fontSize: 14,
+    fontSize: getFontSize(14),
     fontWeight: font.fontWeight.medium,
     lineHeight: 16.71,
   },
@@ -314,7 +316,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: getFontSize(18),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 21,
     letterSpacing: font.letterSpacing.medium,
@@ -322,7 +324,7 @@ const styles = StyleSheet.create({
   },
   modalSubTitle: {
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: getFontSize(14),
     fontWeight: font.fontWeight.medium,
     lineHeight: 16.71,
     letterSpacing: font.letterSpacing.medium,

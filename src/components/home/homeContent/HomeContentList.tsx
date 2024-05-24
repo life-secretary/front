@@ -11,6 +11,8 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
 
+import {getFontSize} from '@/utils/font';
+
 import HomeContent from '@/models/HomeContent';
 
 type Props = {
@@ -70,7 +72,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 28,
-    fontSize: 20,
+    fontSize: getFontSize(20),
     fontWeight: font.fontWeight.bold,
     lineHeight: 23.87,
     letterSpacing: font.letterSpacing.medium,

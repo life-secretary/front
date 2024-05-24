@@ -5,6 +5,8 @@ import {AppText} from '@/components/common/AppText';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
+import {getFontSize} from '@/utils/font';
+
 type Props = {
   item: object;
   homeContentFilter: object;
@@ -59,7 +61,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    fontSize: 15,
+    fontSize: getFontSize(15),
     lineHeight: 17.9,
   },
   defaultText: {

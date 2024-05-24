@@ -7,6 +7,8 @@ import {AppText} from '@/components/common/AppText';
 import {font} from '@/styles/font';
 import color from '@/styles/color';
 
+import {getFontSize} from '@/utils/font';
+
 type SettingMenuItemProps = {
   settingMenu: object;
 };
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   infoText: {
-    fontSize: 14,
+    fontSize: getFontSize(14),
     fontWeight: font.fontWeight.medium,
     lineHeight: 16.71,
     letterSpacing: font.letterSpacing.medium,

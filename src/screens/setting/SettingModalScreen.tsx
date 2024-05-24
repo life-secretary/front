@@ -12,6 +12,8 @@ import {font} from '@/styles/font';
 import color from '@/styles/color';
 import spacing from '@/styles/spacing';
 
+import {getFontSize} from '@/utils/font';
+
 export function SettingModalScreen({
   route,
   navigation,
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: getFontSize(20),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 23.87,
     color: color.grey.grey700,

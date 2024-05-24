@@ -6,6 +6,8 @@ import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
+import {getFontSize} from '@/utils/font';
+
 type AddSubTodoButtonProps = {
   todoItem: object;
 };
@@ -64,7 +66,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.grey.grey100,
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: getFontSize(14),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 16.71,
     letterSpacing: font.letterSpacing.medium,

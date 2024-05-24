@@ -15,6 +15,8 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
 
+import {getFontSize} from '@/utils/font';
+
 type HomeContentItemByFilterType = {
   index: number;
   title: string;
@@ -114,7 +116,7 @@ const styles = StyleSheet.create({
   },
   listTitle: {
     marginBottom: 18,
-    fontSize: 20,
+    fontSize: getFontSize(20),
     fontWeight: font.fontWeight.bold,
     lineHeight: 23.87,
     letterSpacing: font.letterSpacing.medium,
@@ -122,6 +124,7 @@ const styles = StyleSheet.create({
   },
   contents: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
   },
   contentsNo: {
@@ -129,11 +132,12 @@ const styles = StyleSheet.create({
     height: 22,
     textAlign: 'center',
     fontWeight: font.fontWeight.semiBold,
+    lineHeight: 19.09,
     color: color.grey.grey300,
   },
   contentsTitle: {
     flex: 1,
-    fontSize: 15,
+    fontSize: getFontSize(15),
     fontWeight: font.fontWeight.medium,
     lineHeight: 17.9,
     letterSpacing: font.letterSpacing.medium,

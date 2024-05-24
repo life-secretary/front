@@ -10,6 +10,8 @@ import {SettingMenu} from '@/components/setting/SettingMenu';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
+import {getFontSize} from '@/utils/font';
+
 const MY_MENU = {
   key: 'my',
   title: '내 정보',
@@ -89,7 +91,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: getFontSize(20),
     fontWeight: font.fontWeight.bold,
     lineHeight: 23.87,
     color: color.grey.grey700,

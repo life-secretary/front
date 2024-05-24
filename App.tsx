@@ -23,6 +23,8 @@ import color from './src/styles/color';
 import {font} from './src/styles/font';
 import {AppText} from './src/components/common/AppText';
 
+import {getFontSize} from './src/utils/font';
+
 // import Content from './src/components/contentDetail/ContentModal';
 
 const queryClient = new QueryClient();
@@ -239,7 +241,7 @@ const styles = StyleSheet.create({
     }),
   },
   tabLabel: {
-    fontSize: 12,
+    fontSize: getFontSize(12),
     fontWeight: font.fontWeight.medium,
     lineHeight: 14.32,
     letterSpacing: font.letterSpacing.medium,

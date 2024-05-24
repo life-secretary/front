@@ -5,6 +5,8 @@ import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
+import {getFontSize} from '@/utils/font';
+
 export function ViewMoreButton(): React.JSX.Element {
   const handlePress = () => {};
 
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.grey.grey100,
   },
   buttonText: {
-    fontSize: 15,
+    fontSize: getFontSize(15),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 17.9,
     color: color.main.primary,

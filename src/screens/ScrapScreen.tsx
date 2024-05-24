@@ -17,6 +17,7 @@ import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
 
 import {removeItemAtIndex} from '@/utils';
+import {getFontSize} from '@/utils/font';
 
 export function ScrapScreen(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState(false);
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: getFontSize(20),
     fontWeight: font.fontWeight.bold,
     lineHeight: 23.87,
     color: color.grey.grey700,
@@ -215,7 +216,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   totalCountText: {
-    fontSize: 18,
+    fontSize: getFontSize(18),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 21.48,
     color: color.grey.grey600,

@@ -12,6 +12,8 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
 
+import {getFontSize} from '@/utils/font';
+
 const EmptyList = () => {
   return (
     <View style={styles.emptyListContainer}>
@@ -127,7 +129,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: getFontSize(18),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 21,
     letterSpacing: font.letterSpacing.medium,
@@ -135,7 +137,7 @@ const styles = StyleSheet.create({
   },
   subText: {
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: getFontSize(14),
     fontWeight: font.fontWeight.medium,
     lineHeight: 17.9,
     letterSpacing: font.letterSpacing.medium,
@@ -148,7 +150,7 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 14,
     paddingVertical: 10,
-    fontSize: 13,
-    fontWeight: '700',
+    fontSize: getFontSize(13),
+    fontWeight: font.fontWeight.bold,
   },
 });

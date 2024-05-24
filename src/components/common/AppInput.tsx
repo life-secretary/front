@@ -6,6 +6,8 @@ import AppIcon from './AppIcon';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
+import {getFontSize} from '@/utils/font';
+
 type Props = {
   /** Whether has label or not */
   hasLabel: boolean;
@@ -127,7 +129,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   label: {
-    fontSize: 14,
+    fontSize: getFontSize(14),
     fontWeight: font.fontWeight.medium,
     lineHeight: 16.71,
     color: color.grey.grey500,
@@ -140,7 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.grey.grey100,
   },
   inputText: {
-    fontSize: 16, // TextInput에 적용되는 font에는 default size가 적용되지 않음.
+    fontSize: getFontSize(16), // TextInput에 적용되는 font에는 default size가 적용되지 않음.
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 21,
     letterSpacing: font.letterSpacing.medium,
@@ -164,7 +166,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   errorMsg: {
-    fontSize: 13,
+    fontSize: getFontSize(13),
     fontWeight: font.fontWeight.medium,
     lineHeight: 15.51,
     letterSpacing: font.letterSpacing.medium,

@@ -7,7 +7,9 @@ import {AppDivider} from '@/components/common/AppDivider';
 import AppIcon from '@/components/common/AppIcon';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+
 import {getFormattedDate} from '@/utils';
+import {getFontSize} from '@/utils/font';
 
 import Todo from '@/models/Todo';
 import SubTodo from '@/models/SubTodo';
@@ -176,7 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.grey.grey700,
   },
   cardTag: {
-    fontSize: 12,
+    fontSize: getFontSize(12),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 14.32,
   },
@@ -205,7 +207,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cardInfoText: {
-    fontSize: 13,
+    fontSize: getFontSize(13),
     fontWeight: font.fontWeight.medium,
     lineHeight: 15.51,
   },

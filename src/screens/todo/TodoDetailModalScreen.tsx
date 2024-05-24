@@ -19,6 +19,7 @@ import {TodoDetail} from '@/components/todo/detail/TodoDetail';
 import {SubTodoList} from '@/components/todo/detail/SubTodoList';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import {getFontSize} from '@/utils/font';
 
 export function TodoDetailModalScreen({navigation, route}: any) {
   const {todoItem} = route.params;
@@ -304,7 +305,7 @@ const styles = StyleSheet.create({
   },
   completeButtonText: {
     textAlign: 'center',
-    fontSize: 15,
+    fontSize: getFontSize(15),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 17.9,
     color: color.main.secondary,
@@ -358,14 +359,14 @@ const styles = StyleSheet.create({
   },
   contentsTitle: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: getFontSize(20),
     fontWeight: font.fontWeight.bold,
     lineHeight: 30,
     letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey700,
   },
   contentsDescription: {
-    fontSize: 15,
+    fontSize: getFontSize(15),
     fontWeight: font.fontWeight.medium,
     lineHeight: 17.9,
     letterSpacing: font.letterSpacing.medium,
