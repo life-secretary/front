@@ -193,12 +193,13 @@ export function ScrapScreen(): React.JSX.Element {
 const styles = StyleSheet.create({
   header: {
     justifyContent: 'center',
-    marginTop: 12,
+    marginTop: 21, // 아이콘 없는 헤더
   },
   container: {
     flex: 1,
   },
   title: {
+    height: 24,
     textAlign: 'center',
     fontSize: getFontSize(20),
     fontWeight: font.fontWeight.bold,

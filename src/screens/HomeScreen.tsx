@@ -254,12 +254,14 @@ const styles = StyleSheet.create({
   header: {
     justifyContent: 'space-between',
     paddingHorizontal: 24,
+    marginTop: 12, // 아이콘이 있는 헤더
   },
   headerIconContainer: {
     flexDirection: 'row',
     gap: 10,
   },
   headerTitle: {
+    height: 24,
     fontSize: getFontSize(18),
     fontWeight: font.fontWeight.bold,
     lineHeight: 21.48,

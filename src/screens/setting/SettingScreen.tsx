@@ -88,9 +88,10 @@ const styles = StyleSheet.create({
   },
   header: {
     justifyContent: 'space-between',
-    marginTop: 12,
+    marginTop: 21, // 아이콘 없는 헤더
   },
   headerTitle: {
+    height: 24,
     fontSize: getFontSize(20),
     fontWeight: font.fontWeight.bold,
     lineHeight: 23.87,
