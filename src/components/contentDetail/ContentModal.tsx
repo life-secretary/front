@@ -28,7 +28,7 @@ type ContentModalProps = Partial<AppModalProps> & {
   closeContentModal: () => void;
 };
 
-const ContentModal = ({
+export const ContentModal = ({
   content,
   isVisible = false,
   closeContentModal,
@@ -290,6 +290,11 @@ const ContentModal = ({
     });
   };
 
+  const onPressAskQuestionButton = () => {
+    console.log('문의 버튼 클릭');
+    // navigation.navigate('SettingModal', { menu: { key: 'sendFeedback' }});
+  };
+
   useEffect(() => {
     if (!content || !content.todos) {
       return;
@@ -540,7 +545,7 @@ const ContentModal = ({
                         buttonStyle={styles.askButton}
                         // TODO pressedColor 통일되면 props 제거 가능
                         pressedBackgroundColor={'#11111166'}
-                        onPressButton={() => {}}
+                        onPressButton={onPressAskQuestionButton}
                       />
                     </View>
                   </View>

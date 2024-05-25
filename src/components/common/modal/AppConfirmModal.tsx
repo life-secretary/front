@@ -69,15 +69,15 @@ const AppConfirmModal = ({
           }>
           <AppButton
             text={button.first.text}
-            textStyle={button.first.textStyle}
-            buttonStyle={button.first.buttonStyle}
+            textStyle={button.first.textStyle ? button.first.textStyle : styles.modalTextStyleFirst}
+            buttonStyle={button.first.buttonStyle ? button.first.buttonStyle : styles.modalButtonStyleFirst}
             onPressButton={button.first.onPressButton}
           />
           {button.second ? (
             <AppButton
               text={button.second.text}
-              textStyle={button.second.textStyle}
-              buttonStyle={button.second.buttonStyle}
+              textStyle={button.second.textStyle ? button.second.textStyle : styles.modalTextStyleSecond}
+              buttonStyle={button.second.buttonStyle ? button.second.buttonStyle : styles.modalButtonStyleSecond}
               onPressButton={button.second.onPressButton}
             />
           ) : null}
@@ -132,6 +132,35 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     gap: 12,
+  },
+
+  // default button
+  modalTextStyleFirst: {
+    alignSelf: 'center',
+    fontWeight: '600',
+    fontSize: getFontSize(15),
+    lineHeight: 18,
+    color: '#FFFFFF',
+  },
+  modalTextStyleSecond: {
+    alignSelf: 'center',
+    fontWeight: '600',
+    fontSize: getFontSize(15),
+    lineHeight: 18,
+    color: '#000E24',
+  },
+
+  modalButtonStyleFirst: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    backgroundColor: '#0B2A4F',
+  },
+  modalButtonStyleSecond: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
   },
 });
 

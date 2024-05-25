@@ -20,18 +20,20 @@ import {getFontSize} from '@/utils/font';
 
 // TODO: type 재정의 필요
 type SlideType = {
+  id: string | number;
   tag: string;
   title: string;
-  thumbnail: string;
+  thumbnail: ImageRequireSource;
+  openContentModal: (data: any) => void;
 };
 
-function Slide({tag, title, thumbnail}: SlideType): React.JSX.Element {
+function Slide({id, tag, title, thumbnail, openContentModal,}: SlideType): React.JSX.Element {
   const imageSource = thumbnail
     ? {uri: thumbnail}
     : require('@/assets/images/carouselPlaceholder.jpg');
 
   return (
-    <View style={styles.slide}>
+    <Pressable style={[styles.slide]} onPress={() => openContentModal(id)}>
       <ImageBackground
         source={imageSource}
         resizeMode="cover"
@@ -46,20 +48,20 @@ function Slide({tag, title, thumbnail}: SlideType): React.JSX.Element {
           </View>
         </View>
       </ImageBackground>
-    </View>
+    </Pressable>
   );
 }
 
 // TODO: type 재정의 필요
 type Props = {
   data: object[];
-  openContentModal: () => void;
+  openContentModal: (data: any) => void;
 };
 
 // TODO: carousel library 교체 필요
 export function HomeImageCarousel({
   data,
-  openContentModal,
+  openContentModal, // TODO 사용
 }: Props): React.JSX.Element {
   const categories = useRecoilValue(categoryListState);
   const [isSwiped, setIsSwiped] = useState(false);
@@ -130,11 +132,13 @@ export function HomeImageCarousel({
                 openContentModal();
               }}>
               <Slide
+                id={item.id}
                 tag={
                   categories.find(cate => cate.id === item?.categoryId)?.title
                 }
                 title={item?.title}
                 thumbnail={item?.imageUrl}
+                openContentModal={openContentModal}
               />
             </Pressable>
           );
