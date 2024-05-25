@@ -452,24 +452,24 @@ const SearchScreen = () => {
     }
       {/** TODO (일단 검색탭에 컨펌모달 추가) 다른페이지에서 공통으로 사용가능한 방법 모색 */}
       {/* <AppConfirmModal
-                isVisible={true}
-                title='추가 완료'
-                description='할 일 목록에서 확인할 수 있어요'
-                button={{
-                    first: {
-                        text: '목록 바로가기',
-                        textStyle: styles.modalTextStyleFirst,
-                        buttonStyle: styles.modalButtonStyleFirst,
-                        onPressButton: () => {}
-                    },
-                    second: {
-                        text: '계속 둘러보기',
-                        textStyle: styles.modalTextStyleSecond,
-                        buttonStyle: styles.modalButtonStyleSecond,
-                        onPressButton: () => {}
-                    }
-                }}
-            /> */}
+          isVisible={true}
+          title='추가 완료'
+          description='할 일 목록에서 확인할 수 있어요'
+          button={{
+              first: {
+                  text: '목록 바로가기',
+                  textStyle: styles.modalTextStyleFirst,
+                  buttonStyle: styles.modalButtonStyleFirst,
+                  onPressButton: () => {}
+              },
+              second: {
+                  text: '계속 둘러보기',
+                  textStyle: styles.modalTextStyleSecond,
+                  buttonStyle: styles.modalButtonStyleSecond,
+                  onPressButton: () => {}
+              }
+          }}
+      /> */}
     </View>
   );
 };

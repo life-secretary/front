@@ -21,6 +21,7 @@ import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
 import AppIcon from '@/components/common/AppIcon';
+import AppConfirmModal from '@/components/common/modal/AppConfirmModal';
 import {HomeCategoryList} from '@/components/home/HomeCategoryList';
 import {HomeContentListWithFilter} from '@/components/home/homeContent/HomeContentListWithFilter';
 import {HomeImageCarousel} from '@/components/home/HomeImageCarousel';
@@ -59,6 +60,13 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
     homeContentListReadBySimilarUsers,
     setHomeContentListReadBySimilarUsers,
   ] = useRecoilState(homeContentListReadBySimilarUsersState);
+
+  // 콘텐츠 상세 조회
+  const [content, setContent] = useState<any>({});
+  const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
+  const [confirmData, setConfirmData] = useState<any>({});
+
+  const HOME_CONTENT_SIZE = 5;
 
   const scrollViewRef = useRef(null);
 
@@ -166,8 +174,31 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
     setIsCategoryModalVisible(false);
   };
 
-  const openContentModal = () => {
-    setIsContentModalVisible(true);
+  const openContentModal = (id: any) => {
+    fetchData(`/content/${id}`, {})
+      .then((response) => {
+        const { data : { data } } = response;
+
+        setContent(data);
+        setIsContentModalVisible(true);
+      })
+      .catch((error) => {
+        console.log('콘텐츠 fetch 에러', error);
+        setConfirmData({
+          title: '400 에러',
+          description: '해당 컨텐츠는 존재하지 않습니다',
+          button: {
+            first: {
+              text: '닫기',
+              onPressButton: () => {
+                console.log('닫기');
+                setIsConfirmOpen(false);
+              }
+            }
+          }
+        });
+        setIsConfirmOpen(true);
+      });
   };
 
   const closeContentModal = () => {
@@ -283,8 +314,22 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
         selectedCategory={selectedCategory}
       />
       <ContentModal
+        content={content}
         isVisible={isContentModalVisible}
         closeContentModal={closeContentModal}
+      />
+      <AppConfirmModal 
+        isVisible={isConfirmOpen}
+        title={confirmData.title ? confirmData.title : ''}
+        description={confirmData.description ? confirmData.description : ''}
+        button={confirmData.button ? confirmData.button : {
+          first: {
+            text: '',
+            textStyle: {},
+            buttonStyle: {},
+            onPressButton: () => {},
+          }
+        }}
       />
     </AppLayout>
   );
