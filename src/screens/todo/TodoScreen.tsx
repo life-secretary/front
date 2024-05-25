@@ -60,8 +60,10 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
   return (
     <AppLayout style={styles.layout} isPaddingUsed={true}>
       <AppHeader style={styles.header}>
-        <AppTitle text="To Do" style={styles.title} />
-        <View style={styles.button}>
+        <View style={styles.titleContainer}>
+          <AppTitle text="To Do" style={styles.title} />
+        </View>
+        <View style={styles.iconContainer}>
           <AppIcon
             name="addDark"
             width={42}
@@ -93,18 +95,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    minHeight: 42,
-    justifyContent: 'center',
-    marginTop: 12,
+    justifyContent: 'flex-end',
+    marginTop: 12, // 아이콘 있는 헤더
+  },
+  titleContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
   },
   title: {
+    height: 24,
     fontSize: getFontSize(20),
     fontWeight: font.fontWeight.bold,
     lineHeight: 23.87,
     letterSpacing: font.letterSpacing.medium,
   },
-  button: {
-    position: 'absolute',
-    right: 0,
-  },
+  iconContainer: {},
 });
