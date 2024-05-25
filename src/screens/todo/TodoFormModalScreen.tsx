@@ -45,8 +45,10 @@ export function TodoFormModalScreen({route, navigation}: any) {
     <>
       <AppLayout isPaddingUsed={true}>
         <AppHeader style={styles.header}>
-          <AppText style={styles.headerTitle}>{headerTitle}</AppText>
-          <View style={styles.button}>
+          <View style={styles.titleContainer}>
+            <AppText style={styles.title}>{headerTitle}</AppText>
+          </View>
+          <View style={styles.iconContainer}>
             <AppIcon
               name="closeDark"
               width={42}
@@ -86,21 +88,24 @@ export function TodoFormModalScreen({route, navigation}: any) {
 
 const styles = StyleSheet.create({
   header: {
-    minHeight: 42,
-    justifyContent: 'center',
-    marginTop: 12,
+    justifyContent: 'flex-end',
+    marginTop: 12, // 아이콘 있는 헤더
     marginBottom: 27,
   },
-  headerTitle: {
+  titleContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  title: {
+    height: 24,
     fontSize: getFontSize(20),
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 23.87,
     color: color.grey.grey700,
   },
-  button: {
-    position: 'absolute',
-    right: 0,
-  },
+  iconContainer: {},
   container: {
     flex: 1,
   },
