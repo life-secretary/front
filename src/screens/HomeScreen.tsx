@@ -13,8 +13,7 @@ import {fetchData} from '@/api/api';
 
 import type {CategoryObject, OccupationObject} from '../models/common';
 
-import {StyleSheet, ScrollView, View, useWindowDimensions} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {StyleSheet, ScrollView, View} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
@@ -35,33 +34,6 @@ import {getFontSize} from '@/utils/font';
 
 import {HOME_CONTENT_SIZE} from '@/constants';
 import {useQueries} from '@tanstack/react-query';
-
-const DUMMY_CAROUSEL_LIST = [
-  {
-    id: 'c1',
-    tag: '경제',
-    title: '2024년 달라지는 것들\n알아보기',
-    thumbnail: require('@/assets/images/carouselPlaceholder.jpg'),
-  },
-  {
-    id: 'c2',
-    tag: '부동산',
-    title: '2024년 달라지는 것들\n알아보기',
-    thumbnail: require('@/assets/images/carouselPlaceholder.jpg'),
-  },
-  {
-    id: 'c3',
-    tag: '건강',
-    title: '2024년 달라지는 것들\n알아보기',
-    thumbnail: require('@/assets/images/carouselPlaceholder.jpg'),
-  },
-  {
-    id: 'c4',
-    tag: '기타',
-    title: '2024년 달라지는 것들\n알아보기',
-    thumbnail: require('@/assets/images/carouselPlaceholder.jpg'),
-  },
-];
 
 export function HomeScreen(): React.JSX.Element {
   // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
@@ -85,9 +57,6 @@ export function HomeScreen(): React.JSX.Element {
     homeContentListReadBySimilarUsers,
     setHomeContentListReadBySimilarUsers,
   ] = useRecoilState(homeContentListReadBySimilarUsersState);
-
-  const {height} = useWindowDimensions();
-  const {top, bottom} = useSafeAreaInsets();
 
   const fetchCategories = async () => {
     const res = await fetchData('/categories', null);
@@ -275,11 +244,7 @@ export function HomeScreen(): React.JSX.Element {
             openCategoryModal={openCategoryModal}
           />
           <HomeImageCarousel
-            data={
-              homeCarouselContentList.length > 0
-                ? homeCarouselContentList
-                : DUMMY_CAROUSEL_LIST
-            }
+            data={homeCarouselContentList}
             openContentModal={openContentModal}
           />
           <HomeContentList
