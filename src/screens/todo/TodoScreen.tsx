@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {fetchData} from '@/api/api';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
@@ -17,11 +17,12 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 import {getFontSize} from '@/utils/font';
+import {useQuery} from '@tanstack/react-query';
+import {AppSpinner} from '@/components/common/AppSpinner';
 
 export function TodoScreen({navigation}: any): React.JSX.Element {
   const setTodoList = useSetRecoilState(todoListState);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
 
   const moveToScreen = (screen: string, params: object) => {
@@ -39,22 +40,39 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
     });
   };
 
+  const fetchTodoList = async () => {
+    const res = await fetchData('/user-todos', {
+      userId: userInfo.id,
+    });
+
+    if (res.status !== 200) {
+      throw Error('Network Error');
+    }
+
+    return res.data.data;
+  };
+
+  const {
+    data: todos,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodoList,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+
+  useEffect(() => {
+    if (todos) {
+      setTodoList(todos);
+    }
+  }, [setTodoList, todos]);
+
   useFocusEffect(
     useCallback(() => {
-      async function fetchTodoList() {
-        setIsLoading(true);
-        const res = await fetchData('/user-todos', {
-          userId: userInfo.id,
-        });
-
-        if (res.status === 200) {
-          setTodoList(res.data.data);
-          setIsLoading(false);
-        }
-      }
-
-      fetchTodoList();
-    }, [setTodoList, userInfo.id]),
+      refetch();
+    }, [refetch]),
   );
 
   return (
