@@ -39,6 +39,14 @@ function HomeContentItemByFilter({
   );
 }
 
+function EmptyList(): React.JSX.Element {
+  return (
+    <View style={styles.emptyContainer}>
+      <AppText style={styles.emptyText}>추천할 콘텐츠가 없어요 🥲</AppText>
+    </View>
+  );
+}
+
 type Props = {
   title: string;
 };
@@ -49,6 +57,7 @@ export function HomeContentListWithFilter({title}: Props): React.JSX.Element {
   const [filteredHomeContentList, setFilteredHomeContentList] = useRecoilState(
     filteredHomeContentListState,
   );
+  const isEmpty = filteredHomeContentList.length === 0;
 
   useEffect(() => {
     const getHomeContentFilter = () => {
@@ -79,14 +88,18 @@ export function HomeContentListWithFilter({title}: Props): React.JSX.Element {
     <View style={styles.container}>
       <AppText style={styles.listTitle}>{title}</AppText>
       <HomeContentCategoryList categories={categories} />
-      <FlatList
-        data={filteredHomeContentList}
-        renderItem={({item, index}) => (
-          <HomeContentItemByFilter index={index} title={item.title} />
-        )}
-        contentContainerStyle={styles.listContainer}
-      />
-      <ViewMoreButton />
+      {isEmpty ? (
+        <EmptyList />
+      ) : (
+        <FlatList
+          data={filteredHomeContentList}
+          renderItem={({item, index}) => (
+            <HomeContentItemByFilter index={index} title={item?.title} />
+          )}
+          contentContainerStyle={styles.listContainer}
+        />
+      )}
+      {!isEmpty && <ViewMoreButton />}
     </View>
   );
 }
@@ -142,5 +155,14 @@ const styles = StyleSheet.create({
     lineHeight: 17.9,
     letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey700,
+  },
+  emptyContainer: {
+    paddingBottom: 14,
+  },
+  emptyText: {
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 19.09,
+    letterSpacing: font.letterSpacing.medium,
+    color: color.grey.grey500,
   },
 });

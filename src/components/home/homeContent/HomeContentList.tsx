@@ -21,12 +21,21 @@ type Props = {
   list: HomeContent[];
 };
 
+function EmptyList(): React.JSX.Element {
+  return (
+    <View style={styles.emptyContainer}>
+      <AppText style={styles.emptyText}>추천할 콘텐츠가 없어요 🥲</AppText>
+    </View>
+  );
+}
+
 export function HomeContentList({
   isUsernameUsed = false,
   title,
   list,
 }: Props): React.JSX.Element {
   const userInfo = useRecoilValue(userInfoState);
+  const isEmpty = list.length === 0;
 
   return (
     <View style={styles.container}>
@@ -36,12 +45,16 @@ export function HomeContentList({
         )}
         <AppText style={styles.title}>{title}</AppText>
       </View>
-      <FlatList
-        ItemSeparatorComponent={() => <AppDivider style={styles.divider} />}
-        data={list}
-        renderItem={({item}) => <HomeContentItem homeContentItem={item} />}
-      />
-      <ViewMoreButton />
+      {isEmpty ? (
+        <EmptyList />
+      ) : (
+        <FlatList
+          ItemSeparatorComponent={() => <AppDivider style={styles.divider} />}
+          data={list}
+          renderItem={({item}) => <HomeContentItem homeContentItem={item} />}
+        />
+      )}
+      {!isEmpty && <ViewMoreButton />}
     </View>
   );
 }
@@ -86,5 +99,14 @@ const styles = StyleSheet.create({
   },
   divider: {
     marginVertical: 16,
+  },
+  emptyContainer: {
+    paddingBottom: 14,
+  },
+  emptyText: {
+    fontWeight: font.fontWeight.medium,
+    lineHeight: 19.09,
+    letterSpacing: font.letterSpacing.medium,
+    color: color.grey.grey500,
   },
 });
