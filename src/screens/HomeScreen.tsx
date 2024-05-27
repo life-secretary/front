@@ -78,6 +78,7 @@ export function HomeScreen(): React.JSX.Element {
     return res.data.data;
   };
 
+  // TODO: login middleware에서 처리하도록 수정
   const fetchScraps = async () => {
     const res = await fetchData('/scrap', {
       userId: userInfo.id,

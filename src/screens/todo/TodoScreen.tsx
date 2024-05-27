@@ -18,7 +18,6 @@ import {font} from '@/styles/font';
 
 import {getFontSize} from '@/utils/font';
 import {useQuery} from '@tanstack/react-query';
-import {AppSpinner} from '@/components/common/AppSpinner';
 
 export function TodoScreen({navigation}: any): React.JSX.Element {
   const setTodoList = useSetRecoilState(todoListState);

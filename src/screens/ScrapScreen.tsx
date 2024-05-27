@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {scrapListState, scrapListTotalCountState} from '@/store/scrapState';
 import {userInfoState} from '@/store/userInfoState';
@@ -18,9 +18,9 @@ import spacing from '@/styles/spacing';
 
 import {removeItemAtIndex} from '@/utils';
 import {getFontSize} from '@/utils/font';
+import {useQuery} from '@tanstack/react-query';
 
 export function ScrapScreen(): React.JSX.Element {
-  const [isLoading, setIsLoading] = useState(false);
   const [mode, setMode] = useState('READ'); // TODO: ENUM type 정의 ['READ', 'EDIT', 'DELETE']
   const [buttonText, setButtonText] = useState('');
   const [totalCheckedCount, setTotalCheckedCount] = React.useState(0);
@@ -96,34 +96,44 @@ export function ScrapScreen(): React.JSX.Element {
   };
 
   // TODO: 중복 코드 제거 필요
-  const fetchScrapList = useCallback(async () => {
-    setIsLoading(true);
+  const fetchScraps = async () => {
     const res = await fetchData('/scrap', {
       userId: userInfo.id,
     });
-    const list = res.data.data;
 
-    if (res.status === 200) {
-      setScrapList(list);
-      setIsLoading(false);
+    if (res.status !== 200) {
+      throw Error('Network Error');
     }
-  }, [setScrapList, userInfo.id]);
+
+    return res.data.data;
+  };
+
+  const {data, isLoading, refetch} = useQuery({
+    queryKey: ['scraps'],
+    queryFn: fetchScraps,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
+  });
 
   const deleteScrapList = async (list: object[]) => {
     const idList = list.map((item: object) => item?.id).join(',');
     const res = await deleteData('/scrap', {}, idList);
 
-    if (res.status === 200) {
-      fetchScrapList();
-      setIsDeleted(true);
-      setCheckedList([]);
-      switchMode('read');
+    if (res.status !== 200) {
+      throw Error('Network Error');
     }
+
+    refetch();
+    setIsDeleted(true);
+    setCheckedList([]);
+    switchMode('read');
   };
 
   useEffect(() => {
-    fetchScrapList();
-  }, []);
+    if (data) {
+      setScrapList(data);
+    }
+  }, [data, setScrapList]);
 
   useEffect(() => {
     const switchButtonText = () => {
