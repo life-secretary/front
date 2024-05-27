@@ -1,9 +1,10 @@
 import React, {useRef, useState} from 'react';
+import {useRecoilValue} from 'recoil';
+import {categoryListState} from '@/store/categoryState';
 
 import {
   Dimensions,
   ImageBackground,
-  ImageRequireSource,
   View,
   Pressable,
   StyleSheet,
@@ -21,22 +22,28 @@ import {getFontSize} from '@/utils/font';
 type SlideType = {
   tag: string;
   title: string;
-  thumbnail: ImageRequireSource;
+  thumbnail: string;
 };
 
 function Slide({tag, title, thumbnail}: SlideType): React.JSX.Element {
+  const imageSource = thumbnail
+    ? {uri: thumbnail}
+    : require('@/assets/images/carouselPlaceholder.jpg');
+
   return (
     <View style={styles.slide}>
       <ImageBackground
-        source={thumbnail}
+        source={imageSource}
         resizeMode="cover"
         style={styles.backgroundImage}>
-        <View style={styles.titleContainer}>
+        <View style={styles.infoContainer}>
           {/* TODO: Tag 컴포넌트화 */}
           <View style={styles.tagContainer}>
-            <AppText style={styles.tag}>{tag}</AppText>
+            <AppText style={styles.tag}>{tag || '카테고리'}</AppText>
           </View>
-          <AppText style={styles.title}>{title}</AppText>
+          <View style={styles.titleContainer}>
+            <AppText style={styles.title}>{title}</AppText>
+          </View>
         </View>
       </ImageBackground>
     </View>
@@ -54,6 +61,7 @@ export function HomeImageCarousel({
   data,
   openContentModal,
 }: Props): React.JSX.Element {
+  const categories = useRecoilValue(categoryListState);
   const [isSwiped, setIsSwiped] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const HORRIZONTAL_PADDING = spacing.layoutPaddingHorizontal * 2;
@@ -122,9 +130,11 @@ export function HomeImageCarousel({
                 openContentModal();
               }}>
               <Slide
-                tag={item?.tag}
+                tag={
+                  categories.find(cate => cate.id === item?.categoryId)?.title
+                }
                 title={item?.title}
-                thumbnail={item?.thumbnail}
+                thumbnail={item?.imageUrl}
               />
             </Pressable>
           );
@@ -157,10 +167,11 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
   },
-  titleContainer: {
+  infoContainer: {
+    flexWrap: 'wrap',
+    marginHorizontal: 30,
     gap: 14,
     position: 'absolute',
-    left: 30,
     bottom: 52,
   },
   tagContainer: {
@@ -177,6 +188,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.grey.grey100,
     overflow: 'hidden',
   },
+  titleContainer: {},
   title: {
     fontSize: getFontSize(24),
     fontWeight: font.fontWeight.bold,
