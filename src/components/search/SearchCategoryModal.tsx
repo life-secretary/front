@@ -38,7 +38,7 @@ type DropDownCategoryProps = {
 type SearchCategoryModal = {
   isVisible: boolean;
   closeCategoryModal: () => void;
-  selectedCategory: CategoryObject;
+  selectedCategory?: CategoryObject;
 };
 
 const DropDownCategory = ({

@@ -7,8 +7,6 @@ import {HomeCategoryItem} from '@/components/home/HomeCategoryItem';
 import color from '@/styles/color';
 import spacing from '@/styles/spacing';
 
-import type {CategoryObject} from '@/models/common';
-
 type Props = {
   openCategoryModal: Function;
 };
@@ -16,12 +14,12 @@ type Props = {
 export function HomeCategoryList({
   openCategoryModal,
 }: Props): React.JSX.Element {
-  const categories = useRecoilValue(homeCategoryListState);
+  const homeCategories = useRecoilValue(homeCategoryListState);
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={categories}
+        data={homeCategories}
         renderItem={({item}) => (
           <HomeCategoryItem
             item={{...item}}
