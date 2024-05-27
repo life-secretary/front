@@ -6,32 +6,41 @@ import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {HomeCategoryItem} from '@/components/home/HomeCategoryItem';
 import color from '@/styles/color';
 import spacing from '@/styles/spacing';
+import {AppSpinner} from '../common/AppSpinner';
 
 type Props = {
+  isLoading: boolean;
   openCategoryModal: Function;
 };
 
 export function HomeCategoryList({
+  isLoading,
   openCategoryModal,
 }: Props): React.JSX.Element {
   const homeCategories = useRecoilValue(homeCategoryListState);
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={homeCategories}
-        renderItem={({item}) => (
-          <HomeCategoryItem
-            item={{...item}}
-            openCategoryModal={() => openCategoryModal(item)}
-          />
-        )}
-        keyExtractor={item => String(item?.id)}
-        horizontal={false}
-        numColumns={4}
-        columnWrapperStyle={styles.listColumn}
-        contentContainerStyle={styles.listRow}
-      />
+      {isLoading ? (
+        <View style={{flex: 1, padding: 20}}>
+          <AppSpinner />
+        </View>
+      ) : (
+        <FlatList
+          data={homeCategories}
+          renderItem={({item}) => (
+            <HomeCategoryItem
+              item={{...item}}
+              openCategoryModal={() => openCategoryModal(item)}
+            />
+          )}
+          keyExtractor={item => String(item?.id)}
+          horizontal={false}
+          numColumns={4}
+          columnWrapperStyle={styles.listColumn}
+          contentContainerStyle={styles.listRow}
+        />
+      )}
     </View>
   );
 }

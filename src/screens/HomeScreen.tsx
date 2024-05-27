@@ -35,7 +35,6 @@ import {getFontSize} from '@/utils/font';
 
 import {HOME_CONTENT_SIZE} from '@/constants';
 import {useQueries} from '@tanstack/react-query';
-import {AppSpinner} from '@/components/common/AppSpinner';
 
 const DUMMY_CAROUSEL_LIST = [
   {
@@ -196,14 +195,6 @@ export function HomeScreen(): React.JSX.Element {
     ],
   });
 
-  const isLoading =
-    isCategoriesLoading ||
-    isOccupationsLoading ||
-    isScrapsLoading ||
-    isNewestHomeContentsLoading ||
-    ishomeCarouselContentsLoading ||
-    ishomeContentsReadBySimilarUsersLoading;
-
   const openCategoryModal = (category: CategoryObject) => {
     setSelectedCategory(category);
     setIsCategoryModalVisible(true);
@@ -266,58 +257,52 @@ export function HomeScreen(): React.JSX.Element {
 
   return (
     <AppLayout>
-      {isLoading ? (
-        <View
-          style={{
-            height: height - top - bottom,
-            justifyContent: 'center',
-            alignContent: 'center',
-          }}>
-          <AppSpinner />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <AppHeader style={styles.header}>
+          <AppTitle
+            text={getFormattedDate(new Date(), 'kor')}
+            style={styles.headerTitle}
+          />
+          <View style={styles.headerIconContainer}>
+            {/* TODO: 알림 기능 2차 개발 예정 */}
+            {/* <AppIcon name="notificationOn" width={42} height={42} /> */}
+            <AppIcon name="balancer" width={42} height={42} />
+          </View>
+        </AppHeader>
+        <View style={styles.section}>
+          <HomeCategoryList
+            isLoading={isCategoriesLoading}
+            openCategoryModal={openCategoryModal}
+          />
+          <HomeImageCarousel
+            data={
+              homeCarouselContentList.length > 0
+                ? homeCarouselContentList
+                : DUMMY_CAROUSEL_LIST
+            }
+            openContentModal={openContentModal}
+          />
+          <HomeContentList
+            isLoading={ishomeContentsReadBySimilarUsersLoading}
+            isUsernameUsed={true}
+            title={'유사한 사용자가 읽고 있어요'}
+            list={homeContentListReadBySimilarUsers}
+          />
+          <HomeContentListWithFilter title={'인기 많은 콘텐츠'} />
+          <HomeContentList
+            isLoading={isNewestHomeContentsLoading}
+            title={'최근 업데이트 되었어요'}
+            list={newestHomeContentList}
+          />
         </View>
-      ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <AppHeader style={styles.header}>
-            <AppTitle
-              text={getFormattedDate(new Date(), 'kor')}
-              style={styles.headerTitle}
-            />
-            <View style={styles.headerIconContainer}>
-              {/* TODO: 알림 기능 2차 개발 예정 */}
-              {/* <AppIcon name="notificationOn" width={42} height={42} /> */}
-              <AppIcon name="balancer" width={42} height={42} />
-            </View>
-          </AppHeader>
-          <View style={styles.section}>
-            <HomeCategoryList openCategoryModal={openCategoryModal} />
-            <HomeImageCarousel
-              data={
-                homeCarouselContentList.length > 0
-                  ? homeCarouselContentList
-                  : DUMMY_CAROUSEL_LIST
-              }
-              openContentModal={openContentModal}
-            />
-            <HomeContentList
-              isUsernameUsed={true}
-              title={'유사한 사용자가 읽고 있어요'}
-              list={homeContentListReadBySimilarUsers}
-            />
-            <HomeContentListWithFilter title={'인기 많은 콘텐츠'} />
-            <HomeContentList
-              title={'최근 업데이트 되었어요'}
-              list={newestHomeContentList}
-            />
-          </View>
-          <View style={styles.footer}>
-            <AppTitle
-              text="인생비서 팀에게 자유롭게 얘기해주세요"
-              style={styles.footerText}
-            />
-            <SendFeedbackButton />
-          </View>
-        </ScrollView>
-      )}
+        <View style={styles.footer}>
+          <AppTitle
+            text="인생비서 팀에게 자유롭게 얘기해주세요"
+            style={styles.footerText}
+          />
+          <SendFeedbackButton />
+        </View>
+      </ScrollView>
       {/* <Login isVisible={!isDone} closeAllProcess={closeAllProcess} /> */}
       <SearchCategoryModal
         isVisible={isCategoryModalVisible}

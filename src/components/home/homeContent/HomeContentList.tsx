@@ -5,6 +5,7 @@ import {userInfoState} from '@/store/userInfoState';
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {AppText} from '@/components/common/AppText';
 import {AppDivider} from '@/components/common/AppDivider';
+import {AppSpinner} from '@/components/common/AppSpinner';
 import {HomeContentItem} from '@/components/home/homeContent/HomeContentItem';
 import {ViewMoreButton} from '@/components/home/ViewMoreButton';
 import color from '@/styles/color';
@@ -16,6 +17,7 @@ import {getFontSize} from '@/utils/font';
 import HomeContent from '@/models/HomeContent';
 
 type Props = {
+  isLoading: boolean;
   isUsernameUsed?: boolean;
   title: string;
   list: HomeContent[];
@@ -30,6 +32,7 @@ function EmptyList(): React.JSX.Element {
 }
 
 export function HomeContentList({
+  isLoading,
   isUsernameUsed = false,
   title,
   list,
@@ -45,7 +48,9 @@ export function HomeContentList({
         )}
         <AppText style={styles.title}>{title}</AppText>
       </View>
-      {isEmpty ? (
+      {isLoading ? (
+        <AppSpinner />
+      ) : isEmpty ? (
         <EmptyList />
       ) : (
         <FlatList
