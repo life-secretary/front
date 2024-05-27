@@ -49,6 +49,7 @@ type Props = {
   openContentModal: () => void;
 };
 
+// TODO: carousel library 교체 필요
 export function HomeImageCarousel({
   data,
   openContentModal,

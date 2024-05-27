@@ -72,11 +72,12 @@ export function HomeContentListWithFilter({title}: Props): React.JSX.Element {
         size: HOME_CONTENT_SIZE,
       });
 
-      if (res.status === 200) {
-        const list = res.data.data;
-
-        setFilteredHomeContentList(list);
+      if (res.status !== 200) {
+        throw Error('Network Error');
       }
+
+      const list = res.data.data;
+      setFilteredHomeContentList(list);
     };
 
     fetchHomeContentListByFilter();
