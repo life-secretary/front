@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {fetchData} from '@/api/api';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
@@ -23,6 +23,7 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
   const setTodoList = useSetRecoilState(todoListState);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const userInfo = useRecoilValue(userInfoState);
+  const scrollViewRef = useRef(null);
 
   const moveToScreen = (screen: string, params: object) => {
     navigation.navigate(screen, params);
@@ -71,7 +72,14 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
   useFocusEffect(
     useCallback(() => {
       refetch();
-    }, [refetch]),
+
+      const unsubscribe = navigation.addListener('tabPress', e => {
+        e.preventDefault();
+        scrollViewRef?.current.scrollTo({y: 0, animated: true});
+      });
+
+      return unsubscribe;
+    }, [navigation, refetch]),
   );
 
   return (
@@ -95,7 +103,7 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
           selectedIndex={selectedIndex}
           onTabPress={(index: number) => handleTabChange(index)}
         />
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
           {selectedIndex === 0 && <OngoingTodoList isLoading={isLoading} />}
           {selectedIndex === 1 && <CompletedTodoList isLoading={isLoading} />}
         </ScrollView>
