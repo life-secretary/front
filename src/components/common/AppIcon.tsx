@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Pressable} from 'react-native';
+import {Pressable, View} from 'react-native';
 import {SvgProps} from 'react-native-svg';
 import Icons from '../../assets/icon';
 

@@ -18,10 +18,15 @@ import {SettingScreen} from './src/screens/setting/SettingScreen';
 import {SettingModalScreen} from './src/screens/setting/SettingModalScreen';
 import {MyInfoModalScreen} from './src/screens/setting/MyInfoModalScreen';
 import SearchScreen from './src/screens/SearchScreen';
-import AppIcon from './src/components/common/AppIcon';
+import {AppText} from './src/components/common/AppText';
 import color from './src/styles/color';
 import {font} from './src/styles/font';
-import {AppText} from './src/components/common/AppText';
+
+import HomeIcon from './src/assets/icon/bottomTab/icon_home.svg';
+import SearchIcon from './src/assets/icon/bottomTab/icon_search.svg';
+import TodoIcon from './src/assets/icon/bottomTab/icon_todo.svg';
+import ScrapIcon from './src/assets/icon/bottomTab/icon_scrap.svg';
+import SettingIcon from './src/assets/icon/bottomTab/icon_setting.svg';
 
 import {getFontSize} from './src/utils/font';
 
@@ -31,7 +36,7 @@ const queryClient = new QueryClient();
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function HomeTabs({navigation}) {
+function HomeTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -42,22 +47,12 @@ function HomeTabs({navigation}) {
       <Tab.Screen
         name="Home"
         options={{
-          tabBarIcon: ({focused}) => (
-            <AppIcon
-              name="homeTab"
-              width={24}
-              height={24}
-              styles={
-                focused
-                  ? {
-                      fill: color.main.primary,
-                      color: color.main.primary,
-                    }
-                  : null
-              }
-              onPress={() => navigation.navigate('Home')}
-            />
-          ),
+          // eslint-disable-next-line react/no-unstable-nested-components
+          tabBarIcon: ({focused}) => {
+            const iconColor = focused ? color.main.primary : color.grey.grey400;
+
+            return <HomeIcon stroke={iconColor} color={iconColor} />;
+          },
           tabBarLabel: ({focused}) => (
             <AppText style={[styles.tabLabel, focused && styles.focused]}>
               홈
@@ -69,21 +64,11 @@ function HomeTabs({navigation}) {
       <Tab.Screen
         name="Search"
         options={{
-          tabBarIcon: ({focused}) => (
-            <AppIcon
-              name="searchTab"
-              width={24}
-              height={24}
-              styles={
-                focused
-                  ? {
-                      color: color.main.primary,
-                    }
-                  : null
-              }
-              onPress={() => navigation.navigate('Search')}
-            />
-          ),
+          tabBarIcon: ({focused}) => {
+            const iconColor = focused ? color.main.primary : color.grey.grey400;
+
+            return <SearchIcon color={iconColor} />;
+          },
           tabBarLabel: ({focused}) => (
             <AppText style={[styles.tabLabel, focused && styles.focused]}>
               검색
@@ -95,21 +80,11 @@ function HomeTabs({navigation}) {
       <Tab.Screen
         name="Todo"
         options={{
-          tabBarIcon: ({focused}) => (
-            <AppIcon
-              name="todoTab"
-              width={24}
-              height={24}
-              styles={
-                focused
-                  ? {
-                      color: color.main.primary,
-                    }
-                  : null
-              }
-              onPress={() => navigation.navigate('Todo')}
-            />
-          ),
+          tabBarIcon: ({focused}) => {
+            const iconColor = focused ? color.main.primary : color.grey.grey400;
+
+            return <TodoIcon color={iconColor} />;
+          },
           tabBarLabel: ({focused}) => (
             <AppText style={[styles.tabLabel, focused && styles.focused]}>
               할일
@@ -121,22 +96,11 @@ function HomeTabs({navigation}) {
       <Tab.Screen
         name="Scrap"
         options={{
-          tabBarIcon: ({focused}) => (
-            <AppIcon
-              name="scrapTab"
-              width={24}
-              height={24}
-              styles={
-                focused
-                  ? {
-                      fill: color.main.primary,
-                      color: color.main.primary,
-                    }
-                  : null
-              }
-              onPress={() => navigation.navigate('Scrap')}
-            />
-          ),
+          tabBarIcon: ({focused}) => {
+            const iconColor = focused ? color.main.primary : color.grey.grey400;
+
+            return <ScrapIcon color={iconColor} />;
+          },
           tabBarLabel: ({focused}) => (
             <AppText style={[styles.tabLabel, focused && styles.focused]}>
               저장
@@ -148,22 +112,11 @@ function HomeTabs({navigation}) {
       <Tab.Screen
         name="Setting"
         options={{
-          tabBarIcon: ({focused}) => (
-            <AppIcon
-              name="settingTab"
-              width={24}
-              height={24}
-              styles={
-                focused
-                  ? {
-                      fill: color.main.primary,
-                      color: color.main.primary,
-                    }
-                  : null
-              }
-              onPress={() => navigation.navigate('Setting')}
-            />
-          ),
+          tabBarIcon: ({focused}) => {
+            const iconColor = focused ? color.main.primary : color.grey.grey400;
+
+            return <SettingIcon color={iconColor} />;
+          },
           tabBarLabel: ({focused}) => (
             <AppText style={[styles.tabLabel, focused && styles.focused]}>
               관리

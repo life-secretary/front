@@ -2,7 +2,7 @@ import React from 'react';
 import {useRecoilValue} from 'recoil';
 import {categoryListState} from '@/store/categoryState';
 
-import {StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {AppText} from '@/components/common/AppText';
 import {BookmarkButton} from './BookmarkButton';
@@ -26,9 +26,12 @@ export function ScrapContentItem({
   handleCheckedList,
 }: Props): React.JSX.Element {
   const categories = useRecoilValue(categoryListState);
+
   const handleCheckboxPress = (action: string, data: object) => {
     handleCheckedList(action, data);
   };
+
+  const handleItemPress = () => {};
 
   return (
     <View style={styles.container}>
@@ -48,19 +51,22 @@ export function ScrapContentItem({
         </View>
       )}
       <View style={styles.itemContainer}>
-        <View style={styles.infoContainer}>
-          <View style={styles.tagContainer}>
-            <AppText style={styles.tag}>
-              {
-                categories.find(category => category.id === content.categoryId)
-                  ?.title
-              }
+        <Pressable onPress={handleItemPress}>
+          <View style={styles.infoContainer}>
+            <View style={styles.tagContainer}>
+              <AppText style={styles.tag}>
+                {
+                  categories.find(
+                    category => category.id === content.categoryId,
+                  )?.title
+                }
+              </AppText>
+            </View>
+            <AppText style={styles.title} isEllipsizeMode={true}>
+              {content?.title}
             </AppText>
           </View>
-          <AppText style={styles.title} isEllipsizeMode={true}>
-            {content?.title}
-          </AppText>
-        </View>
+        </Pressable>
         {mode === 'READ' && <BookmarkButton contents={content} />}
       </View>
     </View>

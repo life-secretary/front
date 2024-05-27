@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
 import {categoryListState, homeCategoryListState} from '@/store/categoryState';
@@ -35,7 +36,7 @@ import {getFontSize} from '@/utils/font';
 import {HOME_CONTENT_SIZE} from '@/constants';
 import {useQueries} from '@tanstack/react-query';
 
-export function HomeScreen(): React.JSX.Element {
+export function HomeScreen({navigation}: any): React.JSX.Element {
   // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
   const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
   const [isContentModalVisible, setIsContentModalVisible] = useState(false);
@@ -57,6 +58,8 @@ export function HomeScreen(): React.JSX.Element {
     homeContentListReadBySimilarUsers,
     setHomeContentListReadBySimilarUsers,
   ] = useRecoilState(homeContentListReadBySimilarUsersState);
+
+  const scrollViewRef = useRef(null);
 
   const fetchCategories = async () => {
     const res = await fetchData('/categories', null);
@@ -225,9 +228,20 @@ export function HomeScreen(): React.JSX.Element {
     setScrapList,
   ]);
 
+  useFocusEffect(
+    useCallback(() => {
+      const unsubscribe = navigation.addListener('tabPress', e => {
+        e.preventDefault();
+        scrollViewRef?.current.scrollTo({y: 0, animated: true});
+      });
+
+      return unsubscribe;
+    }, [navigation]),
+  );
+
   return (
     <AppLayout>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
         <AppHeader style={styles.header}>
           <AppTitle
             text={getFormattedDate(new Date(), 'kor')}
