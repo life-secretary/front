@@ -1,7 +1,6 @@
 import {atom, selector} from 'recoil';
 
 import type {CategoryObject} from '../models/common';
-import {generateRandomId} from '@/utils';
 
 const categoryListState = atom({
   key: 'CategoryListState',
@@ -53,11 +52,8 @@ const homeCategoryListState = selector({
   key: 'HomeCategoryListState',
   get: ({get}) => {
     const categories = get(mainCategoryListState);
-    return [
-      {id: 0, category: 'all', title: '전체'},
-      ...categories,
-      {id: generateRandomId(), category: 'etc', title: '기타'},
-    ];
+
+    return [{id: 0, category: 'all', title: '전체'}, ...categories];
   },
 });
 

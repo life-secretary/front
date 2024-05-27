@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {useRecoilState, useRecoilValue} from 'recoil';
-import {homeCategoryListState} from '@/store/categoryState';
 import {
   filteredHomeContentListState,
   homeContentFilterState,
@@ -52,7 +51,6 @@ type Props = {
 };
 
 export function HomeContentListWithFilter({title}: Props): React.JSX.Element {
-  const categories = useRecoilValue(homeCategoryListState);
   const homeContentFilter = useRecoilValue(homeContentFilterState);
   const [filteredHomeContentList, setFilteredHomeContentList] = useRecoilState(
     filteredHomeContentListState,
@@ -87,7 +85,7 @@ export function HomeContentListWithFilter({title}: Props): React.JSX.Element {
   return (
     <View style={styles.container}>
       <AppText style={styles.listTitle}>{title}</AppText>
-      <HomeContentCategoryList categories={categories} />
+      <HomeContentCategoryList />
       {isEmpty ? (
         <EmptyList />
       ) : (

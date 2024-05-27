@@ -1,11 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
-import {
-  categoryListState,
-  homeCategoryListState,
-  mainCategoryListState,
-} from '@/store/categoryState';
+import {categoryListState, homeCategoryListState} from '@/store/categoryState';
 import {occupationListState} from '@/store/occupation';
 import {scrapListState} from '@/store/scrapState';
 import {
@@ -17,7 +13,8 @@ import {fetchData} from '@/api/api';
 
 import type {CategoryObject, OccupationObject} from '../models/common';
 
-import {StyleSheet, ScrollView, View} from 'react-native';
+import {StyleSheet, ScrollView, View, useWindowDimensions} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
@@ -37,6 +34,8 @@ import {getFormattedDate} from '@/utils';
 import {getFontSize} from '@/utils/font';
 
 import {HOME_CONTENT_SIZE} from '@/constants';
+import {useQueries} from '@tanstack/react-query';
+import {AppSpinner} from '@/components/common/AppSpinner';
 
 const DUMMY_CAROUSEL_LIST = [
   {
@@ -69,7 +68,7 @@ export function HomeScreen(): React.JSX.Element {
   // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
   const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
   const [isContentModalVisible, setIsContentModalVisible] = useState(false);
-  const setCategories = useSetRecoilState(categoryListState);
+  const setCategoryList = useSetRecoilState(categoryListState);
   const setOccupationList = useSetRecoilState(occupationListState);
   const setScrapList = useSetRecoilState(scrapListState);
   const homeCategories = useRecoilValue(homeCategoryListState);
@@ -87,6 +86,123 @@ export function HomeScreen(): React.JSX.Element {
     homeContentListReadBySimilarUsers,
     setHomeContentListReadBySimilarUsers,
   ] = useRecoilState(homeContentListReadBySimilarUsersState);
+
+  const {height} = useWindowDimensions();
+  const {top, bottom} = useSafeAreaInsets();
+
+  const fetchCategories = async () => {
+    const res = await fetchData('/categories', null);
+
+    if (res.status !== 200) {
+      throw Error('Network Error');
+    }
+
+    return res.data.data;
+  };
+
+  const fetchOccupations = async () => {
+    const res = await fetchData('/occupation', {});
+
+    if (res.status !== 200) {
+      throw Error('Network Error');
+    }
+
+    return res.data.data;
+  };
+
+  const fetchScraps = async () => {
+    const res = await fetchData('/scrap', {
+      userId: userInfo.id,
+    });
+
+    if (res.status !== 200) {
+      throw Error('Network Error');
+    }
+
+    return res.data.data;
+  };
+
+  const fetchHomeContentsByNewest = async () => {
+    const res = await fetchData('/content', {
+      sort: 'createdAt',
+      size: HOME_CONTENT_SIZE,
+    });
+
+    if (res.status !== 200) {
+      throw Error('Network Error');
+    }
+
+    return res.data.data.content;
+  };
+
+  const fetchHomeCarouselContents = async () => {
+    const res = await fetchData('/content/main', {});
+
+    if (res.status !== 200) {
+      throw Error('Network Error');
+    }
+
+    return res.data.data;
+  };
+
+  const fetchHomeContentsReadBySimilarUsers = async () => {
+    const res = await fetchData('/content/similar-users/reads', {
+      userId: userInfo.id,
+    });
+
+    if (res.status !== 200) {
+      throw Error('Network Error');
+    }
+
+    return res.data.data;
+  };
+
+  const [
+    {data: categories, isLoading: isCategoriesLoading},
+    {data: occupations, isLoading: isOccupationsLoading},
+    {data: scraps, isLoading: isScrapsLoading},
+    {data: newestHomeContents, isLoading: isNewestHomeContentsLoading},
+    {data: homeCarouselContents, isLoading: ishomeCarouselContentsLoading},
+    {
+      data: homeContentsReadBySimilarUsers,
+      isLoading: ishomeContentsReadBySimilarUsersLoading,
+    },
+  ] = useQueries({
+    queries: [
+      {
+        queryKey: ['categories'],
+        queryFn: fetchCategories,
+      },
+      {
+        queryKey: ['occupations'],
+        queryFn: fetchOccupations,
+      },
+      {
+        queryKey: ['scraps'],
+        queryFn: fetchScraps,
+      },
+      {
+        queryKey: ['newestHomeContents'],
+        queryFn: fetchHomeContentsByNewest,
+      },
+      {
+        queryKey: ['homeCarouselContents'],
+        queryFn: fetchHomeCarouselContents,
+      },
+      {
+        queryKey: ['homeContentsReadBySimilarUsers'],
+        queryFn: fetchHomeContentsReadBySimilarUsers,
+      },
+    ],
+  });
+
+  const isLoading =
+    isCategoriesLoading ||
+    isOccupationsLoading ||
+    isScrapsLoading ||
+    isNewestHomeContentsLoading ||
+    ishomeCarouselContentsLoading ||
+    ishomeContentsReadBySimilarUsersLoading;
 
   const openCategoryModal = (category: CategoryObject) => {
     setSelectedCategory(category);
@@ -110,147 +226,98 @@ export function HomeScreen(): React.JSX.Element {
   };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetchData('/categories', null);
-        if (res.status === 200) {
-          setCategories(res.data.data);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
+    if (categories) {
+      setCategoryList(categories);
+    }
 
-    const fetchOccupations = async () => {
-      try {
-        const res = await fetchData('/occupation', {});
-        if (res.status === 200) {
-          setOccupationList(res.data.data);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
+    if (occupations) {
+      setOccupationList(occupations);
+    }
 
-    const fetchScrapList = async () => {
-      try {
-        const res = await fetchData('/scrap', {
-          userId: userInfo.id,
-        });
-        const list = res.data.data;
+    if (scraps) {
+      setScrapList(scraps);
+    }
 
-        if (res.status === 200) {
-          setScrapList(list);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
+    if (newestHomeContents) {
+      setNewestHomeContentList(newestHomeContents);
+    }
 
-    const fetchHomeContentListByNewest = async () => {
-      try {
-        const res = await fetchData('/content', {
-          sort: 'createdAt',
-          size: HOME_CONTENT_SIZE,
-        });
-        const list = res.data.data.content;
+    if (homeCarouselContents) {
+      setHomeCarouselContentList(homeCarouselContents);
+    }
 
-        if (res.status === 200) {
-          setNewestHomeContentList(list);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    const fetchHomeCarouselContentList = async () => {
-      try {
-        const res = await fetchData('/content/main', {});
-        const list = res.data.data;
-
-        if (res.status === 200) {
-          setHomeCarouselContentList(list);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    const fetchHomeContentListReadBySimilarUsers = async () => {
-      try {
-        const res = await fetchData('/content/similar-users/reads', {
-          userId: userInfo.id,
-        });
-
-        const list = res.data.data;
-
-        if (res.status === 200) {
-          setHomeContentListReadBySimilarUsers(list);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchCategories();
-    fetchOccupations();
-    fetchScrapList();
-    fetchHomeContentListByNewest();
-    fetchHomeCarouselContentList();
-    fetchHomeContentListReadBySimilarUsers();
+    if (homeContentsReadBySimilarUsers) {
+      setHomeContentListReadBySimilarUsers(homeContentsReadBySimilarUsers);
+    }
   }, [
-    setCategories,
+    categories,
+    homeCarouselContents,
+    homeContentsReadBySimilarUsers,
+    newestHomeContents,
+    occupations,
+    scraps,
+    setCategoryList,
     setHomeCarouselContentList,
     setHomeContentListReadBySimilarUsers,
     setNewestHomeContentList,
     setOccupationList,
     setScrapList,
-    userInfo,
   ]);
 
   return (
     <AppLayout>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <AppHeader style={styles.header}>
-          <AppTitle
-            text={getFormattedDate(new Date(), 'kor')}
-            style={styles.headerTitle}
-          />
-          <View style={styles.headerIconContainer}>
-            {/* TODO: 알림 기능 2차 개발 예정 */}
-            {/* <AppIcon name="notificationOn" width={42} height={42} /> */}
-            <AppIcon name="balancer" width={42} height={42} />
+      {isLoading ? (
+        <View
+          style={{
+            height: height - top - bottom,
+            justifyContent: 'center',
+            alignContent: 'center',
+          }}>
+          <AppSpinner />
+        </View>
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <AppHeader style={styles.header}>
+            <AppTitle
+              text={getFormattedDate(new Date(), 'kor')}
+              style={styles.headerTitle}
+            />
+            <View style={styles.headerIconContainer}>
+              {/* TODO: 알림 기능 2차 개발 예정 */}
+              {/* <AppIcon name="notificationOn" width={42} height={42} /> */}
+              <AppIcon name="balancer" width={42} height={42} />
+            </View>
+          </AppHeader>
+          <View style={styles.section}>
+            <HomeCategoryList openCategoryModal={openCategoryModal} />
+            <HomeImageCarousel
+              data={
+                homeCarouselContentList.length > 0
+                  ? homeCarouselContentList
+                  : DUMMY_CAROUSEL_LIST
+              }
+              openContentModal={openContentModal}
+            />
+            <HomeContentList
+              isUsernameUsed={true}
+              title={'유사한 사용자가 읽고 있어요'}
+              list={homeContentListReadBySimilarUsers}
+            />
+            <HomeContentListWithFilter title={'인기 많은 콘텐츠'} />
+            <HomeContentList
+              title={'최근 업데이트 되었어요'}
+              list={newestHomeContentList}
+            />
           </View>
-        </AppHeader>
-        <View style={styles.section}>
-          <HomeCategoryList openCategoryModal={openCategoryModal} />
-          <HomeImageCarousel
-            data={
-              homeCarouselContentList.length > 0
-                ? homeCarouselContentList
-                : DUMMY_CAROUSEL_LIST
-            }
-            openContentModal={openContentModal}
-          />
-          <HomeContentList
-            isUsernameUsed={true}
-            title={'유사한 사용자가 읽고 있어요'}
-            list={homeContentListReadBySimilarUsers}
-          />
-          <HomeContentListWithFilter title={'인기 많은 콘텐츠'} />
-          <HomeContentList
-            title={'최근 업데이트 되었어요'}
-            list={newestHomeContentList}
-          />
-        </View>
-        <View style={styles.footer}>
-          <AppTitle
-            text="인생비서 팀에게 자유롭게 얘기해주세요"
-            style={styles.footerText}
-          />
-          <SendFeedbackButton />
-        </View>
-      </ScrollView>
+          <View style={styles.footer}>
+            <AppTitle
+              text="인생비서 팀에게 자유롭게 얘기해주세요"
+              style={styles.footerText}
+            />
+            <SendFeedbackButton />
+          </View>
+        </ScrollView>
+      )}
       {/* <Login isVisible={!isDone} closeAllProcess={closeAllProcess} /> */}
       <SearchCategoryModal
         isVisible={isCategoryModalVisible}

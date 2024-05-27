@@ -7,7 +7,7 @@ export const homeContentListState = atom({
 
 export const homeContentFilterState = atom({
   key: 'HomeContentFilterState',
-  default: {},
+  default: {id: 0, category: 'all', title: '전체'},
 });
 
 export const filteredHomeContentListState = atom({
