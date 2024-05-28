@@ -4,7 +4,6 @@ import {StyleSheet, View} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
-// import AppIcon from '@/components/common/AppIcon';
 import {MyInfoSection} from '@/components/setting/my/MyInfoSection';
 import {SettingMenu} from '@/components/setting/SettingMenu';
 import color from '@/styles/color';

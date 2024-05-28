@@ -20,6 +20,7 @@ import {getFontSize} from '@/utils/font';
 import {useQuery} from '@tanstack/react-query';
 
 export function TodoScreen({navigation}: any): React.JSX.Element {
+  const [isFetched, setIsFetched] = useState(false);
   const setTodoList = useSetRecoilState(todoListState);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const userInfo = useRecoilValue(userInfoState);
@@ -45,16 +46,13 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
       userId: userInfo.id,
     });
 
-    if (res.status !== 200) {
-      throw Error('Network Error');
-    }
-
     return res.data.data;
   };
 
   const {
     data: todos,
     isLoading,
+    error,
     refetch,
   } = useQuery({
     queryKey: ['todos'],
@@ -63,9 +61,14 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
     refetchOnReconnect: true,
   });
 
+  if (error && !isLoading) {
+    throw error;
+  }
+
   useEffect(() => {
     if (todos) {
       setTodoList(todos);
+      setIsFetched(true);
     }
   }, [setTodoList, todos]);
 
@@ -104,8 +107,12 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
           onTabPress={(index: number) => handleTabChange(index)}
         />
         <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
-          {selectedIndex === 0 && <OngoingTodoList isLoading={isLoading} />}
-          {selectedIndex === 1 && <CompletedTodoList isLoading={isLoading} />}
+          {selectedIndex === 0 && (
+            <OngoingTodoList isLoading={isLoading} isFetched={isFetched} />
+          )}
+          {selectedIndex === 1 && (
+            <CompletedTodoList isLoading={isLoading} isFetched={isFetched} />
+          )}
         </ScrollView>
       </View>
     </AppLayout>

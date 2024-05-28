@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {useQuery} from '@tanstack/react-query';
-import {useRecoilState, useRecoilValue} from 'recoil';
+import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {scrapListState, scrapListTotalCountState} from '@/store/scrapState';
 import {userInfoState} from '@/store/userInfoState';
 import {deleteData, fetchData} from '@/api/api';
@@ -26,7 +26,7 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
   const [buttonText, setButtonText] = useState('');
   const [totalCheckedCount, setTotalCheckedCount] = React.useState(0);
   const [checkedList, setCheckedList] = useState<object[]>([]);
-  const [scrapList, setScrapList] = useRecoilState(scrapListState);
+  const setScrapList = useSetRecoilState(scrapListState);
   const [isDeleted, setIsDeleted] = useState(false);
   const totalCount = useRecoilValue(scrapListTotalCountState);
   const userInfo = useRecoilValue(userInfoState);
@@ -109,12 +109,16 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
     return res.data.data;
   };
 
-  const {data, isLoading, refetch} = useQuery({
+  const {data, isLoading, refetch, error} = useQuery({
     queryKey: ['scraps'],
     queryFn: fetchScraps,
     refetchOnMount: true,
     refetchOnReconnect: true,
   });
+
+  if (error && !isLoading) {
+    throw error;
+  }
 
   const deleteScrapList = async (list: object[]) => {
     const idList = list.map((item: object) => item?.id).join(',');

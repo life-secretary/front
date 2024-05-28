@@ -28,32 +28,41 @@ const EmptyList = () => {
 
 type Props = {
   isLoading: boolean;
+  isFetched: boolean;
 };
 
-export function OngoingTodoList({isLoading}: Props): React.JSX.Element {
+export function OngoingTodoList({
+  isLoading,
+  isFetched,
+}: Props): React.JSX.Element {
   const [isEmpty, setIsEmpty] = useState(false);
   const totalTodoCount = useRecoilValue(todoListTotalCountState);
   const list = useRecoilValue(filteredTodoListState);
 
   useEffect(() => {
-    if (!isLoading && totalTodoCount === 0) {
-      setIsEmpty(true);
-    } else {
-      setIsEmpty(false);
+    if (!isLoading) {
+      if (isFetched && totalTodoCount === 0) {
+        setIsEmpty(true);
+      } else {
+        setIsEmpty(false);
+      }
     }
-  }, [isLoading, totalTodoCount]);
+  }, [isFetched, isLoading, totalTodoCount]);
+
+  if (isLoading) {
+    return (
+      <View style={styles.emptyListContainer}>
+        <AppSpinner color={color.main.primary} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      {isLoading && (
-        <View style={styles.emptyListContainer}>
-          <AppSpinner color={color.main.primary} />
-        </View>
-      )}
       {isEmpty ? (
         <EmptyList />
       ) : (
-        <>
+        <View>
           <TodoCount title="나의 할 일" totalTodoCount={totalTodoCount} />
           <FlatList
             data={list}
@@ -61,7 +70,7 @@ export function OngoingTodoList({isLoading}: Props): React.JSX.Element {
             keyExtractor={(item: Todo) => String(item.id)}
             contentContainerStyle={styles.listContainer}
           />
-        </>
+        </View>
       )}
     </View>
   );

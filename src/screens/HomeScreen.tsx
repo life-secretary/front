@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
+import {useQueries} from '@tanstack/react-query';
 import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
 import {categoryListState, homeCategoryListState} from '@/store/categoryState';
@@ -10,11 +11,14 @@ import {
   homeContentListReadBySimilarUsersState,
   newestHomeContentListState,
 } from '@/store/homeContentState';
+
 import {fetchData} from '@/api/api';
 
 import type {CategoryObject, OccupationObject} from '../models/common';
 
 import {StyleSheet, ScrollView, View} from 'react-native';
+import ErrorBoundary from 'react-native-error-boundary';
+import {AppErrorFallback} from '@/components/common/AppErrorFallback';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
@@ -34,7 +38,6 @@ import {getFormattedDate} from '@/utils';
 import {getFontSize} from '@/utils/font';
 
 import {HOME_CONTENT_SIZE} from '@/constants';
-import {useQueries} from '@tanstack/react-query';
 
 export function HomeScreen({navigation}: any): React.JSX.Element {
   // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
@@ -64,19 +67,11 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
   const fetchCategories = async () => {
     const res = await fetchData('/categories', null);
 
-    if (res.status !== 200) {
-      throw Error('Network Error');
-    }
-
     return res.data.data;
   };
 
   const fetchOccupations = async () => {
     const res = await fetchData('/occupation', {});
-
-    if (res.status !== 200) {
-      throw Error('Network Error');
-    }
 
     return res.data.data;
   };
@@ -87,10 +82,6 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
       userId: userInfo.id,
     });
 
-    if (res.status !== 200) {
-      throw Error('Network Error');
-    }
-
     return res.data.data;
   };
 
@@ -100,19 +91,11 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
       size: HOME_CONTENT_SIZE,
     });
 
-    if (res.status !== 200) {
-      throw Error('Network Error');
-    }
-
     return res.data.data.content;
   };
 
   const fetchHomeCarouselContents = async () => {
     const res = await fetchData('/content/main', {});
-
-    if (res.status !== 200) {
-      throw Error('Network Error');
-    }
 
     return res.data.data;
   };
@@ -122,24 +105,10 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
       userId: userInfo.id,
     });
 
-    if (res.status !== 200) {
-      throw Error('Network Error');
-    }
-
     return res.data.data;
   };
 
-  const [
-    {data: categories, isLoading: isCategoriesLoading},
-    {data: occupations, isLoading: isOccupationsLoading},
-    {data: scraps, isLoading: isScrapsLoading},
-    {data: newestHomeContents, isLoading: isNewestHomeContentsLoading},
-    {data: homeCarouselContents, isLoading: ishomeCarouselContentsLoading},
-    {
-      data: homeContentsReadBySimilarUsers,
-      isLoading: ishomeContentsReadBySimilarUsersLoading,
-    },
-  ] = useQueries({
+  const combinedQueries = useQueries({
     queries: [
       {
         queryKey: ['categories'],
@@ -166,7 +135,29 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
         queryFn: fetchHomeContentsReadBySimilarUsers,
       },
     ],
+    combine: results => {
+      return {
+        data: results.map(result => result.data),
+        isLoading: results.some(result => result.isLoading),
+        error: results.some(result => result.error),
+      };
+    },
   });
+
+  const {error, isLoading} = combinedQueries;
+
+  if (error && !isLoading) {
+    throw error;
+  }
+
+  const [
+    categories,
+    occupations,
+    scraps,
+    newestHomeContents,
+    homeCarouselContents,
+    homeContentsReadBySimilarUsers,
+  ] = combinedQueries.data;
 
   const openCategoryModal = (category: CategoryObject) => {
     setSelectedCategory(category);
@@ -255,7 +246,7 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
         </AppHeader>
         <View style={styles.section}>
           <HomeCategoryList
-            isLoading={isCategoriesLoading}
+            isLoading={isLoading}
             openCategoryModal={openCategoryModal}
           />
           <HomeImageCarousel
@@ -263,14 +254,14 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
             openContentModal={openContentModal}
           />
           <HomeContentList
-            isLoading={ishomeContentsReadBySimilarUsersLoading}
+            isLoading={isLoading}
             isUsernameUsed={true}
             title={'유사한 사용자가 읽고 있어요'}
             list={homeContentListReadBySimilarUsers}
           />
           <HomeContentListWithFilter title={'인기 많은 콘텐츠'} />
           <HomeContentList
-            isLoading={isNewestHomeContentsLoading}
+            isLoading={isLoading}
             title={'최근 업데이트 되었어요'}
             list={newestHomeContentList}
           />
