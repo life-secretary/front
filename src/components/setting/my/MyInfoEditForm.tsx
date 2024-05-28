@@ -15,7 +15,7 @@ import OutsidePressHandler from 'react-native-outside-press';
 import {userInfoState} from '@/store/userInfoState';
 import {useRecoilValue} from 'recoil';
 import {
-  checkInappropriateKeyword,
+  // checkInappropriateKeyword,
   checkNumber,
   checkSpaceChar,
   checkSpecialChar,
@@ -91,17 +91,17 @@ export function MyInfoEditForm(): React.JSX.Element {
       return false;
     }
 
-    // 부적절한 단어 체크
-    if (
-      checkInappropriateKeyword(
-        formValidation.common.inappropriate.keywords,
-        nickname,
-      )
-    ) {
-      setIsInvalid(true);
-      setErrorMsg(formValidation.common.inappropriate.errorMsg);
-      return false;
-    }
+    // TODO: 부적절한 단어 체크 2차 개발
+    // if (
+    //   checkInappropriateKeyword(
+    //     formValidation.common.inappropriate.keywords,
+    //     nickname,
+    //   )
+    // ) {
+    //   setIsInvalid(true);
+    //   setErrorMsg(formValidation.common.inappropriate.errorMsg);
+    //   return false;
+    // }
 
     setIsInvalid(false);
     setErrorMsg('');
