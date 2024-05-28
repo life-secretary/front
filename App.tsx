@@ -10,12 +10,12 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import ErrorBoundary from 'react-native-error-boundary';
 
-import {HomeScreen} from './src/screens/HomeScreen';
-import {TodoScreen} from './src/screens/todo/TodoScreen';
-import {ScrapScreen} from './src/screens/ScrapScreen';
+import WrappedHomeScreen from './src/screens/WrappedHomeScreen';
+import WrappedTodoScreen from './src/screens/todo/WrappedTodoScreen';
+import WrappedScrapScreen from './src/screens/WrappedScrapScreen';
 import {TodoDetailModalScreen} from './src/screens/todo/TodoDetailModalScreen';
 import {TodoFormModalScreen} from './src/screens/todo/TodoFormModalScreen';
-import {SettingScreen} from './src/screens/setting/SettingScreen';
+import WrappedSettingScreen from './src/screens/setting/WrappedSettingScreen';
 import {SettingModalScreen} from './src/screens/setting/SettingModalScreen';
 import {MyInfoModalScreen} from './src/screens/setting/MyInfoModalScreen';
 import SearchScreen from './src/screens/SearchScreen';
@@ -60,7 +60,7 @@ function HomeTabs() {
             </AppText>
           ),
         }}
-        component={HomeScreen}
+        component={WrappedHomeScreen}
       />
       <Tab.Screen
         name="Search"
@@ -92,7 +92,7 @@ function HomeTabs() {
             </AppText>
           ),
         }}
-        component={TodoScreen}
+        component={WrappedTodoScreen}
       />
       <Tab.Screen
         name="Scrap"
@@ -108,7 +108,7 @@ function HomeTabs() {
             </AppText>
           ),
         }}
-        component={ScrapScreen}
+        component={WrappedScrapScreen}
       />
       <Tab.Screen
         name="Setting"
@@ -124,7 +124,7 @@ function HomeTabs() {
             </AppText>
           ),
         }}
-        component={SettingScreen}
+        component={WrappedSettingScreen}
       />
     </Tab.Navigator>
   );
