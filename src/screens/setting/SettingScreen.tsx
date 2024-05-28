@@ -57,7 +57,7 @@ const SETTING_MENU_LIST = [
   ],
 ];
 
-export function SettingScreen(): React.JSX.Element {
+export function SettingScreen({navigation}: any): React.JSX.Element {
   return (
     <AppLayout isPaddingUsed={true} style={styles.layout}>
       <AppHeader style={styles.header}>
