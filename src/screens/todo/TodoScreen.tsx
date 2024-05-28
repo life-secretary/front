@@ -5,7 +5,7 @@ import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
 import {userInfoState} from '@/store/userInfoState';
 
-import {StyleSheet, View, ScrollView} from 'react-native';
+import {StyleSheet, View, FlatList} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
@@ -78,7 +78,7 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
 
       const unsubscribe = navigation.addListener('tabPress', e => {
         e.preventDefault();
-        scrollViewRef?.current.scrollTo({y: 0, animated: true});
+        scrollViewRef?.current.scrollToOffset({offset: 0, animated: true});
       });
 
       return unsubscribe;
@@ -106,14 +106,26 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
           selectedIndex={selectedIndex}
           onTabPress={(index: number) => handleTabChange(index)}
         />
-        <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
-          {selectedIndex === 0 && (
-            <OngoingTodoList isLoading={isLoading} isFetched={isFetched} />
-          )}
-          {selectedIndex === 1 && (
-            <CompletedTodoList isLoading={isLoading} isFetched={isFetched} />
-          )}
-        </ScrollView>
+        <FlatList
+          ref={scrollViewRef}
+          showsVerticalScrollIndicator={false}
+          data={[]}
+          keyExtractor={() => 'scrollview'}
+          renderItem={null}
+          ListHeaderComponent={
+            <>
+              {selectedIndex === 0 && (
+                <OngoingTodoList isLoading={isLoading} isFetched={isFetched} />
+              )}
+              {selectedIndex === 1 && (
+                <CompletedTodoList
+                  isLoading={isLoading}
+                  isFetched={isFetched}
+                />
+              )}
+            </>
+          }
+        />
       </View>
     </AppLayout>
   );

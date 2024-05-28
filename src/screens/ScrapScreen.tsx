@@ -6,7 +6,7 @@ import {scrapListState, scrapListTotalCountState} from '@/store/scrapState';
 import {userInfoState} from '@/store/userInfoState';
 import {deleteData, fetchData} from '@/api/api';
 
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppText} from '@/components/common/AppText';
@@ -145,7 +145,7 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
     useCallback(() => {
       const unsubscribe = navigation.addListener('tabPress', e => {
         e.preventDefault();
-        scrollViewRef?.current.scrollTo({y: 0, animated: true});
+        scrollViewRef?.current.scrollToOffset({offset: 0, animated: true});
       });
 
       return () => {
@@ -179,20 +179,29 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
             onPressButton={handleButtonPress}
           />
         </View>
-        <AppDivider style={styles.divider} />
-        <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
-          <ScrapContentList
-            isLoading={isLoading}
-            isDeleted={isDeleted}
-            checkedList={checkedList}
-            mode={mode}
-            manipulateCheckedList={manipulateCheckedList}
-            handleButtonPress={switchMode}
-            handleTotalCheckedCount={(count: number) =>
-              setTotalCheckedCount(count)
-            }
-          />
-        </ScrollView>
+        <FlatList
+          ref={scrollViewRef}
+          showsVerticalScrollIndicator={false}
+          data={[]}
+          keyExtractor={() => 'scrollview'}
+          renderItem={null}
+          ListHeaderComponent={
+            <>
+              <AppDivider style={styles.divider} />
+              <ScrapContentList
+                isLoading={isLoading}
+                isDeleted={isDeleted}
+                checkedList={checkedList}
+                mode={mode}
+                manipulateCheckedList={manipulateCheckedList}
+                handleButtonPress={switchMode}
+                handleTotalCheckedCount={(count: number) =>
+                  setTotalCheckedCount(count)
+                }
+              />
+            </>
+          }
+        />
       </View>
     </AppLayout>
   );
