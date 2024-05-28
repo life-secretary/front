@@ -9,7 +9,7 @@ import {font} from '@/styles/font';
 
 import {createData} from '@/api/api';
 import {
-  checkInappropriateKeyword,
+  // checkInappropriateKeyword,
   checkSpecialChar,
   formValidation,
 } from '@/utils/formValidation';
@@ -43,16 +43,17 @@ export function SubTodoForm({todoItem}: Props) {
       return false;
     }
 
-    if (
-      checkInappropriateKeyword(
-        formValidation.common.inappropriate.keywords,
-        subTitle,
-      )
-    ) {
-      setIsInvalid(true);
-      setErrorMsg(formValidation.common.inappropriate.errorMsg);
-      return false;
-    }
+    // TODO: 부적절한 단어 체크 2차 개발
+    // if (
+    //   checkInappropriateKeyword(
+    //     formValidation.common.inappropriate.keywords,
+    //     subTitle,
+    //   )
+    // ) {
+    //   setIsInvalid(true);
+    //   setErrorMsg(formValidation.common.inappropriate.errorMsg);
+    //   return false;
+    // }
 
     setIsInvalid(false);
     setErrorMsg('');

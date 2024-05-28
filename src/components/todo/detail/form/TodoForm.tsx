@@ -12,7 +12,7 @@ import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 import {
-  checkInappropriateKeyword,
+  // checkInappropriateKeyword,
   checkSpecialChar,
   formValidation,
 } from '@/utils/formValidation';
@@ -140,16 +140,17 @@ export function TodoForm({
       return false;
     }
 
-    if (
-      checkInappropriateKeyword(
-        formValidation.common.inappropriate.keywords,
-        category,
-      )
-    ) {
-      setIsCategoryInvalid(true);
-      setCategoryErrorMsg(formValidation.common.inappropriate.errorMsg);
-      return false;
-    }
+    // TODO: 부적절한 단어 체크 2차 개발
+    // if (
+    //   checkInappropriateKeyword(
+    //     formValidation.common.inappropriate.keywords,
+    //     category,
+    //   )
+    // ) {
+    //   setIsCategoryInvalid(true);
+    //   setCategoryErrorMsg(formValidation.common.inappropriate.errorMsg);
+    //   return false;
+    // }
 
     setIsCategoryInvalid(false);
     setCategoryErrorMsg('');
@@ -163,16 +164,17 @@ export function TodoForm({
       return false;
     }
 
-    if (
-      checkInappropriateKeyword(
-        formValidation.common.inappropriate.keywords,
-        title,
-      )
-    ) {
-      setIsTitleInvalid(true);
-      setTitleErrorMsg(formValidation.common.inappropriate.errorMsg);
-      return false;
-    }
+    // TODO: 부적절한 단어 체크 2차 개발
+    // if (
+    //   checkInappropriateKeyword(
+    //     formValidation.common.inappropriate.keywords,
+    //     title,
+    //   )
+    // ) {
+    //   setIsTitleInvalid(true);
+    //   setTitleErrorMsg(formValidation.common.inappropriate.errorMsg);
+    //   return false;
+    // }
 
     setIsTitleInvalid(false);
     setTitleErrorMsg('');
