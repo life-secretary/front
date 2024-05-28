@@ -1,13 +1,14 @@
 import React from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
 import {RecoilRoot} from 'recoil';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {EventProvider} from 'react-native-outside-press';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import ErrorBoundary from 'react-native-error-boundary';
 
 import {HomeScreen} from './src/screens/HomeScreen';
 import {TodoScreen} from './src/screens/todo/TodoScreen';
@@ -19,6 +20,7 @@ import {SettingModalScreen} from './src/screens/setting/SettingModalScreen';
 import {MyInfoModalScreen} from './src/screens/setting/MyInfoModalScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import {AppText} from './src/components/common/AppText';
+import {AppErrorFallback} from './src/components/common/AppErrorFallback';
 import color from './src/styles/color';
 import {font} from './src/styles/font';
 
@@ -47,7 +49,6 @@ function HomeTabs() {
       <Tab.Screen
         name="Home"
         options={{
-          // eslint-disable-next-line react/no-unstable-nested-components
           tabBarIcon: ({focused}) => {
             const iconColor = focused ? color.main.primary : color.grey.grey400;
 
@@ -155,9 +156,11 @@ function App(): React.JSX.Element {
         <EventProvider>
           <GestureHandlerRootView style={styles.container}>
             <SafeAreaProvider>
-              <NavigationContainer>
-                <RootStack />
-              </NavigationContainer>
+              <ErrorBoundary FallbackComponent={AppErrorFallback}>
+                <NavigationContainer>
+                  <RootStack />
+                </NavigationContainer>
+              </ErrorBoundary>
             </SafeAreaProvider>
           </GestureHandlerRootView>
         </EventProvider>
