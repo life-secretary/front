@@ -21,10 +21,13 @@ import spacing from '@/styles/spacing';
 import {removeItemAtIndex} from '@/utils';
 import {getFontSize} from '@/utils/font';
 
+type Mode = 'READ' | 'EDIT' | 'DELETE' | '';
+type ButtonText = '편집' | '취소' | '삭제' | '';
+
 export function ScrapScreen({navigation}: any): React.JSX.Element {
-  const [mode, setMode] = useState('READ'); // TODO: ENUM type 정의 ['READ', 'EDIT', 'DELETE']
-  const [buttonText, setButtonText] = useState('');
-  const [totalCheckedCount, setTotalCheckedCount] = React.useState(0);
+  const [mode, setMode] = useState<Mode>('READ');
+  const [buttonText, setButtonText] = useState<ButtonText>('편집');
+  const [totalCheckedCount, setTotalCheckedCount] = useState(0);
   const [checkedList, setCheckedList] = useState<object[]>([]);
   const setScrapList = useSetRecoilState(scrapListState);
   const [isDeleted, setIsDeleted] = useState(false);
@@ -32,29 +35,32 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
   const userInfo = useRecoilValue(userInfoState);
   const scrollViewRef = useRef(null);
 
+  const reset = () => {
+    setCheckedList([]);
+    setTotalCheckedCount(0);
+    switchMode('read');
+  };
+
   const switchMode = (action: string) => {
     switch (action) {
       case 'read':
         setMode('READ');
+        setButtonText('편집');
         setIsDeleted(false);
         break;
       case 'edit':
         setMode('EDIT');
+        setButtonText('취소');
         break;
       case 'delete':
         setMode('DELETE');
+        setButtonText('삭제');
         break;
       default:
         setMode('');
+        setButtonText('');
     }
   };
-
-  // TODO: reset 함수 구현
-  // const reset = () => {
-  //   setCheckedList([]);
-  //   setMode('READ');
-  //   setIsDeleted(false);
-  // };
 
   const handleButtonPress = () => {
     if (totalCount === 0) {
@@ -102,10 +108,6 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
       userId: userInfo.id,
     });
 
-    if (res.status !== 200) {
-      throw Error('Network Error');
-    }
-
     return res.data.data;
   };
 
@@ -130,8 +132,7 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
 
     refetch();
     setIsDeleted(true);
-    setCheckedList([]);
-    switchMode('read');
+    reset();
   };
 
   useEffect(() => {
@@ -140,30 +141,6 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
     }
   }, [data, setScrapList]);
 
-  useEffect(() => {
-    const switchButtonText = () => {
-      switch (mode) {
-        case 'READ':
-          setButtonText('편집');
-          break;
-        case 'EDIT':
-          setButtonText('취소');
-          break;
-        case 'DELETE':
-          setButtonText('삭제');
-          break;
-        default:
-          setButtonText('');
-      }
-    };
-
-    switchButtonText();
-
-    // return () => {
-    //   reset();
-    // };
-  }, [mode]);
-
   useFocusEffect(
     useCallback(() => {
       const unsubscribe = navigation.addListener('tabPress', e => {
@@ -171,7 +148,10 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
         scrollViewRef?.current.scrollTo({y: 0, animated: true});
       });
 
-      return unsubscribe;
+      return () => {
+        unsubscribe();
+        reset();
+      };
     }, [navigation]),
   );
 
