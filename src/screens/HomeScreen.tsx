@@ -17,8 +17,6 @@ import {fetchData} from '@/api/api';
 import type {CategoryObject, OccupationObject} from '../models/common';
 
 import {StyleSheet, ScrollView, View} from 'react-native';
-import ErrorBoundary from 'react-native-error-boundary';
-import {AppErrorFallback} from '@/components/common/AppErrorFallback';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
@@ -232,6 +230,10 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
 
   return (
     <AppLayout>
+      {/* FIXME: ScrollView와 FlatList를 중첩해서 사용하면 'VirtuallizedLists should never be nested...' 관련 에러 발생 */}
+      {/* 현재 구조에서 FlatList 컴포넌트로 변경하면 HomeImageCarousel에 적용된 gesture handler가 동작하지 않는 부작용이 발생하기 때문에
+          일단 ScrollView를 유지하고 추후 FlatList로 변경하면서 carousel 라이브러리 교체 필요
+       */}
       <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
         <AppHeader style={styles.header}>
           <AppTitle

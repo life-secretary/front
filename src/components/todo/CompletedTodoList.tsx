@@ -61,8 +61,8 @@ export function CompletedTodoList({
             <FlatList
               data={list}
               renderItem={({item}) => <TodoCard item={item} />}
-              keyExtractor={(item: Todo) => String(item.id)}
-              contentContainerStyle={styles.listContainer}
+              keyExtractor={(item: Todo) => item.id.toString()}
+              style={styles.listContainer}
             />
           </>
         ) : (
