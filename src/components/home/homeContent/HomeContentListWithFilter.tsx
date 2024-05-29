@@ -7,7 +7,7 @@ import {
 
 import {fetchData} from '@/api/api';
 
-import {StyleSheet, View, FlatList, Platform} from 'react-native';
+import {StyleSheet, View, FlatList, Platform, Pressable} from 'react-native';
 import {AppText} from '@/components/common/AppText';
 import {HomeContentCategoryList} from '@/components/home/homeContent/HomeContentCategoryList';
 import {ViewMoreButton} from '@/components/home/ViewMoreButton';
@@ -18,23 +18,31 @@ import spacing from '@/styles/spacing';
 import {getFontSize} from '@/utils/font';
 
 import {HOME_CONTENT_SIZE} from '@/constants';
+import { useNavigation } from '@react-navigation/native';
 
 type HomeContentItemByFilterType = {
+  id: number;
   index: number;
   title: string;
 };
 
 function HomeContentItemByFilter({
+  id,
   index,
   title,
 }: HomeContentItemByFilterType): React.JSX.Element {
+  const navigation: any = useNavigation();
+  const onPressContent = () => {
+    navigation.navigate('ContentModal', { id });
+  };
+
   return (
-    <View style={styles.contents}>
+    <Pressable style={styles.contents} onPress={onPressContent}>
       <AppText style={styles.contentsNo}>{index + 1}</AppText>
       <AppText isEllipsizeMode={true} style={styles.contentsTitle}>
         {title}
       </AppText>
-    </View>
+    </Pressable>
   );
 }
 
@@ -92,8 +100,8 @@ export function HomeContentListWithFilter({title}: Props): React.JSX.Element {
       ) : (
         <FlatList
           data={filteredHomeContentList}
-          renderItem={({item, index}) => (
-            <HomeContentItemByFilter index={index} title={item?.title} />
+          renderItem={({item, index}: any) => (
+            <HomeContentItemByFilter id={item.id} index={index} title={item?.title} />
           )}
           contentContainerStyle={styles.listContainer}
         />

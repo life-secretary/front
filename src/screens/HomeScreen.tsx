@@ -45,7 +45,6 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
   const userInfo = useRecoilValue(userInfoState);
   // Login → Agreement → Survey 과정 임시 테스팅 중
   const [isDone, setIsDone] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(homeCategories[0]);
   const [newestHomeContentList, setNewestHomeContentList] = useRecoilState(
     newestHomeContentListState,
   );
@@ -59,7 +58,7 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
 
   const HOME_CONTENT_SIZE = 5;
 
-  const scrollViewRef = useRef(null);
+  const scrollViewRef = useRef<any>(null);
 
   const fetchCategories = async () => {
     const res = await fetchData('/categories', null);
@@ -157,7 +156,7 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
   ] = combinedQueries.data;
 
   const openCategoryModal = (category: CategoryObject) => {
-    navigation.navigate('SearchCategoryModal', { categories: homeCategories, selectedCategory:category });
+    navigation.navigate('SearchCategoryModal', { selectedCategory:category });
   };
 
   const openContentModal = (id: any) => {
@@ -209,7 +208,7 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
 
   useFocusEffect(
     useCallback(() => {
-      const unsubscribe = navigation.addListener('tabPress', e => {
+      const unsubscribe = navigation.addListener('tabPress', (e: any) => {
         e.preventDefault();
         scrollViewRef?.current.scrollTo({y: 0, animated: true});
       });

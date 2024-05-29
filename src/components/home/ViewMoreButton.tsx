@@ -4,11 +4,19 @@ import {StyleSheet} from 'react-native';
 import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
+import { useNavigation } from '@react-navigation/native';
+import {useRecoilValue} from 'recoil';
+import { homeContentFilterState } from '@/store/homeContentState';
 
 import {getFontSize} from '@/utils/font';
 
 export function ViewMoreButton(): React.JSX.Element {
-  const handlePress = () => {};
+  const navigation: any = useNavigation();
+  const homeContentFilter = useRecoilValue(homeContentFilterState);
+  
+  const handlePress = () => {
+    navigation.navigate('SearchCategoryModal', { selectedCategory: homeContentFilter });
+  };
 
   return (
     <AppButton

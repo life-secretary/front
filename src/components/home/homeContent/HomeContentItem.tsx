@@ -1,8 +1,9 @@
 import React from 'react';
 import {useRecoilValue} from 'recoil';
 import {categoryListState} from '@/store/categoryState';
+import { useNavigation } from '@react-navigation/native';
 
-import {StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Image, Pressable} from 'react-native';
 import {AppText} from '@/components/common/AppText';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
@@ -17,11 +18,16 @@ type Props = {
 };
 
 export function HomeContentItem({homeContentItem}: Props): React.JSX.Element {
+  const navigation: any = useNavigation();
   const categories = useRecoilValue(categoryListState);
   const skeletonThumbnail = require('@/assets/images/thumbnailPlaceholder.jpg');
 
+  const onPressContent = () => {
+    navigation.navigate('ContentModal', { id: homeContentItem.id });
+  };
+
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={onPressContent}>
       <View style={styles.thumbnailContainer}>
         {homeContentItem.imageUrl ? (
           <Image
@@ -52,7 +58,7 @@ export function HomeContentItem({homeContentItem}: Props): React.JSX.Element {
           </AppText>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
