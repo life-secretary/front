@@ -1,4 +1,4 @@
-import type { ConditionData } from "@/components/search/SearchCategoryModal";
+import type { ConditionData } from "@/components/search/SearchCategory";
 
 const getSort = (data: any) => {
     const condition = data.find((item: any) => item.isSelected);

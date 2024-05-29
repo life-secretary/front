@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
-import {
-    View,
-    StyleSheet,
-} from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, StyleSheet } from 'react-native';
 
 import { AppText } from '../common/AppText';
 import { AppHeader } from '../common/AppHeader';
 import AppIcon from '../common/AppIcon';
-import AppModal from '../common/modal/AppModal';
 
 import SearchTextInput from '../../components/search/SearchTextInput';
 import SearchTab from '../../components/search/SearchTab';
 import SearchContentView from '../../components/search/SearchContentView';
 import SearchToDoView from '../../components/search/SearchToDoView';
+import { fetchData } from '@/api/api';
+import { getNewData } from '@/utils/search';
 
 import { getFontSize } from '../../utils/font';
 
@@ -26,13 +24,15 @@ const HashTagResultHeader = ({ data, hashTag }: any) => {
     );
 };
 
-const SearchHashTagModal = ({
-    isVisible,
-    hashTag,
-    content,
-    pressBackButton,
-    onContentPageEndReached,
+const SearchHashTag = ({
+    route,
+    navigation
 }: any) => {
+    const { pressedHashtag } = route.params;
+    console.log('hashtag', pressedHashtag);
+    const pageHashTagContent = useRef<number>(0);
+    const isHashTagLoading = useRef<boolean>(false);
+    const [hashTagContent, setHashTagContent] = useState([]);
 
     // const [tabData, setTabData] = useState([
     //     { id: 1, text: '콘텐츠', isPressed: true }, 
@@ -76,11 +76,6 @@ const SearchHashTagModal = ({
     //     { id: 4, title: '할 일의 제목 입력은 41자 제한으로 둠', category: '부동산', },
     // ];
 
-    const constants = {
-        MODAL_BACKDROP_COLOR: '#FFFFFF',
-        MODAL_BACKDROP_OPACITY: 1,
-    }; // TODO 상수로 관리
-
     const changeSearchText = () => {};
     const submitSearchText = () => {};
     const pressRemoveSearchTextButton = () => {};
@@ -92,64 +87,90 @@ const SearchHashTagModal = ({
     //     return current;
     // };
 
+    const fetchHashTagContent = ({
+        hashTagContentText,
+        hashTagContentPage,
+        hashTagContentSize,
+        hashTagContentSort,
+      }: any) => {
+        const hashtag = hashTagContentText ? hashTagContentText : pressedHashtag;
+        const page = hashTagContentPage ? hashTagContentPage : pageHashTagContent.current;
+        const size = hashTagContentSize ? hashTagContentSize : 10;
+        const sort = hashTagContentSort ? hashTagContentSort : 'viewCount,desc';
+    
+        fetchData(`/content/search`, {
+          hashtag,
+          page,
+          size,
+          sort,
+        })
+        .then((response) => {
+          const { data : { data } } = response;
+    
+          setHashTagContent((previousValue) => {
+            return getNewData(previousValue, data.content);
+          })
+        })
+        .catch((error) => {
+          console.log('콘텐츠 해시태그 검색 에러', error);
+        })
+        .finally(() => {
+          isHashTagLoading.current = false;
+        });
+    };
+
+    const onHashTagContentPageEndReached = () => {
+        if ((hashTagContent.length >= 10) && isHashTagLoading.current === false) {
+          isHashTagLoading.current = true;
+          pageHashTagContent.current += 1;
+          fetchHashTagContent({});
+        }
+    };
+
+    const openContentModal = (id: any) => {
+        // 렌더링 사이클 이슈로 동작 막기
+        // navigation.navigate('ContentModal', { id });
+    };
+
+    useEffect(() => {
+        if (!pressedHashtag) {
+            return;
+        }
+
+        fetchHashTagContent({ hashTagContentText: pressedHashtag });
+    }, [pressedHashtag]);
+
     return (
-        <AppModal
-            isVisible={isVisible}
-            backdropColor={constants.MODAL_BACKDROP_COLOR}
-            backdropOpacity={constants.MODAL_BACKDROP_OPACITY}
-        >
-            <View style={styles.container}>
-                <AppHeader style={styles.header}>
-                    <View style={styles.wrapper}>
-                        <View style={styles.backIconWrapper}>
-                            <AppIcon 
-                                name='back'
-                                width={36}
-                                height={36}
-                                onPress={pressBackButton}
-                            />
-                        </View>
-                        <View style={styles.textInputWrapper}>
-                            <SearchTextInput 
-                                disabled={true}
-                                isSearchResultPage={true}
-                                searchText={hashTag}
-                                changeSearchText={changeSearchText}
-                                submitSearchText={submitSearchText}
-                                pressRemoveSearchTextButton={pressRemoveSearchTextButton}
-                                pressSearchButton={pressSearchButton}
-                            />
-                        </View>
+        <View style={styles.container}>
+            <AppHeader style={styles.header}>
+                <View style={styles.wrapper}>
+                    <View style={styles.backIconWrapper}>
+                        <AppIcon 
+                            name='back'
+                            width={36}
+                            height={36}
+                            onPress={() => navigation.goBack()}
+                        />
                     </View>
-                    {/* <SearchTab 
-                        tabData={tabData} 
-                        onPressTab={onPressTab}
-                    /> */}
-                </AppHeader>
-                {/* {
-                    currentData()?.id === 1 ?
-                    <SearchContentView 
-                        data={content} 
-                        headerComponent={
-                            <HashTagResultHeader 
-                                data={content} 
-                                hashTag={hashTag} 
-                            />
-                        } 
-                        onEndReached={() => {}} // 검색 페이지 참고
-                    />
-                    :
-                    <SearchToDoView 
-                        data={toDoData} 
-                        headerComponent={
-                            <HashTagResultHeader 
-                                data={toDoData} 
-                                hashTag={hashTag} 
-                            />
-                        }
-                        onEndReached={() => {}} // 검색 페이지 참고
-                    />
-                } */}
+                    <View style={styles.textInputWrapper}>
+                        <SearchTextInput 
+                            disabled={true}
+                            isSearchResultPage={true}
+                            searchText={pressedHashtag}
+                            changeSearchText={changeSearchText}
+                            submitSearchText={submitSearchText}
+                            pressRemoveSearchTextButton={pressRemoveSearchTextButton}
+                            pressSearchButton={pressSearchButton}
+                        />
+                    </View>
+                </View>
+                {/* <SearchTab 
+                    tabData={tabData} 
+                    onPressTab={onPressTab}
+                /> */}
+            </AppHeader>
+            {/* {
+                currentData()?.id === 1 ?
                 <SearchContentView 
                     data={content} 
                     headerComponent={
@@ -158,11 +179,33 @@ const SearchHashTagModal = ({
                             hashTag={hashTag} 
                         />
                     } 
-                    onEndReached={onContentPageEndReached}  
+                    onEndReached={() => {}} // 검색 페이지 참고
                 />
-            </View>
-        </AppModal>
-    );
+                :
+                <SearchToDoView 
+                    data={toDoData} 
+                    headerComponent={
+                        <HashTagResultHeader 
+                            data={toDoData} 
+                            hashTag={hashTag} 
+                        />
+                    }
+                    onEndReached={() => {}} // 검색 페이지 참고
+                />
+            } */}
+            <SearchContentView 
+                data={hashTagContent} 
+                headerComponent={
+                    <HashTagResultHeader 
+                        data={hashTagContent} 
+                        hashTag={pressedHashtag} 
+                    />
+                } 
+                onEndReached={onHashTagContentPageEndReached}  
+                onPressContent={openContentModal}
+            />
+        </View>
+    )
 };
 
 const styles = StyleSheet.create({
@@ -209,6 +252,6 @@ const styles = StyleSheet.create({
         lineHeight: 17,
         color: '#A1ACB9',
     },
-})
+});
 
-export default SearchHashTagModal;
+export default SearchHashTag;

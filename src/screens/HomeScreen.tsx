@@ -28,8 +28,6 @@ import {HomeImageCarousel} from '@/components/home/HomeImageCarousel';
 import {HomeContentList} from '@/components/home/homeContent/HomeContentList';
 import {SendFeedbackButton} from '@/components/home/SendFeedbackButton';
 import Login from './init/Login';
-import SearchCategoryModal from '@/components/search/SearchCategoryModal';
-import ContentModal from '@/components/contentDetail/ContentModal';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
@@ -40,8 +38,6 @@ import {HOME_CONTENT_SIZE} from '@/constants';
 
 export function HomeScreen({navigation}: any): React.JSX.Element {
   // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
-  const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
-  const [isContentModalVisible, setIsContentModalVisible] = useState(false);
   const setCategoryList = useSetRecoilState(categoryListState);
   const setOccupationList = useSetRecoilState(occupationListState);
   const setScrapList = useSetRecoilState(scrapListState);
@@ -60,11 +56,6 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
     homeContentListReadBySimilarUsers,
     setHomeContentListReadBySimilarUsers,
   ] = useRecoilState(homeContentListReadBySimilarUsersState);
-
-  // 콘텐츠 상세 조회
-  const [content, setContent] = useState<any>({});
-  const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
-  const [confirmData, setConfirmData] = useState<any>({});
 
   const HOME_CONTENT_SIZE = 5;
 
@@ -166,43 +157,11 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
   ] = combinedQueries.data;
 
   const openCategoryModal = (category: CategoryObject) => {
-    setSelectedCategory(category);
-    setIsCategoryModalVisible(true);
-  };
-
-  const closeCategoryModal = () => {
-    setIsCategoryModalVisible(false);
+    navigation.navigate('SearchCategoryModal', { categories: homeCategories, selectedCategory:category });
   };
 
   const openContentModal = (id: any) => {
-    fetchData(`/content/${id}`, {})
-      .then((response) => {
-        const { data : { data } } = response;
-
-        setContent(data);
-        setIsContentModalVisible(true);
-      })
-      .catch((error) => {
-        console.log('콘텐츠 fetch 에러', error);
-        setConfirmData({
-          title: '400 에러',
-          description: '해당 컨텐츠는 존재하지 않습니다',
-          button: {
-            first: {
-              text: '닫기',
-              onPressButton: () => {
-                console.log('닫기');
-                setIsConfirmOpen(false);
-              }
-            }
-          }
-        });
-        setIsConfirmOpen(true);
-      });
-  };
-
-  const closeContentModal = () => {
-    setIsContentModalVisible(false);
+    navigation.navigate('ContentModal', { id });
   };
 
   const closeAllProcess = () => {
@@ -308,29 +267,6 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
         </View>
       </ScrollView>
       {/* <Login isVisible={!isDone} closeAllProcess={closeAllProcess} /> */}
-      <SearchCategoryModal
-        isVisible={isCategoryModalVisible}
-        closeCategoryModal={closeCategoryModal}
-        selectedCategory={selectedCategory}
-      />
-      <ContentModal
-        content={content}
-        isVisible={isContentModalVisible}
-        closeContentModal={closeContentModal}
-      />
-      <AppConfirmModal 
-        isVisible={isConfirmOpen}
-        title={confirmData.title ? confirmData.title : ''}
-        description={confirmData.description ? confirmData.description : ''}
-        button={confirmData.button ? confirmData.button : {
-          first: {
-            text: '',
-            textStyle: {},
-            buttonStyle: {},
-            onPressButton: () => {},
-          }
-        }}
-      />
     </AppLayout>
   );
 }

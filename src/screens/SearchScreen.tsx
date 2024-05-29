@@ -18,7 +18,7 @@ import { getSort, getNewData, getNewConditionData } from '@/utils/search';
 
 import { fetchData, createData } from '@/api/api';
 
-import type { ConditionData } from '../components/search/SearchCategoryModal';
+import type { ConditionData } from '../components/search/SearchCategory';
 
 import { useRecoilState } from 'recoil';
 import { recentSearchWordState, popularSearchWordState, PopularSearchWord } from '@/store/search';
@@ -42,7 +42,9 @@ const HeaderSearchResult = ({
   );
 };
 
-const SearchScreen = () => {
+const SearchScreen = ({
+  navigation
+}: any) => {
   const [recentSearchItemHeight, setRecentSearchItemHeight] = useState(38);
   const [recentSearchListHeight, setRecentSearchListHeight] = useState(0);
   const [isRecentSearchListOpen, setIsRecentSearchListOpen] = useState(false);
@@ -69,7 +71,7 @@ const SearchScreen = () => {
   // todo
   const pageToDo = useRef<number>(0);
   const [searchConditionToDoData, setSearchConditionToDoData] = useState<Array<ConditionData>>([
-    {text: '조회순', type: 'viewCount', orderType: 'desc', isSelected: true},
+    {text: '저장순', type: 'saveCount', orderType: 'desc', isSelected: true},
     {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
   ]);
   const [toDoData, setToDoData] = useState([]);
@@ -85,6 +87,9 @@ const SearchScreen = () => {
     isFetched:isPopularSearchWordListFetched,
     isRefetching:isPopularSearchWordListRefetching,
   } = getPopularSearchWordListQuery();
+
+  const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
+  const [confirmData, setConfirmData] = useState<any>({});
 
   const initPopularSearchData = () => {
     if (!isPopularSearchWordListFetched || !isPopularSearchWordListSuccess || !popularSearchWordList) {
@@ -105,6 +110,12 @@ const SearchScreen = () => {
           item.isPressed = true;
         } else {
           item.isPressed = false;
+        }
+
+        if (number === 0) {
+          fetchContent({});
+        } else {
+          fetchToDo({});
         }
 
         return item;
@@ -153,6 +164,14 @@ const SearchScreen = () => {
     const size = contentSize ? contentSize : 10;
     const sort = contentSort ? contentSort : getSort(searchConditionContentData);
 
+    // for test
+    console.log({
+      title,
+      page,
+      size,
+      sort,
+    });
+
     fetchData('/content/search', { 
       title,
       page,
@@ -185,6 +204,14 @@ const SearchScreen = () => {
     const size = toDoSize ? toDoSize : 10;
     const sort = toDoSort ? toDoSort : getSort(searchConditionToDoData);
 
+    // for test
+    console.log({
+      title,
+      page,
+      size,
+      sort,
+    });
+
     fetchData('/todo/search', {
       title,
       page,
@@ -195,7 +222,7 @@ const SearchScreen = () => {
         const { data : { data } } = response;
 
         setToDoData((previousValue) => {
-          return getNewData(previousValue, data.todo);
+          return getNewData(previousValue, data.content);
         });
       })
       .catch((error) => {
@@ -231,9 +258,20 @@ const SearchScreen = () => {
   // 검색 기능
   const pressSearchButton = () => {
     let currentDataLength = 4;
-
     if (searchText.length === 0) {
-      console.log('입력된 검색어가 없습니다.');
+      setIsConfirmOpen(true);
+      setConfirmData({
+        title: '안내',
+        description: '입력된 검색어가 없습니다',
+        button: {
+          first: {
+            text: '확인',
+            onPressButton: () => {
+              setIsConfirmOpen(false);
+            },
+          }
+        }
+      })
       return;
     }
 
@@ -366,6 +404,10 @@ const SearchScreen = () => {
     setIsRecentSearchListOpen(true);
   };
 
+  const onPressContent = (id: number) => {
+    navigation.navigate('', { id })
+  };
+
   // 검색 결과 페이지 진입시 검색 조건 초기화
   useEffect(() => {
     onPressTab(0);
@@ -436,6 +478,7 @@ const SearchScreen = () => {
             />
           }
           onEndReached={onContentPageEndReached}
+          onPressContent={onPressContent}
         />
         :
         <SearchToDoView 
@@ -470,6 +513,12 @@ const SearchScreen = () => {
               }
           }}
       /> */}
+      <AppConfirmModal
+          isVisible={isConfirmOpen}
+          title={confirmData.title}
+          description={confirmData.description}
+          button={confirmData.button}
+      />
     </View>
   );
 };

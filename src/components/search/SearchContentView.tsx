@@ -1,25 +1,20 @@
 import React, { useState, ReactNode } from 'react';
 import { VirtualizedList, View, StyleSheet, Pressable } from 'react-native';
-
 import { HomeContentItem } from '../home/homeContent/HomeContentItem';
-import ContentModal from '../contentDetail/ContentModal';
-
-import { fetchData } from '@/api/api';
 
 type SearchContentViewProps = {
   data: Array<any>; // TODO 타입 구체화
   headerComponent: ReactNode;
   onEndReached: () => void;
+  onPressContent: (id: number) => void;
 };
 
 const SearchContentView = ({
   data, 
   headerComponent,
   onEndReached,
+  onPressContent,
 }: SearchContentViewProps): React.JSX.Element => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [content, setContent] = useState<any>({});
-
   const getContentTabItem = (_data: any, index: number) => { // TODO 타입 구체화
     return data[index];
   };
@@ -32,19 +27,6 @@ const SearchContentView = ({
     const keyName = 'content' + item.id;
 
     return keyName;
-  };
-
-  const onPressContent = (id: number) => {
-    fetchData(`/content/${id}`, {})
-      .then((response) => {
-        const { data : { data } } = response;
-
-        setContent(data);
-        setIsModalVisible(true);
-      })
-      .catch((error) => {
-        console.log('error', error);
-      });
   };
 
   return (
@@ -66,11 +48,6 @@ const SearchContentView = ({
         ItemSeparatorComponent={() => <View style={styles.separatorContent} />}
         style={styles.contentContainer}
         onEndReached={onEndReached}
-      />
-      <ContentModal 
-        content={content}
-        isVisible={isModalVisible}
-        closeContentModal={() => setIsModalVisible(false)}
       />
     </>
   );
