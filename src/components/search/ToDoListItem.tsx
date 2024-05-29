@@ -30,7 +30,7 @@ const ToDoListItem = ({
         <View style={styles.toDoListItemTextWrapper}>
           {hasMainCategory ? (
             <AppText style={styles.toDoListItemCategory}>
-              {item.category.title}
+              {item.category ? item.category.title : '기타'}
             </AppText>
           ) : (
             <></>

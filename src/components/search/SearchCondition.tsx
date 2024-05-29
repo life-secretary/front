@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
-
 import AppButton from '../common/AppButton';
-
 import { getFontSize } from '../../utils/font';
-
-import type { ConditionData } from '../search/SearchCategoryModal';
+import type { ConditionData } from '../search/SearchCategory';
 
 type SearchConditionProps = {
     data: Array<ConditionData>;
