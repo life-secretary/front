@@ -157,7 +157,6 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.layoutPaddingHorizontal,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 10,
     borderRadius: 14,
     overflow: 'hidden',
   },
