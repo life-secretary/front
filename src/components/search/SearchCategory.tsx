@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {View, StyleSheet, TouchableOpacity } from 'react-native';
 import type {CategoryObject} from '../../models/common';
+import { useRecoilValue } from 'recoil';
+import { homeCategoryListState } from '@/store/categoryState';
 
-import color from '../../styles/color';
 import {AppHeader} from '../common/AppHeader';
 import AppButton from '../common/AppButton';
 import AppIcon from '../common/AppIcon';
-import AppModal from '../common/modal/AppModal';
 
 import SearchCondition from '../../components/search/SearchCondition';
 import SearchTab from '../../components/search/SearchTab';
@@ -27,21 +27,21 @@ export type ConditionData = {
 
 type DropDownCategoryProps = {
     // NOTE: Function 과 () => {} 차이 ?
-    categories: CategoryObject[];
     onPressListItemButton: Function;
     onPressDimmedSpace: () => void;
   };
 
 const DropDownCategory = ({
-    categories,
     onPressListItemButton,
     onPressDimmedSpace,
   }: DropDownCategoryProps): React.JSX.Element => {
+    const homeCategories = useRecoilValue(homeCategoryListState);
+
     return (
       <>
         <View style={styles.dropDownDivider} />
         <View style={styles.dropDownContainer}>
-          {categories.map(item => {
+          {homeCategories.map(item => {
             return (
               <AppButton
                 key={item.id}
@@ -65,7 +65,7 @@ const SearchCategory = ({
     route,
     navigation
 }: any) => {
-    const { categories, selectedCategory } = route.params;
+    const { selectedCategory } = route.params;
 
     const [category, setCategory] = useState<any>({});
     const isLoading = useRef<boolean>(false);
@@ -176,12 +176,12 @@ const SearchCategory = ({
     const size = contentSize ? contentSize : 10;
     const sort = contentSort ? contentSort : currentContentSort();
 
-    // console.log({ 
-    //     categoryId,
-    //     page,
-    //     size,
-    //     sort,
-    // });
+    console.log({ 
+        categoryId,
+        page,
+        size,
+        sort,
+    });
 
     fetchData('/content', { 
       categoryId,
@@ -216,12 +216,12 @@ const SearchCategory = ({
     const size = todoSize ? todoSize : 10;
     const sort = todoSort ? todoSort : currentToDoSort();
 
-    // console.log({ 
-    //     categoryId,
-    //     page,
-    //     size,
-    //     sort,
-    // });
+    console.log({ 
+        categoryId,
+        page,
+        size,
+        sort,
+    });
 
     fetchData('/todo', {
       categoryId,
@@ -286,7 +286,7 @@ const SearchCategory = ({
   };
 
   useEffect(() => {
-    if (!category.id) {
+    if ((!category.id && category.id !== 0)) {
         return;
     }
 
@@ -294,7 +294,7 @@ const SearchCategory = ({
   }, [category.id, searchConditionToDoData, tabData]);
 
   useEffect(() => {
-    if (!category.id) {
+    if ((!category.id && category.id !== 0)) {
         return;
     }
 
@@ -302,7 +302,7 @@ const SearchCategory = ({
   }, [category.id, searchConditionContentData]);
 
   useEffect(() => {
-    if (!selectedCategory.id) {
+    if ((!selectedCategory.id && selectedCategory.id !== 0)) {
         return;
     }
 
@@ -350,7 +350,6 @@ const SearchCategory = ({
             {/** TODO fix 야매 DropDown */}
             {isCategoryDownModalVisible && (
             <DropDownCategory
-                categories={categories}
                 onPressListItemButton={onPressCategoryNameButton}
                 onPressDimmedSpace={onToggleCategoryButton}
             />

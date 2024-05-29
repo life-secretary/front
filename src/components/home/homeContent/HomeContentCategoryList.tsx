@@ -27,7 +27,7 @@ export function HomeContentCategoryList(): React.JSX.Element {
   useFocusEffect(
     useCallback(() => {
       return () => {
-        setHomeContentFilter(defaultCategory);
+        setHomeContentFilter(defaultCategory ? defaultCategory : { category: 'all', id: 0, title: '전체' });
       };
     }, [defaultCategory, setHomeContentFilter]),
   );
