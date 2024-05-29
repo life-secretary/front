@@ -298,6 +298,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 24,
     marginTop: 12, // 아이콘이 있는 헤더
+    marginBottom: 24,
   },
   headerIconContainer: {
     flexDirection: 'row',

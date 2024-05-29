@@ -48,7 +48,6 @@ export function HomeCategoryList({
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: spacing.layoutPaddingHorizontal,
-    marginVertical: 10,
     padding: 20,
     justifyContent: 'center',
     alignItems: 'center',
