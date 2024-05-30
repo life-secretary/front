@@ -14,15 +14,15 @@ import SearchContentView from '../components/search/SearchContentView';
 import SearchToDoView from '../components/search/SearchToDoView';
 
 import { getFontSize } from '../utils/font';
-import { getSort, getNewData, getNewConditionData } from '@/utils/search';
+import { getNewConditionData } from '@/utils/search';
 
-import { fetchData, createData } from '@/api/api';
+import { createData } from '@/api/api';
 
 import type { ConditionData } from '../components/search/SearchCategory';
 
 import { useRecoilState } from 'recoil';
 import { recentSearchWordState, popularSearchWordState, PopularSearchWord } from '@/store/search';
-import { getPopularSearchWordListQuery } from '@/api/search';
+import { getPopularSearchWordListQuery, getSearchContentListQuery, getSearchToDoListQuery } from '@/api/search';
 
 const HeaderSearchResult = ({
   data, 
@@ -49,6 +49,37 @@ const SearchScreen = ({
   const [recentSearchListHeight, setRecentSearchListHeight] = useState(0);
   const [isRecentSearchListOpen, setIsRecentSearchListOpen] = useState(false);
 
+  // content
+  const pageContent = useRef<number>(0);
+  const [searchConditionContentData, setSearchConditionContentData] = useState<Array<ConditionData>>([
+    {text: '조회순', type: 'viewCount', orderType: 'desc', isSelected: true},
+    {text: '저장순', type: 'scrapCount', orderType: 'desc', isSelected: false},
+    {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
+  ]);
+  const [searchConditionContent, setSearchConditionContent] = useState({
+    title: '',
+    page: 0,
+    size: 10,
+    sort: 'viewCount,desc'
+  });
+  const { data:content, isFetching:ContentIsFetching, isRefetching:ContentIsRefetching } = getSearchContentListQuery(searchConditionContent);
+  const [contentData, setContentData] = useState([]);
+
+  // todo
+  const pageToDo = useRef<number>(0);
+  const [searchConditionToDoData, setSearchConditionToDoData] = useState<Array<ConditionData>>([
+    {text: '저장순', type: 'saveCount', orderType: 'desc', isSelected: true},
+    {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
+  ]);
+  const [searchConditionToDo, setSearchConditionToDo] = useState({
+    title: '',
+    page: 0,
+    size: 10,
+    sort: 'saveCount,desc'
+  });
+  const { data:toDo, isFetching:TodoIsFetching, isRefetching:toDoIsRefetching } = getSearchToDoListQuery(searchConditionToDo);
+  const [toDoData, setToDoData] = useState([]);
+
   const isLoading = useRef<boolean>(false);
 
   const [tabData, setTabData] = useState([
@@ -58,23 +89,6 @@ const SearchScreen = ({
 
   // 검색
   const [searchText, setSearchText] = useState('');
-
-  // content
-  const pageContent = useRef<number>(0);
-  const [searchConditionContentData, setSearchConditionContentData] = useState<Array<ConditionData>>([
-    {text: '조회순', type: 'viewCount', orderType: 'desc', isSelected: true},
-    {text: '저장순', type: 'scrapCount', orderType: 'desc', isSelected: false},
-    {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
-  ]);
-  const [contentData, setContentData] = useState([]);
-
-  // todo
-  const pageToDo = useRef<number>(0);
-  const [searchConditionToDoData, setSearchConditionToDoData] = useState<Array<ConditionData>>([
-    {text: '저장순', type: 'saveCount', orderType: 'desc', isSelected: true},
-    {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
-  ]);
-  const [toDoData, setToDoData] = useState([]);
 
   // 최근 검색어
   const [recentSearchData, setRecentSearchesData] = useRecoilState(recentSearchWordState);
@@ -103,6 +117,7 @@ const SearchScreen = ({
     setPopularSearchData(data);
   };
 
+  // tab
   const onPressTab = (number: number) => {
     setTabData((previousValue) => {
       return previousValue.map((item, index) => {
@@ -111,147 +126,78 @@ const SearchScreen = ({
         } else {
           item.isPressed = false;
         }
-
-        if (number === 0) {
-          fetchContent({});
-        } else {
-          fetchToDo({});
-        }
-
         return item;
       });
     });
+
+    if (number === 0) {
+      pageContent.current = 0;
+      setSearchConditionContentData((prev) => getNewConditionData(prev, 0));
+      setSearchConditionContent((prev) => ({
+        title: searchText,
+        page: 0,
+        size: 10,
+        sort: 'viewCount,desc'
+      }));
+    } else {
+      pageToDo.current = 0;
+      setSearchConditionToDoData((prev) => getNewConditionData(prev, 0));
+      setSearchConditionToDo((prev) => ({
+        title: searchText,
+        page: 0,
+        size: 10,
+        sort: 'saveCount,desc'
+      }))
+    }
   };
 
   // content condition
   const onPressContentViewConditionButton = (data: ConditionData, index: number): void => {
-    setSearchConditionContentData((previousValue) => {
-      const contentSort = [previousValue[index].type, previousValue[index].orderType];
-
-      pageContent.current = 0;
-      setContentData([]);
-      fetchContent({
-        contentSort,
-      });
-
-      return getNewConditionData(previousValue, index);
+    pageContent.current = 0;
+    setSearchConditionContentData((prev) => getNewConditionData(prev, index));
+    setSearchConditionContent((prev: any) => {
+      return { 
+        ...prev,
+        page: 0,
+        sort: `${data.type},${data.orderType}`,
+      };
     });
   };
 
   // todo condition
   const onPressToDoViewConditionButton = (data: ConditionData, index: number): void => {
-    setSearchConditionToDoData((previousValue) => {
-      const toDoSort = [previousValue[index].type, previousValue[index].orderType];
-
-      pageContent.current = 0;
-      setContentData([]);
-      fetchToDo({
-        toDoSort,
-      });
-
-      return getNewConditionData(previousValue, index);
+    pageToDo.current = 0;
+    setSearchConditionToDoData((prev) => getNewConditionData(prev, index));
+    setSearchConditionToDo((prev) => {
+      return {
+        ...prev,
+        page: 0,
+        sort: `${data.type},${data.orderType}`,
+      }
     });
-  };
-
-  const fetchContent = ({
-    contentTitle,
-    contentPage,
-    contentSize,
-    contentSort,
-  }: any) => {
-    const title = contentTitle ? contentTitle : searchText;
-    const page = contentPage ? contentPage : pageContent.current;
-    const size = contentSize ? contentSize : 10;
-    const sort = contentSort ? contentSort : getSort(searchConditionContentData);
-
-    // for test
-    console.log({
-      title,
-      page,
-      size,
-      sort,
-    });
-
-    fetchData('/content/search', { 
-      title,
-      page,
-      size,
-      sort,   
-    })
-      .then((response) => {
-        const { data : { data } } = response;
-
-        setContentData((previousValue) => {
-          return getNewData(previousValue, data.content);
-        });
-      })
-      .catch((error) => {
-        console.log('error', error);
-      })
-      .finally(() => {
-        isLoading.current = false;
-      });
-  };
-
-  const fetchToDo = ({
-    toDoTitle,
-    toDoPage,
-    toDoSize,
-    toDoSort,
-  }: any) => {
-    const title = toDoTitle ? toDoTitle : searchText;
-    const page = toDoPage ? toDoPage : pageToDo.current;
-    const size = toDoSize ? toDoSize : 10;
-    const sort = toDoSort ? toDoSort : getSort(searchConditionToDoData);
-
-    // for test
-    console.log({
-      title,
-      page,
-      size,
-      sort,
-    });
-
-    fetchData('/todo/search', {
-      title,
-      page,
-      size,
-      sort,
-    })
-      .then((response) => {
-        const { data : { data } } = response;
-
-        setToDoData((previousValue) => {
-          return getNewData(previousValue, data.content);
-        });
-      })
-      .catch((error) => {
-        console.log('error', error);
-      })
-      .finally(() => {
-        isLoading.current = false;
-      });
   };
 
   const onContentPageEndReached = () => {
     if ((contentData.length >= 10) && isLoading.current === false) {
-      isLoading.current = true;
       pageContent.current += 1;
-      fetchContent({});
+      setSearchConditionContent((prev) => ({
+        ...prev,
+        page: pageContent.current,
+      }))
     }
   };
 
   const onToDoPageEndReached = () => {
     if ((toDoData.length >= 10 && isLoading.current === false)) {
-      isLoading.current = true;
       pageToDo.current += 1;
-      fetchToDo({});
+      setSearchConditionToDo((prev) => ({
+        ...prev,
+        page: pageToDo.current,
+      }))
     }
   };
 
-  const constants = {
-    recentSearchInitialCount: 4,
-  };
+  const constants = { recentSearchInitialCount: 4 };
 
   const [isSearchResultPage, setIsSearchResultPage] = useState(false);
 
@@ -274,6 +220,11 @@ const SearchScreen = ({
       })
       return;
     }
+
+    setSearchConditionContent((prev) => ({
+      ...prev,
+      title: searchText,
+    }))
 
     setRecentSearchesData((previousValue) => {
       const copiedValue = [...previousValue];
@@ -303,12 +254,6 @@ const SearchScreen = ({
     .then((response) => {
       // console.log(response);
     });
-
-    if (currentData()?.id === 1) {
-      fetchContent({});
-    } else {
-      fetchToDo({});
-    }
 
     const recentSearchListHeight = recentSearchItemHeight * currentDataLength;
 
@@ -354,7 +299,6 @@ const SearchScreen = ({
      * 배열의 길이가 4보다 적은 경우 → 높이 변화 있음.
      *
      */
-
     setRecentSearchesData((previousData) => {
       const currentData = previousData.filter(item => item.id !== id);
       const currentDataLength = currentData.length;
@@ -410,21 +354,34 @@ const SearchScreen = ({
 
   // 검색 결과 페이지 진입시 검색 조건 초기화
   useEffect(() => {
-    onPressTab(0);
-    // content
-    setSearchConditionContentData((previousValue) => {
-      return getNewConditionData(previousValue, 0);
-    });
-
-    // todo
-    setSearchConditionToDoData((previousValue) => {
-      return getNewConditionData(previousValue, 0);
-    });
+    onPressTab(0);                                                         // tab
+    setSearchConditionContentData((prev) => getNewConditionData(prev, 0)); // content
+    setSearchConditionToDoData((prev) => getNewConditionData(prev, 0));    // todo
   }, [isSearchResultPage]);
 
   useEffect(() => {
     initPopularSearchData();
   }, [isPopularSearchWordListFetched, isPopularSearchWordListRefetching]);
+
+  useEffect(() => {
+    isLoading.current = true;
+    if (!content || !isSearchResultPage) {
+      return;
+    }
+
+    setContentData(content);
+    isLoading.current = false;
+  }, [ContentIsFetching, ContentIsRefetching, content]);
+
+  useEffect(() => {
+    isLoading.current = true;
+    if (!toDo || !isSearchResultPage) {
+      return;
+    }
+
+    setToDoData(toDo);
+    isLoading.current = false;
+  }, [TodoIsFetching, toDoIsRefetching, toDo]);
 
   return (
     <View style={styles.container}>

@@ -17,6 +17,7 @@ import { getFontSize } from '../../utils/font';
 import { getSort, getNewData, getNewConditionData } from '@/utils/search';
 
 import { fetchData } from '@/api/api';
+import { getCategoryContentListQuery, getCategoryToDoListQuery } from '@/api/search';
 
 export type ConditionData = {
     text: string;
@@ -70,14 +71,6 @@ const SearchCategory = ({
     const [category, setCategory] = useState<any>({});
     const isLoading = useRef<boolean>(false);
 
-    // 야매 드롭다운 리스트
-    const [isCategoryDownModalVisible, setIsCategoryDownModalVisible] = useState(false);
-
-    const [tabData, setTabData] = useState([
-        {id: 1, text: '콘텐츠', isPressed: true},
-        {id: 2, text: '할 일', isPressed: false},
-    ]);
-
     // content
     const pageContent = useRef<number>(0);
     const [searchConditionContentData, setSearchConditionContentData] = useState<Array<ConditionData>>([
@@ -85,6 +78,13 @@ const SearchCategory = ({
         {text: '저장순', type: 'scrapCount', orderType: 'desc', isSelected: false},
         {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
     ]);
+    const [categoryConditionContent, setCategoryConditionContent] = useState({
+      categoryId: selectedCategory.id,
+      page: 0,
+      size: 10,
+      sort: 'viewCount,desc',
+    });
+    const { data:content, isFetching:ContentIsFetching, isRefetching:ContentIsRefetching } = getCategoryContentListQuery(categoryConditionContent);
     const [contentData, setContentData] = useState([]);
 
     // todo
@@ -93,170 +93,101 @@ const SearchCategory = ({
         {text: '저장순', type: 'saveCount', orderType: 'desc', isSelected: true},
         {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
     ]);
+    const [categoryConditionToDo, setCategoryConditionToDo] = useState({
+      categoryId: selectedCategory.id,
+      page: 0,
+      size: 10,
+      sort: 'saveCount,desc'
+    })
+    const { data:toDo, isFetching:TodoIsFetching, isRefetching:toDoIsRefetching } = getCategoryToDoListQuery(categoryConditionToDo);
     const [toDoData, setToDoData] = useState([]);
 
+    // 야매 드롭다운 리스트
+    const [isCategoryDownModalVisible, setIsCategoryDownModalVisible] = useState(false);
+
+    const [tabData, setTabData] = useState([
+        {id: 1, text: '콘텐츠', isPressed: true},
+        {id: 2, text: '할 일', isPressed: false},
+    ]);
 
     const onPressTab = (number: number) => {
-        setTabData((previousValue) => {
+      setTabData((previousValue) => {
         return previousValue.map((item, index) => {
             if (number === index) {
             item.isPressed = true;
             } else {
             item.isPressed = false;
             }
-
-            if (index === 0) {
-            resetContentCondition();
-            pageContent.current = 0;
-            // fetchContent({
-            //     contentPage: 0,
-            //     contentSort: ['viewCount', 'desc']
-            // })  
-            } else {
-            resetToDoCondition();
-            pageToDo.current = 0;
-            // fetchToDo({
-            //     contentPage: 0,
-            //     contentSort: ['saveCount', 'desc']
-            // });
-            }
-
             return item;
         });
-        });
+      });
+
+      if (number === 0) {
+        pageContent.current = 0;
+        resetContentCondition();
+        setCategoryConditionContent((prev) => ({
+          ...prev,
+          page: 0,
+          sort: 'viewCount,desc',
+        }));
+      } else {
+        pageToDo.current = 0;
+        resetToDoCondition();
+        setCategoryConditionToDo((prev) => ({
+          ...prev,
+          page: 0,
+          sort: 'saveCount,desc',
+        }))
+      }
     };
 
   const resetContentCondition = () => {
-    setSearchConditionContentData((previousValue) => {
-      return getNewConditionData(previousValue, 0);
-    });
+    setSearchConditionContentData((prev) => getNewConditionData(prev, 0));
   };
 
   const resetToDoCondition = () => {
-    setSearchConditionToDoData((previousValue) => {
-      return getNewConditionData(previousValue, 0);
-    });
+    setSearchConditionToDoData((prev) => getNewConditionData(prev, 0));
   };
 
   // content condition
   const onPressContentViewConditionButton = (data: ConditionData, index: number): void => {
-    setSearchConditionContentData((previousValue) => {
-      return getNewConditionData(previousValue, index);
-    });
-    // setContentData([]);
     pageContent.current = 0;
+    setSearchConditionContentData((prev) => getNewConditionData(prev, index));
+    setCategoryConditionContent((prev) => ({
+      ...prev,
+      page: 0,
+      sort: `${data.type},${data.orderType}`,
+    }));
   };
 
   // todo condition
   const onPressToDoViewConditionButton = (data: ConditionData, index: number): void => {
-    setSearchConditionToDoData((previousValue) => {
-      return getNewConditionData(previousValue, index);
-    });
-    // setToDoData([]);
-    pageContent.current = 0;
-  };
-
-  const currentContentSort = () => {
-    return getSort(searchConditionContentData);
-  };
-
-  const currentToDoSort = () => {
-    return getSort(searchConditionToDoData);
-  };
-
-  const fetchContent = ({
-    contentCategoryId,
-    contentPage,
-    contentSize,
-    contentSort,
-  }: any) => {
-    // console.log('fetch content');
-    const categoryId = contentCategoryId ? contentCategoryId : category.id;
-    const page = contentPage ? contentPage : pageContent.current;
-    const size = contentSize ? contentSize : 10;
-    const sort = contentSort ? contentSort : currentContentSort();
-
-    console.log({ 
-        categoryId,
-        page,
-        size,
-        sort,
-    });
-
-    fetchData('/content', { 
-      categoryId,
-      page,
-      size,
-      sort,
-    })
-      .then((response) => {
-        const { data : { data } } = response;
-        
-        setContentData((previousValue) => {
-          return getNewData(previousValue, data.content);
-        });
-      })
-      .catch((error) => {
-        console.log('error', error);
-      })
-      .finally(() => {
-        isLoading.current === false;
-      });
-  };
-
-  const fetchToDo = ({
-    todoCategoryId,
-    todoPage,
-    todoSize,
-    todoSort,
-  }: any) => {
-    // console.log('fetch todo');
-    const categoryId = todoCategoryId ? todoCategoryId : category.id;
-    const page = todoPage ? todoPage : pageToDo.current;
-    const size = todoSize ? todoSize : 10;
-    const sort = todoSort ? todoSort : currentToDoSort();
-
-    console.log({ 
-        categoryId,
-        page,
-        size,
-        sort,
-    });
-
-    fetchData('/todo', {
-      categoryId,
-      page,
-      size,
-      sort,
-    })
-      .then((response) => {
-        const { data : { data } } = response;
-
-        setToDoData((previousValue) => {
-          return getNewData(previousValue, data);
-        });
-      })
-      .catch((error) => {
-        console.log('error', error);
-      })
-      .finally(() => {
-        isLoading.current === false;
-      });
+    pageToDo.current = 0;
+    setSearchConditionToDoData((prev) => getNewConditionData(prev, index));
+    setCategoryConditionToDo((prev) => ({
+      ...prev,
+      page: 0,
+      sort: `${data.type},${data.orderType}`,
+    }));
   };
 
   const onContentPageEndReached = () => {
     if ((contentData.length >= 10) && isLoading.current === false) {
-      isLoading.current = true;
       pageContent.current += 1;
-      fetchContent({});
+      setCategoryConditionContent((prev) => ({
+        ...prev,
+        page: pageContent.current,
+      }))
     }
   };
 
   const onToDoPageEndReached = () => {
     if ((toDoData.length >= 10 && isLoading.current === false)) {
-      isLoading.current = true;
       pageToDo.current += 1;
-      fetchToDo({});
+      setCategoryConditionToDo((prev) => ({
+        ...prev,
+        page: pageToDo.current,
+      }))
     }
   };
 
@@ -273,11 +204,28 @@ const SearchCategory = ({
   const onPressCategoryNameButton = (
     category: CategoryObject
   ) => {
-    resetContentCondition();
-    resetToDoCondition();
-    pageContent.current = 0;
-    pageToDo.current = 0;
     setCategory(category);
+
+    // content 재검색
+    resetContentCondition();
+    pageContent.current = 0;
+    setCategoryConditionContent((prev) => ({
+      ...prev,
+      categoryId: category.id,
+      page: 0,
+      sort: 'viewCount,desc'
+    }));
+
+    // todo 재검색
+    resetToDoCondition();
+    pageToDo.current = 0;
+    setCategoryConditionToDo((prev) => ({
+      ...prev,
+      categoryId: category.id,
+      page: 0,
+      sort: 'saveCount,desc'
+    }));
+
     setIsCategoryDownModalVisible(false);
   };
 
@@ -286,20 +234,24 @@ const SearchCategory = ({
   };
 
   useEffect(() => {
-    if ((!category.id && category.id !== 0)) {
-        return;
+    isLoading.current = true;
+    if (!content) {
+      return;
     }
 
-    fetchToDo({});
-  }, [category.id, searchConditionToDoData, tabData]);
+    setContentData(content);
+    isLoading.current = false;
+  }, [ContentIsFetching, ContentIsRefetching, content]);
 
   useEffect(() => {
-    if ((!category.id && category.id !== 0)) {
-        return;
+    isLoading.current = true;
+    if (!toDo) {
+      return;
     }
 
-    fetchContent({});
-  }, [category.id, searchConditionContentData]);
+    setToDoData(toDo);
+    isLoading.current = false;
+  }, [TodoIsFetching, toDoIsRefetching, toDo]);
 
   useEffect(() => {
     if ((!selectedCategory.id && selectedCategory.id !== 0)) {

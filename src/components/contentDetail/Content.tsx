@@ -274,7 +274,7 @@ const Content = ({ route, navigation }: any) => {
                     categoryId: data.categoryId,
                     page: 0,
                     size: 5,
-                    sort: ['viewCount', 'desc']
+                    sort: 'viewCount,desc',
                   })
                   .then((response) => {
                     const { data: { data } } = response;
