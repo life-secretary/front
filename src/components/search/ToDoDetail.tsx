@@ -1,22 +1,76 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { AppText } from '../common/AppText';
 import { ScrollView } from 'react-native-gesture-handler';
 import AppIcon from '../common/AppIcon';
 import { getFontSize } from '@/utils/font';
 import AppButton from '../common/AppButton';
+import { fetchData, createData } from '@/api/api';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from '@/store/userInfoState';
+import AppConfirmModal from '../common/modal/AppConfirmModal';
 
 const ToDoDetail = ({
     navigation,
     route,
 }: any) => {
     const { id } = route.params;
+    const userInfo = useRecoilValue(userInfoState);
+    const [toDo, setToDo] = useState([]);
+    const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
+    const [confirmData, setConfirmData] = useState<any>({});
 
     const onPressCloseIcon = () => {
         navigation.goBack();
     };
 
-    const data = ['노후비용 계산하기', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const onPressAddToDosButton = () => {
+        createData('/todo/save', {
+            id,
+            userId: userInfo.id,
+        })
+        .then((response) => {
+            const { data: { data } } = response;
+
+            if (data) {
+                // 추가완료 팝업 띄우기
+                setConfirmData({
+                    title: '추가 완료',
+                    description: '할 일 목록에서 확인할 수 있어요',
+                    button: {
+                        first: {
+                            text: '목록 바로 가기',
+                            onPressButton: () => {
+                                setIsConfirmOpen(false);
+                                navigation.navigate('Todo');
+                            }
+                        },
+                        second: {
+                            text: '계속 둘러보기',
+                            onPressButton: () => {
+                                setIsConfirmOpen(false);
+                                navigation.goBack();
+                            }
+                        }
+                    }
+                });
+                setIsConfirmOpen(true);
+            }
+        })
+    };
+
+    useEffect(() => {
+        if (!id && (id !== 0)) {
+            return;
+        }
+
+        fetchData(`/todo/${id}/sub`, {})
+            .then((response) => {
+                const { data: { data } } = response;
+
+                setToDo(data);
+            });
+    }, [id]);
 
     return (
         <View style={styles.background}>
@@ -38,9 +92,9 @@ const ToDoDetail = ({
                     <AppText style={styles.infoText}>아래 순서로 할 일을 진행해보세요</AppText>
                     <ScrollView style={styles.scrollView}>
                         <View style={styles.todoWrapper}>
-                            {data.map((item) => {
+                            {toDo.map((item: any) => {
                                 return (
-                                <AppText style={styles.todo}>{item}</AppText>
+                                <AppText key={`sub_detail_${item.id}`} style={styles.todo}>{item.title}</AppText>
                                 )   
                             })}
                         </View>
@@ -58,9 +112,23 @@ const ToDoDetail = ({
                             width: 36,
                             height: 36,
                         }} 
+                        onPressButton={onPressAddToDosButton}
                     />
                 </View>
             </View>
+            <AppConfirmModal 
+                isVisible={isConfirmOpen}
+                title={confirmData.title ? confirmData.title : ''}
+                description={confirmData.description ? confirmData.description : ''}
+                button={confirmData.button ? confirmData.button : {
+                first: {
+                    text: '',
+                    textStyle: {},
+                    buttonStyle: {},
+                    onPressButton: () => {},
+                }
+                }}
+            />
         </View>
     )
 };
@@ -88,7 +156,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        paddingHorizontal: 24,
+        paddingHorizontal: 16,
         paddingVertical: 16,
     },
     categoryIcon: {

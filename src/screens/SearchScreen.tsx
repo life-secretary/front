@@ -20,7 +20,8 @@ import { createData } from '@/api/api';
 
 import type { ConditionData } from '../components/search/SearchCategory';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userInfoState } from '@/store/userInfoState';
 import { recentSearchWordState, popularSearchWordState, PopularSearchWord } from '@/store/search';
 import { getPopularSearchWordListQuery, getSearchContentListQuery, getSearchToDoListQuery } from '@/api/search';
 
@@ -48,6 +49,7 @@ const SearchScreen = ({
   const [recentSearchItemHeight, setRecentSearchItemHeight] = useState(38);
   const [recentSearchListHeight, setRecentSearchListHeight] = useState(0);
   const [isRecentSearchListOpen, setIsRecentSearchListOpen] = useState(false);
+  const userInfo = useRecoilValue(userInfoState);
 
   // content
   const pageContent = useRef<number>(0);
@@ -249,7 +251,7 @@ const SearchScreen = ({
     // 검색 로그 기록
     createData(
       '/search-logs',
-      { userId: 0, searchText } // TODO userId store 에서 가져오기
+      { userId: userInfo.id, searchText }
     )
     .then((response) => {
       // console.log(response);
