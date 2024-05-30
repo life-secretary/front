@@ -31,7 +31,7 @@ export function TodoCard({item}: Props): React.JSX.Element {
     }
 
     // 사용자가 만든 할 일 구분
-    if (item.hasOwnProperty('origId')) {
+    if (!item.origId) {
       list.push('나의 할 일');
     }
 
