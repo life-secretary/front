@@ -4,10 +4,10 @@ const getSort = (data: any) => {
     const condition = data.find((item: any) => item.isSelected);
 
     if (!condition) {
-      return ['viewCount', 'desc'];
+      return 'viewCount,desc';
     }
 
-    return [condition.type, condition.orderType];
+    return `${condition.type},${condition.orderType}`;
 };
 
 const getNewData = (prev: any, curr: any) => {
