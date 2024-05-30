@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 import { AppText } from '@/components/common/AppText';
-import AppModal from '@/components/common/modal/AppModal';
 import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
 import Agreement from '../init/Agreement';
@@ -10,7 +9,7 @@ import Agreement from '../init/Agreement';
 import { getFontSize } from '@/utils/font';
 
 import { useRecoilState } from 'recoil';
-import { userInfoState } from '@/store/login';
+import { PROVIDERS, userInfoState } from '@/store/login';
 
 import { 
     login,
@@ -22,17 +21,8 @@ import {
     GoogleSignin,
 } from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
-import Config from 'react-native-config';
 
-type LoginProps = {
-    isVisible: boolean;
-    closeAllProcess: () => void;
-};
-
-const Login = ({
-    isVisible,
-    closeAllProcess,
-}: LoginProps): React.JSX.Element => {
+export function Login({navigation}: any): React.JSX.Element {
     const [isLogin, setIsLogin] = useState(false);
     const [isStartModalOpen, setIsStartModalOpen] = useState(false);
     const [userInfo, setUserInfo] = useRecoilState(userInfoState);
@@ -52,7 +42,7 @@ const Login = ({
             setUserInfo((previousValue: any) => {
                 const newValue = Object.assign({}, previousValue);
 
-                newValue.provider = 'KAKAO';
+                newValue.provider = PROVIDERS.KAKAO;
                 newValue.providerId = profile.id;
 
                 return newValue;
@@ -65,17 +55,6 @@ const Login = ({
         }
     };
 
-    const googleSigninConfigure = () => {
-        GoogleSignin.configure({
-        webClientId: Config.GOOGLE_AUTH_WEB_ID,
-        iosClientId: Config.GOOGLE_AUTH_IOS_ID,
-      });
-    };
-    
-    useEffect(() => {
-        googleSigninConfigure();
-    }, []);
-
     const signInWithGoogle = async(): Promise<void> => {
         console.log('구글 로그인');
         try {
@@ -86,7 +65,7 @@ const Login = ({
             setUserInfo((previousValue: any) => {
                 const newValue = Object.assign({}, previousValue);
 
-                newValue.provider = 'GOOGLE';
+                newValue.provider = PROVIDERS.GOOGLE;
                 newValue.nickname = userInfo.user.name
                 newValue.email = userInfo.user.email
                 newValue.providerId = userInfo.user.id;
@@ -109,59 +88,52 @@ const Login = ({
         signInWithGoogle();
     };
 
-    const onPressAppleLoginButton = () => {
-        setIsLogin(true);
-        setIsStartModalOpen(true);
-    };
-
     const closeStartModal = () => {
         setIsStartModalOpen(false);
     };
 
     const closeStartProcess = () => {
         setIsStartModalOpen(false);
-        closeAllProcess();
+        navigation.navigate('HomeTab')
     };
 
     return (
-        <AppModal isVisible={isVisible}>
-            <View style={styles.container}>
-                <View style={styles.logoContainer}>
-                    <AppText style={styles.logoText}>
-                        <AppText style={styles.logoTextHighlight}>
-                            처음 살아보는
-                        </AppText> 나를 위한
-                    </AppText>
-                    <AppIcon 
-                        name='logo'
-                        width={146}
-                        height={39}
-                    />
-                </View>
-                <View style={styles.buttonContainer}>
-                    <AppButton 
-                        text='카카오 로그인'
-                        textStyle={styles.buttonKakaoText}
-                        buttonStyle={styles.buttonKakao}
-                        startIcon={{
-                            name: 'logoKakao',
-                            width: 18,
-                            height: 19,
-                        }}
-                        onPressButton={onPressKakaoLoginButton}
-                    />
-                    <AppButton 
-                        text='Google 로그인'
-                        textStyle={styles.buttonGoggleText}
-                        buttonStyle={styles.buttonGoogle}
-                        startIcon={{
-                            name: 'logoGoogle',
-                            width: 19,
-                            height: 19,
-                        }}
-                        onPressButton={onPressGoogleLoginButton}
-                    />
-                </View>
+        <View style={styles.container}>
+            <View style={styles.logoContainer}>
+                <AppText style={styles.logoText}>
+                    <AppText style={styles.logoTextHighlight}>
+                        처음 살아보는
+                    </AppText> 나를 위한
+                </AppText>
+                <AppIcon 
+                    name='logo'
+                    width={146}
+                    height={39}
+                />
+            </View>
+            <View style={styles.buttonContainer}>
+                <AppButton 
+                    text='카카오 로그인'
+                    textStyle={styles.buttonKakaoText}
+                    buttonStyle={styles.buttonKakao}
+                    startIcon={{
+                        name: 'logoKakao',
+                        width: 18,
+                        height: 19,
+                    }}
+                    onPressButton={onPressKakaoLoginButton}
+                />
+                <AppButton 
+                    text='Google 로그인'
+                    textStyle={styles.buttonGoggleText}
+                    buttonStyle={styles.buttonGoogle}
+                    startIcon={{
+                        name: 'logoGoogle',
+                        width: 19,
+                        height: 19,
+                    }}
+                    onPressButton={onPressGoogleLoginButton}
+                />
             </View>
             <Agreement 
                 isVisible={isStartModalOpen} 
@@ -169,24 +141,23 @@ const Login = ({
                 closeStartProcess={closeStartProcess}
             />
             <Toast />
-        </AppModal>
+        </View>
     )
 };
 
 const styles = StyleSheet.create({
     container: {
-        height: '80%',
-        alignItems: 'center'
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     logoContainer: {
         height: '60%',
-
         alignItems: 'center',
         gap: 10,
-
-        paddingTop: 60,
     },
+
     logoText: {        
         fontWeight: '600',
         fontSize: getFontSize(16),
@@ -203,6 +174,7 @@ const styles = StyleSheet.create({
         gap: 10,
         paddingHorizontal: 24,
         zIndex: 9,
+        paddingBottom: 60,
     },
 
     buttonKakao: {
@@ -245,5 +217,3 @@ const styles = StyleSheet.create({
     },
 
 });
-
-export default Login;
