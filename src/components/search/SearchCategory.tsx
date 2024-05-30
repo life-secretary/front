@@ -233,6 +233,10 @@ const SearchCategory = ({
     navigation.navigate('ContentModal', { id });
   };
 
+  const onPressToDo = (id: number) => {
+    navigation.navigate('ToDoDetail', { id });
+  };
+
   useEffect(() => {
     isLoading.current = true;
     if (!content) {
@@ -327,7 +331,7 @@ const SearchCategory = ({
                     data={toDoData} 
                     headerComponent={<></>} 
                     onEndReached={onToDoPageEndReached}
-
+                    onPressToDo={onPressToDo}
                 />
             }
       </View>

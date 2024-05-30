@@ -132,9 +132,9 @@ const Content = ({ route, navigation }: any) => {
   };
 
   // addToDo [RelatedTodo]
-  const addToDoItem = (item: any) => {
+  const addToDoItem = (id: number) => {
     createData('/todo/save', {
-      id: item.id,
+      id,
       userId: userInfo.id,
     })
     .then((response) => {
@@ -402,7 +402,7 @@ const Content = ({ route, navigation }: any) => {
                                 <ToDoListItem 
                                     hasMainCategory={false} 
                                     item={item} 
-                                    onPressAddItem={() => addToDoItem(item)} 
+                                    onPressAddItem={addToDoItem} 
                                 />
                                 </View>
                             )
