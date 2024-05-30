@@ -1,14 +1,16 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ViewStyle} from 'react-native';
 import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
 import {getFontSize} from '@/utils/font';
 
-export function SendFeedbackButton(): React.JSX.Element {
+type Props = {style?: ViewStyle};
+
+export function SendFeedbackButton({style}: Props): React.JSX.Element {
   const navigation = useNavigation();
 
   const handleButtonPress = () => {
@@ -17,6 +19,7 @@ export function SendFeedbackButton(): React.JSX.Element {
 
   return (
     <AppButton
+      style={style}
       text="문의 및 의견 보내기"
       textStyle={styles.buttonText}
       buttonStyle={styles.button}

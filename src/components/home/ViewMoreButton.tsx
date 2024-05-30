@@ -4,22 +4,27 @@ import {StyleSheet} from 'react-native';
 import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useRecoilValue} from 'recoil';
-import { homeContentFilterState } from '@/store/homeContentState';
+import {homeContentFilterState} from '@/store/homeContentState';
 
 import {getFontSize} from '@/utils/font';
 
-export function ViewMoreButton(): React.JSX.Element {
+type Props = {style?: ViewStyle};
+
+export function ViewMoreButton({style}: Props): React.JSX.Element {
   const navigation: any = useNavigation();
   const homeContentFilter = useRecoilValue(homeContentFilterState);
-  
+
   const handlePress = () => {
-    navigation.navigate('SearchCategoryModal', { selectedCategory: homeContentFilter });
+    navigation.navigate('SearchCategoryModal', {
+      selectedCategory: homeContentFilter,
+    });
   };
 
   return (
     <AppButton
+      style={style}
       text="더보기"
       textStyle={styles.buttonText}
       buttonStyle={styles.button}
