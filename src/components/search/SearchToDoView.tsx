@@ -7,12 +7,14 @@ type SearchToDoViewProps = {
   data: Array<{}>; // TODO 타입 구체화
   headerComponent: ReactNode;
   onEndReached: () => void;
+  onPressToDo: (id: number) => void;
 };
 
 const SearchToDoView = ({
   data, 
   headerComponent,
   onEndReached,
+  onPressToDo,
 }: SearchToDoViewProps): React.JSX.Element => {
   const getToDoTabItem = (_data: any, index: any) => { // TODO 타입 구체화
     return data[index];
@@ -32,7 +34,7 @@ const SearchToDoView = ({
     <VirtualizedList
       initialNumToRender={8}
       renderItem={({item}) => {
-        return <ToDoListItem hasMainCategory={true} item={item} onPressAddItem={() => {}} />;
+        return <ToDoListItem hasMainCategory={true} item={item} onPressAddItem={onPressToDo} />;
       }}
       keyExtractor={getToDoTabKeyExtractor}
       getItemCount={getToDoTabItemCount}

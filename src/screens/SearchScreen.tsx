@@ -349,8 +349,12 @@ const SearchScreen = ({
   };
 
   const onPressContent = (id: number) => {
-    navigation.navigate('', { id })
+    navigation.navigate('ContentModal', { id });
   };
+
+  const onPressToDo = (id: number) => {
+    navigation.navigate('ToDoDetail', { id });
+  }
 
   // 검색 결과 페이지 진입시 검색 조건 초기화
   useEffect(() => {
@@ -448,6 +452,7 @@ const SearchScreen = ({
             />
           } 
           onEndReached={onToDoPageEndReached}
+          onPressToDo={onPressToDo}
         />
     }
       {/** TODO (일단 검색탭에 컨펌모달 추가) 다른페이지에서 공통으로 사용가능한 방법 모색 */}

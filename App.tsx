@@ -33,6 +33,7 @@ import SettingIcon from './src/assets/icon/bottomTab/icon_setting.svg';
 import SearchCategory from './src/components/search/SearchCategory';
 import SearchHashTag from './src/components/search/SearchHashTag';
 import Content from './src/components/contentDetail/Content';
+import ToDoDetail from './src/components/search/ToDoDetail';
 
 import {getFontSize} from './src/utils/font';
 
@@ -149,6 +150,7 @@ function RootStack() {
         <Stack.Screen name="SearchCategoryModal" component={SearchCategory} />
         <Stack.Screen name="ContentModal" component={Content} />
         <Stack.Screen name="SearchHashTagModal" component={SearchHashTag} />
+        <Stack.Screen name="ToDoDetail" component={ToDoDetail} />
       </Stack.Group>
     </Stack.Navigator>
   );

@@ -53,7 +53,7 @@ const ToDoListItem = ({
           name="addCircle" 
           width={42} 
           height={42} 
-          onPress={onPressAddItem}
+          onPress={() => onPressAddItem(item.id)}
         />
       </View>
     </View>
