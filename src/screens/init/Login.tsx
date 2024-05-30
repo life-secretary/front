@@ -9,7 +9,7 @@ import Agreement from '../init/Agreement';
 import { getFontSize } from '@/utils/font';
 
 import { useRecoilState } from 'recoil';
-import { PROVIDERS, userInfoState } from '@/store/login';
+import { PROVIDERS, storeKey, userInfoState } from '@/store/login';
 
 import { 
     login,
@@ -21,6 +21,7 @@ import {
     GoogleSignin,
 } from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function Login({navigation}: any): React.JSX.Element {
     const [isLogin, setIsLogin] = useState(false);
@@ -30,6 +31,14 @@ export function Login({navigation}: any): React.JSX.Element {
     const [kakaoToken, setKakaoToken] = useState<KakaoOAuthToken>();
     const [kakaoProfile, setKakaoProfile] = useState<KakaoProfile>(); // id, nickname 사용가능
 
+    const storeProvider = async (value: string) => {
+        try {
+            await AsyncStorage.setItem(storeKey, value);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+      
     const signInWithKakao = async(): Promise<void> => {
         console.log('카카오 로그인');
         try {
@@ -47,7 +56,7 @@ export function Login({navigation}: any): React.JSX.Element {
 
                 return newValue;
             })
-
+            storeProvider(PROVIDERS.KAKAO);
             setIsLogin(true);
             setIsStartModalOpen(true);
         } catch (error) {
@@ -72,7 +81,7 @@ export function Login({navigation}: any): React.JSX.Element {
 
                 return newValue;
             });
-
+            storeProvider(PROVIDERS.GOOGLE);
             setIsLogin(true);
             setIsStartModalOpen(true);
         } catch(error) {
@@ -94,7 +103,7 @@ export function Login({navigation}: any): React.JSX.Element {
 
     const closeStartProcess = () => {
         setIsStartModalOpen(false);
-        navigation.navigate('HomeTab')
+        navigation.navigate('Splash')
     };
 
     return (
