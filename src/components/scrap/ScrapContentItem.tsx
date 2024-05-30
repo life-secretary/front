@@ -1,4 +1,5 @@
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {useRecoilValue} from 'recoil';
 import {categoryListState} from '@/store/categoryState';
 
@@ -26,12 +27,15 @@ export function ScrapContentItem({
   handleCheckedList,
 }: Props): React.JSX.Element {
   const categories = useRecoilValue(categoryListState);
+  const navigation: any = useNavigation();
 
   const handleCheckboxPress = (action: string, data: object) => {
     handleCheckedList(action, data);
   };
 
-  const handleItemPress = () => {};
+  const handleItemPress = () => {
+    navigation.navigate('ContentModal', {id: content?.contentId});
+  };
 
   return (
     <View style={styles.container}>
@@ -55,11 +59,8 @@ export function ScrapContentItem({
           <View style={styles.infoContainer}>
             <View style={styles.tagContainer}>
               <AppText style={styles.tag}>
-                {
-                  categories.find(
-                    category => category.id === content.categoryId,
-                  )?.title
-                }
+                {categories.find(category => category.id === content.categoryId)
+                  ?.title || '카테고리'}
               </AppText>
             </View>
             <AppText style={styles.title} isEllipsizeMode={true}>
