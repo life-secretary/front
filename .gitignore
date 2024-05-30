@@ -67,3 +67,7 @@ yarn-error.log
 
 # VSC
 .vscode/
+
+#config
+.env
+/ios/tmp.xcconfig

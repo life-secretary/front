@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">인생비서</string>
-    <string name="kakao_app_key">your_app_key</string>
+    <string name="kakao_app_scheme">@string/KAKAO_APP_SCHEME</string>
 </resources>

@@ -64,7 +64,7 @@ const surveyCategoryListState = selector({
     const convertedCategories = categories.map((item: CategoryObject) => {
       return {
         ...item,
-        id: String(item.id),
+        id: item.id,
         selected: false,
       };
     });

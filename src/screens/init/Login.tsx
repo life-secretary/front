@@ -20,10 +20,9 @@ import {
 } from '@react-native-seoul/kakao-login';
 import { 
     GoogleSignin,
-    GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
-
-// @ref[google oauth] https://github.com/react-native-google-signin/google-signin
+import Toast from 'react-native-toast-message';
+import Config from 'react-native-config';
 
 type LoginProps = {
     isVisible: boolean;
@@ -42,7 +41,7 @@ const Login = ({
     const [kakaoProfile, setKakaoProfile] = useState<KakaoProfile>(); // id, nickname 사용가능
 
     const signInWithKakao = async(): Promise<void> => {
-        console.log('카카오 로그인 테스트');
+        console.log('카카오 로그인');
         try {
             const token: KakaoOAuthToken = await login();
             const profile: KakaoProfile = await getProfile();
@@ -66,19 +65,31 @@ const Login = ({
         }
     };
 
+    const googleSigninConfigure = () => {
+        GoogleSignin.configure({
+        webClientId: Config.GOOGLE_AUTH_WEB_ID,
+        iosClientId: Config.GOOGLE_AUTH_IOS_ID,
+      });
+    };
+    
+    useEffect(() => {
+        googleSigninConfigure();
+    }, []);
+
     const signInWithGoogle = async(): Promise<void> => {
-        console.log('구글 로그인 테스트');
+        console.log('구글 로그인');
         try {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
-
-            // TODO Client ID 적용 시간 걸려서 잠시 hold
+            
             // console.log('userInfo', userInfo);
             setUserInfo((previousValue: any) => {
                 const newValue = Object.assign({}, previousValue);
 
                 newValue.provider = 'GOOGLE';
-                newValue.providerId = ''; // TODO
+                newValue.nickname = userInfo.user.name
+                newValue.email = userInfo.user.email
+                newValue.providerId = userInfo.user.id;
 
                 return newValue;
             });
@@ -157,6 +168,7 @@ const Login = ({
                 closeModalHandler={closeStartModal}
                 closeStartProcess={closeStartProcess}
             />
+            <Toast />
         </AppModal>
     )
 };

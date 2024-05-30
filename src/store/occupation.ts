@@ -16,13 +16,13 @@ const surveyOccupationListState = selector({
             .map((item) => {
                 return {
                     ...item,
-                    id: String(item.id),
+                    id: item.id,
                     selected: false,
                 }
             })
             .concat({
                 title: '해당 없음', 
-                id: '', 
+                id: -1, 
                 selected: false,
             });
     },

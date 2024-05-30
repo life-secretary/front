@@ -1,5 +1,5 @@
 import React from 'react';
-import { 
+import {
     View,
     Image,
 } from 'react-native';
@@ -12,7 +12,7 @@ import AppButton from '@/components/common/AppButton';
 import { styles } from '../../screens/init/Survey';
 import type { SurveyProccessProps } from '../../screens/init/Survey';
 import { useRecoilValue } from 'recoil';
-import { userInfoState } from '@/store/login';
+import { UserInfo, userInfoState } from '@/store/login';
 import { createData } from '@/api/api';
 import Toast from 'react-native-toast-message';
 
@@ -21,26 +21,38 @@ const Welcome = ({
     nextButtonHandler,
 }: SurveyProccessProps): React.JSX.Element => {
     const userInfo = useRecoilValue(userInfoState);
-    const createUserInfo = async (info: object) => {
-        const res = await createData('/signUp', info);
-        console.log(res)
-        if (res.status === 200) {
-            nextButtonHandler();
-        } else {
+    const convertStateToUser = (info: UserInfo) => {
+        const { provider, providerId, email, nickname, year, month, day, gender, jobIds, interests, married, hasChild } = info;
+        const noJobIds= jobIds.length === 1 && jobIds[0] === -1;
+        return {
+          provider,
+          providerId,
+          nickname,
+          birthDate: `${year}-${month}-${day}`,
+          gender: gender === "" ? null : jobIds,
+          jobIds: noJobIds ? null : jobIds,
+          interests,
+          married,
+          hasChild,
+          email,
+        };
+      };
+
+    const signup = async () => {
+        const newInfo = convertStateToUser(userInfo)
+        // console.log("signup", userInfo)
+        const res = await createData('/auth/signUp', newInfo)
+        .then(res => {
+            // console.log(res)
+            nextButtonHandler()
+        })
+        .catch(error => {
+            console.log(error)
             Toast.show({
                 type: 'error',
                 text1: 'sign up fail',
-                text2: "error" + res.status
             });
-        }
-    };
-
-    function signup() {
-        const { year, month, day } = userInfo;
-        const birthDate = `${year}-${month}-${day}`;
-        const newInfo = { ...userInfo, birthDate };
-        console.log("signup", userInfo)
-        createUserInfo(newInfo)
+        })
     }
     
     return (
