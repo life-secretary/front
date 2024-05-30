@@ -48,7 +48,6 @@ const Survey = ({
     closeModalHandler,
     closeStartProcess,
 }: SurveyProps): React.JSX.Element => {
-    const [userInfo, setUserInfo] = useRecoilState(userInfoState);
     const setCategories = useSetRecoilState(categoryListState);
     const setOccupationList = useSetRecoilState(occupationListState);
 
@@ -131,7 +130,6 @@ const Survey = ({
                 <GetOccupation 
                     backButtonHandler={() => openOrCloseSurvey(3)}
                     nextButtonHandler={() => openOrCloseSurvey(5)}
-                    closeStartProcess={closeStartProcess}
                 />
         },
         {
@@ -140,7 +138,6 @@ const Survey = ({
                 <GetMarriage 
                     backButtonHandler={() => openOrCloseSurvey(4)}
                     nextButtonHandler={() => openOrCloseSurvey(6)}
-                    closeStartProcess={closeStartProcess}
                 />
         },
         {

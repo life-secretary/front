@@ -18,6 +18,11 @@ export const userInfoState = atom<UserInfo>({
   },
 });
 
+export const tokenState = atom({
+  key: 'tokenState',
+  default: null,
+});
+
 export interface UserInfo {
   provider: string;
   providerId: string;
@@ -32,3 +37,17 @@ export interface UserInfo {
   married: boolean;
   hasChild: boolean;
 }
+
+export interface LoginInfo {
+  provider: string;
+  idToken: string;
+}
+
+export const storeKey = '@storage_Key'
+
+export const PROVIDERS = {
+  KAKAO: 'KAKAO',
+  GOOGLE: 'GOOGLE',
+  APPLE: 'APPLE',
+  NONE: 'NONE'
+};

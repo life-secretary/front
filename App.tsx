@@ -23,6 +23,8 @@ import {AppText} from './src/components/common/AppText';
 import {AppErrorFallback} from './src/components/common/AppErrorFallback';
 import color from './src/styles/color';
 import {font} from './src/styles/font';
+import { Login } from './src/screens/init/Login';
+import { Splash } from './src/screens/init/Splash';
 
 import HomeIcon from './src/assets/icon/bottomTab/icon_home.svg';
 import SearchIcon from './src/assets/icon/bottomTab/icon_search.svg';
@@ -136,6 +138,12 @@ function HomeTabs() {
 function RootStack() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Group screenOptions={{presentation: 'fullScreenModal'}}>
+        <Stack.Screen name="Splash" component={Splash} />
+      </Stack.Group>
+      <Stack.Group screenOptions={{presentation: 'fullScreenModal'}}>
+        <Stack.Screen name="Login" component={Login} />
+      </Stack.Group>
       <Stack.Group>
         <Stack.Screen name="HomeTab" component={HomeTabs} />
       </Stack.Group>
