@@ -23,9 +23,11 @@ import Toast from 'react-native-toast-message';
 import Config from 'react-native-config';
 import { createData } from '@/api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 
 export function Splash({navigation}: any): React.JSX.Element {
     const [ setToken ] = useRecoilState(tokenState);
+    const isFocused = useIsFocused();
 
     const signInWithKakao = async(): Promise<void> => {
         console.log('카카오 로그인');
@@ -91,9 +93,10 @@ export function Splash({navigation}: any): React.JSX.Element {
         //3. getoken and call login api
         //4. save jwt to recoil
         //5. intercept and add token to header
+        
         googleSigninConfigure();
         startLogin();
-    }, []);
+    }, [isFocused]);
 
 
     const signIn = async(info: LoginInfo): Promise<void> => {
@@ -113,6 +116,7 @@ export function Splash({navigation}: any): React.JSX.Element {
             });
             //TODO: remove
             navigation.navigate('HomeTab')
+            // navigation.navigate('Login')
         })
     }
 
