@@ -29,7 +29,7 @@ const Welcome = ({
           providerId,
           nickname,
           birthDate: `${year}-${month}-${day}`,
-          gender: gender === "" ? null : jobIds,
+          gender: gender === "" ? null : gender,
           jobIds: noJobIds ? null : jobIds,
           interests,
           married,
