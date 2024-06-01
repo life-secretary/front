@@ -5,15 +5,10 @@ import { AppText } from '@/components/common/AppText';
 
 import { getFontSize } from '@/utils/font';
 
-import { useRecoilState } from 'recoil';
-import { LoginInfo, PROVIDERS, storeKey, tokenState, userInfoState } from '@/store/login';
+import { LoginInfo, PROVIDERS, providerKey, tokenKey } from '@/store/login';
 
 import { 
-    login,
     getProfile,
-    KakaoProfile,
-    KakaoOAuthToken,
-    getAccessToken
 } from '@react-native-seoul/kakao-login';
 import { 
     GoogleSignin,
@@ -26,8 +21,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 
 export function Splash({navigation}: any): React.JSX.Element {
-    const [ setToken ] = useRecoilState(tokenState);
     const isFocused = useIsFocused();
+
+    const storeToken = async (value: string) => {
+        try {
+            await AsyncStorage.setItem(tokenKey, value);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const signInWithKakao = async(): Promise<void> => {
         console.log('카카오 로그인');
@@ -40,7 +42,7 @@ export function Splash({navigation}: any): React.JSX.Element {
                 } else {
                     //TODO: change
                     const loginInfo: LoginInfo = {
-                        provider: PROVIDERS.KAKAO,
+                        provider: "kakao",
                         idToken: String(res.id)
                     };
                     signIn(loginInfo)
@@ -71,7 +73,7 @@ export function Splash({navigation}: any): React.JSX.Element {
     
     const startLogin = async () => {
         try {
-            const value = await AsyncStorage.getItem(storeKey)
+            const value = await AsyncStorage.getItem(providerKey)
             console.log("value", value)
             if (value === PROVIDERS.GOOGLE) {
                 signInWithGoogle();
@@ -105,7 +107,10 @@ export function Splash({navigation}: any): React.JSX.Element {
         .then(res => {
             console.log(res)
             //TODO: store token to recoil for auth
-            // setToken(res.data.token)
+            if (res.data.token === null) {
+                throw Error("no token")
+            }
+            storeToken(res.data.token)
             navigation.navigate('HomeTab')
         })
         .catch(error => {
@@ -114,9 +119,9 @@ export function Splash({navigation}: any): React.JSX.Element {
                 type: 'error',
                 text1: 'login fail',
             });
-            //TODO: remove
-            navigation.navigate('HomeTab')
-            // navigation.navigate('Login')
+            //TODO:
+            // navigation.navigate('HomeTab')
+            navigation.navigate('Login')
         })
     }
 
@@ -130,7 +135,7 @@ export function Splash({navigation}: any): React.JSX.Element {
                         //??
                     } else {
                         const loginInfo: LoginInfo = {
-                            provider: PROVIDERS.GOOGLE,
+                            provider: "google",
                             idToken: res.idToken
                         };
                         signIn(loginInfo)

@@ -9,7 +9,7 @@ import Agreement from '../init/Agreement';
 import { getFontSize } from '@/utils/font';
 
 import { useRecoilState } from 'recoil';
-import { PROVIDERS, storeKey, userInfoState } from '@/store/login';
+import { PROVIDERS, providerKey, userInfoState } from '@/store/login';
 
 import { 
     login,
@@ -33,7 +33,7 @@ export function Login({navigation}: any): React.JSX.Element {
 
     const storeProvider = async (value: string) => {
         try {
-            await AsyncStorage.setItem(storeKey, value);
+            await AsyncStorage.setItem(providerKey, value);
         } catch (error) {
             console.log(error);
         }
