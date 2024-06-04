@@ -115,9 +115,7 @@ export function Splash({navigation}: any): React.JSX.Element {
                 type: 'error',
                 text1: 'login fail',
             });
-            //TODO:
-            // navigation.navigate('HomeTab')
-            navigation.navigate('Login')
+            navigation.navigate('HomeTab')
         })
     }
 
