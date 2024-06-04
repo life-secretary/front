@@ -23,23 +23,36 @@ type SlideType = {
   id: string | number;
   tag: string;
   title: string;
-  thumbnail: ImageRequireSource;
+  thumbnail: string;
   openContentModal: (data: any) => void;
 };
 
-function Slide({id, tag, title, thumbnail, openContentModal,}: SlideType): React.JSX.Element {
-  const imageSource = thumbnail
-    ? {uri: thumbnail}
-    : require('@/assets/images/carouselPlaceholder.jpg');
+function Slide({
+  id,
+  tag,
+  title,
+  thumbnail,
+  openContentModal,
+}: SlideType): React.JSX.Element {
+  console.log(thumbnail);
+
+  const setImageSource = () => {
+    const skeletonThumbnail = require('@/assets/images/carouselPlaceholder.jpg');
+
+    if (!thumbnail || thumbnail.includes('null')) {
+      return skeletonThumbnail;
+    }
+
+    return {uri: thumbnail};
+  };
 
   return (
     <Pressable style={[styles.slide]} onPress={() => openContentModal(id)}>
       <ImageBackground
-        source={imageSource}
+        source={setImageSource()}
         resizeMode="cover"
         style={styles.backgroundImage}>
         <View style={styles.infoContainer}>
-          {/* TODO: Tag 컴포넌트화 */}
           <View style={styles.tagContainer}>
             <AppText style={styles.tag}>{tag || '카테고리'}</AppText>
           </View>

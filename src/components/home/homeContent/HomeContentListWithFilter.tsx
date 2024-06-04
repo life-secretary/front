@@ -18,7 +18,7 @@ import spacing from '@/styles/spacing';
 import {getFontSize} from '@/utils/font';
 
 import {HOME_CONTENT_SIZE} from '@/constants';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 type HomeContentItemByFilterType = {
   id: number;
@@ -33,7 +33,7 @@ function HomeContentItemByFilter({
 }: HomeContentItemByFilterType): React.JSX.Element {
   const navigation: any = useNavigation();
   const onPressContent = () => {
-    navigation.navigate('ContentModal', { id });
+    navigation.navigate('ContentModal', {id});
   };
 
   return (
@@ -101,7 +101,11 @@ export function HomeContentListWithFilter({title}: Props): React.JSX.Element {
         <FlatList
           data={filteredHomeContentList}
           renderItem={({item, index}: any) => (
-            <HomeContentItemByFilter id={item.id} index={index} title={item?.title} />
+            <HomeContentItemByFilter
+              id={item.id}
+              index={index}
+              title={item?.title}
+            />
           )}
           contentContainerStyle={styles.listContainer}
         />
@@ -168,7 +172,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontWeight: font.fontWeight.medium,
-    lineHeight: 19.09,
+    // lineHeight: 19.09,
     letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey500,
   },

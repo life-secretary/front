@@ -1,4 +1,4 @@
-import { atom, selector } from 'recoil';
+import {atom, selector} from 'recoil';
 
 export const userInfoState = atom<UserInfo>({
   key: 'UserInfo',
@@ -38,11 +38,7 @@ export interface LoginInfo {
   idToken: string;
 }
 
-export interface Login {
-  token: string;
-}
-
-export const providerKey = '@providerKey'
+export const providerKey = '@providerKey';
 // export const idTokenKey = '@idTokenKey'
 // export const tokenKey = '@tokenKey'
 
@@ -50,5 +46,5 @@ export const PROVIDERS = {
   KAKAO: 'KAKAO',
   GOOGLE: 'GOOGLE',
   APPLE: 'APPLE',
-  NONE: 'NONE'
+  NONE: 'NONE',
 };

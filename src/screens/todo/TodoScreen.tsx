@@ -4,6 +4,7 @@ import {fetchData} from '@/api/api';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
 import {userInfoState} from '@/store/userInfoState';
+// import {userInfoState} from '@/store/login';
 
 import {StyleSheet, View, FlatList} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';

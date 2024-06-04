@@ -23,8 +23,8 @@ import {AppText} from './src/components/common/AppText';
 import {AppErrorFallback} from './src/components/common/AppErrorFallback';
 import color from './src/styles/color';
 import {font} from './src/styles/font';
-import { Login } from './src/screens/init/Login';
-import { Splash } from './src/screens/init/Splash';
+import {Login} from './src/screens/init/Login';
+import {Splash} from './src/screens/init/Splash';
 
 import HomeIcon from './src/assets/icon/bottomTab/icon_home.svg';
 import SearchIcon from './src/assets/icon/bottomTab/icon_search.svg';
