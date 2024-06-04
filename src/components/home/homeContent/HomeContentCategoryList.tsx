@@ -5,8 +5,8 @@ import {homeCategoryListState} from '@/store/categoryState';
 import {homeContentFilterState} from '@/store/homeContentState';
 
 import {StyleSheet, FlatList, View} from 'react-native';
-import {HomeContentCategoryItem} from '@/components/home/homeContent/HomeContentCategoryItem';
 import LinearGradient from 'react-native-linear-gradient';
+import {HomeContentCategoryItem} from '@/components/home/homeContent/HomeContentCategoryItem';
 
 type homeContentFilter = {
   id: number;
@@ -76,7 +76,7 @@ export function HomeContentCategoryList(): React.JSX.Element {
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
-          style={styles.fade}
+          style={styles.gradient}
         />
       )}
     </View>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   listContainer: {
     gap: 8,
   },
-  fade: {
+  gradient: {
     position: 'absolute',
     left: '85%',
     right: 0,

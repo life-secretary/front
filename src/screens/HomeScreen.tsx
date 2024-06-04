@@ -18,6 +18,7 @@ import {fetchData} from '@/api/api';
 import type {CategoryObject, OccupationObject} from '../models/common';
 
 import {StyleSheet, ScrollView, View} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
@@ -46,6 +47,7 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
   const userInfo = useRecoilValue(userInfoState);
   // Login → Agreement → Survey 과정 임시 테스팅 중
   const [isDone, setIsDone] = useState(false);
+  const [showGradient, setShowGradient] = useState(true);
   const [newestHomeContentList, setNewestHomeContentList] = useRecoilState(
     newestHomeContentListState,
   );
@@ -168,6 +170,18 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
     setIsDone(true);
   };
 
+  const handleScroll = event => {
+    const {nativeEvent} = event;
+
+    const top = nativeEvent.contentOffset.y === 0;
+
+    if (top) {
+      setShowGradient(false);
+    } else {
+      setShowGradient(true);
+    }
+  };
+
   useEffect(() => {
     if (categories) {
       setCategoryList(categories);
@@ -224,7 +238,19 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
       {/* 현재 구조에서 FlatList 컴포넌트로 변경하면 HomeImageCarousel에 적용된 gesture handler가 동작하지 않는 부작용이 발생하기 때문에
           일단 ScrollView를 유지하고 추후 FlatList로 변경하면서 carousel 라이브러리 교체 필요
        */}
-      <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
+      {showGradient && (
+        <LinearGradient
+          start={{x: 0, y: 0}}
+          end={{x: 0, y: 1}}
+          colors={['rgba(242, 244, 247, 1)', 'rgba(242, 244, 247, 0)']}
+          style={styles.gradient}
+        />
+      )}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        ref={scrollViewRef}>
         <AppHeader style={styles.header}>
           <AppTitle
             text={getFormattedDate(new Date(), 'kor')}
@@ -313,5 +339,14 @@ const styles = StyleSheet.create({
     fontWeight: font.fontWeight.semiBold,
     lineHeight: 21,
     color: color.grey.grey400,
+  },
+  gradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 100,
+    zIndex: 999,
   },
 });
