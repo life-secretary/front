@@ -28,6 +28,7 @@
 		"react-native-error-boundary": "^1.2.4",
 		"react-native-gesture-handler": "^2.15.0",
 		"react-native-keyboard-aware-scroll-view": "^0.9.5",
+		"react-native-linear-gradient": "^2.8.3",
 		"react-native-markdown-display": "^7.0.2",
 		"react-native-modal": "^13.0.1",
 		"react-native-outside-press": "^1.2.2",
