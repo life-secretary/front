@@ -5,7 +5,7 @@ import { AppText } from '@/components/common/AppText';
 
 import { getFontSize } from '@/utils/font';
 
-import { LoginInfo, PROVIDERS, providerKey, tokenKey } from '@/store/login';
+import { LoginInfo, PROVIDERS, providerKey } from '@/store/login';
 
 import { 
     getProfile,
@@ -19,17 +19,10 @@ import Config from 'react-native-config';
 import { createData } from '@/api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
+import { removeToken, setToken } from '@/api/axios';
 
 export function Splash({navigation}: any): React.JSX.Element {
     const isFocused = useIsFocused();
-
-    const storeToken = async (value: string) => {
-        try {
-            await AsyncStorage.setItem(tokenKey, value);
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     const signInWithKakao = async(): Promise<void> => {
         console.log('카카오 로그인');
@@ -73,6 +66,7 @@ export function Splash({navigation}: any): React.JSX.Element {
     
     const startLogin = async () => {
         try {
+            removeToken()
             const value = await AsyncStorage.getItem(providerKey)
             console.log("value", value)
             if (value === PROVIDERS.GOOGLE) {
@@ -92,9 +86,8 @@ export function Splash({navigation}: any): React.JSX.Element {
         //1. check storage
         //2. login in silence
         // if expire ->login
-        //3. getoken and call login api
-        //4. save jwt to recoil
-        //5. intercept and add token to header
+        //3. call login api
+        //5. add token to header
         
         googleSigninConfigure();
         startLogin();
@@ -105,13 +98,16 @@ export function Splash({navigation}: any): React.JSX.Element {
         console.log("signIn", info)
         await createData('/auth/login', info)
         .then(res => {
-            console.log(res)
-            //TODO: store token to recoil for auth
-            if (res.data.token === null) {
+            return res.data.data
+        })
+        .then(data => {
+            if (data.data.token === null) {
                 throw Error("no token")
             }
-            storeToken(res.data.token)
-            navigation.navigate('HomeTab')
+            setToken(data.data.token)
+            setTimeout(() => {
+                navigation.navigate('HomeTab')
+            }, 1000);
         })
         .catch(error => {
             console.log(error)
@@ -119,9 +115,7 @@ export function Splash({navigation}: any): React.JSX.Element {
                 type: 'error',
                 text1: 'login fail',
             });
-            //TODO:
-            // navigation.navigate('HomeTab')
-            navigation.navigate('Login')
+            navigation.navigate('HomeTab')
         })
     }
 

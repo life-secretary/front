@@ -29,7 +29,7 @@ export function Login({navigation}: any): React.JSX.Element {
     const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
     const [kakaoToken, setKakaoToken] = useState<KakaoOAuthToken>();
-    const [kakaoProfile, setKakaoProfile] = useState<KakaoProfile>(); // id, nickname 사용가능
+    const [kakaoProfile, setKakaoProfile] = useState<KakaoProfile>();
 
     const storeProvider = async (value: string) => {
         try {
