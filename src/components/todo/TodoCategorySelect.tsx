@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: getFontSize(20),
     fontWeight: font.fontWeight.semiBold,
-    lineHeight: 21,
+    // lineHeight: 21,
     letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey700,
   },

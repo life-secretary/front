@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import OutsidePressHandler from 'react-native-outside-press';
 import {createData, updateData} from '@/api/api';
 
-import {StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import {AppInput} from '@/components/common/AppInput';
 import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
@@ -38,6 +38,7 @@ export function TodoForm({
   const [categoryErrorMsg, setCategoryErrorMsg] = useState('');
   const [titleErrorMsg, setTitleErrorMsg] = useState('');
   const [category, setCategory] = useState('');
+  const [customCategory, setCustomCategory] = useState('');
   const [title, setTitle] = useState(todoItem?.title || '');
   const navigation = useNavigation();
   const categoryInputRef = useRef(null);
@@ -56,6 +57,10 @@ export function TodoForm({
 
   const handleTitleInputBlur = (ref: React.MutableRefObject<null>) => {
     ref?.current.blur();
+  };
+
+  const handleBottomSheetVisible = (isVisible: boolean) => {
+    setIsVisible(isVisible);
   };
 
   const handleSubmitButtonPress = () => {
@@ -77,7 +82,7 @@ export function TodoForm({
     } else if (selectedCategory?.key === 'custom') {
       // 유저가 카테고리 직접 입력
       currentCategoryId = null;
-      userTag = selectedCategory?.title;
+      userTag = customCategory;
     } else {
       // 유저가 카테고리 선택
       currentCategoryId = selectedCategory?.id;
@@ -134,7 +139,7 @@ export function TodoForm({
   };
 
   const checkCategoryInputValidation = useCallback(() => {
-    if (checkSpecialChar(category)) {
+    if (checkSpecialChar(customCategory)) {
       setIsCategoryInvalid(true);
       setCategoryErrorMsg(formValidation.common.specialChar.errorMsg);
       return false;
@@ -155,7 +160,7 @@ export function TodoForm({
     setIsCategoryInvalid(false);
     setCategoryErrorMsg('');
     return true;
-  }, [category]);
+  }, [customCategory]);
 
   const checkTitleInputValidation = useCallback(() => {
     if (checkSpecialChar(title)) {
@@ -181,62 +186,83 @@ export function TodoForm({
     return true;
   }, [title]);
 
-  useEffect(() => {
-    if (!selectedCategory) {
-      setCategory('');
-      return;
-    }
+  // useEffect(() => {
+  //   if (!selectedCategory) {
+  //     setCategory('');
+  //     return;
+  //   }
 
-    if (typeof selectedCategory === 'object') {
-      setCategory(selectedCategory?.title);
-    } else {
-      setCategory(todoItem?.category);
-    }
-  }, [selectedCategory, todoItem?.category]);
+  //   if (typeof selectedCategory === 'object') {
+  //     setCategory(selectedCategory?.title);
+  //   } else {
+  //     setCategory(todoItem?.category);
+  //   }
+  // }, [selectedCategory, todoItem?.category]);
 
   useEffect(() => {
     if (!title || !selectedCategory) {
       setIsEmpty(true);
-      return;
+    } else {
+      setIsEmpty(false);
+    }
+
+    if (selectedCategory.key === 'custom' && !customCategory) {
+      setIsEmpty(true);
+    } else {
+      setIsEmpty(false);
     }
 
     setIsEmpty(false);
     checkCategoryInputValidation();
     checkTitleInputValidation();
   }, [
-    title,
-    selectedCategory,
     isEmpty,
-    checkTitleInputValidation,
+    title,
+    customCategory,
+    selectedCategory,
     checkCategoryInputValidation,
+    checkTitleInputValidation,
+    isCategoryInvalid,
+    isTitleInvalid,
   ]);
 
   return (
     <View style={styles.container}>
       <View style={styles.form}>
-        <OutsidePressHandler
-          onOutsidePress={() => handleCategoryInputBlur(categoryInputRef)}>
-          <AppInput
-            ref={categoryInputRef}
-            hasLabel={true}
-            labelText="분야"
-            placeholder="최대 6자 내로 입력 가능해요"
-            text={isCustomCategory ? selectedCategory?.title || '' : category}
-            onChangeText={(newText: string) =>
-              handleSelectCategory({id: null, key: 'custom', title: newText})
-            }
-            editable={isCustomCategory}
-            icon={{
-              name: 'arrowRight',
-              width: 36,
-              height: 36,
-              styles: {color: color.grey.grey400},
-              onPress: () => setIsVisible(true),
-            }}
-            error={isCategoryInvalid}
-            errorMsg={categoryErrorMsg}
-          />
-        </OutsidePressHandler>
+        <Pressable onPress={() => handleBottomSheetVisible(true)}>
+          <View pointerEvents="none">
+            <AppInput
+              ref={categoryInputRef}
+              hasLabel={true}
+              labelText="분야"
+              placeholder="최대 6자 내로 입력 가능해요"
+              text={selectedCategory?.title || category}
+              icon={{
+                name: 'arrowRight',
+                width: 36,
+                height: 36,
+                styles: {color: color.grey.grey400},
+                onPress: () => handleBottomSheetVisible(true),
+              }}
+            />
+          </View>
+        </Pressable>
+        {isCustomCategory && (
+          <OutsidePressHandler
+            onOutsidePress={() => handleCategoryInputBlur(categoryInputRef)}>
+            <AppInput
+              ref={categoryInputRef}
+              hasLabel={true}
+              labelText="분야 입력"
+              placeholder="최대 6자 내로 입력 가능해요"
+              text={customCategory}
+              maxLength={6}
+              onChangeText={setCustomCategory}
+              error={isCategoryInvalid}
+              errorMsg={categoryErrorMsg}
+            />
+          </OutsidePressHandler>
+        )}
         <OutsidePressHandler
           onOutsidePress={() => handleTitleInputBlur(titleInputRef)}>
           <AppInput
