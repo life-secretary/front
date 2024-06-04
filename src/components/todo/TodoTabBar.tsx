@@ -49,5 +49,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: color.main.white,
     marginTop: 17,
+    zIndex: 2,
   },
 });

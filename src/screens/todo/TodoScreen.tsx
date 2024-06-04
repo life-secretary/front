@@ -7,6 +7,7 @@ import {userInfoState} from '@/store/userInfoState';
 // import {userInfoState} from '@/store/login';
 
 import {StyleSheet, View, FlatList} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
@@ -21,6 +22,7 @@ import {getFontSize} from '@/utils/font';
 import {useQuery} from '@tanstack/react-query';
 
 export function TodoScreen({navigation}: any): React.JSX.Element {
+  const [showGradient, setShowGradient] = useState(true);
   const [isFetched, setIsFetched] = useState(false);
   const setTodoList = useSetRecoilState(todoListState);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -66,6 +68,18 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
     throw error;
   }
 
+  const handleScroll = event => {
+    const {nativeEvent} = event;
+
+    const top = nativeEvent.contentOffset.y <= 1;
+
+    if (top) {
+      setShowGradient(false);
+    } else {
+      setShowGradient(true);
+    }
+  };
+
   useEffect(() => {
     if (todos) {
       setTodoList(todos);
@@ -102,14 +116,26 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
         </View>
       </AppHeader>
       <View style={styles.container}>
-        <TodoTabBar
-          tabOptions={['진행 중', '완료']}
-          selectedIndex={selectedIndex}
-          onTabPress={(index: number) => handleTabChange(index)}
-        />
+        <>
+          <TodoTabBar
+            tabOptions={['진행 중', '완료']}
+            selectedIndex={selectedIndex}
+            onTabPress={(index: number) => handleTabChange(index)}
+          />
+          {showGradient && (
+            <LinearGradient
+              start={{x: 0, y: 0}}
+              end={{x: 0, y: 1}}
+              colors={['rgba(242, 244, 247, 1)', 'rgba(242, 244, 247, 0)']}
+              style={styles.gradient}
+            />
+          )}
+        </>
         <FlatList
           ref={scrollViewRef}
           showsVerticalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
           data={[]}
           keyExtractor={() => 'scrollview'}
           renderItem={null}
@@ -139,9 +165,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  tabBarContainer: {},
   header: {
     justifyContent: 'flex-end',
     marginTop: 12, // 아이콘 있는 헤더
+    zIndex: 2,
   },
   titleContainer: {
     position: 'absolute',
@@ -157,4 +185,13 @@ const styles = StyleSheet.create({
     letterSpacing: font.letterSpacing.medium,
   },
   iconContainer: {},
+  gradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 150,
+    zIndex: 1,
+  },
 });
