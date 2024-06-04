@@ -34,8 +34,6 @@ function Slide({
   thumbnail,
   openContentModal,
 }: SlideType): React.JSX.Element {
-  console.log(thumbnail);
-
   const setImageSource = () => {
     const skeletonThumbnail = require('@/assets/images/carouselPlaceholder.jpg');
 
