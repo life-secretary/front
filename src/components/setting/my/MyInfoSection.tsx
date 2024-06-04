@@ -2,6 +2,7 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useRecoilValue} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
+// import {userInfoState} from '@/store/login';
 
 import {StyleSheet, View} from 'react-native';
 import {AppText} from '@/components/common/AppText';

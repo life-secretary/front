@@ -1,7 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {useRecoilValue} from 'recoil';
+import {useRecoilState} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
+// import {userInfoState} from '@/store/login';
 
 import {createData, deleteData, fetchData} from '@/api/api';
 
@@ -19,6 +20,12 @@ import spacing from '@/styles/spacing';
 
 import {removeItemAtIndex} from '@/utils';
 import {getFontSize} from '@/utils/font';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {PROVIDERS, providerKey} from '@/store/login';
+import {removeToken} from '@/api/axios';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {logout, unlink} from '@react-native-seoul/kakao-login';
 
 type checkboxItemProps = {
   item: object;
@@ -72,7 +79,7 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
     [],
   );
   const [reasonText, onChangeReasonText] = useState('');
-  const userInfo = useRecoilValue(userInfoState);
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const navigation = useNavigation();
   const inputRef = useRef(null);
 
@@ -142,6 +149,23 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
 
     if (res.status === 200) {
       handleModalVisible(true);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const value = await AsyncStorage.getItem(providerKey);
+      if (value === PROVIDERS.GOOGLE) {
+        await GoogleSignin.signOut();
+      } else if (value === PROVIDERS.KAKAO) {
+        await unlink();
+        // await logout();
+      }
+      removeToken();
+      setUserInfo(null);
+      AsyncStorage.setItem(providerKey, '');
+    } catch (e) {
+      console.log('e', e);
     }
   };
 
@@ -298,8 +322,8 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
             buttonStyle: styles.modalButton,
             onPressButton: () => {
               handleModalVisible(false);
-              // TODO: logout 함수 필요
-              navigation.goBack();
+              handleLogout();
+              navigation.navigate('Splash');
             },
           },
         }}

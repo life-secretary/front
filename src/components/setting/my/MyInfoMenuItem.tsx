@@ -7,11 +7,10 @@ import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { PROVIDERS, providerKey } from '@/store/login';
-import { removeToken } from '@/api/axios';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { logout } from '@react-native-seoul/kakao-login';
-
+import {PROVIDERS, providerKey} from '@/store/login';
+import {removeToken} from '@/api/axios';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {logout} from '@react-native-seoul/kakao-login';
 
 type Props = {
   myInfoMenu: object;
@@ -19,29 +18,28 @@ type Props = {
 
 const startLogout = async () => {
   try {
-      const value = await AsyncStorage.getItem(providerKey)
-      if (value === PROVIDERS.GOOGLE) {
-          await GoogleSignin.signOut()
-      } else if (value === PROVIDERS.KAKAO) {
-          await logout()
-      }
-      removeToken()
-      AsyncStorage.setItem(providerKey, '')
+    const value = await AsyncStorage.getItem(providerKey);
+    if (value === PROVIDERS.GOOGLE) {
+      await GoogleSignin.signOut();
+    } else if (value === PROVIDERS.KAKAO) {
+      await logout();
+    }
+    removeToken();
+    AsyncStorage.setItem(providerKey, '');
   } catch (e) {
-      console.log("e", e)
+    console.log('e', e);
   }
-}
+};
 
 export function MyInfoMenuItem({myInfoMenu}: Props): React.JSX.Element {
   const navigation = useNavigation();
 
   const handleButtonPress = (menu: object) => {
     if (menu.key === 'logout') {
-      startLogout()
-      .then(() => {
-        navigation.navigate("Splash")
-      })
-      return
+      startLogout().then(() => {
+        navigation.navigate('Splash');
+      });
+      return;
     }
 
     if (menu?.key === 'resurvey') {
