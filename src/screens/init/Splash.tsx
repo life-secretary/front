@@ -1,22 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet} from 'react-native';
 
-import { AppText } from '@/components/common/AppText';
+import {AppText} from '@/components/common/AppText';
 
-import { getFontSize } from '@/utils/font';
+import {getFontSize} from '@/utils/font';
 
 import { LoginInfo, PROVIDERS, providerKey } from '@/store/login';
 
-import { 
-    getProfile,
-} from '@react-native-seoul/kakao-login';
-import { 
-    GoogleSignin,
-    statusCodes,
+import {getProfile} from '@react-native-seoul/kakao-login';
+import {
+  GoogleSignin,
+  statusCodes,
 } from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
 import Config from 'react-native-config';
-import { createData } from '@/api/api';
+import {createData} from '@/api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 import { removeToken, setToken } from '@/api/axios';
@@ -24,38 +22,46 @@ import { removeToken, setToken } from '@/api/axios';
 export function Splash({navigation}: any): React.JSX.Element {
     const isFocused = useIsFocused();
 
-    const signInWithKakao = async(): Promise<void> => {
-        console.log('카카오 로그인');
+    const storeToken = async (value: string) => {
         try {
-            await getProfile()
-            .then(res => {
-                // console.log('userInfo', res);
-                if (res === null) {
-                    //??
-                } else {
-                    //TODO: change
-                    const loginInfo: LoginInfo = {
-                        provider: "kakao",
-                        idToken: String(res.id)
-                    };
-                    signIn(loginInfo)
-                }
-            })
-            .catch(error => {
-                if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-                // user has not signed in yet
-                navigation.navigate('Login')
-            } else {
-                Toast.show({
-                    type: error,
-                    text1: "login fail" + error.code
-                })
-            }
-        });
+            await AsyncStorage.setItem(tokenKey, value);
         } catch (error) {
             console.log(error);
         }
     };
+
+  const signInWithKakao = async (): Promise<void> => {
+    console.log('카카오 로그인');
+    try {
+      await getProfile()
+        .then(res => {
+          // console.log('userInfo', res);
+          if (res === null) {
+            //??
+          } else {
+            //TODO: change
+            const loginInfo: LoginInfo = {
+              provider: 'kakao',
+              idToken: String(res.id),
+            };
+            signIn(loginInfo);
+          }
+        })
+        .catch(error => {
+          if (error.code === statusCodes.SIGN_IN_REQUIRED) {
+            // user has not signed in yet
+            navigation.navigate('Login');
+          } else {
+            Toast.show({
+              type: error,
+              text1: 'login fail' + error.code,
+            });
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
     const googleSigninConfigure = () => {
         GoogleSignin.configure({
@@ -81,6 +87,7 @@ export function Splash({navigation}: any): React.JSX.Element {
             navigation.navigate('Login')
         }
     }
+  };
 
     useEffect(() => {
         //1. check storage
@@ -146,64 +153,61 @@ export function Splash({navigation}: any): React.JSX.Element {
                     })
                 }
             });
-            
-        } catch(error) {
-            console.log('error', error);
-        }
+          }
+        });
+    } catch (error) {
+      console.log('error', error);
     }
+  };
 
-    return (
-        <View style={styles.container}>
-            <View style={{flex: 1}}/>
-            <View style={styles.logoContainer}>
-                <AppText style={styles.logoText}>
-                    <AppText style={styles.logoTextHighlight}>
-                        처음 살아보는
-                    </AppText> 나를 위한
-                </AppText>
-                <AppText style={styles.title}>
-                    인생비서
-                </AppText>
-            </View>
-            {/* <Agreement 
-                isVisible={isStartModalOpen} 
+  return (
+    <View style={styles.container}>
+      <View style={{flex: 1}} />
+      <View style={styles.logoContainer}>
+        <AppText style={styles.logoText}>
+          <AppText style={styles.logoTextHighlight}>처음 살아보는</AppText> 나를
+          위한
+        </AppText>
+        <AppText style={styles.title}>인생비서</AppText>
+      </View>
+      {/* <Agreement
+                isVisible={isStartModalOpen}
                 closeModalHandler={closeStartModal}
                 closeStartProcess={closeStartProcess}
             /> */}
-            <Toast />
-        </View>
-    )
-};
+      <Toast />
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#000E24',
-    },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000E24',
+  },
 
-    logoContainer: {
-        flex: 2,
-        alignItems: 'center',
-        gap: 10,
-    },
+  logoContainer: {
+    flex: 2,
+    alignItems: 'center',
+    gap: 10,
+  },
 
-    logoText: {        
-        fontWeight: '600',
-        fontSize: getFontSize(16),
-        lineHeight: 20,
-        color: 'white',
-    },
+  logoText: {
+    fontWeight: '600',
+    fontSize: getFontSize(16),
+    lineHeight: 20,
+    color: 'white',
+  },
 
-    title: {        
-        fontWeight: '600',
-        fontSize: getFontSize(44),
-        color: 'white',
-    },
+  title: {
+    fontWeight: '600',
+    fontSize: getFontSize(44),
+    color: 'white',
+  },
 
-    logoTextHighlight: {
-        color: '#4681F6',
-    },
-
+  logoTextHighlight: {
+    color: '#4681F6',
+  },
 });

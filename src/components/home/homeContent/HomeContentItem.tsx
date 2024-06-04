@@ -1,7 +1,7 @@
 import React from 'react';
 import {useRecoilValue} from 'recoil';
 import {categoryListState} from '@/store/categoryState';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 import {StyleSheet, View, Image, Pressable} from 'react-native';
 import {AppText} from '@/components/common/AppText';
@@ -22,21 +22,24 @@ export function HomeContentItem({homeContentItem}: Props): React.JSX.Element {
   const categories = useRecoilValue(categoryListState);
   const skeletonThumbnail = require('@/assets/images/thumbnailPlaceholder.jpg');
 
+  const setThumbnailSource = () => {
+    const thumbnail = homeContentItem.imageUrl;
+
+    if (!thumbnail || thumbnail.includes('null')) {
+      return skeletonThumbnail;
+    }
+
+    return {uri: thumbnail};
+  };
+
   const onPressContent = () => {
-    navigation.navigate('ContentModal', { id: homeContentItem.id });
+    navigation.navigate('ContentModal', {id: homeContentItem.id});
   };
 
   return (
     <Pressable style={styles.container} onPress={onPressContent}>
       <View style={styles.thumbnailContainer}>
-        {homeContentItem.imageUrl ? (
-          <Image
-            source={{uri: homeContentItem.imageUrl}}
-            style={styles.thumbnail}
-          />
-        ) : (
-          <Image source={skeletonThumbnail} style={styles.thumbnail} />
-        )}
+        <Image source={setThumbnailSource()} style={styles.thumbnail} />
       </View>
       <View style={styles.infoContainer}>
         <View>

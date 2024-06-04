@@ -1,6 +1,7 @@
 import React from 'react';
 import {useRecoilValue} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
+// import {userInfoState} from '@/store/login';
 
 import {StyleSheet, View, FlatList, Platform} from 'react-native';
 import {AppText} from '@/components/common/AppText';
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontWeight: font.fontWeight.medium,
-    lineHeight: 19.09,
+    // lineHeight: 19.09,
     letterSpacing: font.letterSpacing.medium,
     color: color.grey.grey500,
   },

@@ -3,6 +3,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {useQueries} from '@tanstack/react-query';
 import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
 import {userInfoState} from '@/store/userInfoState';
+// import {userInfoState} from '@/store/login';
 import {categoryListState, homeCategoryListState} from '@/store/categoryState';
 import {occupationListState} from '@/store/occupation';
 import {scrapListState} from '@/store/scrapState';
@@ -56,9 +57,9 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
     setHomeContentListReadBySimilarUsers,
   ] = useRecoilState(homeContentListReadBySimilarUsersState);
 
-  const HOME_CONTENT_SIZE = 5;
-
   const scrollViewRef = useRef<any>(null);
+
+  const handleHeaderIconPress = () => {};
 
   const fetchCategories = async () => {
     const res = await fetchData('/categories', null);
@@ -156,11 +157,11 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
   ] = combinedQueries.data;
 
   const openCategoryModal = (category: CategoryObject) => {
-    navigation.navigate('SearchCategoryModal', { selectedCategory:category });
+    navigation.navigate('SearchCategoryModal', {selectedCategory: category});
   };
 
   const openContentModal = (id: any) => {
-    navigation.navigate('ContentModal', { id });
+    navigation.navigate('ContentModal', {id});
   };
 
   const closeAllProcess = () => {
@@ -232,7 +233,12 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
           <View style={styles.headerIconContainer}>
             {/* TODO: 알림 기능 2차 개발 예정 */}
             {/* <AppIcon name="notificationOn" width={42} height={42} /> */}
-            <AppIcon name="balancer" width={42} height={42} />
+            <AppIcon
+              name="balancer"
+              width={42}
+              height={42}
+              onPress={handleHeaderIconPress}
+            />
           </View>
         </AppHeader>
         <View style={styles.section}>
