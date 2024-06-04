@@ -38,9 +38,13 @@ export interface LoginInfo {
   idToken: string;
 }
 
+export interface Login {
+  token: string;
+}
+
 export const providerKey = '@providerKey'
-export const idTokenKey = '@idTokenKey'
-export const tokenKey = '@tokenKey'
+// export const idTokenKey = '@idTokenKey'
+// export const tokenKey = '@tokenKey'
 
 export const PROVIDERS = {
   KAKAO: 'KAKAO',
