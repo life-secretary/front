@@ -1,11 +1,12 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {useRecoilState, useRecoilValue} from 'recoil';
+import {homeCategoryListState} from '@/store/categoryState';
 import {homeContentFilterState} from '@/store/homeContentState';
 
-import {StyleSheet, FlatList} from 'react-native';
+import {StyleSheet, FlatList, View} from 'react-native';
 import {HomeContentCategoryItem} from '@/components/home/homeContent/HomeContentCategoryItem';
-import {homeCategoryListState} from '@/store/categoryState';
+import LinearGradient from 'react-native-linear-gradient';
 
 type homeContentFilter = {
   id: number;
@@ -14,6 +15,7 @@ type homeContentFilter = {
 };
 
 export function HomeContentCategoryList(): React.JSX.Element {
+  const [showGradient, setShowGradient] = useState(true);
   const [homeContentFilter, setHomeContentFilter] = useRecoilState(
     homeContentFilterState,
   );
@@ -24,36 +26,76 @@ export function HomeContentCategoryList(): React.JSX.Element {
     setHomeContentFilter(category);
   };
 
+  const handleScroll = event => {
+    const {nativeEvent} = event;
+
+    const bottom =
+      nativeEvent.contentOffset.x + nativeEvent.layoutMeasurement.width >=
+      nativeEvent.contentSize.width;
+
+    if (bottom) {
+      setShowGradient(false);
+    } else {
+      setShowGradient(true);
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
       return () => {
-        setHomeContentFilter(defaultCategory ? defaultCategory : { category: 'all', id: 0, title: '전체' });
+        setHomeContentFilter(
+          defaultCategory
+            ? defaultCategory
+            : {category: 'all', id: 0, title: '전체'},
+        );
       };
     }, [defaultCategory, setHomeContentFilter]),
   );
 
   return (
-    <FlatList
-      scrollsToTop
-      data={categories}
-      renderItem={({item}) => (
-        <HomeContentCategoryItem
-          item={{...item}}
-          homeContentFilter={homeContentFilter}
-          handleHomeContentFilter={handleHomeContentFilter}
+    <View style={styles.container}>
+      <FlatList
+        scrollsToTop
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        data={categories}
+        renderItem={({item}) => (
+          <HomeContentCategoryItem
+            item={{...item}}
+            homeContentFilter={homeContentFilter}
+            handleHomeContentFilter={handleHomeContentFilter}
+          />
+        )}
+        keyExtractor={item => String(item.id)}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.listContainer}
+      />
+      {showGradient && (
+        <LinearGradient
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
+          style={styles.fade}
         />
       )}
-      keyExtractor={item => String(item.id)}
-      horizontal={true}
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.listContainer}
-    />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginBottom: 28,
+  },
   listContainer: {
     gap: 8,
-    marginBottom: 28,
+  },
+  fade: {
+    position: 'absolute',
+    left: '85%',
+    right: 0,
+    bottom: 0,
+    height: '100%',
   },
 });
