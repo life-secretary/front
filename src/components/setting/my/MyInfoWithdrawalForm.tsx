@@ -22,7 +22,7 @@ import {removeItemAtIndex} from '@/utils';
 import {getFontSize} from '@/utils/font';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {PROVIDERS, providerKey} from '@/store/login';
+import {PROVIDERS, idTokenKey, providerKey} from '@/store/login';
 import {removeToken} from '@/api/axios';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {logout, unlink} from '@react-native-seoul/kakao-login';
@@ -159,6 +159,7 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
         await GoogleSignin.signOut();
       } else if (value === PROVIDERS.KAKAO) {
         await unlink();
+        AsyncStorage.setItem(idTokenKey, '');
         // await logout();
       }
       removeToken();
