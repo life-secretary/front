@@ -5,7 +5,7 @@ import {AppText} from '@/components/common/AppText';
 
 import {getFontSize} from '@/utils/font';
 
-import {LoginInfo, PROVIDERS, providerKey} from '@/store/login';
+import {LoginInfo, PROVIDERS, idTokenKey, providerKey} from '@/store/login';
 
 import {getProfile} from '@react-native-seoul/kakao-login';
 import {
@@ -25,7 +25,8 @@ export function Splash({navigation}: any): React.JSX.Element {
   const signInWithKakao = async (): Promise<void> => {
     console.log('카카오 로그인');
     try {
-      await getProfile()
+        var idToken = await AsyncStorage.getItem(idTokenKey)
+        await getProfile()
         .then(res => {
           // console.log('userInfo', res);
           if (res === null) {
@@ -34,7 +35,7 @@ export function Splash({navigation}: any): React.JSX.Element {
             //TODO: change
             const loginInfo: LoginInfo = {
               provider: 'kakao',
-              idToken: String(res.id),
+              idToken: idToken!!
             };
             signIn(loginInfo);
           }

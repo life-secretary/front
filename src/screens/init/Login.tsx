@@ -9,7 +9,7 @@ import Agreement from '../init/Agreement';
 import {getFontSize} from '@/utils/font';
 
 import {useRecoilState} from 'recoil';
-import {PROVIDERS, providerKey, userInfoState} from '@/store/login';
+import {LoginInfo, PROVIDERS, idTokenKey, providerKey, userInfoState} from '@/store/login';
 
 import {
   login,
@@ -20,6 +20,8 @@ import {
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createData } from '@/api/api';
+import { setToken } from '@/api/axios';
 
 export function Login({navigation}: any): React.JSX.Element {
   const [isLogin, setIsLogin] = useState(false);
@@ -32,6 +34,14 @@ export function Login({navigation}: any): React.JSX.Element {
   const storeProvider = async (value: string) => {
     try {
       await AsyncStorage.setItem(providerKey, value);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const storeIdToken = async (value: string) => {
+    try {
+      await AsyncStorage.setItem(idTokenKey, value);
     } catch (error) {
       console.log(error);
     }
@@ -54,9 +64,13 @@ export function Login({navigation}: any): React.JSX.Element {
 
         return newValue;
       });
+      storeIdToken(token.idToken)
       storeProvider(PROVIDERS.KAKAO);
-      setIsLogin(true);
-      setIsStartModalOpen(true);
+      const loginInfo: LoginInfo = {
+        provider: 'kakao',
+        idToken: token.idToken!!,
+      };
+      signIn(loginInfo);
     } catch (error) {
       console.log(error);
     }
@@ -80,11 +94,38 @@ export function Login({navigation}: any): React.JSX.Element {
         return newValue;
       });
       storeProvider(PROVIDERS.GOOGLE);
-      setIsLogin(true);
-      setIsStartModalOpen(true);
+      const loginInfo: LoginInfo = {
+        provider: 'google',
+        idToken: userInfo.idToken!!,
+      };
+      signIn(loginInfo);
     } catch (error) {
       console.log('error', error);
     }
+  };
+
+  const signIn = async (info: LoginInfo): Promise<void> => {
+    console.log('signIn', info);
+    await createData('/auth/login', info)
+      .then(res => {
+        return res.data.data;
+      })
+      .then(data => {
+        if (data.data.token === null) {
+          throw Error('no token');
+        }
+        setToken(data.data.token);
+        closeStartProcess()
+      })
+      .catch(error => {
+        console.log(error);
+        // Toast.show({
+        //   type: 'error',
+        //   text1: 'login fail',
+        // });
+        setIsLogin(true);
+        setIsStartModalOpen(true);
+      });
   };
 
   const onPressKakaoLoginButton = () => {
