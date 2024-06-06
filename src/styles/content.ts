@@ -8,6 +8,8 @@ export const markdownStyle = () => {
         },
         image: {
           marginBottom: 18,
+          overflow: 'hidden',
+          borderRadius: 10,
         },
         heading1: {
           fontWeight: '600',
@@ -24,7 +26,7 @@ export const markdownStyle = () => {
           marginBottom: 18,
         },
         heading4: {
-          fontWeight: '400',
+          fontWeight: '300',
           fontSize: getFontSize(17),
           lineHeight: 26,
           color: '#40474F',

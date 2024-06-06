@@ -312,10 +312,20 @@ const SearchCategory = ({
             )}
             {/** sort conditions */}
             <View style={styles.searchConditionContainer}>
-            <SearchCondition 
-                data={currentData()?.id === 1 ? searchConditionContentData : searchConditionToDoData} 
-                onPressButton={currentData()?.id === 1 ? onPressContentViewConditionButton : onPressToDoViewConditionButton}
-            />
+              {
+                (currentData()?.id === 1 && !!contentData.length) &&
+                <SearchCondition 
+                    data={searchConditionContentData} 
+                    onPressButton={onPressContentViewConditionButton}
+                />
+              }
+              {
+                (currentData()?.id === 2 && !!toDoData.length) &&
+                <SearchCondition 
+                    data={searchConditionToDoData} 
+                    onPressButton={onPressToDoViewConditionButton}
+                />
+              }
             </View>
             {/** list */}
             {
@@ -352,7 +362,7 @@ const styles = StyleSheet.create({
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
       borderBottomColor: '#F2F4F7',
-      marginTop: 30,
+      marginTop: 60,
     },
     wrapper: {
       width: '100%',
@@ -405,7 +415,7 @@ const styles = StyleSheet.create({
   
     dropDownDivider: {
       position: 'absolute',
-      top: 80,
+      top: 110,
       width: '100%',
       zIndex: 2,
       borderColor: '#F2F4F7',
@@ -413,7 +423,7 @@ const styles = StyleSheet.create({
     },
     dropDownContainer: {
       position: 'absolute',
-      top: 90,
+      top: 120,
       width: '100%',
       zIndex: 1,
       backgroundColor: '#FFFFFF',

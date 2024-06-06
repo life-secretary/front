@@ -1,6 +1,8 @@
 import React, { useState, ReactNode } from 'react';
 import { VirtualizedList, View, StyleSheet, Pressable } from 'react-native';
 import { HomeContentItem } from '../home/homeContent/HomeContentItem';
+import { AppText } from '../common/AppText';
+import { getFontSize } from '@/utils/font';
 
 type SearchContentViewProps = {
   data: Array<any>; // TODO 타입 구체화
@@ -31,24 +33,32 @@ const SearchContentView = ({
 
   return (
     <>
-      <VirtualizedList
-        initialNumToRender={8}
-        renderItem={({item}) => {
-          return (
-            <Pressable onPress={() => onPressContent(item.id)}>
-              <HomeContentItem homeContentItem={{...item}} />
-            </Pressable>
-          );
-        }}
-        keyExtractor={getContentTabKeyExtractor}
-        getItemCount={getContentTabItemCount}
-        getItem={getContentTabItem}
-        ListHeaderComponent={() => headerComponent}
-        ListFooterComponent={() => <View style={styles.contentFooter} />}
-        ItemSeparatorComponent={() => <View style={styles.separatorContent} />}
-        style={styles.contentContainer}
-        onEndReached={onEndReached}
-      />
+      {
+        data.length ?
+        <VirtualizedList
+          initialNumToRender={8}
+          renderItem={({item}) => {
+            return (
+              <Pressable onPress={() => onPressContent(item.id)}>
+                <HomeContentItem homeContentItem={{...item}} />
+              </Pressable>
+            );
+          }}
+          keyExtractor={getContentTabKeyExtractor}
+          getItemCount={getContentTabItemCount}
+          getItem={getContentTabItem}
+          ListHeaderComponent={() => headerComponent}
+          ListFooterComponent={() => <View style={styles.contentFooter} />}
+          ItemSeparatorComponent={() => <View style={styles.separatorContent} />}
+          style={styles.contentContainer}
+          onEndReached={onEndReached}
+        />
+        :
+        <View style={styles.emptyContainer}>
+          <AppText style={styles.emptyTitle}>검색 결과가 없어요</AppText>
+          <AppText style={styles.emptySubTitle}>다른 키워드로 검색해보세요</AppText>
+        </View>
+      }
     </>
   );
 };
@@ -65,6 +75,24 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     borderWidth: 0.5,
     borderColor: '#F2F4F7',
+  },
+
+  emptyContainer: {
+    height: '60%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyTitle: {
+    fontSize: getFontSize(18),
+    fontWeight: '500',
+    lineHeight: 21,
+    marginBottom: 8,
+    color: '#000E24'
+  },
+  emptySubTitle: {
+    fontSize: getFontSize(15),
+    fontWeight: '400',
+    color: '#526070'
   },
 });
 

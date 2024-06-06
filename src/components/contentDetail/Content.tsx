@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, VirtualizedList } from 'react-native';
 import { AppText } from '../common/AppText';
 import { AppHeader } from '../common/AppHeader';
@@ -32,6 +32,7 @@ const Content = ({ route, navigation }: any) => {
     const [todos, setTodos] = useState<any>([]);
     const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
     const [confirmData, setConfirmData] = useState<any>({});
+    const [isScrollTop, setIsScrollTop] = useState(true);
 
   /**
    * NOTE PressableButton 을
@@ -225,6 +226,22 @@ const Content = ({ route, navigation }: any) => {
     navigation.navigate('SettingModal', { menu: { key: 'sendFeedback' }});
   };
 
+  const onScroll = ({ nativeEvent }: any) => {
+    const offsetY = Math.floor(nativeEvent.contentOffset.y);
+    
+    if (offsetY <= 0) {
+      setIsScrollTop((prev) => {
+        if (prev === true) { return prev; }
+        return true;
+      });
+    } else {
+      setIsScrollTop((prev) => {
+        if (prev === false) { return prev; }
+        return false;
+      });
+    }
+  };
+
     useEffect(() => {
         fetchData(`/content/${id}`, {})
             .then((response) => {
@@ -249,7 +266,7 @@ const Content = ({ route, navigation }: any) => {
                     id: data.id,
                     title: data.title,
                     url: data.contentUrl,
-                    content: data.content,
+                    content: String(data.content),
                     hashtags: data.hashtags,
                     createdTime: data.createdTime,
                     category: category ? category.title : '카테고리',
@@ -311,7 +328,10 @@ const Content = ({ route, navigation }: any) => {
 
     return (
         <View style={styles.container}>
-            <AppHeader style={styles.header}>
+            <AppHeader style={[
+              styles.header , 
+              isScrollTop ? {} : { backgroundColor: 'rgba(170, 170, 170, 0.262)'}
+            ]}>
                 <View style={styles.headerWrapper}>
                     <AppIcon
                         name="back"
@@ -339,6 +359,7 @@ const Content = ({ route, navigation }: any) => {
             {
                 item.length ?
                 <VirtualizedList
+                onScroll={onScroll}
                 getItem={getItem}
                 getItemCount={getItemCount}
                 renderItem={({item, index}) => {
@@ -381,12 +402,20 @@ const Content = ({ route, navigation }: any) => {
                             <AppText style={styles.basicTitle}>
                                 연관된 할 일 추가하기
                             </AppText>
-                            <AppButton
-                                text={'전체추가하기'}
-                                textStyle={styles.todoListAddAllButton}
-                                buttonStyle={{}}
-                                onPressButton={addToDoItems}
-                            />
+                            <View style={styles.allAddWrapper}>
+                              <AppIcon 
+                                name='addDark'
+                                width={30}
+                                height={30}
+                                styles={{ color: '#4681F6' }}
+                              />
+                              <AppButton
+                                  text={'전체추가하기'}
+                                  textStyle={styles.todoListAddAllButton}
+                                  buttonStyle={{}}
+                                  onPressButton={addToDoItems}
+                              />
+                            </View>
                             </View>
                         </View>
                         {todos.length ?
@@ -438,13 +467,13 @@ const Content = ({ route, navigation }: any) => {
                                     </View>
                                     <View style={styles.contentSaveButtonWrapper}>
                                     <AppIcon
-                                        name="bookmarkMedium"
-                                        width={42}
-                                        height={42}
-                                        onPress={() =>
-                                        onPressRelatedContentBookMarkButton(item, index)
-                                        }
-                                        styles={item.isBookMarked ? {fill: '#A1ACB9'} : {}}
+                                      name="bookmarkMedium"
+                                      width={42}
+                                      height={42}
+                                      onPress={() =>
+                                      onPressRelatedContentBookMarkButton(item, index)
+                                      }
+                                      styles={item.isBookMarked ? {fill: '#A1ACB9'} : {}}
                                     />
                                     </View>
                                 </View>
@@ -457,17 +486,13 @@ const Content = ({ route, navigation }: any) => {
                         <View style={styles.separator} />
                         {/** Section3 : 문의 및 의견 보내기 */}
                         <View
-                            style={{
+                          style={{
                             paddingHorizontal: 24,
                             paddingBottom: 40,
-                            }}>
-                            <AppText style={styles.askButtonTitle}>
-                            이번 콘텐츠는 어떠신가요?
-                            </AppText>
-                            <AppText style={styles.askButtonSubTitle}>
-                            더 나은 콘텐츠를 제작하는데 큰 도움이 됩니다
-                            </AppText>
-                            <View style={styles.askButtonWrapper}>
+                          }}>
+                          <AppText style={styles.askButtonTitle}>이번 콘텐츠는 어떠신가요?</AppText>
+                          <AppText style={styles.askButtonSubTitle}>더 나은 콘텐츠를 제작하는데 큰 도움이 됩니다</AppText>
+                          <View style={styles.askButtonWrapper}>
                             <AppButton
                                 text={'문의 및 의견 보내기'}
                                 // 📌 임시
@@ -477,20 +502,20 @@ const Content = ({ route, navigation }: any) => {
                                 pressedBackgroundColor={'#11111166'}
                                 onPressButton={onPressAskQuestionButton}
                             />
-                            </View>
+                          </View>
                         </View>
                         {/** Section4 : 안내 사항 */}
-                        {/* <View style={styles.notificationWrapper}>
-                            {item[0].notification.map((item: any, index: number) => {
+                        <View style={styles.notificationWrapper}>
+                            {item.notification.map((item: any, index: number) => {
                             return (
                                 <AppText
-                                key={`notification${index}`}
-                                style={styles.notificationText}>
-                                &#183; {item.title}
+                                  key={`notification${index}`}
+                                  style={styles.notificationText}>
+                                  {item.title}
                                 </AppText>
                             );
                             })}
-                        </View> */}
+                        </View>
                     </View>
                     );
                     }}
@@ -527,7 +552,8 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'column',
         borderColor: 'transparent',
-        paddingTop: 20,
+        paddingTop: 55,
+        paddingBottom: 10,
     },
     headerWrapper: {
         flexDirection: 'row',
@@ -543,7 +569,8 @@ const styles = StyleSheet.create({
     // TODO font style 상수로 관리
     mainCategoryWrapper: {
       flexDirection: 'row',
-      paddingTop: 5,
+      paddingTop: 15,
+      paddingBottom: 3,
       paddingHorizontal: 24,
     },
     mainCategoryPressable: {
@@ -602,6 +629,7 @@ const styles = StyleSheet.create({
     basicTitleWrapper: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
       marginBottom: 24,
     },
     basicTitle: {
@@ -609,12 +637,14 @@ const styles = StyleSheet.create({
       fontSize: getFontSize(18),
       lineHeight: 21,
     },
+
+    allAddWrapper: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
   
     todoListAddAllButton: {
-      fontWeight: '500',
-      fontSize: getFontSize(15),
-      lineHeight: 18,
-      textDecorationLine: 'underline',
+      color: '#4681F6',
     },
   
     contentWrapper: {

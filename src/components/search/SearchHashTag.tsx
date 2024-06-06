@@ -29,7 +29,6 @@ const SearchHashTag = ({
     navigation
 }: any) => {
     const { pressedHashtag } = route.params;
-    console.log('hashtag', pressedHashtag);
     const pageHashTagContent = useRef<number>(0);
     const isHashTagLoading = useRef<boolean>(false);
     const [hashTagContent, setHashTagContent] = useState([]);
@@ -196,10 +195,13 @@ const SearchHashTag = ({
             <SearchContentView 
                 data={hashTagContent} 
                 headerComponent={
+                    hashTagContent.length ?
                     <HashTagResultHeader 
                         data={hashTagContent} 
                         hashTag={pressedHashtag} 
                     />
+                    :
+                    <></>
                 } 
                 onEndReached={onHashTagContentPageEndReached}  
                 onPressContent={openContentModal}
@@ -212,8 +214,10 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         height: '100%',
+        backgroundColor: '#FFFFFF',
     },
     header: {
+        paddingTop: 50,
         paddingHorizontal: 24,
         borderTopColor: 'transparent',
         borderLeftColor: 'transparent',
