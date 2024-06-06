@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Alert, AlertButton} from 'react-native';
 
 import {AppText} from '@/components/common/AppText';
 
@@ -18,9 +18,58 @@ import {createData} from '@/api/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native';
 import {removeToken, setToken} from '@/api/axios';
+import AppVersionInfo, { compareVersions, getLatestVersion } from './AppVersion';
+import DeviceInfo from 'react-native-device-info';
 
 export function Splash({navigation}: any): React.JSX.Element {
-  const isFocused = useIsFocused();
+    const isFocused = useIsFocused();
+
+    async function hasVersionUpdate() {
+        let shouldUpdate = false
+        try {
+            const res = await getLatestVersion()
+            const latest = res.data.data as AppVersionInfo
+            // console.log(latest.version)
+            // console.log(DeviceInfo.getVersion())
+            const hasNewer = compareVersions(latest.version, DeviceInfo.getVersion()) === 1
+            shouldUpdate = hasNewer && latest.showAlert
+            //TODO: os type check
+            if (shouldUpdate) {
+                const buttons: Array<AlertButton> = [
+                    {
+                        text: '업데이트',
+                        onPress: () => {
+                            // TODO: go to appstore
+                        },
+                        style: 'destructive',
+                    },
+                ];
+
+                if (!latest.critical) {
+                    buttons.unshift({
+                        text: '나중에',
+                        onPress: () => {
+                            startLogin();
+                        },
+                        style: 'cancel',
+                    });
+                }
+
+                Alert.alert(
+                    '업데이트',
+                    '더 나은 환경을 제공하기 위해\n 최신버전으로 업데이트가 필요합니다',
+                    buttons,
+                    {
+                        cancelable: true,
+                        onDismiss: () => { },
+                    }
+                );
+            }
+        } catch (e) {
+            console.log('e', e);
+        }
+        return shouldUpdate
+    }
 
   const signInWithKakao = async (): Promise<void> => {
     console.log('카카오 로그인');
@@ -66,6 +115,7 @@ export function Splash({navigation}: any): React.JSX.Element {
   const startLogin = async () => {
     try {
       removeToken();
+      googleSigninConfigure();
       const value = await AsyncStorage.getItem(providerKey);
       console.log('value', value);
       if (value === PROVIDERS.GOOGLE) {
@@ -81,41 +131,49 @@ export function Splash({navigation}: any): React.JSX.Element {
     }
   };
 
-  useEffect(() => {
-    //1. check storage
-    //2. login in silence
-    // if expire ->login
-    //3. call login api
-    //5. add token to header
+    useEffect(() => {
+        //1. check storage
+        //2. login in silence
+        // if expire ->login
+        //3. call login api
+        //5. add token to header
 
-    googleSigninConfigure();
-    startLogin();
-  }, [isFocused]);
-
-  const signIn = async (info: LoginInfo): Promise<void> => {
-    console.log('signIn', info);
-    await createData('/auth/login', info)
-      .then(res => {
-        return res.data.data;
-      })
-      .then(data => {
-        if (data.data.token === null) {
-          throw Error('no token');
+        if (!isFocused) {
+            return
         }
-        setToken(data.data.token);
-        setTimeout(() => {
-          navigation.navigate('HomeTab');
-        }, 1000);
-      })
-      .catch(error => {
-        console.log(error);
-        Toast.show({
-          type: 'error',
-          text1: 'login fail',
-        });
-        navigation.navigate('HomeTab');
-      });
-  };
+        hasVersionUpdate()
+        .then((shouldUpdate) => {
+            console.log("shouldUpdate", shouldUpdate)
+            if (!shouldUpdate) {
+                startLogin()
+            }
+        })
+    }, [isFocused]);
+
+    const signIn = async (info: LoginInfo): Promise<void> => {
+        console.log('signIn', info);
+        await createData('/auth/login', info)
+            .then(res => {
+                return res.data.data;
+            })
+            .then(data => {
+                if (data.data.token === null) {
+                    throw Error('no token');
+                }
+                setToken(data.data.token);
+                setTimeout(() => {
+                    navigation.navigate('HomeTab');
+                }, 1000);
+            })
+            .catch(error => {
+                console.log(error);
+                Toast.show({
+                    type: 'error',
+                    text1: 'login fail',
+                });
+                navigation.navigate('HomeTab');
+            });
+    };
 
   const signInWithGoogle = async (): Promise<void> => {
     console.log('구글 로그인');
