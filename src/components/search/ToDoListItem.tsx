@@ -4,11 +4,6 @@ import {StyleSheet, View, TouchableHighlight, Pressable} from 'react-native';
 import {AppText} from '../common/AppText';
 import {getFontSize} from '../../utils/font';
 import AppIcon from '../common/AppIcon';
-
-import { useRecoilValue } from 'recoil';
-import { categoryListState } from '@/store/categoryState';
-
-import type { CategoryObject } from '@/models/common';
 import type Todo from '@/models/todo';
 
 export type ToDoListItemProps = {
@@ -27,7 +22,7 @@ const ToDoListItem = ({
   return (
     <View style={styles.toDoListItemContainer}>
       <View style={styles.toDoListItemTextContainer}>
-        <View style={styles.toDoListItemTextWrapper}>
+        <View style={hasMainCategory ? styles.toDoListItemTextWrapper : styles.toDoListContentListWrapper}>
           {hasMainCategory ? (
             <AppText style={styles.toDoListItemCategory}>
               {item.category ? item.category.title : '기타'}
@@ -75,11 +70,15 @@ const styles = StyleSheet.create({
     flex: 4,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    
   },
   toDoListItemTextWrapper: {
     // NOTE 한번 더 고민해야 할 부분
     // 컨텐츠 모달 내 컴포넌트와 검색 탭 내 컴포넌트 padding값 관리 협의 필요
     paddingVertical: 18,
+  },
+  toDoListContentListWrapper: {
+    paddingVertical: 25,
   },
   toDoListItemCategory: {
     alignSelf: 'flex-start',

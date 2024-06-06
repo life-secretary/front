@@ -264,21 +264,15 @@ const SearchScreen = ({
   };
 
   const pressRemoveSearchTextButton = () => {
-    setIsSearchResultPage(false);
     setSearchText('');
   };
 
   const changeSearchText = (text: string) => {
-    // 검색창에 텍스트가 없을시 검색어 화면으로 돌아오기
-    if (text.length === 0) {
-      setIsSearchResultPage(false);
-    }
-
     setSearchText(text);
   };
 
   const submitSearchText = ({ nativeEvent }: any) => {
-
+    pressSearchButton();
   };
 
   const currentData = () => {
@@ -400,14 +394,29 @@ const SearchScreen = ({
           ) : (
             <></>
           )}
-          <SearchTextInput
-            isSearchResultPage={isSearchResultPage}
-            searchText={searchText}
-            changeSearchText={changeSearchText}
-            submitSearchText={submitSearchText}
-            pressRemoveSearchTextButton={pressRemoveSearchTextButton}
-            pressSearchButton={pressSearchButton}
-          />
+          <View style={styles.wrapper}>
+            {
+              isSearchResultPage &&
+              <View style={styles.backIconWrapper}>
+                <AppIcon 
+                    name='back'
+                    width={36}
+                    height={36}
+                    onPress={() => setIsSearchResultPage(false)}
+                />
+              </View>
+            } 
+            <View style={styles.textInputWrapper}>
+              <SearchTextInput
+                isSearchResultPage={isSearchResultPage}
+                searchText={searchText}
+                changeSearchText={changeSearchText}
+                submitSearchText={submitSearchText}
+                pressRemoveSearchTextButton={pressRemoveSearchTextButton}
+                pressSearchButton={pressSearchButton}
+              />
+            </View>
+          </View>
           {
             !isSearchResultPage ? 
             <></> 
@@ -434,11 +443,14 @@ const SearchScreen = ({
         <SearchContentView
           data={contentData}
           headerComponent={
+            contentData.length ? 
             <HeaderSearchResult
               data={contentData}
               searchData={searchConditionContentData}
               onPressButton={onPressContentViewConditionButton}
             />
+            :
+            <></>
           }
           onEndReached={onContentPageEndReached}
           onPressContent={onPressContent}
@@ -447,11 +459,14 @@ const SearchScreen = ({
         <SearchToDoView 
           data={toDoData} 
           headerComponent={
+            toDoData.length ?
             <HeaderSearchResult
               data={toDoData}
               searchData={searchConditionToDoData}
               onPressButton={onPressToDoViewConditionButton}
             />
+            :
+            <></>
           } 
           onEndReached={onToDoPageEndReached}
           onPressToDo={onPressToDo}
@@ -500,6 +515,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'column',
+    paddingTop: 25,
     paddingHorizontal: 24,
     borderWidth: 0.5,
     borderTopColor: 'transparent',
@@ -510,6 +526,17 @@ const styles = StyleSheet.create({
   },
   headerWrapper: {
     width: '100%',
+  },
+
+  wrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  backIconWrapper: {
+    flex: 2,
+  },
+  textInputWrapper: {
+    flex: 15,
   },
 
   logoContainer: {
