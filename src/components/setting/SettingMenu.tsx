@@ -5,17 +5,21 @@ import {SettingMenuItem} from '@/components/setting/SettingMenuItem';
 
 type SettingMenuProps = {
   settingMenuList: object[];
+  appVersion?: object;
 };
 
 export function SettingMenu({
   settingMenuList,
+  appVersion,
 }: SettingMenuProps): React.JSX.Element {
   return (
     <View style={styles.container}>
       <FlatList
         scrollEnabled={false}
         data={settingMenuList}
-        renderItem={({item}) => <SettingMenuItem settingMenu={item} />}
+        renderItem={({item}) => (
+          <SettingMenuItem settingMenu={item} appVersion={appVersion} />
+        )}
         keyExtractor={item => item.key}
         contentContainerStyle={styles.listContainer}
       />

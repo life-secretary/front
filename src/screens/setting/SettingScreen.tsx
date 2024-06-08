@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {fetchData} from '@/api/api';
 
 import {StyleSheet, View} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
@@ -57,7 +58,23 @@ const SETTING_MENU_LIST = [
   ],
 ];
 
-export function SettingScreen({navigation}: any): React.JSX.Element {
+export function SettingScreen(): React.JSX.Element {
+  const [appVersion, setAppVersion] = useState({});
+
+  useEffect(() => {
+    const fetchAppVersion = async () => {
+      const res = await fetchData('/app-version/latest', null);
+
+      if (res.status === 200) {
+        setAppVersion(res.data.data);
+      }
+
+      return res.data.data;
+    };
+
+    fetchAppVersion();
+  }, []);
+
   return (
     <AppLayout isPaddingUsed={true} style={styles.layout}>
       <AppHeader style={styles.header}>
@@ -73,7 +90,10 @@ export function SettingScreen({navigation}: any): React.JSX.Element {
         </View>
         <SettingMenu settingMenuList={SETTING_MENU_LIST[0]} />
         <View style={styles.divider} />
-        <SettingMenu settingMenuList={SETTING_MENU_LIST[1]} />
+        <SettingMenu
+          settingMenuList={SETTING_MENU_LIST[1]}
+          appVersion={appVersion}
+        />
         <View style={styles.divider} />
         <SettingMenu settingMenuList={SETTING_MENU_LIST[2]} />
       </View>
