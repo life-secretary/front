@@ -11,10 +11,12 @@ import {getFontSize} from '@/utils/font';
 
 type SettingMenuItemProps = {
   settingMenu: object;
+  appVersion?: object;
 };
 
 export function SettingMenuItem({
   settingMenu,
+  appVersion,
 }: SettingMenuItemProps): React.JSX.Element {
   const navigation = useNavigation();
 
@@ -42,7 +44,7 @@ export function SettingMenuItem({
       />
       {settingMenu?.key === 'version' && (
         <View style={styles.row}>
-          <AppText style={styles.infoText}>1.0.1</AppText>
+          <AppText style={styles.infoText}>{appVersion?.version}</AppText>
           <AppButton
             text="업데이트"
             textStyle={styles.infoText}
