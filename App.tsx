@@ -18,6 +18,7 @@ import {TodoFormModalScreen} from './src/screens/todo/TodoFormModalScreen';
 import WrappedSettingScreen from './src/screens/setting/WrappedSettingScreen';
 import {SettingModalScreen} from './src/screens/setting/SettingModalScreen';
 import {MyInfoModalScreen} from './src/screens/setting/MyInfoModalScreen';
+import {OpenSourceModalScreen} from './src/screens/setting/OpenSourceModalScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import {AppText} from './src/components/common/AppText';
 import {AppErrorFallback} from './src/components/common/AppErrorFallback';
@@ -155,6 +156,10 @@ function RootStack() {
         <Stack.Screen name="TodoForm" component={TodoFormModalScreen} />
         <Stack.Screen name="SettingModal" component={SettingModalScreen} />
         <Stack.Screen name="MyInfoModal" component={MyInfoModalScreen} />
+        <Stack.Screen
+          name="OpenSourceModal"
+          component={OpenSourceModalScreen}
+        />
         <Stack.Screen name="SearchCategoryModal" component={SearchCategory} />
         <Stack.Screen name="ContentModal" component={Content} />
         <Stack.Screen name="SearchHashTagModal" component={SearchHashTag} />
