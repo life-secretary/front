@@ -16,8 +16,10 @@ import { userInfoState } from '@/store/login';
 import { styles } from '@/styles/survey';
 
 const GetCategory = ({
-    navigation
+    navigation,
+    route
 }: any) => {
+    const { modify } = route.params;
     const categoryList = useRecoilValue(surveyCategoryListState);
     const [userInfo, setUserInfo] = useRecoilState(userInfoState);
     const [containerWidth, setContainerWidth] = useState(0);
@@ -25,6 +27,28 @@ const GetCategory = ({
 
     const margins = 12;
     const numColumns = 2;
+
+    const onPressBackButton = () => {
+        if (modify) {
+            navigation.navigate('SettingModal', {
+                headerTitle: '내 정보',
+                menu: { key: 'my', title: '내 정보' },
+            });
+            return;
+        }
+
+        navigation.navigate('GetGender')
+    };
+
+    const onPressSubmitButton = () => {
+        if (modify) {
+            // TODO api 관심사 수정 요청
+            navigation.navigate('SettingModal');
+            return;
+        }
+
+        navigation.navigate('GetOccupation')
+    };
 
     const onPressCategoryButton = (index: number) => {
         setData((previousValue) => {
@@ -82,7 +106,7 @@ const GetCategory = ({
                     name='back'
                     width={42}
                     height={42}
-                    onPress={() => navigation.navigate('GetGender')}
+                    onPress={onPressBackButton}
                 />
             </AppHeader>
             <View style={styles.titleContainer}>
@@ -118,10 +142,10 @@ const GetCategory = ({
             />
             <View style={styles.buttonContainer}>
                 <AppButton 
-                    text='다음'
+                    text={modify ? '완료' : '다음'}
                     textStyle={styles.nextButtonText}
                     buttonStyle={[styles.nextButton, !checkCategorySelect() ? styles.nextButtonDisabled : {}]}
-                    onPressButton={!checkCategorySelect() ? () => {} : () => navigation.navigate('GetOccupation')}
+                    onPressButton={!checkCategorySelect() ? () => {} : () => onPressSubmitButton()}
                 />
             </View>
         </View>
