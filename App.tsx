@@ -37,6 +37,14 @@ import SearchCategory from './src/components/search/SearchCategory';
 import SearchHashTag from './src/components/search/SearchHashTag';
 import Content from './src/components/contentDetail/Content';
 import ToDoDetail from './src/components/search/ToDoDetail';
+import Agreement from './src/screens/init/Agreement';
+import GetNickName from './src/screens/survey/GetNickName';
+import GetBirthDate from './src/screens/survey/GetBirthDate';
+import GetGender from './src/screens/survey/GetGender';
+import GetCategory from './src/screens/survey/GetCategory';
+import GetOccupation from './src/screens/survey/GetOccupation';
+import GetMarriage from './src/screens/survey/GetMarriage';
+import Welcome from './src/screens/init/Welcome';
 
 import {getFontSize} from './src/utils/font';
 
@@ -144,6 +152,14 @@ function RootStack() {
       </Stack.Group>
       <Stack.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Agreement" component={Agreement} />
+        <Stack.Screen name="GetNickName" component={GetNickName} />
+        <Stack.Screen name="GetBirthDate" component={GetBirthDate} />
+        <Stack.Screen name="GetGender" component={GetGender} />
+        <Stack.Screen name="GetCategory" component={GetCategory} />
+        <Stack.Screen name="GetOccupation" component={GetOccupation} />
+        <Stack.Screen name="GetMarriage" component={GetMarriage} />
+        <Stack.Screen name="Welcome" component={Welcome} />
       </Stack.Group>
       <Stack.Group>
         <Stack.Screen name="HomeTab" component={HomeTabs} />

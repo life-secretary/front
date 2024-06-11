@@ -1,5 +1,8 @@
-import React, { ChangeEvent, Component, useEffect, useState, useRef } from 'react';
-import { View, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { 
+    View, 
+    FlatList,
+} from 'react-native';
 
 import { AppText } from '@/components/common/AppText';
 import { AppHeader } from '@/components/common/AppHeader';
@@ -7,61 +10,48 @@ import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { surveyCategoryListState } from '@/store/categoryState';
 import { userInfoState } from '@/store/login';
-import { surveyOccupationListState } from '@/store/occupation';
 
-import { styles } from '../../screens/init/Survey';
-import type { SurveyProccessProps } from '../../screens/init/Survey';
+import { styles } from '@/styles/survey';
 
-const GetOccupation = ({
-    backButtonHandler,
-    nextButtonHandler,
-    closeStartProcess,
-}: SurveyProccessProps): React.JSX.Element => {
-    const occupationList = useRecoilValue(surveyOccupationListState);
+const GetCategory = ({
+    navigation
+}: any) => {
+    const categoryList = useRecoilValue(surveyCategoryListState);
     const [userInfo, setUserInfo] = useRecoilState(userInfoState);
     const [containerWidth, setContainerWidth] = useState(0);
-    const [data, setData] = useState(occupationList);
+    const [data, setData] = useState(categoryList);
 
     const margins = 12;
     const numColumns = 2;
 
-    const onPressOccupationButton = (index: number) => {
+    const onPressCategoryButton = (index: number) => {
         setData((previousValue) => {
             const newValue = previousValue.map((item, idx, array) => {
-                const lastOneSelected = array[array.length - 1].selected
-                if (index === array.length - 1) {
-                    if (!lastOneSelected) {
-                        return { ...item, selected: idx === array.length - 1 }
-                    }
-                }
-
                 if (idx === index) {
                     item.selected = !item.selected;
-                    if (lastOneSelected) {
-                        array[array.length - 1].selected = false
-                    }
                 }
 
                 return item;
             });
 
             setUserInfo((previousValue) => {
-                const jobIds = newValue
-                .filter((item) => item.selected)
-                .map((item) => item.id);
-
+                const interests = newValue
+                    .filter((item) => item.selected)
+                    .map((item) => item.id);
+                    
                 return {
                     ...previousValue,
-                    jobIds,
-                }
-            });
+                    interests,
+                };
+            })
 
             return newValue;
         });
     };
 
-    const checkOccupationSelect = () => {
+    const checkCategorySelect = () => {
         return data.reduce((prev, curr) => {
             return prev || curr.selected;
         }, false);
@@ -69,12 +59,12 @@ const GetOccupation = ({
 
     useEffect(() => {
         setData((previousValue) => {
-            const newData = occupationList.map((item) => {
+            const newData = categoryList.map((item) => {
                 return {...item, selected: false};
             });
 
-            userInfo.jobIds.forEach((id) => {
-                const item = newData.find((jobData) => jobData.id === id);
+            userInfo.interests.forEach((id) => {
+                const item = newData.find((category) => category.id === id);
                 
                 if (item) {
                     item.selected = true;
@@ -92,18 +82,13 @@ const GetOccupation = ({
                     name='back'
                     width={42}
                     height={42}
-                    onPress={backButtonHandler}
+                    onPress={() => navigation.navigate('GetGender')}
                 />
-                {/* <AppButton 
-                    text='건너뛰기'
-                    textStyle={styles.passButtonText}
-                    onPressButton={closeStartProcess}
-                /> */}
             </AppHeader>
-            <View>
+            <View style={styles.titleContainer}>
                 <View style={styles.textContainer}>
-                    <AppText style={styles.titleText}>직업군을 선택해 주세요</AppText>
-                    <AppText style={styles.subTitleText}>직업별로 유용한 정보를 알려드려요 (중복가능)</AppText>
+                    <AppText style={styles.titleText}>알고 싶은 분야를 선택해 주세요</AppText>
+                    <AppText style={styles.subTitleText}>관심사 기반으로 정보를 볼 수 있어요 (최소 1개 이상)</AppText>
                 </View>
             </View>
             <FlatList 
@@ -124,7 +109,7 @@ const GetOccupation = ({
                                 },
                                 item.selected ? styles.buttonSelected : styles.buttonUnselected
                             ]}
-                            onPressButton={() => onPressOccupationButton(index)}
+                            onPressButton={() => onPressCategoryButton(index)}
                         />
                     );
                 }}
@@ -135,12 +120,12 @@ const GetOccupation = ({
                 <AppButton 
                     text='다음'
                     textStyle={styles.nextButtonText}
-                    buttonStyle={[styles.nextButton, !checkOccupationSelect() ? styles.nextButtonDisabled : {}]}
-                    onPressButton={!checkOccupationSelect() ? () => {} : () => nextButtonHandler()}
+                    buttonStyle={[styles.nextButton, !checkCategorySelect() ? styles.nextButtonDisabled : {}]}
+                    onPressButton={!checkCategorySelect() ? () => {} : () => navigation.navigate('GetOccupation')}
                 />
             </View>
         </View>
     );
 };
 
-export default GetOccupation;
+export default GetCategory;

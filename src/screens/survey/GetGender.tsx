@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Component, useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
     View, 
     FlatList,
@@ -12,13 +12,11 @@ import AppButton from '@/components/common/AppButton';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '@/store/login';
 
-import { styles } from '../../screens/init/Survey';
-import type { SurveyProccessProps } from '../../screens/init/Survey';
+import { styles } from '@/styles/survey';
 
 const GetGender = ({
-    backButtonHandler,
-    nextButtonHandler,
-}: SurveyProccessProps): React.JSX.Element => {
+    navigation
+}: any) => {
     const [userInfo, setUserInfo] = useRecoilState(userInfoState);
     const [containerWidth, setContainerWidth] = useState(0);
     const [data, setData] = useState([
@@ -69,10 +67,10 @@ const GetGender = ({
                     name='back'
                     width={42}
                     height={42}
-                    onPress={backButtonHandler}
+                    onPress={() => navigation.navigate('GetBirthDate')}
                 />
             </AppHeader>
-            <View>
+            <View style={styles.titleContainer}>
                 <View style={styles.textContainer}>
                     <AppText style={styles.titleText}>성별을 선택해 주세요</AppText>
                     <AppText style={styles.subTitleText}>관리 페이지에서 언제든지 변경할 수 있어요</AppText>
@@ -108,11 +106,11 @@ const GetGender = ({
                     text='다음'
                     textStyle={styles.nextButtonText}
                     buttonStyle={styles.nextButton}
-                    onPressButton={() => nextButtonHandler()}
+                    onPressButton={() => navigation.navigate('GetCategory')}
                 />
             </View>
         </View>
     );
-};
+}
 
 export default GetGender;
