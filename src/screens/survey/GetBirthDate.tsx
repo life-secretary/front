@@ -14,13 +14,11 @@ import AppButton from '@/components/common/AppButton';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '@/store/login';
 
-import { styles } from '../../screens/init/Survey';
-import type { SurveyProccessProps } from '../../screens/init/Survey';
+import { styles } from '@/styles/survey';
 
 const GetBirthDate = ({
-    backButtonHandler,
-    nextButtonHandler,
-}: SurveyProccessProps): React.JSX.Element => {
+    navigation
+}: any) => {
     const currentDate = new Date();
     const yearRef = useRef(null);
     const monthRef = useRef(null);
@@ -113,7 +111,6 @@ const GetBirthDate = ({
     };
 
     const allTextInputFull = () => {
-        console.log('userInfo', userInfo);
         if (!userInfo) {
             return false;
         }
@@ -136,10 +133,10 @@ const GetBirthDate = ({
                         name='back'
                         width={42}
                         height={42}
-                        onPress={backButtonHandler}
+                        onPress={() => navigation.navigate('GetNickName')}
                     />
                 </AppHeader>
-                <View>
+                <View style={styles.titleContainer}>
                     <View style={styles.textContainer}>
                         <AppText style={styles.titleText}>생년월일을 입력해 주세요</AppText>
                         <AppText style={styles.subTitleText}>나이에 맞는 정보를 제공해드리기 위해 필요해요</AppText>
@@ -180,12 +177,13 @@ const GetBirthDate = ({
                         text='다음'
                         textStyle={styles.nextButtonText}
                         buttonStyle={[styles.nextButton, (isError || !allTextInputFull()) ? styles.nextButtonDisabled : {}]}
-                        onPressButton={(isError || !allTextInputFull()) ? () => {} : () => nextButtonHandler()}
+                        disabled={(isError || !allTextInputFull())}
+                        onPressButton={(isError || !allTextInputFull()) ? () => {} : () => navigation.navigate('GetGender')}
                     />
                 </View>
             </View>
         </KeyboardAvoidingView>
-    );
+    )
 };
 
 export default GetBirthDate;

@@ -14,13 +14,11 @@ import AppButton from '@/components/common/AppButton';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '@/store/login';
 
-import { styles } from '../../screens/init/Survey';
-import type { SurveyProccessProps } from '../../screens/init/Survey';
+import { styles } from '@/styles/survey';
 
 const GetNickName = ({
-    backButtonHandler,
-    nextButtonHandler,
-}: SurveyProccessProps): React.JSX.Element => {
+    navigation
+}: any) => {
     const [userInfo, setUserInfo] = useRecoilState(userInfoState);
     const [isError, setIsError] = useState(true)
 
@@ -46,6 +44,14 @@ const GetNickName = ({
         });
     };
 
+    const allTextInputFull = () => {
+        if (!userInfo) {
+            return false;
+        }
+        
+        return !!userInfo.nickname.length;
+    };
+
     useEffect(() => {
         setIsError(false);
     }, []);
@@ -61,10 +67,10 @@ const GetNickName = ({
                         name='back'
                         width={42}
                         height={42}
-                        onPress={backButtonHandler}
+                        onPress={() => navigation.navigate('Agreement')}
                     />
                 </AppHeader>
-                <View>
+                <View style={styles.titleContainer}>
                     <View style={styles.textContainer}>
                         <AppText style={styles.titleText}>닉네임을 알려주세요</AppText>
                         <AppText style={styles.subTitleText}>공백없이 6자 내로 입력할 수 있어요 (특수문자 불가)</AppText>
@@ -80,14 +86,14 @@ const GetNickName = ({
                     <AppButton 
                         text='다음'
                         textStyle={styles.nextButtonText}
-                        buttonStyle={[styles.nextButton, isError ? styles.nextButtonDisabled : {}]}
-                        disabled={isError}
-                        onPressButton={isError ? () => {} : () => nextButtonHandler()}
+                        buttonStyle={[styles.nextButton, (isError || !allTextInputFull()) ? styles.nextButtonDisabled : {}]}
+                        disabled={(isError || !allTextInputFull())}
+                        onPressButton={(isError || !allTextInputFull()) ? () => {} : () => navigation.navigate('GetBirthDate')}
                     />
                 </View>
             </View>
         </KeyboardAvoidingView>
-    )
+    );
 };
 
 export default GetNickName;

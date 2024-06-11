@@ -4,7 +4,6 @@ import {View, StyleSheet} from 'react-native';
 import {AppText} from '@/components/common/AppText';
 import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
-import Agreement from '../init/Agreement';
 
 import {getFontSize} from '@/utils/font';
 
@@ -25,7 +24,6 @@ import Config from 'react-native-config';
 
 export function Login({navigation}: any): React.JSX.Element {
   const [isLogin, setIsLogin] = useState(false);
-  const [isStartModalOpen, setIsStartModalOpen] = useState(false);
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const [kakaoToken, setKakaoToken] = useState<KakaoOAuthToken>();
@@ -123,7 +121,7 @@ export function Login({navigation}: any): React.JSX.Element {
         //기존 가입된 유저가 아니면 회원가입으로 넘어갑니다.
         console.log(error);
         setIsLogin(true);
-        setIsStartModalOpen(true);
+        navigation.navigate('Agreement');
       });
   };
 
@@ -135,12 +133,7 @@ export function Login({navigation}: any): React.JSX.Element {
     signInWithGoogle();
   };
 
-  const closeStartModal = () => {
-    setIsStartModalOpen(false);
-  };
-
   const closeStartProcess = () => {
-    setIsStartModalOpen(false);
     navigation.navigate('Splash');
   };
 
@@ -177,11 +170,6 @@ export function Login({navigation}: any): React.JSX.Element {
           onPressButton={onPressGoogleLoginButton}
         />
       </View>
-      <Agreement
-        isVisible={isStartModalOpen}
-        closeModalHandler={closeStartModal}
-        closeStartProcess={closeStartProcess}
-      />
       <Toast />
     </View>
   );

@@ -29,7 +29,6 @@ import {HomeContentListWithFilter} from '@/components/home/homeContent/HomeConte
 import {HomeImageCarousel} from '@/components/home/HomeImageCarousel';
 import {HomeContentList} from '@/components/home/homeContent/HomeContentList';
 import {SendFeedbackButton} from '@/components/home/SendFeedbackButton';
-import Login from './init/Login';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 
@@ -297,7 +296,6 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
           <SendFeedbackButton />
         </View>
       </ScrollView>
-      {/* <Login isVisible={!isDone} closeAllProcess={closeAllProcess} /> */}
     </AppLayout>
   );
 }

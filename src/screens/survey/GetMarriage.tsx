@@ -12,14 +12,11 @@ import AppButton from '@/components/common/AppButton';
 import { useRecoilState } from 'recoil';
 import { userInfoState } from '@/store/login';
 
-import { styles } from '../../screens/init/Survey';
-import type { SurveyProccessProps } from '../../screens/init/Survey';
+import { styles } from '@/styles/survey';
 
 const GetMarriage = ({
-    backButtonHandler,
-    nextButtonHandler,
-    closeStartProcess,
-}: SurveyProccessProps): React.JSX.Element => {
+    navigation
+}: any) => {
     const [userInfo, setUserInfo] = useRecoilState(userInfoState);
     const [containerWidth, setContainerWidth] = useState(0);
     const [dataMarriage, setDataMarriage] = useState([
@@ -144,15 +141,15 @@ const GetMarriage = ({
                     name='back'
                     width={42}
                     height={42}
-                    onPress={backButtonHandler}
+                    onPress={() => navigation.navigate('GetOccupation')}
                 />
-                {/* <AppButton 
+                <AppButton 
                     text='건너뛰기'
                     textStyle={styles.passButtonText}
-                    onPressButton={closeStartProcess}
-                /> */}
+                    onPressButton={() => navigation.navigate('Welcome')}
+                />
             </AppHeader>
-            <View>
+            <View style={styles.titleContainer}>
                 <View style={styles.textContainer}>
                     <AppText style={styles.titleText}>결혼 및 자녀 정보를 알려주세요</AppText>
                     <AppText style={styles.subTitleText}>다양한 혜택과 제도에 대해 알려드려요</AppText>
@@ -229,11 +226,11 @@ const GetMarriage = ({
                     text='다음'
                     textStyle={styles.nextButtonText}
                     buttonStyle={[styles.nextButton, !checkAllDataSelect() ? styles.nextButtonDisabled : {}]}
-                    onPressButton={!checkAllDataSelect() ? () => {} : () => nextButtonHandler({ dataMarriage, dataChildren })}
+                    onPressButton={!checkAllDataSelect() ? () => {} : () => navigation.navigate('Welcome')}
                 />
             </View>
         </View>
     );
-};
+}
 
 export default GetMarriage;

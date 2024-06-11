@@ -9,17 +9,15 @@ import { AppHeader } from '@/components/common/AppHeader';
 import AppIcon from '@/components/common/AppIcon';
 import AppButton from '@/components/common/AppButton';
 
-import { styles } from '../../screens/init/Survey';
-import type { SurveyProccessProps } from '../../screens/init/Survey';
+import { styles } from '@/styles/survey';
 import { useRecoilValue } from 'recoil';
 import { UserInfo, userInfoState } from '@/store/login';
 import { createData } from '@/api/api';
 import Toast from 'react-native-toast-message';
 
 const Welcome = ({
-    backButtonHandler,
-    nextButtonHandler,
-}: SurveyProccessProps): React.JSX.Element => {
+    navigation
+}: any) => {
     const userInfo = useRecoilValue(userInfoState);
     const convertStateToUser = (info: UserInfo) => {
         const { provider, providerId, email, nickname, year, month, day, gender, jobIds, interests, married, hasChild } = info;
@@ -40,11 +38,9 @@ const Welcome = ({
 
     const signup = async () => {
         const newInfo = convertStateToUser(userInfo)
-        // console.log("signup", userInfo)
         const res = await createData('/auth/signUp', newInfo)
         .then(res => {
-            // console.log(res)
-            nextButtonHandler()
+            navigation.navigate('Splash');
         })
         .catch(error => {
             console.log(error)
@@ -53,8 +49,8 @@ const Welcome = ({
                 text1: 'sign up fail',
             });
         })
-    }
-    
+    };
+
     return (
         <View style={styles.container}>
             <AppHeader style={styles.headerContainer}>
@@ -62,10 +58,10 @@ const Welcome = ({
                     name='back'
                     width={42}
                     height={42}
-                    onPress={backButtonHandler}
+                    onPress={() => navigation.navigate('GetMarriage')}
                 />
             </AppHeader>
-            <View>
+            <View style={styles.titleContainer}>
                 <View style={styles.textContainer}>
                     <AppText style={styles.welcomeText}>어서오세요! 인생비서에</AppText>
                     <AppText style={styles.welcomeText}>오신것을 환영합니다</AppText>
@@ -74,7 +70,6 @@ const Welcome = ({
             <View>
                 <View style={{
                     position: 'absolute',
-                    left: -10,
                     top: -30,
                 }}>
                     <Image 
@@ -84,8 +79,8 @@ const Welcome = ({
                 </View>
                 <View style={{
                     position: 'absolute',
-                    left: '-15%',
-                    top: 100,
+                    left: '-13%',
+                    top: 150,
                     zIndex: 1,
                 }}>
                     <Image 
