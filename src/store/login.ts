@@ -1,4 +1,6 @@
-import { atom, selector } from 'recoil';
+import { removeToken, setToken } from '@/api/axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { atom } from 'recoil';
 
 export const userInfoState = atom<UserInfo>({
   key: 'UserInfo',
@@ -39,8 +41,51 @@ export interface LoginInfo {
 }
 
 export const providerKey = '@providerKey';
-export const idTokenKey = '@idTokenKey'
-// export const tokenKey = '@tokenKey'
+export const refreshTokenKey = '@refreshTokenKey'
+
+export const setTokens = async (accessToken: string, refreshToken: string) => {
+  try {
+    setToken(accessToken)
+    await AsyncStorage.setItem(refreshTokenKey, refreshToken);
+  } catch (error) {
+    console.error('Error saving tokens:', error);
+  }
+};
+
+export const getRefreshToken = async () => {
+  try {
+    const refreshToken = await AsyncStorage.getItem(refreshTokenKey);
+    if (refreshToken !== null) {
+      console.log('Refresh token retrieved successfully:', refreshToken);
+      return refreshToken;
+    } else {
+      console.log('No refresh token found');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error retrieving refresh token:', error);
+    return null;
+  }
+};
+
+const removeRefreshToken = async () => {
+  try {
+    await AsyncStorage.removeItem(refreshTokenKey)
+    console.log('All tokens removed successfully');
+  } catch (error) {
+    console.error('Error removing tokens:', error);
+  }
+};
+
+export async function clearAuth() {
+  try {
+    removeToken()
+    removeRefreshToken()
+    await AsyncStorage.removeItem(providerKey)
+  } catch (error) {
+    console.error('Error remove tokens:', error);
+  }
+}
 
 export const PROVIDERS = {
   KAKAO: 'KAKAO',

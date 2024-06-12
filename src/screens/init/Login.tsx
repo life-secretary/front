@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 
 import {AppText} from '@/components/common/AppText';
@@ -9,7 +9,7 @@ import Agreement from '../init/Agreement';
 import {getFontSize} from '@/utils/font';
 
 import {useRecoilState} from 'recoil';
-import {LoginInfo, PROVIDERS, idTokenKey, providerKey, userInfoState} from '@/store/login';
+import {LoginInfo, PROVIDERS, providerKey, setTokens, userInfoState} from '@/store/login';
 
 import {
   login,
@@ -21,7 +21,7 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createData } from '@/api/api';
-import { setToken } from '@/api/axios';
+import Config from 'react-native-config';
 
 export function Login({navigation}: any): React.JSX.Element {
   const [isLogin, setIsLogin] = useState(false);
@@ -39,14 +39,13 @@ export function Login({navigation}: any): React.JSX.Element {
     }
   };
 
-  const storeIdToken = async (value: string) => {
-    try {
-      await AsyncStorage.setItem(idTokenKey, value);
-    } catch (error) {
-      console.log(error);
-    }
+  const googleSigninConfigure = () => {
+    GoogleSignin.configure({
+      webClientId: Config.GOOGLE_AUTH_WEB_ID,
+      iosClientId: Config.GOOGLE_AUTH_IOS_ID,
+    });
   };
-
+  
   const signInWithKakao = async (): Promise<void> => {
     console.log('카카오 로그인');
     try {
@@ -64,7 +63,6 @@ export function Login({navigation}: any): React.JSX.Element {
 
         return newValue;
       });
-      storeIdToken(token.idToken)
       storeProvider(PROVIDERS.KAKAO);
       const loginInfo: LoginInfo = {
         provider: 'kakao',
@@ -79,6 +77,7 @@ export function Login({navigation}: any): React.JSX.Element {
   const signInWithGoogle = async (): Promise<void> => {
     console.log('구글 로그인');
     try {
+      googleSigninConfigure()
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
 
@@ -105,24 +104,24 @@ export function Login({navigation}: any): React.JSX.Element {
   };
 
   const signIn = async (info: LoginInfo): Promise<void> => {
-    console.log('signIn', info);
+    // console.log('signIn', info);
     await createData('/auth/login', info)
       .then(res => {
         return res.data.data;
       })
       .then(data => {
-        if (data.data.token === null) {
+        let accessToken = data.data.accessToken
+        let refreshToken = data.data.refreshToken
+        if (accessToken === null) {
           throw Error('no token');
         }
-        setToken(data.data.token);
+        setTokens(accessToken, refreshToken)
+        //전에 가입한 사용자
         closeStartProcess()
       })
       .catch(error => {
+        //기존 가입된 유저가 아니면 회원가입으로 넘어갑니다.
         console.log(error);
-        // Toast.show({
-        //   type: 'error',
-        //   text1: 'login fail',
-        // });
         setIsLogin(true);
         setIsStartModalOpen(true);
       });

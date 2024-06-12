@@ -1,215 +1,134 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Alert, AlertButton} from 'react-native';
+import React, { useEffect } from 'react';
+import { View, StyleSheet, Alert, AlertButton } from 'react-native';
 
-import {AppText} from '@/components/common/AppText';
+import { AppText } from '@/components/common/AppText';
 
-import {getFontSize} from '@/utils/font';
+import { getFontSize } from '@/utils/font';
 
-import {LoginInfo, PROVIDERS, idTokenKey, providerKey} from '@/store/login';
+import { getRefreshToken, setTokens } from '@/store/login';
 
-import {getProfile} from '@react-native-seoul/kakao-login';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
-import Config from 'react-native-config';
-import {createData} from '@/api/api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useIsFocused} from '@react-navigation/native';
-import {removeToken, setToken} from '@/api/axios';
+import { createData } from '@/api/api';
+import { useIsFocused } from '@react-navigation/native';
+import { removeToken } from '@/api/axios';
 import AppVersionInfo, { compareVersions, getLatestVersion } from './AppVersion';
 import DeviceInfo from 'react-native-device-info';
 
-export function Splash({navigation}: any): React.JSX.Element {
-    const isFocused = useIsFocused();
+export function Splash({ navigation }: any): React.JSX.Element {
+  const isFocused = useIsFocused();
 
-    async function hasVersionUpdate() {
-        let shouldUpdate = false
-        try {
-            const res = await getLatestVersion()
-            const latest = res.data.data as AppVersionInfo
-            // console.log(latest.version)
-            // console.log(DeviceInfo.getVersion())
-            const hasNewer = compareVersions(latest.version, DeviceInfo.getVersion()) === 1
-            shouldUpdate = hasNewer && latest.showAlert
-            //TODO: os type check
-            if (shouldUpdate) {
-                const buttons: Array<AlertButton> = [
-                    {
-                        text: '업데이트',
-                        onPress: () => {
-                            // TODO: go to appstore
-                        },
-                        style: 'destructive',
-                    },
-                ];
-
-                if (!latest.critical) {
-                    buttons.unshift({
-                        text: '나중에',
-                        onPress: () => {
-                            startLogin();
-                        },
-                        style: 'cancel',
-                    });
-                }
-
-                Alert.alert(
-                    '업데이트',
-                    '더 나은 환경을 제공하기 위해\n 최신버전으로 업데이트가 필요합니다',
-                    buttons,
-                    {
-                        cancelable: true,
-                        onDismiss: () => { },
-                    }
-                );
-            }
-        } catch (e) {
-            console.log('e', e);
-        }
-        return shouldUpdate
-    }
-
-  const signInWithKakao = async (): Promise<void> => {
-    console.log('카카오 로그인');
+  async function hasVersionUpdate() {
+    let shouldUpdate = false
     try {
-        var idToken = await AsyncStorage.getItem(idTokenKey)
-        await getProfile()
-        .then(res => {
-          // console.log('userInfo', res);
-          if (res === null) {
-            //??
-          } else {
-            //TODO: change
-            const loginInfo: LoginInfo = {
-              provider: 'kakao',
-              idToken: idToken!!
-            };
-            signIn(loginInfo);
-          }
-        })
-        .catch(error => {
-          if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-            // user has not signed in yet
-            navigation.navigate('Login');
-          } else {
-            Toast.show({
-              type: error,
-              text1: 'login fail' + error.code,
-            });
-          }
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      const res = await getLatestVersion()
+      const latest = res.data.data as AppVersionInfo
+      // console.log(latest.version)
+      // console.log(DeviceInfo.getVersion())
+      const hasNewer = compareVersions(latest.version, DeviceInfo.getVersion()) === 1
+      shouldUpdate = hasNewer && latest.showAlert
+      //TODO: os type check
+      if (shouldUpdate) {
+        const buttons: Array<AlertButton> = [
+          {
+            text: '업데이트',
+            onPress: () => {
+              // TODO: go to appstore
+            },
+            style: 'destructive',
+          },
+        ];
 
-  const googleSigninConfigure = () => {
-    GoogleSignin.configure({
-      webClientId: Config.GOOGLE_AUTH_WEB_ID,
-      iosClientId: Config.GOOGLE_AUTH_IOS_ID,
-    });
+        if (!latest.critical) {
+          buttons.unshift({
+            text: '나중에',
+            onPress: () => {
+              startLogin();
+            },
+            style: 'cancel',
+          });
+        }
+
+        Alert.alert(
+          '업데이트',
+          '더 나은 환경을 제공하기 위해\n 최신버전으로 업데이트가 필요합니다',
+          buttons,
+          {
+            cancelable: true,
+            onDismiss: () => { },
+          }
+        );
+      }
+    } catch (e) {
+      console.log('e', e);
+    }
+    return shouldUpdate
+  }
+
+  const authToken = async (token: string): Promise<void> => {
+    console.log('authToken');
+    const req = {
+      refreshToken: token
+    };
+    await createData('/auth/refresh-token', req)
+      .then(res => {
+        return res.data.data;
+      })
+      .then(data => {
+        if (data.accessToken === null) {
+          throw Error('no token');
+        }
+        let accessToken = data.accessToken
+        let refreshToken = data.refreshToken
+        setTokens(accessToken, refreshToken)
+        setTimeout(() => {
+          navigation.navigate('HomeTab');
+        }, 1000);
+      })
+      .catch(error => {
+        console.log(error);
+        Toast.show({
+          type: 'error',
+          text1: '토큰이 만료되었습니다.',
+        });
+        setTimeout(() => {
+          navigation.navigate('Login');
+        }, 1000);
+      });
   };
 
   const startLogin = async () => {
     try {
       removeToken();
-      googleSigninConfigure();
-      const value = await AsyncStorage.getItem(providerKey);
-      console.log('value', value);
-      if (value === PROVIDERS.GOOGLE) {
-        signInWithGoogle();
-      } else if (value === PROVIDERS.KAKAO) {
-        signInWithKakao();
+      const refreshToken = await getRefreshToken()
+      // console.log('refreshToken', refreshToken);
+      if (refreshToken !== null) {
+        authToken(refreshToken)
       } else {
+        //토큰 만료
         navigation.navigate('Login');
       }
     } catch (e) {
-      console.log('e', e);
+      console.log('something wrong', e);
       navigation.navigate('Login');
     }
   };
 
-    useEffect(() => {
-        //1. check storage
-        //2. login in silence
-        // if expire ->login
-        //3. call login api
-        //5. add token to header
-
-        if (!isFocused) {
-            return
-        }
-        hasVersionUpdate()
-        .then((shouldUpdate) => {
-            console.log("shouldUpdate", shouldUpdate)
-            if (!shouldUpdate) {
-                startLogin()
-            }
-        })
-    }, [isFocused]);
-
-    const signIn = async (info: LoginInfo): Promise<void> => {
-        console.log('signIn', info);
-        await createData('/auth/login', info)
-            .then(res => {
-                return res.data.data;
-            })
-            .then(data => {
-                if (data.data.token === null) {
-                    throw Error('no token');
-                }
-                setToken(data.data.token);
-                setTimeout(() => {
-                    navigation.navigate('HomeTab');
-                }, 1000);
-            })
-            .catch(error => {
-                console.log(error);
-                Toast.show({
-                    type: 'error',
-                    text1: 'login fail',
-                });
-                navigation.navigate('HomeTab');
-            });
-    };
-
-  const signInWithGoogle = async (): Promise<void> => {
-    console.log('구글 로그인');
-    try {
-      await GoogleSignin.signInSilently()
-        .then(res => {
-          console.log('userInfo', res);
-          if (res.idToken === null) {
-            //??
-          } else {
-            const loginInfo: LoginInfo = {
-              provider: 'google',
-              idToken: res.idToken,
-            };
-            signIn(loginInfo);
-          }
-        })
-        .catch(error => {
-          if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-            // user has not signed in yet
-            navigation.navigate('Login');
-          } else {
-            Toast.show({
-              type: error,
-              text1: 'login fail' + error.code,
-            });
-          }
-        });
-    } catch (error) {
-      console.log('error', error);
+  useEffect(() => {
+    if (!isFocused) {
+      return
     }
-  };
+    hasVersionUpdate()
+      .then((shouldUpdate) => {
+        console.log("shouldUpdate", shouldUpdate)
+        if (!shouldUpdate) {
+          startLogin()
+        }
+      })
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
-      <View style={{flex: 1}} />
+      <View style={{ flex: 1 }} />
       <View style={styles.logoContainer}>
         <AppText style={styles.logoText}>
           <AppText style={styles.logoTextHighlight}>처음 살아보는</AppText> 나를
@@ -217,11 +136,6 @@ export function Splash({navigation}: any): React.JSX.Element {
         </AppText>
         <AppText style={styles.title}>인생비서</AppText>
       </View>
-      {/* <Agreement
-                isVisible={isStartModalOpen}
-                closeModalHandler={closeStartModal}
-                closeStartProcess={closeStartProcess}
-            /> */}
       <Toast />
     </View>
   );
