@@ -1,24 +1,25 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {StyleSheet, View, Platform} from 'react-native';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { StyleSheet, View, Platform } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
-import {AppHeader} from '../components/common/AppHeader';
-import {AppText} from '../components/common/AppText';
-import AppIcon from '../components/common/AppIcon';
-import AppConfirmModal from '../components/common/modal/AppConfirmModal';
+import { AppHeader } from '../../components/common/AppHeader';
+import { AppText } from '../../components/common/AppText';
+import AppIcon from '../../components/common/AppIcon';
+import AppConfirmModal from '../../components/common/modal/AppConfirmModal';
 
-import SearchTextInput from '../components/search/SearchTextInput';
-import SearchCondition from '../components/search/SearchCondition';
-import SearchTab from '../components/search/SearchTab';
-import SearchWordView from '../components/search/SearchWordView';
-import SearchContentView from '../components/search/SearchContentView';
-import SearchToDoView from '../components/search/SearchToDoView';
+import SearchTextInput from '../../components/search/SearchTextInput';
+import SearchCondition from '../../components/search/SearchCondition';
+import SearchTab from '../../components/search/SearchTab';
+import SearchWordView from '../../components/search/SearchWordView';
+import SearchContentView from '../../components/search/SearchContentView';
+import SearchToDoView from '../../components/search/SearchToDoView';
 
-import { getFontSize } from '../utils/font';
+import { getFontSize } from '../../utils/font';
 import { getNewConditionData } from '@/utils/search';
 
 import { createData } from '@/api/api';
 
-import type { ConditionData } from '../components/search/SearchCategory';
+import type { ConditionData } from '../../components/search/SearchCategory';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userInfoState } from '@/store/userInfoState';
@@ -46,6 +47,7 @@ const HeaderSearchResult = ({
 const SearchScreen = ({
   navigation
 }: any) => {
+  const scrollViewRef = useRef(null);
   const [recentSearchItemHeight, setRecentSearchItemHeight] = useState(38);
   const [recentSearchListHeight, setRecentSearchListHeight] = useState(0);
   const [isRecentSearchListOpen, setIsRecentSearchListOpen] = useState(false);
@@ -413,6 +415,21 @@ const SearchScreen = ({
     isLoading.current = false;
   }, [TodoIsFetching, toDoIsRefetching, toDo]);
 
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const unsubscribe = navigation.addListener('tabPress', (e: any) => {
+  //       e.preventDefault();
+  //       if (!scrollViewRef?.current) {
+  //         return;
+  //       }
+        
+  //       scrollViewRef?.current.scrollToOffset({offset: 0, animated: true});
+  //     });
+
+  //     return unsubscribe;
+  //   }, [navigation, isSearchResultPage]),
+  // );
+
   return (
     <View style={styles.container}>
       <AppHeader style={styles.header}>
@@ -461,6 +478,7 @@ const SearchScreen = ({
       {!isSearchResultPage ? (
         // 검색어
         <SearchWordView
+          scrollViewRef={scrollViewRef}
           isRecentSearchListOpen={isRecentSearchListOpen}
           recentSearchData={recentSearchData}
           popularSearchData={popularSearchData}

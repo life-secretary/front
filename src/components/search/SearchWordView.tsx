@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, MutableRefObject } from 'react';
 import { ScrollView, View, StyleSheet, Pressable } from 'react-native';
 
 import { AppText } from '../../components/common/AppText';
@@ -10,6 +10,7 @@ import { getFontSize } from '../../utils/font';
 import type { RecentSearchWord, PopularSearchWord } from '@/store/search';
 
 type SearchWordViewProps = {
+    scrollViewRef: any,
     isRecentSearchListOpen: boolean;
     recentSearchData: Array<RecentSearchWord>;
     popularSearchData: Array<PopularSearchWord>;
@@ -21,6 +22,7 @@ type SearchWordViewProps = {
 };
 
 const SearchWordView = ({ 
+    scrollViewRef,
     isRecentSearchListOpen = false,
     recentSearchData,
     popularSearchData,
@@ -50,7 +52,7 @@ const SearchWordView = ({
     };
 
     return (
-        <ScrollView>
+        <ScrollView ref={scrollViewRef}>
             <View style={styles.recentSearchContainer}>
                 <View style={styles.searchContainer}>
                     <AppText style={styles.searchMainTitle}>최근 검색어</AppText>
@@ -200,7 +202,7 @@ const styles = StyleSheet.create({
     // 인기 검색어
     popularSearchContainer: {
         paddingHorizontal: 24,
-        paddingBottom: 44,
+        paddingBottom: 100,
     },
     popularSearchTextContainer: {
         flexDirection: 'row',
