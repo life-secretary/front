@@ -331,6 +331,7 @@ const SearchCategory = ({
             {
             currentData()?.id === 1 ?
                 <SearchContentView 
+                    type='category'
                     data={contentData} 
                     headerComponent={<></>} 
                     onEndReached={onContentPageEndReached}
@@ -338,6 +339,7 @@ const SearchCategory = ({
                 />
             :
                 <SearchToDoView 
+                    type='category'
                     data={toDoData} 
                     headerComponent={<></>} 
                     onEndReached={onToDoPageEndReached}

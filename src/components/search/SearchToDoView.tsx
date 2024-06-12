@@ -6,6 +6,7 @@ import { AppText } from '../common/AppText';
 import ToDoListItem from './ToDoListItem';
 
 type SearchToDoViewProps = {
+  type: string;
   data: Array<{}>; // TODO 타입 구체화
   headerComponent: ReactNode;
   onEndReached: () => void;
@@ -13,6 +14,7 @@ type SearchToDoViewProps = {
 };
 
 const SearchToDoView = ({
+  type,
   data, 
   headerComponent,
   onEndReached,
@@ -52,8 +54,8 @@ const SearchToDoView = ({
       />
       :
       <View style={styles.emptyContainer}>
-        <AppText style={styles.emptyTitle}>검색 결과가 없어요</AppText>
-        <AppText style={styles.emptySubTitle}>다른 키워드로 검색해보세요</AppText>
+        <AppText style={styles.emptyTitle}>{type === 'search' ? '검색 결과가 없어요' : '등록된 할 일이 없어요'}</AppText>
+        <AppText style={styles.emptySubTitle}>{type === 'search' ? '다른 키워드로 검색해보세요' : '다른 카테고리를 둘러보세요'}</AppText>
       </View>
       }
     </>

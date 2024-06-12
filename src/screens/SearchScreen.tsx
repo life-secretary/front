@@ -441,6 +441,7 @@ const SearchScreen = ({
         />
       ) : currentData()?.id === 1 ?
         <SearchContentView
+          type='search'
           data={contentData}
           headerComponent={
             contentData.length ? 
@@ -457,6 +458,7 @@ const SearchScreen = ({
         />
         :
         <SearchToDoView 
+          type='search'
           data={toDoData} 
           headerComponent={
             toDoData.length ?
