@@ -203,31 +203,23 @@ const SearchScreen = ({
 
   const [isSearchResultPage, setIsSearchResultPage] = useState(false);
 
-  // 검색 기능
-  const pressSearchButton = () => {
-    let currentDataLength = 4;
-    if (searchText.length === 0) {
-      setIsConfirmOpen(true);
-      setConfirmData({
-        title: '안내',
-        description: '입력된 검색어가 없습니다',
-        button: {
-          first: {
-            text: '확인',
-            onPressButton: () => {
-              setIsConfirmOpen(false);
-            },
-          }
+  const alertNoSearchWord = () => {
+    setIsConfirmOpen(true);
+    setConfirmData({
+      title: '안내',
+      description: '입력된 검색어가 없습니다',
+      button: {
+        first: {
+          text: '확인',
+          onPressButton: () => {
+            setIsConfirmOpen(false);
+          },
         }
-      })
-      return;
-    }
+      }
+    });
+  };
 
-    setSearchConditionContent((prev) => ({
-      ...prev,
-      title: searchText,
-    }))
-
+  const updateRecentSearchItem = (text: string, currData: { length: number }) => {
     setRecentSearchesData((previousValue) => {
       const copiedValue = [...previousValue];
       const duplicatedText = previousValue.find((item) => item.title === searchText);
@@ -243,24 +235,47 @@ const SearchScreen = ({
         });
       }
 
-      currentDataLength = (4 <= copiedValue.length) ? 4 : copiedValue.length;
+      currData.length = (4 <= copiedValue.length) ? 4 : copiedValue.length;
 
       return copiedValue;
     });
+  };
+
+  // 검색 기능
+  const search = (text?: string) => {
+    let currData = { length : 4 };
+    const value = text ? text : searchText;
+
+    if (value.length === 0) {
+      alertNoSearchWord();
+      return;
+    }
+
+    // 검색 조건 업데이트
+    setSearchConditionContent((prev) => ({
+      ...prev,
+      title: value,
+    }))
+
+    // 최신 검색어 업데이트
+    updateRecentSearchItem(value, currData);
 
     // 검색 로그 기록
     createData(
       '/search-logs',
-      { userId: userInfo.id, searchText }
-    )
-    .then((response) => {
-      // console.log(response);
-    });
+      { userId: userInfo.id, value }
+    );
 
-    const recentSearchListHeight = recentSearchItemHeight * currentDataLength;
-
+    // 최신 검색어 높이 업데이트
+    const recentSearchListHeight = recentSearchItemHeight * currData.length;
     setRecentSearchListHeight(recentSearchListHeight);
+
     setIsSearchResultPage(true);
+  };
+
+
+  const pressSearchButton = () => {
+    search();
   };
 
   const pressRemoveSearchTextButton = () => {
@@ -272,7 +287,12 @@ const SearchScreen = ({
   };
 
   const submitSearchText = ({ nativeEvent }: any) => {
-    pressSearchButton();
+    search();
+  };
+
+  const onPressPopularSearchWord = (text: string) => {
+    setSearchText(text);
+    search(text);
   };
 
   const currentData = () => {
@@ -447,6 +467,7 @@ const SearchScreen = ({
           pressMoreListButton={pressMoreListButton}
           removeAllRecentSearchItems={removeAllRecentSearchItems}
           removeRecentSearchItem={removeRecentSearchItem}
+          onPressPopularSearchWord={onPressPopularSearchWord}
           height={recentSearchListHeight}
         />
       ) : currentData()?.id === 1 ?
