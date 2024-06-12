@@ -7,8 +7,7 @@ import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {PROVIDERS, idTokenKey, providerKey} from '@/store/login';
-import {removeToken} from '@/api/axios';
+import {PROVIDERS, clearAuth, providerKey} from '@/store/login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {logout} from '@react-native-seoul/kakao-login';
 
@@ -23,10 +22,8 @@ const startLogout = async () => {
       await GoogleSignin.signOut();
     } else if (value === PROVIDERS.KAKAO) {
       await logout();
-      AsyncStorage.setItem(idTokenKey, '');
     }
-    removeToken();
-    AsyncStorage.setItem(providerKey, '');
+    await clearAuth()
   } catch (e) {
     console.log('e', e);
   }
