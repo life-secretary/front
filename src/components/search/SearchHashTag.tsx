@@ -106,8 +106,13 @@ const SearchHashTag = ({
         .then((response) => {
           const { data : { data } } = response;
     
-          setHashTagContent((previousValue) => {
-            return getNewData(previousValue, data.content);
+          setHashTagContent((prev) => {
+            if (page === 0) {
+                return getNewData(prev, data.content);
+            }
+
+            // TODO 무한 스크롤링 잘 되는지 테스트 필요
+            return [...prev, ...getNewData(prev, data.content)];
           })
         })
         .catch((error) => {
