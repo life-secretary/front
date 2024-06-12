@@ -171,6 +171,7 @@ const SearchHashTag = ({
             {/* {
                 currentData()?.id === 1 ?
                 <SearchContentView 
+                    type='hashtag'
                     data={content} 
                     headerComponent={
                         <HashTagResultHeader 
@@ -182,6 +183,7 @@ const SearchHashTag = ({
                 />
                 :
                 <SearchToDoView 
+                    type='hashtag'
                     data={toDoData} 
                     headerComponent={
                         <HashTagResultHeader 
@@ -193,6 +195,7 @@ const SearchHashTag = ({
                 />
             } */}
             <SearchContentView 
+                type='hashtag'
                 data={hashTagContent} 
                 headerComponent={
                     hashTagContent.length ?
