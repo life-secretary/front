@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
+import { ScrollView, View, StyleSheet, Pressable } from 'react-native';
 
 import { AppText } from '../../components/common/AppText';
 import AppIcon from '../../components/common/AppIcon';
@@ -16,6 +16,7 @@ type SearchWordViewProps = {
     pressMoreListButton: () => void;
     removeAllRecentSearchItems: () => void;
     removeRecentSearchItem: (id: number) => void;
+    onPressPopularSearchWord: (text: string) => void;
     height: number;
 };
 
@@ -26,6 +27,7 @@ const SearchWordView = ({
     pressMoreListButton,
     removeAllRecentSearchItems,
     removeRecentSearchItem,
+    onPressPopularSearchWord,
     height,
 }: SearchWordViewProps) => {
     const getDate = () => {
@@ -122,10 +124,15 @@ const SearchWordView = ({
                 </View>
                 {popularSearchData.map((item, index) => {
                     return (
-                        <View key={`popularSearch${index}`} style={styles.popularSearchTextContainer}>
-                            <AppText style={styles.popularSearchIndexText}>{index + 1}</AppText>
-                            <AppText style={styles.popularSearchTitleText}>{item.searchText}</AppText>
-                        </View>
+                        <Pressable 
+                            key={`popularSearch${index}`} 
+                            onPress={() => onPressPopularSearchWord(item.searchText)}
+                        >
+                            <View style={styles.popularSearchTextContainer}>
+                                <AppText style={styles.popularSearchIndexText}>{index + 1}</AppText>
+                                <AppText style={styles.popularSearchTitleText}>{item.searchText}</AppText>
+                            </View>
+                        </Pressable>
                     );
                 })}
             </View>
