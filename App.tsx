@@ -13,13 +13,14 @@ import ErrorBoundary from 'react-native-error-boundary';
 import WrappedHomeScreen from './src/screens/WrappedHomeScreen';
 import WrappedTodoScreen from './src/screens/todo/WrappedTodoScreen';
 import WrappedScrapScreen from './src/screens/WrappedScrapScreen';
+import WrappedSearchScreen from './src/screens/WrappedSearchScreen';
 import {TodoDetailModalScreen} from './src/screens/todo/TodoDetailModalScreen';
 import {TodoFormModalScreen} from './src/screens/todo/TodoFormModalScreen';
 import WrappedSettingScreen from './src/screens/setting/WrappedSettingScreen';
 import {SettingModalScreen} from './src/screens/setting/SettingModalScreen';
 import {MyInfoModalScreen} from './src/screens/setting/MyInfoModalScreen';
 import {OpenSourceModalScreen} from './src/screens/setting/OpenSourceModalScreen';
-import SearchScreen from './src/screens/SearchScreen';
+import SearchScreen from './src/screens/search/SearchScreen';
 import {AppText} from './src/components/common/AppText';
 import {AppErrorFallback} from './src/components/common/AppErrorFallback';
 import color from './src/styles/color';
@@ -90,7 +91,7 @@ function HomeTabs() {
             </AppText>
           ),
         }}
-        component={SearchScreen}
+        component={WrappedSearchScreen}
       />
       <Tab.Screen
         name="Todo"
