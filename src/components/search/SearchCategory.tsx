@@ -79,13 +79,14 @@ const SearchCategory = ({
         {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
     ]);
     const [categoryConditionContent, setCategoryConditionContent] = useState({
-      categoryId: selectedCategory.id,
+      /** 전체 조회시 카테고리 id 넘기지 않기 */
+      categoryId: selectedCategory.id === 0 ? '' : selectedCategory.id,
       page: 0,
       size: 10,
       sort: 'viewCount,desc',
     });
     const { data:content, isFetching:ContentIsFetching, isRefetching:ContentIsRefetching } = getCategoryContentListQuery(categoryConditionContent);
-    const [contentData, setContentData] = useState([]);
+    const [contentData, setContentData] = useState<any>([]);
 
     // todo
     const pageToDo = useRef<number>(0);
@@ -94,13 +95,13 @@ const SearchCategory = ({
         {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
     ]);
     const [categoryConditionToDo, setCategoryConditionToDo] = useState({
-      categoryId: selectedCategory.id,
+      categoryId: selectedCategory.id === 0 ? '' : selectedCategory.id,
       page: 0,
       size: 10,
       sort: 'saveCount,desc'
     })
     const { data:toDo, isFetching:TodoIsFetching, isRefetching:toDoIsRefetching } = getCategoryToDoListQuery(categoryConditionToDo);
-    const [toDoData, setToDoData] = useState([]);
+    const [toDoData, setToDoData] = useState<any>([]);
 
     // 야매 드롭다운 리스트
     const [isCategoryDownModalVisible, setIsCategoryDownModalVisible] = useState(false);
@@ -211,7 +212,7 @@ const SearchCategory = ({
     pageContent.current = 0;
     setCategoryConditionContent((prev) => ({
       ...prev,
-      categoryId: category.id,
+      categoryId: category.id === 0 ? '' : category.id,
       page: 0,
       sort: 'viewCount,desc'
     }));
@@ -221,7 +222,7 @@ const SearchCategory = ({
     pageToDo.current = 0;
     setCategoryConditionToDo((prev) => ({
       ...prev,
-      categoryId: category.id,
+      categoryId: category.id === 0 ? '' : category.id,
       page: 0,
       sort: 'saveCount,desc'
     }));
@@ -243,7 +244,12 @@ const SearchCategory = ({
       return;
     }
 
-    setContentData(content);
+    if (pageContent.current === 0) {
+      setContentData(content);  
+    } else {
+      setContentData((prev: any) => [...prev, ...content]);
+    }
+
     isLoading.current = false;
   }, [ContentIsFetching, ContentIsRefetching, content]);
 
@@ -253,7 +259,12 @@ const SearchCategory = ({
       return;
     }
 
-    setToDoData(toDo);
+    if (pageToDo.current === 0) {
+      setToDoData(toDo);
+    } else {
+      setToDoData((prev: any) => [...prev, ...toDo]);
+    }
+
     isLoading.current = false;
   }, [TodoIsFetching, toDoIsRefetching, toDo]);
 

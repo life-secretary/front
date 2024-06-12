@@ -65,7 +65,7 @@ const SearchScreen = ({
     sort: 'viewCount,desc'
   });
   const { data:content, isFetching:ContentIsFetching, isRefetching:ContentIsRefetching } = getSearchContentListQuery(searchConditionContent);
-  const [contentData, setContentData] = useState([]);
+  const [contentData, setContentData] = useState<any>([]);
 
   // todo
   const pageToDo = useRef<number>(0);
@@ -80,7 +80,7 @@ const SearchScreen = ({
     sort: 'saveCount,desc'
   });
   const { data:toDo, isFetching:TodoIsFetching, isRefetching:toDoIsRefetching } = getSearchToDoListQuery(searchConditionToDo);
-  const [toDoData, setToDoData] = useState([]);
+  const [toDoData, setToDoData] = useState<any>([]);
 
   const isLoading = useRef<boolean>(false);
 
@@ -369,7 +369,12 @@ const SearchScreen = ({
       return;
     }
 
-    setContentData(content);
+    if (pageContent.current === 0) {
+      setContentData(content);
+    } else {
+      setContentData((prev: any) => [...prev, ...content])
+    }
+
     isLoading.current = false;
   }, [ContentIsFetching, ContentIsRefetching, content]);
 
@@ -378,8 +383,13 @@ const SearchScreen = ({
     if (!toDo || !isSearchResultPage) {
       return;
     }
+    
+    if (pageToDo.current === 0) {
+      setToDoData(toDo);
+    } else {
+      setToDoData((prev: any) => [...prev, ...toDo]);
+    }
 
-    setToDoData(toDo);
     isLoading.current = false;
   }, [TodoIsFetching, toDoIsRefetching, toDo]);
 
