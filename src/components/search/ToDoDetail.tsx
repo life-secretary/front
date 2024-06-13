@@ -8,6 +8,7 @@ import AppButton from '../common/AppButton';
 import { fetchData, createData } from '@/api/api';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from '@/store/userInfoState';
+import { categoryListState } from '@/store/categoryState';
 import AppConfirmModal from '../common/modal/AppConfirmModal';
 
 const ToDoDetail = ({
@@ -16,6 +17,8 @@ const ToDoDetail = ({
 }: any) => {
     const { id } = route.params;
     const userInfo = useRecoilValue(userInfoState);
+    const categories = useRecoilValue(categoryListState);
+    const [data, setData] = useState<any>({});
     const [toDo, setToDo] = useState([]);
     const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
     const [confirmData, setConfirmData] = useState<any>({});
@@ -70,6 +73,15 @@ const ToDoDetail = ({
 
                 setToDo(data);
             });
+
+        // testing
+        fetchData(`/todo/${id}`, {})
+            .then((response) => {
+                const { data: { data } } = response;
+
+                setData(data);
+            })
+            
     }, [id]);
 
     return (
@@ -81,10 +93,13 @@ const ToDoDetail = ({
                     </View>
                     <View style={styles.titleTextWrapper}>
                         <AppText style={styles.categoryIcon}>
-                            경제
+                            {categories.find(
+                                (category: any) => category.id === data?.category.id,
+                            )?.title || '카테고리'}       
                         </AppText>
                         <AppText style={styles.title}>
-                            나의 미래준비, 어떻게 시작할까요?
+                            {data?.title || ''}
+                            {/** TODO 예외처리 정확히 하기 */}
                         </AppText>
                     </View>
                 </View>
