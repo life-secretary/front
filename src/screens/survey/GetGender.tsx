@@ -106,7 +106,7 @@ const GetGender = ({
                     text='다음'
                     textStyle={styles.nextButtonText}
                     buttonStyle={styles.nextButton}
-                    onPressButton={() => navigation.navigate('GetCategory')}
+                    onPressButton={() => navigation.navigate('GetCategory', { modify: false })}
                 />
             </View>
         </View>
