@@ -1,8 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
-import {useRecoilState, useRecoilValue} from 'recoil';
+import {useRecoilState} from 'recoil';
 import {scrapListState} from '@/store/scrapState';
-import {userInfoState} from '@/store/userInfoState';
 
 import AppIcon from '../common/AppIcon';
 import color from '@/styles/color';
@@ -15,7 +14,6 @@ type Props = {
 export function BookmarkButton({contents}: Props): React.JSX.Element {
   const [isScrapped, setIsScrapped] = useState(true);
   const [scrapList, setScrapList] = useRecoilState(scrapListState);
-  const userInfo = useRecoilValue(userInfoState);
 
   const handleButtonPress = () => {
     setIsScrapped((prevState: any) => !prevState);
@@ -24,15 +22,13 @@ export function BookmarkButton({contents}: Props): React.JSX.Element {
 
   // TODO: 중복 코드 제거 필요
   const fetchScrapList = useCallback(async () => {
-    const res = await fetchData('/scrap', {
-      userId: userInfo.id,
-    });
+    const res = await fetchData('/scrap', null);
     const list = res.data.data;
 
     if (res.status === 200) {
       setScrapList(list);
     }
-  }, [setScrapList, userInfo.id]);
+  }, [setScrapList]);
 
   const toggleScrap = () => {
     isScrapped ? unscrap() : scrap();

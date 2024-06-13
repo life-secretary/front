@@ -17,29 +17,29 @@ import SearchToDoView from '../../components/search/SearchToDoView';
 import { getFontSize } from '../../utils/font';
 import { getNewConditionData } from '@/utils/search';
 
-import { createData } from '@/api/api';
+import {createData} from '@/api/api';
 
 import type { ConditionData } from '../../components/search/SearchCategory';
 
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { userInfoState } from '@/store/userInfoState';
-import { recentSearchWordState, popularSearchWordState, PopularSearchWord } from '@/store/search';
-import { getPopularSearchWordListQuery, getSearchContentListQuery, getSearchToDoListQuery } from '@/api/search';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import {
+  recentSearchWordState,
+  popularSearchWordState,
+  PopularSearchWord,
+} from '@/store/search';
+import {
+  getPopularSearchWordListQuery,
+  getSearchContentListQuery,
+  getSearchToDoListQuery,
+} from '@/api/search';
 
-const HeaderSearchResult = ({
-  data, 
-  searchData,
-  onPressButton,
-}: any) => {
+const HeaderSearchResult = ({data, searchData, onPressButton}: any) => {
   return (
     <View style={styles.searchResultHeader}>
       <AppText style={styles.searchResultText}>
         검색 결과 {data.length}건
       </AppText>
-      <SearchCondition 
-        data={searchData} 
-        onPressButton={onPressButton}
-      />
+      <SearchCondition data={searchData} onPressButton={onPressButton} />
     </View>
   );
 };
@@ -51,11 +51,12 @@ const SearchScreen = ({
   const [recentSearchItemHeight, setRecentSearchItemHeight] = useState(38);
   const [recentSearchListHeight, setRecentSearchListHeight] = useState(0);
   const [isRecentSearchListOpen, setIsRecentSearchListOpen] = useState(false);
-  const userInfo = useRecoilValue(userInfoState);
 
   // content
   const pageContent = useRef<number>(0);
-  const [searchConditionContentData, setSearchConditionContentData] = useState<Array<ConditionData>>([
+  const [searchConditionContentData, setSearchConditionContentData] = useState<
+    Array<ConditionData>
+  >([
     {text: '조회순', type: 'viewCount', orderType: 'desc', isSelected: true},
     {text: '저장순', type: 'scrapCount', orderType: 'desc', isSelected: false},
     {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
@@ -64,14 +65,16 @@ const SearchScreen = ({
     title: '',
     page: 0,
     size: 10,
-    sort: 'viewCount,desc'
+    sort: 'viewCount,desc',
   });
   const { data:content, isFetching:ContentIsFetching, isRefetching:ContentIsRefetching } = getSearchContentListQuery(searchConditionContent);
   const [contentData, setContentData] = useState<any>([]);
 
   // todo
   const pageToDo = useRef<number>(0);
-  const [searchConditionToDoData, setSearchConditionToDoData] = useState<Array<ConditionData>>([
+  const [searchConditionToDoData, setSearchConditionToDoData] = useState<
+    Array<ConditionData>
+  >([
     {text: '저장순', type: 'saveCount', orderType: 'desc', isSelected: true},
     {text: '최신순', type: 'createdAt', orderType: 'desc', isSelected: false},
   ]);
@@ -79,7 +82,7 @@ const SearchScreen = ({
     title: '',
     page: 0,
     size: 10,
-    sort: 'saveCount,desc'
+    sort: 'saveCount,desc',
   });
   const { data:toDo, isFetching:TodoIsFetching, isRefetching:toDoIsRefetching } = getSearchToDoListQuery(searchConditionToDo);
   const [toDoData, setToDoData] = useState<any>([]);
@@ -95,27 +98,37 @@ const SearchScreen = ({
   const [searchText, setSearchText] = useState('');
 
   // 최근 검색어
-  const [recentSearchData, setRecentSearchesData] = useRecoilState(recentSearchWordState);
-  
+  const [recentSearchData, setRecentSearchesData] = useRecoilState(
+    recentSearchWordState,
+  );
   // 인기 검색어
-  const [popularSearchData, setPopularSearchData] = useRecoilState(popularSearchWordState);
-  const { 
-    data:popularSearchWordList, 
-    isSuccess:isPopularSearchWordListSuccess,
-    isFetched:isPopularSearchWordListFetched,
-    isRefetching:isPopularSearchWordListRefetching,
+  const [popularSearchData, setPopularSearchData] = useRecoilState(
+    popularSearchWordState,
+  );
+  const {
+    data: popularSearchWordList,
+    isSuccess: isPopularSearchWordListSuccess,
+    isFetched: isPopularSearchWordListFetched,
+    isRefetching: isPopularSearchWordListRefetching,
   } = getPopularSearchWordListQuery();
 
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
   const [confirmData, setConfirmData] = useState<any>({});
 
   const initPopularSearchData = () => {
-    if (!isPopularSearchWordListFetched || !isPopularSearchWordListSuccess || !popularSearchWordList) {
+    if (
+      !isPopularSearchWordListFetched ||
+      !isPopularSearchWordListSuccess ||
+      !popularSearchWordList
+    ) {
       return;
     }
 
     const data = popularSearchWordList
-      .sort((prev: PopularSearchWord, curr: PopularSearchWord) => curr.searchCount - prev.searchCount)
+      .sort(
+        (prev: PopularSearchWord, curr: PopularSearchWord) =>
+          curr.searchCount - prev.searchCount,
+      )
       .slice(0, 10);
 
     setPopularSearchData(data);
@@ -123,7 +136,7 @@ const SearchScreen = ({
 
   // tab
   const onPressTab = (number: number) => {
-    setTabData((previousValue) => {
+    setTabData(previousValue => {
       return previousValue.map((item, index) => {
         if (number === index) {
           item.isPressed = true;
@@ -136,31 +149,34 @@ const SearchScreen = ({
 
     if (number === 0) {
       pageContent.current = 0;
-      setSearchConditionContentData((prev) => getNewConditionData(prev, 0));
-      setSearchConditionContent((prev) => ({
+      setSearchConditionContentData(prev => getNewConditionData(prev, 0));
+      setSearchConditionContent(prev => ({
         title: searchText,
         page: 0,
         size: 10,
-        sort: 'viewCount,desc'
+        sort: 'viewCount,desc',
       }));
     } else {
       pageToDo.current = 0;
-      setSearchConditionToDoData((prev) => getNewConditionData(prev, 0));
-      setSearchConditionToDo((prev) => ({
+      setSearchConditionToDoData(prev => getNewConditionData(prev, 0));
+      setSearchConditionToDo(prev => ({
         title: searchText,
         page: 0,
         size: 10,
-        sort: 'saveCount,desc'
-      }))
+        sort: 'saveCount,desc',
+      }));
     }
   };
 
   // content condition
-  const onPressContentViewConditionButton = (data: ConditionData, index: number): void => {
+  const onPressContentViewConditionButton = (
+    data: ConditionData,
+    index: number,
+  ): void => {
     pageContent.current = 0;
-    setSearchConditionContentData((prev) => getNewConditionData(prev, index));
+    setSearchConditionContentData(prev => getNewConditionData(prev, index));
     setSearchConditionContent((prev: any) => {
-      return { 
+      return {
         ...prev,
         page: 0,
         sort: `${data.type},${data.orderType}`,
@@ -169,39 +185,42 @@ const SearchScreen = ({
   };
 
   // todo condition
-  const onPressToDoViewConditionButton = (data: ConditionData, index: number): void => {
+  const onPressToDoViewConditionButton = (
+    data: ConditionData,
+    index: number,
+  ): void => {
     pageToDo.current = 0;
-    setSearchConditionToDoData((prev) => getNewConditionData(prev, index));
-    setSearchConditionToDo((prev) => {
+    setSearchConditionToDoData(prev => getNewConditionData(prev, index));
+    setSearchConditionToDo(prev => {
       return {
         ...prev,
         page: 0,
         sort: `${data.type},${data.orderType}`,
-      }
+      };
     });
   };
 
   const onContentPageEndReached = () => {
-    if ((contentData.length >= 10) && isLoading.current === false) {
+    if (contentData.length >= 10 && isLoading.current === false) {
       pageContent.current += 1;
-      setSearchConditionContent((prev) => ({
+      setSearchConditionContent(prev => ({
         ...prev,
         page: pageContent.current,
-      }))
+      }));
     }
   };
 
   const onToDoPageEndReached = () => {
-    if ((toDoData.length >= 10 && isLoading.current === false)) {
+    if (toDoData.length >= 10 && isLoading.current === false) {
       pageToDo.current += 1;
-      setSearchConditionToDo((prev) => ({
+      setSearchConditionToDo(prev => ({
         ...prev,
         page: pageToDo.current,
-      }))
+      }));
     }
   };
 
-  const constants = { recentSearchInitialCount: 4 };
+  const constants = {recentSearchInitialCount: 4};
 
   const [isSearchResultPage, setIsSearchResultPage] = useState(false);
 
@@ -224,7 +243,9 @@ const SearchScreen = ({
   const updateRecentSearchItem = (text: string, currData: { length: number }) => {
     setRecentSearchesData((previousValue) => {
       const copiedValue = [...previousValue];
-      const duplicatedText = previousValue.find((item) => item.title === searchText);
+      const duplicatedText = previousValue.find(
+        item => item.title === searchText,
+      );
 
       if (!duplicatedText && copiedValue.length === 10) {
         copiedValue.pop();
@@ -265,11 +286,12 @@ const SearchScreen = ({
     // 검색 로그 기록
     createData(
       '/search-logs',
-      { userId: userInfo.id, value }
+      { value }
     );
 
     // 최신 검색어 높이 업데이트
     const recentSearchListHeight = recentSearchItemHeight * currData.length;
+
     setRecentSearchListHeight(recentSearchListHeight);
 
     setIsSearchResultPage(true);
@@ -317,7 +339,7 @@ const SearchScreen = ({
      * 배열의 길이가 4보다 적은 경우 → 높이 변화 있음.
      *
      */
-    setRecentSearchesData((previousData) => {
+    setRecentSearchesData(previousData => {
       const currentData = previousData.filter(item => item.id !== id);
       const currentDataLength = currentData.length;
       const recentSearchListHeight = recentSearchItemHeight * currentDataLength;
@@ -367,18 +389,18 @@ const SearchScreen = ({
   };
 
   const onPressContent = (id: number) => {
-    navigation.navigate('ContentModal', { id });
+    navigation.navigate('ContentModal', {id});
   };
 
   const onPressToDo = (id: number) => {
-    navigation.navigate('ToDoDetail', { id });
-  }
+    navigation.navigate('ToDoDetail', {id});
+  };
 
   // 검색 결과 페이지 진입시 검색 조건 초기화
   useEffect(() => {
-    onPressTab(0);                                                         // tab
-    setSearchConditionContentData((prev) => getNewConditionData(prev, 0)); // content
-    setSearchConditionToDoData((prev) => getNewConditionData(prev, 0));    // todo
+    onPressTab(0); // tab
+    setSearchConditionContentData(prev => getNewConditionData(prev, 0)); // content
+    setSearchConditionToDoData(prev => getNewConditionData(prev, 0)); // todo
   }, [isSearchResultPage]);
 
   useEffect(() => {
@@ -442,17 +464,16 @@ const SearchScreen = ({
             <></>
           )}
           <View style={styles.wrapper}>
-            {
-              isSearchResultPage &&
+            {isSearchResultPage && (
               <View style={styles.backIconWrapper}>
-                <AppIcon 
-                    name='back'
-                    width={36}
-                    height={36}
-                    onPress={() => setIsSearchResultPage(false)}
+                <AppIcon
+                  name="back"
+                  width={36}
+                  height={36}
+                  onPress={() => setIsSearchResultPage(false)}
                 />
               </View>
-            } 
+            )}
             <View style={styles.textInputWrapper}>
               <SearchTextInput
                 isSearchResultPage={isSearchResultPage}
@@ -464,15 +485,11 @@ const SearchScreen = ({
               />
             </View>
           </View>
-          {
-            !isSearchResultPage ? 
-            <></> 
-            : 
-            <SearchTab 
-              tabData={tabData} 
-              onPressTab={onPressTab}
-            />
-          }
+          {!isSearchResultPage ? (
+            <></>
+          ) : (
+            <SearchTab tabData={tabData} onPressTab={onPressTab} />
+          )}
         </View>
       </AppHeader>
       {!isSearchResultPage ? (
@@ -488,19 +505,20 @@ const SearchScreen = ({
           onPressPopularSearchWord={onPressPopularSearchWord}
           height={recentSearchListHeight}
         />
-      ) : currentData()?.id === 1 ?
+      ) : currentData()?.id === 1 ? (
         <SearchContentView
           type='search'
           data={contentData}
           headerComponent={
-            contentData.length ? 
-            <HeaderSearchResult
-              data={contentData}
-              searchData={searchConditionContentData}
-              onPressButton={onPressContentViewConditionButton}
-            />
-            :
-            <></>
+            contentData.length ? (
+              <HeaderSearchResult
+                data={contentData}
+                searchData={searchConditionContentData}
+                onPressButton={onPressContentViewConditionButton}
+              />
+            ) : (
+              <></>
+            )
           }
           onEndReached={onContentPageEndReached}
           onPressContent={onPressContent}
@@ -510,19 +528,20 @@ const SearchScreen = ({
           type='search'
           data={toDoData} 
           headerComponent={
-            toDoData.length ?
-            <HeaderSearchResult
-              data={toDoData}
-              searchData={searchConditionToDoData}
-              onPressButton={onPressToDoViewConditionButton}
-            />
-            :
-            <></>
-          } 
+            toDoData.length ? (
+              <HeaderSearchResult
+                data={toDoData}
+                searchData={searchConditionToDoData}
+                onPressButton={onPressToDoViewConditionButton}
+              />
+            ) : (
+              <></>
+            )
+          }
           onEndReached={onToDoPageEndReached}
           onPressToDo={onPressToDo}
         />
-    }
+      )}
       {/** TODO (일단 검색탭에 컨펌모달 추가) 다른페이지에서 공통으로 사용가능한 방법 모색 */}
       {/* <AppConfirmModal
           isVisible={true}
@@ -544,10 +563,10 @@ const SearchScreen = ({
           }}
       /> */}
       <AppConfirmModal
-          isVisible={isConfirmOpen}
-          title={confirmData.title}
-          description={confirmData.description}
-          button={confirmData.button}
+        isVisible={isConfirmOpen}
+        title={confirmData.title}
+        description={confirmData.description}
+        button={confirmData.button}
       />
     </View>
   );

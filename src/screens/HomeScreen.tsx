@@ -1,10 +1,9 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {useQueries} from '@tanstack/react-query';
-import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil';
-import {userInfoState} from '@/store/userInfoState';
-// import {userInfoState} from '@/store/login';
-import {categoryListState, homeCategoryListState} from '@/store/categoryState';
+import {useRecoilState, useSetRecoilState} from 'recoil';
+import {userState} from '@/store/userState';
+import {categoryListState} from '@/store/categoryState';
 import {occupationListState} from '@/store/occupation';
 import {scrapListState} from '@/store/scrapState';
 import {
@@ -15,7 +14,7 @@ import {
 
 import {fetchData} from '@/api/api';
 
-import type {CategoryObject, OccupationObject} from '../models/common';
+import type {CategoryObject} from '@/models/common';
 
 import {StyleSheet, ScrollView, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -23,7 +22,6 @@ import {AppLayout} from '@/components/common/AppLayout';
 import {AppHeader} from '@/components/common/AppHeader';
 import {AppTitle} from '@/components/common/AppTitle';
 import AppIcon from '@/components/common/AppIcon';
-import AppConfirmModal from '@/components/common/modal/AppConfirmModal';
 import {HomeCategoryList} from '@/components/home/HomeCategoryList';
 import {HomeContentListWithFilter} from '@/components/home/homeContent/HomeContentListWithFilter';
 import {HomeImageCarousel} from '@/components/home/HomeImageCarousel';
@@ -41,9 +39,9 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
   // TODO: API 연동과 파라미터 넘기는 작업은 추후 작업. 현재는 워크플로우만 확인할 수 있게끔 작업.
   const setCategoryList = useSetRecoilState(categoryListState);
   const setOccupationList = useSetRecoilState(occupationListState);
+  const setUserInfo = useSetRecoilState(userState);
   const setScrapList = useSetRecoilState(scrapListState);
-  const homeCategories = useRecoilValue(homeCategoryListState);
-  const userInfo = useRecoilValue(userInfoState);
+
   // Login → Agreement → Survey 과정 임시 테스팅 중
   const [isDone, setIsDone] = useState(false);
   const [showGradient, setShowGradient] = useState(true);
@@ -76,11 +74,16 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
 
   // TODO: login middleware에서 처리하도록 수정
   const fetchScraps = async () => {
-    const res = await fetchData('/scrap', {
-      userId: userInfo.id,
-    });
+    const res = await fetchData('/scrap', null);
 
     return res.data.data;
+  };
+
+  // TODO: login middleware에서 처리하도록 수정
+  const fetchUser = async () => {
+    const res = await fetchData('/user', null);
+
+    return res.data;
   };
 
   const fetchHomeContentsByNewest = async () => {
@@ -99,9 +102,7 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
   };
 
   const fetchHomeContentsReadBySimilarUsers = async () => {
-    const res = await fetchData('/content/similar-users/reads', {
-      userId: userInfo.id,
-    });
+    const res = await fetchData('/content/similar-users/reads', null);
 
     return res.data.data;
   };
@@ -115,6 +116,10 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
       {
         queryKey: ['occupations'],
         queryFn: fetchOccupations,
+      },
+      {
+        queryKey: ['user'],
+        queryFn: fetchUser,
       },
       {
         queryKey: ['scraps'],
@@ -151,6 +156,7 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
   const [
     categories,
     occupations,
+    user,
     scraps,
     newestHomeContents,
     homeCarouselContents,
@@ -163,10 +169,6 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
 
   const openContentModal = (id: any) => {
     navigation.navigate('ContentModal', {id});
-  };
-
-  const closeAllProcess = () => {
-    setIsDone(true);
   };
 
   const handleScroll = event => {
@@ -188,6 +190,10 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
 
     if (occupations) {
       setOccupationList(occupations);
+    }
+
+    if (user) {
+      setUserInfo(user);
     }
 
     if (scraps) {
@@ -218,6 +224,8 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
     setNewestHomeContentList,
     setOccupationList,
     setScrapList,
+    setUserInfo,
+    user,
   ]);
 
   useFocusEffect(

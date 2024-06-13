@@ -1,8 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {useRecoilState} from 'recoil';
-import {userInfoState} from '@/store/userInfoState';
-// import {userInfoState} from '@/store/login';
+import {useResetRecoilState} from 'recoil';
 
 import {createData, deleteData, fetchData} from '@/api/api';
 
@@ -24,7 +22,8 @@ import {getFontSize} from '@/utils/font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PROVIDERS, clearAuth, providerKey} from '@/store/login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {logout, unlink} from '@react-native-seoul/kakao-login';
+import {unlink} from '@react-native-seoul/kakao-login';
+import {userState} from '@/store/userState';
 
 type checkboxItemProps = {
   item: object;
@@ -68,6 +67,7 @@ type CheckboxItem = {
 */
 
 export function MyInfoWithdrawalForm(): React.JSX.Element {
+  const resetMyInfo = useResetRecoilState(userState);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
@@ -78,7 +78,6 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
     [],
   );
   const [reasonText, onChangeReasonText] = useState('');
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const navigation = useNavigation();
   const inputRef = useRef(null);
 
@@ -130,7 +129,6 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
 
   const sendWithdrawalReason = async () => {
     const withdrawalReasons: any = {
-      userId: userInfo.id,
       reasonTypeIds: checkedReasonList.map(item => item.id),
     };
 
@@ -144,10 +142,14 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
   };
 
   const withdrawUser = async () => {
-    const res = await deleteData('/user', {}, userInfo.id);
+    try {
+      const res = await deleteData('/user', {}, null);
 
-    if (res.status === 200) {
-      handleModalVisible(true);
+      if (res.status === 200) {
+        handleModalVisible(true);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -158,10 +160,9 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
         await GoogleSignin.signOut();
       } else if (value === PROVIDERS.KAKAO) {
         await unlink();
-        // await logout();
       }
-      await clearAuth()
-      setUserInfo(null);
+      await clearAuth();
+      resetMyInfo();
     } catch (e) {
       console.log('e', e);
     }

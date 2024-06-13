@@ -1,8 +1,7 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useRecoilValue} from 'recoil';
-import {userInfoState} from '@/store/userInfoState';
-// import {userInfoState} from '@/store/login';
+import {userState} from '@/store/userState';
 
 import {StyleSheet, View} from 'react-native';
 import {AppText} from '@/components/common/AppText';
@@ -20,7 +19,7 @@ export function MyInfoSection({
   settingMenu,
 }: UserInfoSectionProps): React.JSX.Element {
   const navigation = useNavigation();
-  const userInfo = useRecoilValue(userInfoState);
+  const myInfo = useRecoilValue(userState);
 
   const handleButtonPress = () => {
     navigation.navigate('SettingModal', {
@@ -31,7 +30,7 @@ export function MyInfoSection({
 
   return (
     <View style={styles.container}>
-      <AppText style={styles.username}>{userInfo?.nickname}</AppText>
+      <AppText style={styles.username}>{myInfo?.nickname}</AppText>
       <AppButton
         text="내 정보"
         textStyle={styles.buttonText}

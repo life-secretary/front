@@ -93,7 +93,6 @@ export function TodoForm({
       title,
       categoryId: +currentCategoryId,
       userTag,
-      userId: 1,
     };
 
     const res = await createData('/user-todos', newTodo);
