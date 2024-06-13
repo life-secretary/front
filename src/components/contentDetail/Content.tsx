@@ -390,7 +390,7 @@ const Content = ({ route, navigation }: any) => {
                                 buttonStyle={styles.hashTagPressable}
                                 // TODO pressedColor 통일되면 props 제거 가능
                                 pressedBackgroundColor={'#11111166'}
-                                onPressButton={() => onPressHashTag(item)}
+                                // onPressButton={() => onPressHashTag(item)}
                                 />
                             );
                             })}
