@@ -19,9 +19,14 @@ export async function createData(url: string, data: any) {
 }
 
 // PUT
-export async function updateData(url: string, id: number | string, data: any) {
+export async function updateData(
+  url: string,
+  id: number | string | null,
+  data: any,
+) {
   try {
-    return await axiosInstance.put(`${url}/${id}`, data);
+    const requestUrl = id ? `${url}/${id}` : `${url}`;
+    return await axiosInstance.put(requestUrl, data);
   } catch (err) {
     throw err;
   }
@@ -31,10 +36,11 @@ export async function updateData(url: string, id: number | string, data: any) {
 export async function deleteData(
   url: string,
   params: object,
-  id: number | string | number[],
+  id: number | string | number[] | null,
 ) {
   try {
-    return await axiosInstance.delete(`${url}/${id}`, {params});
+    const requestUrl = id ? `${url}/${id}` : `${url}`;
+    return await axiosInstance.delete(requestUrl, {params});
   } catch (err) {
     throw err;
   }

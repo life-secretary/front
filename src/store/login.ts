@@ -1,6 +1,6 @@
-import { removeToken, setToken } from '@/api/axios';
+import {removeToken, setToken} from '@/api/axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { atom } from 'recoil';
+import {atom} from 'recoil';
 
 export const userInfoState = atom<UserInfo>({
   key: 'UserInfo',
@@ -41,11 +41,11 @@ export interface LoginInfo {
 }
 
 export const providerKey = '@providerKey';
-export const refreshTokenKey = '@refreshTokenKey'
+export const refreshTokenKey = '@refreshTokenKey';
 
 export const setTokens = async (accessToken: string, refreshToken: string) => {
   try {
-    setToken(accessToken)
+    setToken(accessToken);
     await AsyncStorage.setItem(refreshTokenKey, refreshToken);
   } catch (error) {
     console.error('Error saving tokens:', error);
@@ -70,7 +70,7 @@ export const getRefreshToken = async () => {
 
 const removeRefreshToken = async () => {
   try {
-    await AsyncStorage.removeItem(refreshTokenKey)
+    await AsyncStorage.removeItem(refreshTokenKey);
     console.log('All tokens removed successfully');
   } catch (error) {
     console.error('Error removing tokens:', error);
@@ -79,9 +79,9 @@ const removeRefreshToken = async () => {
 
 export async function clearAuth() {
   try {
-    removeToken()
-    removeRefreshToken()
-    await AsyncStorage.removeItem(providerKey)
+    removeToken();
+    removeRefreshToken();
+    await AsyncStorage.removeItem(providerKey);
   } catch (error) {
     console.error('Error remove tokens:', error);
   }
@@ -91,5 +91,5 @@ export const PROVIDERS = {
   KAKAO: 'KAKAO',
   GOOGLE: 'GOOGLE',
   APPLE: 'APPLE',
-  NONE: 'NONE'
+  NONE: 'NONE',
 };

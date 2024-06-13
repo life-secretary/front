@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import OutsidePressHandler from 'react-native-outside-press';
 import {useRecoilValue} from 'recoil';
-import {userInfoState} from '@/store/userInfoState';
 
 import {createData} from '@/api/api';
 
@@ -34,7 +33,6 @@ export function SendFeedbackForm() {
   const [content, onChangeContent] = useState('');
   // const [appState, setAppState] = useState(AppState.currentState);
   // const [isSendingSuccess, setIsSendingSuccess] = useState(false);
-  const userInfo = useRecoilValue(userInfoState);
   const inputRef = useRef(null);
   const navigation = useNavigation();
 
@@ -66,7 +64,6 @@ export function SendFeedbackForm() {
     const newFeedback = {
       title: feedbackStatus.text || '인생비서 피드백',
       message: content,
-      userId: userInfo.id,
     };
 
     const res = await createData('/inquiry', newFeedback);

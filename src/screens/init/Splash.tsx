@@ -1,31 +1,32 @@
-import React, { useEffect } from 'react';
-import { View, StyleSheet, Alert, AlertButton } from 'react-native';
+import React, {useEffect} from 'react';
+import {View, StyleSheet, Alert, AlertButton} from 'react-native';
 
-import { AppText } from '@/components/common/AppText';
+import {AppText} from '@/components/common/AppText';
 
-import { getFontSize } from '@/utils/font';
+import {getFontSize} from '@/utils/font';
 
-import { getRefreshToken, setTokens } from '@/store/login';
+import {getRefreshToken, setTokens} from '@/store/login';
 
 import Toast from 'react-native-toast-message';
-import { createData } from '@/api/api';
-import { useIsFocused } from '@react-navigation/native';
-import { removeToken } from '@/api/axios';
-import AppVersionInfo, { compareVersions, getLatestVersion } from './AppVersion';
+import {createData} from '@/api/api';
+import {useIsFocused} from '@react-navigation/native';
+import {removeToken} from '@/api/axios';
+import AppVersionInfo, {compareVersions, getLatestVersion} from './AppVersion';
 import DeviceInfo from 'react-native-device-info';
 
-export function Splash({ navigation }: any): React.JSX.Element {
+export function Splash({navigation}: any): React.JSX.Element {
   const isFocused = useIsFocused();
 
   async function hasVersionUpdate() {
-    let shouldUpdate = false
+    let shouldUpdate = false;
     try {
-      const res = await getLatestVersion()
-      const latest = res.data.data as AppVersionInfo
+      const res = await getLatestVersion();
+      const latest = res.data.data as AppVersionInfo;
       // console.log(latest.version)
       // console.log(DeviceInfo.getVersion())
-      const hasNewer = compareVersions(latest.version, DeviceInfo.getVersion()) === 1
-      shouldUpdate = hasNewer && latest.showAlert
+      const hasNewer =
+        compareVersions(latest.version, DeviceInfo.getVersion()) === 1;
+      shouldUpdate = hasNewer && latest.showAlert;
       //TODO: os type check
       if (shouldUpdate) {
         const buttons: Array<AlertButton> = [
@@ -54,20 +55,20 @@ export function Splash({ navigation }: any): React.JSX.Element {
           buttons,
           {
             cancelable: true,
-            onDismiss: () => { },
-          }
+            onDismiss: () => {},
+          },
         );
       }
     } catch (e) {
       console.log('e', e);
     }
-    return shouldUpdate
+    return shouldUpdate;
   }
 
   const authToken = async (token: string): Promise<void> => {
     console.log('authToken');
     const req = {
-      refreshToken: token
+      refreshToken: token,
     };
     await createData('/auth/refresh-token', req)
       .then(res => {
@@ -77,9 +78,9 @@ export function Splash({ navigation }: any): React.JSX.Element {
         if (data.accessToken === null) {
           throw Error('no token');
         }
-        let accessToken = data.accessToken
-        let refreshToken = data.refreshToken
-        setTokens(accessToken, refreshToken)
+        let accessToken = data.accessToken;
+        let refreshToken = data.refreshToken;
+        setTokens(accessToken, refreshToken);
         setTimeout(() => {
           navigation.navigate('HomeTab');
         }, 1000);
@@ -99,10 +100,10 @@ export function Splash({ navigation }: any): React.JSX.Element {
   const startLogin = async () => {
     try {
       removeToken();
-      const refreshToken = await getRefreshToken()
+      const refreshToken = await getRefreshToken();
       // console.log('refreshToken', refreshToken);
       if (refreshToken !== null) {
-        authToken(refreshToken)
+        authToken(refreshToken);
       } else {
         //토큰 만료
         navigation.navigate('Login');
@@ -115,20 +116,19 @@ export function Splash({ navigation }: any): React.JSX.Element {
 
   useEffect(() => {
     if (!isFocused) {
-      return
+      return;
     }
-    hasVersionUpdate()
-      .then((shouldUpdate) => {
-        console.log("shouldUpdate", shouldUpdate)
-        if (!shouldUpdate) {
-          startLogin()
-        }
-      })
+    hasVersionUpdate().then(shouldUpdate => {
+      console.log('shouldUpdate', shouldUpdate);
+      if (!shouldUpdate) {
+        startLogin();
+      }
+    });
   }, [isFocused]);
 
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1 }} />
+      <View style={{flex: 1}} />
       <View style={styles.logoContainer}>
         <AppText style={styles.logoText}>
           <AppText style={styles.logoTextHighlight}>처음 살아보는</AppText> 나를

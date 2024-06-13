@@ -1,8 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {updateData} from '@/api/api';
+import {useRecoilState} from 'recoil';
+import {userState} from '@/store/userState';
+
+import {fetchData, updateData} from '@/api/api';
 
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
+import OutsidePressHandler from 'react-native-outside-press';
 import DatePicker from 'react-native-date-picker';
 import AppButton from '@/components/common/AppButton';
 import {AppInput} from '@/components/common/AppInput';
@@ -11,9 +15,6 @@ import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
 
 import {getFormattedDate} from '@/utils';
-import OutsidePressHandler from 'react-native-outside-press';
-import {userInfoState} from '@/store/userInfoState';
-import {useRecoilValue} from 'recoil';
 import {
   // checkInappropriateKeyword,
   checkNumber,
@@ -23,13 +24,14 @@ import {
 } from '@/utils/formValidation';
 
 export function MyInfoEditForm(): React.JSX.Element {
-  const userInfo = useRecoilValue(userInfoState);
+  const [myInfo, setMyInfo] = useRecoilState(userState);
+
   const [isInvalid, setIsInvalid] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
-  const [nickname, onChangeNickname] = useState(userInfo?.nickname);
-  const [birthdate, onChangeBirthdate] = useState(userInfo?.birthdate);
+  const [nickname, onChangeNickname] = useState(myInfo.nickname);
+  const [birthDate, onChangeBirthDate] = useState(myInfo.birthDate);
   const navigation = useNavigation();
   const nicknameInputRef = useRef(null);
   const birthDateInputRef = useRef(null);
@@ -52,19 +54,28 @@ export function MyInfoEditForm(): React.JSX.Element {
 
   const handleSubmitButtonPress = () => {
     if (checkNicknameInputValidation()) {
-      editUserInfo();
+      editMyInfo();
     }
   };
 
-  const editUserInfo = async () => {
-    const newUserInfo = {
-      nickname,
-      birthdate,
-    };
-
-    const res = await updateData('/user', userInfo.id, newUserInfo);
+  const fetchMyInfo = async () => {
+    const res = await fetchData('/user', null);
 
     if (res.status === 200) {
+      setMyInfo(res.data);
+    }
+  };
+
+  const editMyInfo = async () => {
+    const newMyInfo = {
+      nickname,
+      birthDate,
+    };
+
+    const res = await updateData('/user', null, newMyInfo);
+
+    if (res.status === 200) {
+      fetchMyInfo();
       moveToBack();
     }
   };
@@ -109,14 +120,14 @@ export function MyInfoEditForm(): React.JSX.Element {
   }, [nickname]);
 
   useEffect(() => {
-    if (!nickname || !birthdate) {
+    if (!nickname || !birthDate) {
       setIsEmpty(true);
     } else {
       setIsEmpty(false);
     }
 
     checkNicknameInputValidation();
-  }, [nickname, birthdate, checkNicknameInputValidation]);
+  }, [nickname, birthDate, checkNicknameInputValidation]);
 
   return (
     <>
@@ -144,8 +155,8 @@ export function MyInfoEditForm(): React.JSX.Element {
               hasLabel={true}
               editable={false}
               labelText="생년월일"
-              text={getFormattedDate(new Date(birthdate), 'kor')}
-              onChangeText={onChangeBirthdate}
+              text={getFormattedDate(new Date(birthDate), 'kor')}
+              onChangeText={onChangeBirthDate}
               icon={{
                 name: 'arrowDown',
                 width: 24,
@@ -174,10 +185,10 @@ export function MyInfoEditForm(): React.JSX.Element {
         mode="date"
         locale="kor"
         open={isDatePickerVisible}
-        date={new Date(birthdate)}
+        date={new Date(birthDate)}
         onConfirm={date => {
           setIsDatePickerVisible(false);
-          onChangeBirthdate(getFormattedDate(date, '-'));
+          onChangeBirthDate(getFormattedDate(date, '-'));
         }}
         onCancel={() => {
           setIsDatePickerVisible(false);

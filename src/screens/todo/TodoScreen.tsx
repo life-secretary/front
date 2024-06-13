@@ -1,9 +1,8 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {fetchData} from '@/api/api';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
+import {useSetRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
-import {userInfoState} from '@/store/userInfoState';
 // import {userInfoState} from '@/store/login';
 
 import {StyleSheet, View, FlatList} from 'react-native';
@@ -26,7 +25,6 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
   const [isFetched, setIsFetched] = useState(false);
   const setTodoList = useSetRecoilState(todoListState);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const userInfo = useRecoilValue(userInfoState);
   const scrollViewRef = useRef(null);
 
   const moveToScreen = (screen: string, params: object) => {
@@ -45,9 +43,7 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
   };
 
   const fetchTodoList = async () => {
-    const res = await fetchData('/user-todos', {
-      userId: userInfo.id,
-    });
+    const res = await fetchData('/user-todos', null);
 
     return res.data.data;
   };

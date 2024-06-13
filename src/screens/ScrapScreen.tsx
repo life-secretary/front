@@ -3,7 +3,6 @@ import {useFocusEffect} from '@react-navigation/native';
 import {useQuery} from '@tanstack/react-query';
 import {useRecoilValue, useSetRecoilState} from 'recoil';
 import {scrapListState, scrapListTotalCountState} from '@/store/scrapState';
-import {userInfoState} from '@/store/userInfoState';
 import {deleteData, fetchData} from '@/api/api';
 
 import {FlatList, StyleSheet, View} from 'react-native';
@@ -32,7 +31,6 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
   const setScrapList = useSetRecoilState(scrapListState);
   const [isDeleted, setIsDeleted] = useState(false);
   const totalCount = useRecoilValue(scrapListTotalCountState);
-  const userInfo = useRecoilValue(userInfoState);
   const scrollViewRef = useRef(null);
 
   const reset = () => {
@@ -104,9 +102,7 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
   };
 
   const fetchScraps = async () => {
-    const res = await fetchData('/scrap', {
-      userId: userInfo.id,
-    });
+    const res = await fetchData('/scrap', null);
 
     return res.data.data;
   };
@@ -152,7 +148,7 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
         unsubscribe();
         reset();
       };
-    }, [navigation]),
+    }, [navigation, reset]),
   );
 
   return (
