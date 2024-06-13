@@ -89,7 +89,7 @@ const GetOccupation = ({
                     name='back'
                     width={42}
                     height={42}
-                    onPress={() => navigation.navigate('GetCategory')}
+                    onPress={() => navigation.navigate('GetCategory', { modify: false })}
                 />
                 <AppButton 
                     text='건너뛰기'
