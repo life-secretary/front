@@ -9,24 +9,13 @@ import AppButton from '@/components/common/AppButton';
 import {useRecoilState} from 'recoil';
 import {userInfoState} from '@/store/login';
 
-import {styles} from '../../screens/init/Survey';
-import type {SurveyProccessProps} from '../../screens/init/Survey';
-import { styles } from '@/styles/survey';
+import {styles} from '@/styles/survey';
 
-const GetBirthDate = ({
-  backButtonHandler,
-  nextButtonHandler,
-}: SurveyProccessProps): React.JSX.Element => {
+const GetBirthDate = ({navigation}: any) => {
   const currentDate = new Date();
   const yearRef = useRef(null);
   const monthRef = useRef(null);
   const dayRef = useRef(null);
-    navigation
-}: any) => {
-    const currentDate = new Date();
-    const yearRef = useRef(null);
-    const monthRef = useRef(null);
-    const dayRef = useRef(null);
 
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const [isError, setIsError] = useState(true);
@@ -123,9 +112,7 @@ const GetBirthDate = ({
       return false;
     }
 
-
-      !!userInfo.year.length && !!userInfo.month.length && !!userInfo.day.length
-    );
+    !!userInfo.year.length && !!userInfo.month.length && !!userInfo.day.length;
   };
 
   useEffect(() => {
@@ -142,10 +129,10 @@ const GetBirthDate = ({
             name="back"
             width={42}
             height={42}
-            onPress={backButtonHandler}
+            onPress={() => navigation.navigate('GetNickName')}
           />
         </AppHeader>
-        <View>
+        <View style={styles.titleContainer}>
           <View style={styles.textContainer}>
             <AppText style={styles.titleText}>생년월일을 입력해 주세요</AppText>
             <AppText style={styles.subTitleText}>
@@ -192,78 +179,17 @@ const GetBirthDate = ({
               styles.nextButton,
               isError || !allTextInputFull() ? styles.nextButtonDisabled : {},
             ]}
+            disabled={isError || !allTextInputFull()}
             onPressButton={
               isError || !allTextInputFull()
                 ? () => {}
-                : () => nextButtonHandler()
+                : () => navigation.navigate('GetGender')
             }
           />
         </View>
       </View>
     </KeyboardAvoidingView>
   );
-    return (
-        <KeyboardAvoidingView 
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.keyBoardAvoidingContainer}
-        >
-            <View style={styles.container}>
-                <AppHeader style={styles.headerContainer}>
-                    <AppIcon
-                        name='back'
-                        width={42}
-                        height={42}
-                        onPress={() => navigation.navigate('GetNickName')}
-                    />
-                </AppHeader>
-                <View style={styles.titleContainer}>
-                    <View style={styles.textContainer}>
-                        <AppText style={styles.titleText}>생년월일을 입력해 주세요</AppText>
-                        <AppText style={styles.subTitleText}>나이에 맞는 정보를 제공해드리기 위해 필요해요</AppText>
-                    </View>
-                </View>
-                <View style={[styles.textInputBirth, isError ? styles.textInputError : {}]}>
-                    <TextInput
-                        ref={yearRef}
-                        keyboardType='numeric'
-                        placeholder='0000'
-                        value={userInfo.year}
-                        onChange={onChangeYearText}
-                        style={styles.textBirth}
-                        autoFocus={true}
-                    />
-                    <AppText style={styles.textBirth}>년 </AppText>
-                    <TextInput
-                        ref={monthRef}
-                        keyboardType='numeric'
-                        placeholder='00'
-                        value={userInfo.month}
-                        onChange={onChangeMonthText}
-                        style={styles.textBirth}
-                    />
-                    <AppText style={styles.textBirth}>월 </AppText>
-                    <TextInput
-                        ref={dayRef}
-                        keyboardType='numeric'
-                        placeholder='00'
-                        value={userInfo.day}
-                        onChange={onChangeDayText}
-                        style={styles.textBirth}
-                    />
-                    <AppText style={styles.textBirth}>일 </AppText>
-                </View>
-                <View style={styles.buttonContainer}>
-                    <AppButton 
-                        text='다음'
-                        textStyle={styles.nextButtonText}
-                        buttonStyle={[styles.nextButton, (isError || !allTextInputFull()) ? styles.nextButtonDisabled : {}]}
-                        disabled={(isError || !allTextInputFull())}
-                        onPressButton={(isError || !allTextInputFull()) ? () => {} : () => navigation.navigate('GetGender')}
-                    />
-                </View>
-            </View>
-        </KeyboardAvoidingView>
-    )
 };
 
 export default GetBirthDate;

@@ -94,7 +94,7 @@ const ToDoDetail = ({navigation, route}: any) => {
           <View style={styles.titleTextWrapper}>
             <AppText style={styles.categoryIcon}>
               {categories.find(
-                (category: any) => category.id === data?.category.id,
+                (category: any) => category?.id === data?.category?.id,
               )?.title || '카테고리'}
             </AppText>
             <AppText style={styles.title}>

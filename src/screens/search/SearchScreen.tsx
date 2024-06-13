@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { StyleSheet, View, Platform } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
+import {StyleSheet, View, Platform} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 
-import { AppHeader } from '../../components/common/AppHeader';
-import { AppText } from '../../components/common/AppText';
+import {AppHeader} from '../../components/common/AppHeader';
+import {AppText} from '../../components/common/AppText';
 import AppIcon from '../../components/common/AppIcon';
 import AppConfirmModal from '../../components/common/modal/AppConfirmModal';
 
@@ -14,12 +14,12 @@ import SearchWordView from '../../components/search/SearchWordView';
 import SearchContentView from '../../components/search/SearchContentView';
 import SearchToDoView from '../../components/search/SearchToDoView';
 
-import { getFontSize } from '../../utils/font';
-import { getNewConditionData } from '@/utils/search';
+import {getFontSize} from '../../utils/font';
+import {getNewConditionData} from '@/utils/search';
 
 import {createData} from '@/api/api';
 
-import type { ConditionData } from '../../components/search/SearchCategory';
+import type {ConditionData} from '../../components/search/SearchCategory';
 
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {
@@ -44,9 +44,7 @@ const HeaderSearchResult = ({data, searchData, onPressButton}: any) => {
   );
 };
 
-const SearchScreen = ({
-  navigation
-}: any) => {
+const SearchScreen = ({navigation}: any) => {
   const scrollViewRef = useRef(null);
   const [recentSearchItemHeight, setRecentSearchItemHeight] = useState(38);
   const [recentSearchListHeight, setRecentSearchListHeight] = useState(0);
@@ -67,7 +65,11 @@ const SearchScreen = ({
     size: 10,
     sort: 'viewCount,desc',
   });
-  const { data:content, isFetching:ContentIsFetching, isRefetching:ContentIsRefetching } = getSearchContentListQuery(searchConditionContent);
+  const {
+    data: content,
+    isFetching: ContentIsFetching,
+    isRefetching: ContentIsRefetching,
+  } = getSearchContentListQuery(searchConditionContent);
   const [contentData, setContentData] = useState<any>([]);
 
   // todo
@@ -84,7 +86,11 @@ const SearchScreen = ({
     size: 10,
     sort: 'saveCount,desc',
   });
-  const { data:toDo, isFetching:TodoIsFetching, isRefetching:toDoIsRefetching } = getSearchToDoListQuery(searchConditionToDo);
+  const {
+    data: toDo,
+    isFetching: TodoIsFetching,
+    isRefetching: toDoIsRefetching,
+  } = getSearchToDoListQuery(searchConditionToDo);
   const [toDoData, setToDoData] = useState<any>([]);
 
   const isLoading = useRef<boolean>(false);
@@ -235,13 +241,13 @@ const SearchScreen = ({
           onPressButton: () => {
             setIsConfirmOpen(false);
           },
-        }
-      }
+        },
+      },
     });
   };
 
-  const updateRecentSearchItem = (text: string, currData: { length: number }) => {
-    setRecentSearchesData((previousValue) => {
+  const updateRecentSearchItem = (text: string, currData: {length: number}) => {
+    setRecentSearchesData(previousValue => {
       const copiedValue = [...previousValue];
       const duplicatedText = previousValue.find(
         item => item.title === searchText,
@@ -258,7 +264,7 @@ const SearchScreen = ({
         });
       }
 
-      currData.length = (4 <= copiedValue.length) ? 4 : copiedValue.length;
+      currData.length = copiedValue.length >= 4 ? 4 : copiedValue.length;
 
       return copiedValue;
     });
@@ -266,7 +272,7 @@ const SearchScreen = ({
 
   // 검색 기능
   const search = (text?: string) => {
-    let currData = { length : 4 };
+    let currData = {length: 4};
     const value = text ? text : searchText;
 
     if (value.length === 0) {
@@ -275,19 +281,16 @@ const SearchScreen = ({
     }
 
     // 검색 조건 업데이트
-    setSearchConditionContent((prev) => ({
+    setSearchConditionContent(prev => ({
       ...prev,
       title: value,
-    }))
+    }));
 
     // 최신 검색어 업데이트
     updateRecentSearchItem(value, currData);
 
     // 검색 로그 기록
-    createData(
-      '/search-logs',
-      { value }
-    );
+    createData('/search-logs', {value});
 
     // 최신 검색어 높이 업데이트
     const recentSearchListHeight = recentSearchItemHeight * currData.length;
@@ -296,7 +299,6 @@ const SearchScreen = ({
 
     setIsSearchResultPage(true);
   };
-
 
   const pressSearchButton = () => {
     search();
@@ -310,7 +312,7 @@ const SearchScreen = ({
     setSearchText(text);
   };
 
-  const submitSearchText = ({ nativeEvent }: any) => {
+  const submitSearchText = ({nativeEvent}: any) => {
     search();
   };
 
@@ -416,7 +418,7 @@ const SearchScreen = ({
     if (pageContent.current === 0) {
       setContentData(content);
     } else {
-      setContentData((prev: any) => [...prev, ...content])
+      setContentData((prev: any) => [...prev, ...content]);
     }
 
     isLoading.current = false;
@@ -427,7 +429,7 @@ const SearchScreen = ({
     if (!toDo || !isSearchResultPage) {
       return;
     }
-    
+
     if (pageToDo.current === 0) {
       setToDoData(toDo);
     } else {
@@ -444,7 +446,7 @@ const SearchScreen = ({
   //       if (!scrollViewRef?.current) {
   //         return;
   //       }
-        
+
   //       scrollViewRef?.current.scrollToOffset({offset: 0, animated: true});
   //     });
 
@@ -507,7 +509,7 @@ const SearchScreen = ({
         />
       ) : currentData()?.id === 1 ? (
         <SearchContentView
-          type='search'
+          type="search"
           data={contentData}
           headerComponent={
             contentData.length ? (
@@ -523,10 +525,10 @@ const SearchScreen = ({
           onEndReached={onContentPageEndReached}
           onPressContent={onPressContent}
         />
-        :
-        <SearchToDoView 
-          type='search'
-          data={toDoData} 
+      ) : (
+        <SearchToDoView
+          type="search"
+          data={toDoData}
           headerComponent={
             toDoData.length ? (
               <HeaderSearchResult
