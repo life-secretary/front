@@ -23,7 +23,7 @@ const startLogout = async () => {
     } else if (value === PROVIDERS.KAKAO) {
       await logout();
     }
-    await clearAuth()
+    await clearAuth();
   } catch (e) {
     console.log('e', e);
   }
@@ -33,7 +33,7 @@ export function MyInfoMenuItem({myInfoMenu}: Props): React.JSX.Element {
   const navigation = useNavigation();
 
   const handleButtonPress = (menu: object) => {
-    if (menu.key === 'logout') {
+    if (menu?.key === 'logout') {
       startLogout().then(() => {
         navigation.navigate('Splash');
       });
@@ -41,7 +41,7 @@ export function MyInfoMenuItem({myInfoMenu}: Props): React.JSX.Element {
     }
 
     if (menu?.key === 'resurvey') {
-      navigation.navigate('GetCategory', { modify: true });
+      navigation.navigate('GetCategory', {modify: true});
       return;
     }
 
