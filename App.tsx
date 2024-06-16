@@ -163,7 +163,11 @@ function RootStack() {
         <Stack.Screen name="Welcome" component={Welcome} />
       </Stack.Group>
       <Stack.Group>
-        <Stack.Screen name="HomeTab" component={HomeTabs} />
+        <Stack.Screen name="HomeTab" component={HomeTabs}
+          options={{
+            headerShown: false,
+            gestureEnabled: false, // 스와이프 백 동작 비활성화
+          }} />
       </Stack.Group>
       <Stack.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <Stack.Screen
