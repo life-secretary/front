@@ -42,6 +42,32 @@ export interface LoginInfo {
 
 export const providerKey = '@providerKey';
 export const refreshTokenKey = '@refreshTokenKey';
+export const lastNoticeIdKey = '@lastNoticeIdKey';
+
+export const setLastNoticeId = async (noticeId: number) => {
+  try {
+    await AsyncStorage.setItem(lastNoticeIdKey, noticeId.toString());
+    // console.log('Saved successfully:', noticeId);
+  } catch (error) {
+    console.error('Error on saving', error);
+  }
+};
+
+export const getLastNoticeId = async () => {
+  try {
+    const noticeId = await AsyncStorage.getItem(lastNoticeIdKey);
+    if (noticeId !== null) {
+      // console.log('retrieved successfully:', noticeId);
+      return parseInt(noticeId, 10);
+    } else {
+      console.log('Not found');
+      return 0;
+    }
+  } catch (error) {
+    console.error('Error on retrieving', error);
+    return null;
+  }
+};
 
 export const setTokens = async (accessToken: string, refreshToken: string) => {
   try {
@@ -56,7 +82,7 @@ export const getRefreshToken = async () => {
   try {
     const refreshToken = await AsyncStorage.getItem(refreshTokenKey);
     if (refreshToken !== null) {
-      console.log('Refresh token retrieved successfully:', refreshToken);
+      // console.log('Refresh token retrieved successfully:', refreshToken);
       return refreshToken;
     } else {
       console.log('No refresh token found');

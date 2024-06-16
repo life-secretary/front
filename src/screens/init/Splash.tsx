@@ -5,7 +5,7 @@ import { AppText } from '@/components/common/AppText';
 
 import { getFontSize } from '@/utils/font';
 
-import { getRefreshToken, setTokens } from '@/store/login';
+import { getLastNoticeId, getRefreshToken, setLastNoticeId, setTokens } from '@/store/login';
 
 import Toast from 'react-native-toast-message';
 import { createData, fetchData } from '@/api/api';
@@ -75,14 +75,20 @@ export function Splash({ navigation }: any): React.JSX.Element {
   }
 
   const fetchNotice = async () => {
-    return fetchData('/notice/latest', null)
-    .then(response => {
-      return response.data.data;
-    })
-    .catch(error => {
+    try {
+      const response = await fetchData('/notice/latest', null);
+      const notice = response.data.data;
+      const lastId = await getLastNoticeId();
+      if (lastId == null) throw new Error('Failed to retrieve last notice ID');
+      if (notice.id > lastId) {
+        return notice;
+      } else {
+        return Promise.resolve();
+      }
+    } catch (error) {
       console.error(error);
-      return Promise.resolve
-    });
+      return Promise.resolve();
+    }
   };
 
   const authToken = async (token: string): Promise<void> => {
@@ -99,11 +105,12 @@ export function Splash({ navigation }: any): React.JSX.Element {
           throw Error('no token');
         }
         let accessToken = data.accessToken
+        // console.log("currentToken", accessToken)
         let refreshToken = data.refreshToken
         setTokens(accessToken, refreshToken)
         setTimeout(() => {
           navigation.navigate('HomeTab');
-        }, 1000);
+        }, 200);
       })
       .catch(error => {
         console.log(error);
@@ -153,9 +160,12 @@ export function Splash({ navigation }: any): React.JSX.Element {
       return fetchNotice();
     })
     .then((notice) => {
-      if (notice.showPopup) { 
+      if (notice && notice.showPopup) { 
         return showAlert(notice.title, notice.message)
-        .then(() => notice)
+        .then(() => {
+          setLastNoticeId(notice.id.toString())
+          notice
+        })
       }
       return notice
     })
