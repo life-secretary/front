@@ -39,7 +39,7 @@ export function Notice(): React.JSX.Element {
         )}
       </View>
       <AppText style={styles.headerText}>
-        {notice?.createdTime || getFormattedDate(new Date(), '.')}
+        {getFormattedDate(new Date(notice?.createdAt), '.') || '-'}
       </AppText>
     </View>
   );
@@ -60,12 +60,7 @@ export function Notice(): React.JSX.Element {
       const list = res.data.data;
 
       if (res.status === 200) {
-        const orderedList = list.sort(
-          (a: string, b: string) =>
-            new Date(b.createdTime) - new Date(a.createdTime),
-        );
-
-        setNoticeList(orderedList);
+        setNoticeList(list);
       }
     };
 
