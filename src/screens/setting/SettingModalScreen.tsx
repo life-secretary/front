@@ -9,17 +9,36 @@ import {MyInfoMenu} from '@/components/setting/my/MyInfoMenu';
 import {SendFeedbackForm} from '@/components/setting/sendFeedback/SendFeedbackForm';
 import {Notice} from '@/components/setting/notice/Notice';
 import {OpenSourceList} from '@/components/setting/openSource/OpenSourceList';
+import {Empty} from '@/components/setting/Empty';
 import {font} from '@/styles/font';
 import color from '@/styles/color';
 import spacing from '@/styles/spacing';
 
 import {getFontSize} from '@/utils/font';
+import {ServiceIntro} from '@/components/setting/ServiceIntro';
 
 export function SettingModalScreen({
   route,
   navigation,
 }: any): React.JSX.Element {
   const {headerTitle, menu} = route.params;
+
+  const renderComponent = (menuName: string) => {
+    switch (menuName) {
+      case 'my':
+        return <MyInfoMenu />;
+      case 'sendFeedback':
+        return <SendFeedbackForm />;
+      case 'notice':
+        return <Notice />;
+      case 'openSource':
+        return <OpenSourceList />;
+      case 'serviceIntro':
+        return <ServiceIntro />;
+      default:
+        return <Empty />;
+    }
+  };
 
   return (
     <AppLayout>
@@ -39,10 +58,7 @@ export function SettingModalScreen({
         )}
       </AppHeader>
       {menu?.key !== 'sendFeedback' && <View style={styles.divider} />}
-      {menu?.key === 'my' && <MyInfoMenu />}
-      {menu?.key === 'sendFeedback' && <SendFeedbackForm />}
-      {menu?.key === 'notice' && <Notice />}
-      {menu?.key === 'openSource' && <OpenSourceList />}
+      {renderComponent(menu?.key)}
     </AppLayout>
   );
 }
