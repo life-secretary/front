@@ -60,6 +60,7 @@ const getSearchContentListQuery = (params: any) => {
     return useQuery({
         queryKey: ['/content/search', params],
         queryFn: () => getSearchContentList(params),
+        enabled: params.title !== ''
     })
 };
 
