@@ -58,7 +58,10 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
 
   const scrollViewRef = useRef<any>(null);
 
-  const handleHeaderIconPress = () => {};
+  const handleHeaderIconPress = () => {
+    // TODO: 설문입력 가입/수정 플로우 구분 필요
+    navigation.navigate('GetGender');
+  };
 
   const fetchCategories = async () => {
     const res = await fetchData('/categories', null);
