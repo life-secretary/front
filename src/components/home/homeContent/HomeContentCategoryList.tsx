@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {homeCategoryListState} from '@/store/categoryState';
@@ -21,6 +21,7 @@ export function HomeContentCategoryList(): React.JSX.Element {
   );
   const categories = useRecoilValue(homeCategoryListState);
   const defaultCategory = categories.find(item => item.category === 'all');
+  const scrollViewRef = useRef<any>(null);
 
   const handleHomeContentFilter = (category: homeContentFilter) => {
     setHomeContentFilter(category);
@@ -43,11 +44,14 @@ export function HomeContentCategoryList(): React.JSX.Element {
   useFocusEffect(
     useCallback(() => {
       return () => {
-        setHomeContentFilter(
-          defaultCategory
-            ? defaultCategory
-            : {category: 'all', id: 0, title: '전체'},
-        );
+        setTimeout(() => {
+          setHomeContentFilter(
+            defaultCategory
+              ? defaultCategory
+              : {category: 'all', id: 0, title: '전체'},
+          );
+          scrollViewRef?.current.scrollToOffset({offset: 0, animated: true});
+        }, 1000);
       };
     }, [defaultCategory, setHomeContentFilter]),
   );
@@ -55,6 +59,7 @@ export function HomeContentCategoryList(): React.JSX.Element {
   return (
     <View style={styles.container}>
       <FlatList
+        ref={scrollViewRef}
         scrollsToTop
         onScroll={handleScroll}
         scrollEventThrottle={16}
