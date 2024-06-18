@@ -33,11 +33,11 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
   const totalCount = useRecoilValue(scrapListTotalCountState);
   const scrollViewRef = useRef(null);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setCheckedList([]);
     setTotalCheckedCount(0);
     switchMode('read');
-  };
+  }, []);
 
   const switchMode = (action: string) => {
     switch (action) {
@@ -111,6 +111,7 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
     queryKey: ['scraps'],
     queryFn: fetchScraps,
     refetchOnMount: true,
+    refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });
 
@@ -139,6 +140,8 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
 
   useFocusEffect(
     useCallback(() => {
+      refetch();
+
       const unsubscribe = navigation.addListener('tabPress', e => {
         e.preventDefault();
         scrollViewRef?.current.scrollToOffset({offset: 0, animated: true});
@@ -148,7 +151,7 @@ export function ScrapScreen({navigation}: any): React.JSX.Element {
         unsubscribe();
         reset();
       };
-    }, [navigation, reset]),
+    }, [navigation, refetch, reset]),
   );
 
   return (
