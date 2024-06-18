@@ -25,7 +25,7 @@ export function TodoScreen({navigation}: any): React.JSX.Element {
   const [isFetched, setIsFetched] = useState(false);
   const setTodoList = useSetRecoilState(todoListState);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const scrollViewRef = useRef(null);
+  const scrollViewRef = useRef<any>(null);
 
   const moveToScreen = (screen: string, params: object) => {
     navigation.navigate(screen, params);

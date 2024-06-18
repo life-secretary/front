@@ -11,9 +11,10 @@ import Todo from '@/models/Todo';
 import SubTodo from '@/models/SubTodo';
 
 type Props = {
-  todoItem: Todo;
+  todoItem: Todo | {};
   subTodoList: SubTodo[];
   isCompleteMode: boolean;
+  refetch: () => {};
 };
 
 const EmptyList = () => {
@@ -30,6 +31,7 @@ export function SubTodoList({
   todoItem,
   subTodoList,
   isCompleteMode,
+  refetch,
 }: Props): React.JSX.Element {
   return (
     <View style={styles.container}>
@@ -41,6 +43,7 @@ export function SubTodoList({
             todoItem={{...todoItem}}
             subTodoItem={item}
             isCompleteMode={isCompleteMode}
+            refetch={refetch}
           />
         )}
         keyExtractor={item => String(item.id)}
