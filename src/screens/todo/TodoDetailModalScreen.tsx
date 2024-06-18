@@ -1,9 +1,12 @@
 import React, {useState, useEffect, useCallback, useMemo} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import {useRecoilState, useSetRecoilState} from 'recoil';
 import {
   bottomSheetModeState,
   bottomSheetVisibleState,
 } from '@/store/bottomSheetState';
+
+import {useQuery} from '@tanstack/react-query';
 import {createData, deleteData, fetchData, updateData} from '@/api/api';
 
 import {StyleSheet, View} from 'react-native';
@@ -29,9 +32,26 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     useRecoilState(bottomSheetModeState);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSuccessed, setIsSuccessed] = useState(false);
+  const [todoDetail, setTodoDetail] = useState({});
   const [subTodoList, setSubTodoList] = useState([]);
-  const isCompleteMode = todoItem?.isDone;
-  const todoId = todoItem?.id;
+  const isCompleteMode = todoDetail?.isDone;
+
+  const fetchTodoDetail = async () => {
+    const res = await fetchData(`/user-todos/${todoItem.id}`, null);
+
+    return res.data.data;
+  };
+
+  const {data, isLoading, error, refetch} = useQuery({
+    queryKey: ['todoDetail'],
+    queryFn: fetchTodoDetail,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+
+  if (error && !isLoading) {
+    throw error;
+  }
 
   const handleModalVisible = (status: boolean) => {
     setIsModalVisible(status);
@@ -46,7 +66,7 @@ export function TodoDetailModalScreen({navigation, route}: any) {
       form: 'TODO',
       isEditMode: true,
       headerTitle: '할 일 수정',
-      todoItem,
+      todoItem: todoDetail,
     });
 
     setIsBottomSheetVisible(false);
@@ -70,22 +90,22 @@ export function TodoDetailModalScreen({navigation, route}: any) {
   };
 
   const handleDeleteButtonPress = () => {
-    deleteTodo(todoId);
+    deleteTodo(todoDetail?.id);
   };
 
   const handleRetryButtonPress = () => {
-    retryTodo(todoId);
+    retryTodo(todoDetail?.id);
   };
 
   const handleCompleteButtonPress = () => {
-    completeTodo(todoId);
+    completeTodo(todoDetail?.id);
   };
 
   const completeTodo = async (id: number) => {
     const completedTodo = {
-      title: todoItem?.title,
-      categoryId: todoItem?.categoryId,
-      userTag: todoItem?.userTag || '',
+      title: todoDetail?.title,
+      categoryId: todoDetail?.categoryId,
+      userTag: todoDetail?.userTag || '',
       isDone: true,
     };
 
@@ -100,25 +120,20 @@ export function TodoDetailModalScreen({navigation, route}: any) {
     const res = await createData(`/user-todos/retry/${id}`, {});
 
     if (res.status === 200) {
-      // TODO: 완료 투두 리스트에 있는 해당 투두 아이템 제거 필요
       navigation.navigate('Todo');
     }
   };
-
-  const fetchSubTodoList = useCallback(async () => {
-    const res = await fetchData(`/user-todos/${todoId}/sub`, {});
-    if (res.status === 200) {
-      setSubTodoList(res.data.data);
-    }
-  }, [todoId]);
 
   const hasNotYetDoneSubTodo = useMemo(() => {
     return subTodoList.some((todo: object) => todo?.isDone === false);
   }, [subTodoList]);
 
   useEffect(() => {
-    fetchSubTodoList();
-  }, [fetchSubTodoList, subTodoList]);
+    if (data) {
+      setTodoDetail(data);
+      setSubTodoList(data.subs);
+    }
+  }, [data]);
 
   useEffect(() => {
     hasNotYetDoneSubTodo ? setIsSuccessed(false) : setIsSuccessed(true);
@@ -127,6 +142,12 @@ export function TodoDetailModalScreen({navigation, route}: any) {
       setIsBottomSheetVisible(false);
     };
   }, [hasNotYetDoneSubTodo, setIsBottomSheetVisible]);
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch]),
+  );
 
   return (
     <View style={[styles.layout, isCompleteMode && styles.completed]}>
@@ -163,12 +184,16 @@ export function TodoDetailModalScreen({navigation, route}: any) {
             />
           </View>
         </AppHeader>
-        <TodoDetail todoItem={{...todoItem}} isCompleteMode={isCompleteMode} />
+        <TodoDetail
+          todoItem={{...todoDetail, tagList: todoItem.tagList}}
+          isCompleteMode={isCompleteMode}
+        />
       </SafeAreaView>
       <SubTodoList
-        todoItem={{...todoItem}}
+        todoItem={{...todoDetail}}
         subTodoList={subTodoList}
         isCompleteMode={isCompleteMode}
+        refetch={refetch}
       />
       {bottomSheetMode === 'editAndDelete' && (
         <AppBottomSheet

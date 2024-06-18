@@ -27,15 +27,17 @@ import Todo from '@/models/Todo';
 import SubTodo from '@/models/SubTodo';
 
 type ItemProps = {
-  todoItem: Todo;
+  todoItem: Todo | {};
   subTodoItem: SubTodo;
   isCompleteMode: boolean;
+  refetch: () => {};
 };
 
 export function SubTodoItem({
   todoItem,
   subTodoItem,
   isCompleteMode,
+  refetch,
 }: ItemProps): React.JSX.Element {
   const [title, onChangeTitle] = useState(subTodoItem.title || '');
   const [isChecked, setIsChecked] = useState(subTodoItem.isDone || false);
@@ -107,15 +109,27 @@ export function SubTodoItem({
       isDone,
     };
 
-    await updateData(
+    const res = await updateData(
       `/user-todos/${parentTodoId}/sub`,
       subTodoId,
       editedSubTodo,
     );
+
+    if (res.status === 200) {
+      refetch();
+    }
   };
 
   const deleteSubTodo = async (subTodoId: number) => {
-    await deleteData(`/user-todos/${parentTodoId}/sub`, {}, subTodoId);
+    const res = await deleteData(
+      `/user-todos/${parentTodoId}/sub`,
+      {},
+      subTodoId,
+    );
+
+    if (res.status === 200) {
+      refetch();
+    }
   };
 
   const handleInputSubmit = (id: number) => {

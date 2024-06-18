@@ -12,7 +12,7 @@ import Todo from '@/models/Todo';
 import SubTodo from '@/models/SubTodo';
 
 type Props = {
-  todoItem: Todo;
+  todoItem: Todo | {};
   isCompleteMode: boolean;
 };
 
