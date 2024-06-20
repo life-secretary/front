@@ -41,7 +41,7 @@ export function MyInfoMenuItem({myInfoMenu}: Props): React.JSX.Element {
     }
 
     if (menu?.key === 'resurvey') {
-      navigation.navigate('GetCategory', {modify: true});
+      navigation.navigate('GetCategory', {modify: true, from: 'myInfo'});
       return;
     }
 

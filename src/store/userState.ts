@@ -1,12 +1,12 @@
-import {atom, selector} from 'recoil';
+import {atom} from 'recoil';
 
 type UserInfo = {
   nickname: string;
   birthDate: string;
-  occupations: number[];
+  jobIds: number[];
   interests: number[];
   gender: string;
-  hasMarried: boolean;
+  married: boolean;
   hasChild: boolean;
 };
 
@@ -15,10 +15,10 @@ const userState = atom<UserInfo | null>({
   default: {
     nickname: '',
     birthDate: '',
-    occupations: [],
+    jobIds: [],
     interests: [],
     gender: '',
-    hasMarried: false,
+    married: false,
     hasChild: false,
   },
 });

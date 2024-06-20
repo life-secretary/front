@@ -1,44 +1,45 @@
-import React, { useEffect } from 'react';
-import { View, StyleSheet, Alert, AlertButton } from 'react-native';
+import React, {useEffect} from 'react';
+import {View, StyleSheet, Alert, AlertButton} from 'react-native';
 
-import { AppText } from '@/components/common/AppText';
+import {AppText} from '@/components/common/AppText';
 
-import { getFontSize } from '@/utils/font';
+import {getFontSize} from '@/utils/font';
 
-import { getLastNoticeId, getRefreshToken, setLastNoticeId, setTokens } from '@/store/login';
+import {
+  getLastNoticeId,
+  getRefreshToken,
+  setLastNoticeId,
+  setTokens,
+} from '@/store/login';
 
 import Toast from 'react-native-toast-message';
-import { createData, fetchData } from '@/api/api';
-import { useIsFocused } from '@react-navigation/native';
-import { removeToken } from '@/api/axios';
-import AppVersionInfo, { compareVersions, getLatestVersion } from './AppVersion';
+import {createData, fetchData} from '@/api/api';
+import {useIsFocused} from '@react-navigation/native';
+import {removeToken} from '@/api/axios';
+import AppVersionInfo, {compareVersions, getLatestVersion} from './AppVersion';
 import DeviceInfo from 'react-native-device-info';
-import { fetch } from '@react-native-community/netinfo';
+import {fetch} from '@react-native-community/netinfo';
 
-export function Splash({ navigation }: any): React.JSX.Element {
+export function Splash({navigation}: any): React.JSX.Element {
   const isFocused = useIsFocused();
 
   function showAlert(title: string, message: string): Promise<void> {
-    return new Promise((resolve) => {
-      Alert.alert(
-        title,
-        message,
-        [
-          { text: '확인', onPress: () => resolve() }
-        ],
-        { cancelable: false }
-      );
+    return new Promise(resolve => {
+      Alert.alert(title, message, [{text: '확인', onPress: () => resolve()}], {
+        cancelable: false,
+      });
     });
   }
-  
+
   async function hasVersionUpdate() {
-    let shouldUpdate = false
-    const res = await getLatestVersion()
-    const latest = res.data.data as AppVersionInfo
+    let shouldUpdate = false;
+    const res = await getLatestVersion();
+    const latest = res.data.data as AppVersionInfo;
     // console.log(latest.version)
     // console.log(DeviceInfo.getVersion())
-    const hasNewer = compareVersions(latest.version, DeviceInfo.getVersion()) === 1
-    shouldUpdate = hasNewer && latest.showAlert
+    const hasNewer =
+      compareVersions(latest.version, DeviceInfo.getVersion()) === 1;
+    shouldUpdate = hasNewer && latest.showAlert;
     //TODO: os type check
     if (shouldUpdate) {
       const buttons: Array<AlertButton> = [
@@ -67,11 +68,11 @@ export function Splash({ navigation }: any): React.JSX.Element {
         buttons,
         {
           cancelable: true,
-          onDismiss: () => { },
-        }
+          onDismiss: () => {},
+        },
       );
     }
-    return shouldUpdate
+    return shouldUpdate;
   }
 
   const fetchNotice = async () => {
@@ -79,7 +80,9 @@ export function Splash({ navigation }: any): React.JSX.Element {
       const response = await fetchData('/notice/latest', null);
       const notice = response.data.data;
       const lastId = await getLastNoticeId();
-      if (lastId == null) throw new Error('Failed to retrieve last notice ID');
+      if (lastId == null) {
+        throw new Error('Failed to retrieve last notice ID');
+      }
       if (notice.id > lastId) {
         return notice;
       } else {
@@ -94,7 +97,7 @@ export function Splash({ navigation }: any): React.JSX.Element {
   const authToken = async (token: string): Promise<void> => {
     console.log('authToken');
     const req = {
-      refreshToken: token
+      refreshToken: token,
     };
     await createData('/auth/refresh-token', req)
       .then(res => {
@@ -104,10 +107,10 @@ export function Splash({ navigation }: any): React.JSX.Element {
         if (data.accessToken === null) {
           throw Error('no token');
         }
-        let accessToken = data.accessToken
-        // console.log("currentToken", accessToken)
-        let refreshToken = data.refreshToken
-        setTokens(accessToken, refreshToken)
+        let accessToken = data.accessToken;
+        console.log('currentToken', accessToken);
+        let refreshToken = data.refreshToken;
+        setTokens(accessToken, refreshToken);
         setTimeout(() => {
           navigation.navigate('HomeTab');
         }, 200);
@@ -127,10 +130,10 @@ export function Splash({ navigation }: any): React.JSX.Element {
   const startLogin = async () => {
     try {
       removeToken();
-      const refreshToken = await getRefreshToken()
+      const refreshToken = await getRefreshToken();
       // console.log('refreshToken', refreshToken);
       if (refreshToken !== null) {
-        authToken(refreshToken)
+        authToken(refreshToken);
       } else {
         navigation.navigate('Login');
       }
@@ -142,47 +145,50 @@ export function Splash({ navigation }: any): React.JSX.Element {
 
   useEffect(() => {
     if (!isFocused) {
-      return
+      return;
     }
-    fetch().then(state => {
-      if (!state.isConnected) {
-        showAlert("셀룰러 데이터가 꺼져 있음", "데이터에 접근하려면, 셀룰러 데이터를 켜거나 Wi-Fi를 사용하십시오.")
-      }
-    })
-    .then(() => {
-      return hasVersionUpdate()
-    })
-    .then((shouldUpdate) => {
-      console.log("shouldUpdate", shouldUpdate)
-      if (shouldUpdate) {
-        return Promise.reject('Update required');
-      }
-      return fetchNotice();
-    })
-    .then((notice) => {
-      if (notice && notice.showPopup) { 
-        return showAlert(notice.title, notice.message)
-        .then(() => {
-          setLastNoticeId(notice.id.toString())
-          notice
-        })
-      }
-      return notice
-    })
-    .then((notice) => {
-      startLogin();
-    })
-    .catch(error => {
-      console.log(error);
-      if (error.response.status === 502 || error.response.status === 404) {
-        showAlert('', `현재 서비스를 이용할 수 없습니다.`);
-      }
-    });
+    fetch()
+      .then(state => {
+        if (!state.isConnected) {
+          showAlert(
+            '셀룰러 데이터가 꺼져 있음',
+            '데이터에 접근하려면, 셀룰러 데이터를 켜거나 Wi-Fi를 사용하십시오.',
+          );
+        }
+      })
+      .then(() => {
+        return hasVersionUpdate();
+      })
+      .then(shouldUpdate => {
+        console.log('shouldUpdate', shouldUpdate);
+        if (shouldUpdate) {
+          return Promise.reject('Update required');
+        }
+        return fetchNotice();
+      })
+      .then(notice => {
+        if (notice && notice.showPopup) {
+          return showAlert(notice.title, notice.message).then(() => {
+            setLastNoticeId(notice.id.toString());
+            notice;
+          });
+        }
+        return notice;
+      })
+      .then(notice => {
+        startLogin();
+      })
+      .catch(error => {
+        console.log(error);
+        if (error.response.status === 502 || error.response.status === 404) {
+          showAlert('', '현재 서비스를 이용할 수 없습니다.');
+        }
+      });
   }, [isFocused]);
 
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1 }} />
+      <View style={{flex: 1}} />
       <View style={styles.logoContainer}>
         <AppText style={styles.logoText}>
           <AppText style={styles.logoTextHighlight}>처음 살아보는</AppText> 나를
