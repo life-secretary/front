@@ -10,27 +10,41 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {PROVIDERS, clearAuth, providerKey} from '@/store/login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {logout} from '@react-native-seoul/kakao-login';
+import {useResetRecoilState} from 'recoil';
+import {userState} from '@/store/userState';
+import {todoListState} from '@/store/todoState';
+import {scrapListState} from '@/store/scrapState';
 
 type Props = {
   myInfoMenu: object;
 };
 
-const startLogout = async () => {
-  try {
-    const value = await AsyncStorage.getItem(providerKey);
-    if (value === PROVIDERS.GOOGLE) {
-      await GoogleSignin.signOut();
-    } else if (value === PROVIDERS.KAKAO) {
-      await logout();
-    }
-    await clearAuth();
-  } catch (e) {
-    console.log('e', e);
-  }
-};
-
 export function MyInfoMenuItem({myInfoMenu}: Props): React.JSX.Element {
+  const resetUserInfo = useResetRecoilState(userState);
+  const resetTodoList = useResetRecoilState(todoListState);
+  const resetScrapList = useResetRecoilState(scrapListState);
   const navigation = useNavigation();
+
+  const resetMyInfo = () => {
+    resetUserInfo();
+    resetTodoList();
+    resetScrapList();
+  };
+
+  const startLogout = async () => {
+    try {
+      const value = await AsyncStorage.getItem(providerKey);
+      if (value === PROVIDERS.GOOGLE) {
+        await GoogleSignin.signOut();
+      } else if (value === PROVIDERS.KAKAO) {
+        await logout();
+      }
+      await clearAuth();
+      resetMyInfo();
+    } catch (e) {
+      console.log('e', e);
+    }
+  };
 
   const handleButtonPress = (menu: object) => {
     if (menu?.key === 'logout') {
