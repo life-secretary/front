@@ -8,7 +8,13 @@ import AppButton from '@/components/common/AppButton';
 import {getFontSize} from '@/utils/font';
 
 import {useRecoilState} from 'recoil';
-import {LoginInfo, PROVIDERS, providerKey, setTokens, userInfoState} from '@/store/login';
+import {
+  LoginInfo,
+  PROVIDERS,
+  providerKey,
+  setTokens,
+  userInfoState,
+} from '@/store/login';
 
 import {
   login,
@@ -19,7 +25,7 @@ import {
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createData } from '@/api/api';
+import {createData} from '@/api/api';
 import Config from 'react-native-config';
 
 export function Login({navigation}: any): React.JSX.Element {
@@ -43,7 +49,7 @@ export function Login({navigation}: any): React.JSX.Element {
       iosClientId: Config.GOOGLE_AUTH_IOS_ID,
     });
   };
-  
+
   const signInWithKakao = async (): Promise<void> => {
     console.log('카카오 로그인');
     try {
@@ -75,7 +81,7 @@ export function Login({navigation}: any): React.JSX.Element {
   const signInWithGoogle = async (): Promise<void> => {
     console.log('구글 로그인');
     try {
-      googleSigninConfigure()
+      googleSigninConfigure();
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
 
@@ -108,14 +114,14 @@ export function Login({navigation}: any): React.JSX.Element {
         return res.data.data;
       })
       .then(data => {
-        let accessToken = data.data.accessToken
-        let refreshToken = data.data.refreshToken
+        let accessToken = data.data.accessToken;
+        let refreshToken = data.data.refreshToken;
         if (accessToken === null) {
           throw Error('no token');
         }
-        setTokens(accessToken, refreshToken)
+        setTokens(accessToken, refreshToken);
         //전에 가입한 사용자
-        closeStartProcess()
+        closeStartProcess();
       })
       .catch(error => {
         //기존 가입된 유저가 아니면 회원가입으로 넘어갑니다.

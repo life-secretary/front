@@ -44,7 +44,7 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
 
   // Login → Agreement → Survey 과정 임시 테스팅 중
   const [isDone, setIsDone] = useState(false);
-  const [showGradient, setShowGradient] = useState(true);
+  const [showGradient, setShowGradient] = useState(false);
   const [newestHomeContentList, setNewestHomeContentList] = useRecoilState(
     newestHomeContentListState,
   );
@@ -60,7 +60,7 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
 
   const handleHeaderIconPress = () => {
     // TODO: 설문입력 가입/수정 플로우 구분 필요
-    navigation.navigate('GetGender');
+    navigation.navigate('GetGender', {modify: true});
   };
 
   const fetchCategories = async () => {
@@ -359,6 +359,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: 100,
-    zIndex: 999,
+    zIndex: 2,
   },
 });
