@@ -36,7 +36,6 @@ const GetMarriage = ({navigation, route}: any) => {
       ...editedUserInfo,
     };
 
-    console.log(newUserInfo);
     return await updateData('/user', null, newUserInfo);
   };
 
