@@ -182,7 +182,7 @@ const GetBirthDate = ({navigation}: any) => {
             onPressButton={
               isError || !allTextInputFull()
                 ? () => {}
-                : () => navigation.navigate('GetGender')
+                : () => navigation.navigate('GetGender', {modify: false})
             }
           />
         </View>
