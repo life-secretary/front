@@ -3,7 +3,6 @@ import {useFocusEffect} from '@react-navigation/native';
 import {fetchData} from '@/api/api';
 import {useSetRecoilState} from 'recoil';
 import {todoListState} from '@/store/todoState';
-// import {userInfoState} from '@/store/login';
 
 import {StyleSheet, View, FlatList} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
