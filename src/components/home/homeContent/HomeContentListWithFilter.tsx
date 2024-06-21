@@ -110,7 +110,7 @@ export function HomeContentListWithFilter({title}: Props): React.JSX.Element {
           contentContainerStyle={styles.listContainer}
         />
       )}
-      {!isEmpty && <ViewMoreButton />}
+      {!isEmpty && <ViewMoreButton type={'popular'} />}
     </View>
   );
 }
