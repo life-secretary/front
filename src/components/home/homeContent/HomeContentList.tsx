@@ -59,7 +59,7 @@ export function HomeContentList({
           renderItem={({item}) => <HomeContentItem homeContentItem={item} />}
         />
       )}
-      {!isEmpty && <ViewMoreButton />}
+      {!isEmpty && <ViewMoreButton type={isUsernameUsed ? 'similar' : 'recent'} />}
     </View>
   );
 }

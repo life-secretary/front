@@ -167,7 +167,10 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
   ] = combinedQueries.data;
 
   const openCategoryModal = (category: CategoryObject) => {
-    navigation.navigate('SearchCategoryModal', {selectedCategory: category});
+    navigation.navigate('SearchCategoryModal', {
+      selectedCategory: category,
+      selectedSort: 'viewCount,desc',
+    });
   };
 
   const openContentModal = (id: any) => {
