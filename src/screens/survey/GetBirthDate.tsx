@@ -107,12 +107,11 @@ const GetBirthDate = ({navigation}: any) => {
   };
 
   const allTextInputFull = () => {
-    console.log('userInfo', userInfo);
     if (!userInfo) {
       return false;
     }
 
-    !!userInfo.year.length && !!userInfo.month.length && !!userInfo.day.length;
+    return !!userInfo.year.length && !!userInfo.month.length && !!userInfo.day.length;
   };
 
   useEffect(() => {
