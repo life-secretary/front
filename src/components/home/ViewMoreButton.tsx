@@ -10,16 +10,38 @@ import {homeContentFilterState} from '@/store/homeContentState';
 
 import {getFontSize} from '@/utils/font';
 
-type Props = {style?: ViewStyle};
+type Props = {style?: any, type: string};
 
-export function ViewMoreButton({style}: Props): React.JSX.Element {
+export function ViewMoreButton({style, type}: Props): React.JSX.Element {
   const navigation: any = useNavigation();
   const homeContentFilter = useRecoilValue(homeContentFilterState);
 
   const handlePress = () => {
-    navigation.navigate('SearchCategoryModal', {
-      selectedCategory: homeContentFilter,
-    });
+    switch(type) {
+      // 유사한 사용자 콘텐츠 (임시)
+      case 'similar':
+        navigation.navigate('SearchCategoryModal', {
+          selectedCategory: {id: 0, category: 'all', title: '전체'},
+          selectedSort: 'viewCount,desc',
+        });
+      break;
+      // 인기 많은 콘텐츠
+      case 'popular': 
+        navigation.navigate('SearchCategoryModal', {
+          selectedCategory: homeContentFilter,
+          selectedSort: 'scrapCount,desc',
+        });
+      break;
+      // 최근 업데이트 콘텐츠
+      case 'recent':
+        navigation.navigate('SearchCategoryModal', {
+          selectedCategory: {id: 0, category: 'all', title: '전체'},
+          selectedSort: 'createdAt,desc',
+        });
+      break;
+      default:
+
+    }
   };
 
   return (

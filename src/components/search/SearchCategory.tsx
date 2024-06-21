@@ -66,7 +66,8 @@ const SearchCategory = ({
     route,
     navigation
 }: any) => {
-    const { selectedCategory } = route.params;
+    const { selectedCategory, selectedSort } = route.params;
+    // 메인 컨텐츠 정렬 초기값 설정을 위한 selectedSort
 
     const [category, setCategory] = useState<any>({});
     const isLoading = useRef<boolean>(false);
@@ -83,7 +84,7 @@ const SearchCategory = ({
       categoryId: selectedCategory.id === 0 ? '' : selectedCategory.id,
       page: 0,
       size: 10,
-      sort: 'viewCount,desc',
+      sort: selectedSort ? selectedSort : 'viewCount,desc',
     });
     const { data:content, isFetching:ContentIsFetching, isRefetching:ContentIsRefetching } = getCategoryContentListQuery(categoryConditionContent);
     const [contentData, setContentData] = useState<any>([]);
