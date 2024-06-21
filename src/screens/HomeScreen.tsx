@@ -177,7 +177,7 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
     navigation.navigate('ContentModal', {id});
   };
 
-  const handleScroll = event => {
+  const handleScroll = (event: any) => {
     const {nativeEvent} = event;
 
     const top = nativeEvent.contentOffset.y === 0;
