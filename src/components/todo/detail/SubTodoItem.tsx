@@ -154,7 +154,9 @@ export function SubTodoItem({
         <View style={[styles.itemContainer, {width: itemWidth}]}>
           <View style={styles.titleContainer}>
             <View style={styles.titleWrapper}>
-              <AppIcon name="hamburger" width={24} height={24} />
+              {/* TODO: sub todo item drag&drop 2차 개발 */}
+              {/* <AppIcon name="hamburger" width={24} height={24} /> */}
+              <View style={{width: 24, height: 24}} />
               <View
                 style={[
                   isInputActive && styles.inputContainer,
