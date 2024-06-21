@@ -35,8 +35,6 @@ export function Splash({navigation}: any): React.JSX.Element {
     let shouldUpdate = false;
     const res = await getLatestVersion();
     const latest = res.data.data as AppVersionInfo;
-    // console.log(latest.version)
-    // console.log(DeviceInfo.getVersion())
     const hasNewer =
       compareVersions(latest.version, DeviceInfo.getVersion()) === 1;
     shouldUpdate = hasNewer && latest.showAlert;
@@ -95,7 +93,6 @@ export function Splash({navigation}: any): React.JSX.Element {
   };
 
   const authToken = async (token: string): Promise<void> => {
-    console.log('authToken');
     const req = {
       refreshToken: token,
     };
@@ -108,7 +105,6 @@ export function Splash({navigation}: any): React.JSX.Element {
           throw Error('no token');
         }
         let accessToken = data.accessToken;
-        console.log('currentToken', accessToken);
         let refreshToken = data.refreshToken;
         setTokens(accessToken, refreshToken);
         setTimeout(() => {
@@ -131,7 +127,6 @@ export function Splash({navigation}: any): React.JSX.Element {
     try {
       removeToken();
       const refreshToken = await getRefreshToken();
-      // console.log('refreshToken', refreshToken);
       if (refreshToken !== null) {
         authToken(refreshToken);
       } else {
@@ -160,7 +155,6 @@ export function Splash({navigation}: any): React.JSX.Element {
         return hasVersionUpdate();
       })
       .then(shouldUpdate => {
-        console.log('shouldUpdate', shouldUpdate);
         if (shouldUpdate) {
           return Promise.reject('Update required');
         }

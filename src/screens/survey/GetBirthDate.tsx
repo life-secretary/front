@@ -111,7 +111,9 @@ const GetBirthDate = ({navigation}: any) => {
       return false;
     }
 
-    return !!userInfo.year.length && !!userInfo.month.length && !!userInfo.day.length;
+    return (
+      !!userInfo.year.length && !!userInfo.month.length && !!userInfo.day.length
+    );
   };
 
   useEffect(() => {

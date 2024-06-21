@@ -51,7 +51,6 @@ export function Login({navigation}: any): React.JSX.Element {
   };
 
   const signInWithKakao = async (): Promise<void> => {
-    console.log('카카오 로그인');
     try {
       const token: KakaoOAuthToken = await login();
       const profile: KakaoProfile = await getProfile();
@@ -79,13 +78,11 @@ export function Login({navigation}: any): React.JSX.Element {
   };
 
   const signInWithGoogle = async (): Promise<void> => {
-    console.log('구글 로그인');
     try {
       googleSigninConfigure();
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
 
-      // console.log('userInfo', userInfo);
       setUserInfo((previousValue: any) => {
         const newValue = Object.assign({}, previousValue);
 
@@ -108,7 +105,6 @@ export function Login({navigation}: any): React.JSX.Element {
   };
 
   const signIn = async (info: LoginInfo): Promise<void> => {
-    // console.log('signIn', info);
     await createData('/auth/login', info)
       .then(res => {
         return res.data.data;
