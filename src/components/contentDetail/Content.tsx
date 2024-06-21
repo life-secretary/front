@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useMemo} from 'react';
 import {AppLayout} from '@/components/common/AppLayout';
-import {StyleSheet, View, VirtualizedList} from 'react-native';
+import {Pressable, StyleSheet, View, VirtualizedList} from 'react-native';
 import {AppText} from '../common/AppText';
 import {AppHeader} from '../common/AppHeader';
 import AppIcon from '../common/AppIcon';
@@ -573,7 +573,7 @@ const Content = ({route, navigation}: any) => {
                     relatedContent.map(
                       (item: any, index: number, array: any) => {
                         return (
-                          <View
+                          <Pressable
                             key={`content${index}`}
                             style={[
                               styles.contentWrapper,
@@ -585,7 +585,9 @@ const Content = ({route, navigation}: any) => {
                                 paddingBottom:
                                   index === array.length - 1 ? 5 : 8,
                               },
-                            ]}>
+                            ]}
+                            // onPress={() => navigation.navigate('ContentModal', { id: item.id })}
+                            >
                             <View style={styles.contentTitleWrapper}>
                               <AppText style={styles.contentTitle}>
                                 {item.title}
@@ -607,7 +609,7 @@ const Content = ({route, navigation}: any) => {
                                 }
                               />
                             </View>
-                          </View>
+                          </Pressable>
                         );
                       },
                     )
