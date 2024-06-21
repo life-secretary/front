@@ -29,6 +29,13 @@ const Agreement = ({
         return res.data.data;
     };
 
+    const handleButtonPress = (title, name) => {
+        navigation.navigate('SettingModal', {
+            headerTitle: title,
+            menu: {key: name}
+        });
+    };
+
     const combinedQueries = useQueries({
         queries: [
           {
@@ -117,8 +124,15 @@ const Agreement = ({
                 <AppText style={styles.agreementText}>
                     만 14세 이상이고, 
                     <AppButton 
-                        text='개인정보 처리방침과 이용약관'
+                        text=' 개인정보 처리방침'
                         textStyle={styles.agreementButtonText}
+                        onPressButton={() => handleButtonPress('개인정보 처리방침', 'privacy')}
+                    />
+                    과
+                    <AppButton 
+                        text=' 이용약관'
+                        textStyle={styles.agreementButtonText}
+                        onPressButton={() => handleButtonPress('이용약관', 'service')}
                     />
                     에 동의하시나요?
                 </AppText>
