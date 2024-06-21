@@ -385,17 +385,7 @@ const Content = ({route, navigation}: any) => {
           createdTime: data.createdTime,
           category: category ? category.title : '카테고리',
           notification: [
-            {
-              id: 9,
-              title:
-                '콘텐츠에 대한 가벼운 안내사항을 여기에 적으면 어떨까 싶습니다. 예를 들어 이 콘텐츠는 어디어디 사이트를 참고하여 제작되었으며 수정사항이 있다면 어디로 연락주세요.',
-            },
-            {id: 10, title: '일부 콘텐츠는 예고없이 삭제될 수 있습니다.'},
-            {
-              id: 11,
-              title:
-                '테스트 문구 추가해서 ui 검토 테스트 문구 추가해서 ui 검토 테스트 문구 추가해서 ui 검토 테스트 문구 추가해서 ui 검토',
-            },
+            // {id: 10, title: '일부 콘텐츠는 예고없이 삭제될 수 있습니다.'},
           ],
         };
 
