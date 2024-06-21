@@ -337,6 +337,25 @@ const Content = ({route, navigation}: any) => {
   };
 
   useEffect(() => {
+    fetchData('/scrap', {})
+      .then((res) => {
+        const { data: { data } } = res;
+
+        const isSavedContent = data.find((item: any) => item.contentId === id);
+
+        if (isSavedContent) {
+          setIsContentBookMarked(true);
+        } else {
+          setIsContentBookMarked(false);
+        }
+        
+      })
+      .catch((error) => {
+        console.log('사용자 스크랩 데이터 에러', error);
+      })
+  }, []);
+
+  useEffect(() => {
     fetchData(`/content/${id}`, {})
       .then(response => {
         const {
@@ -486,7 +505,8 @@ const Content = ({route, navigation}: any) => {
                   {getFormattedDate(new Date(item.createdTime), '.')}
                 </AppText>
                 {/** Article */}
-                <Markdown style={markdownStyle()}>{item.content}</Markdown>
+                {/** BUG 왜 마크다운 style 에러 ??? */}
+                <Markdown style={markdownStyle() as any}>{item.content}</Markdown>
                 {/** HashTag */}
                 <View style={styles.hashTagWrapper}>
                   {item.hashtags.map((item: any, index: number) => {

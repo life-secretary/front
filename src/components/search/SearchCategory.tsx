@@ -260,6 +260,8 @@ const SearchCategory = ({
       return;
     }
 
+    // NOTE 할 일 목록 불러온 다음 저장되어있는 여부 표기해야하나 ?
+    // api 네트워크 에러나서 뭘 할 수가 없네...
     if (pageToDo.current === 0) {
       setToDoData(toDo);
     } else {
