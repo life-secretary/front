@@ -34,6 +34,7 @@ import TodoIcon from './src/assets/icon/bottomTab/icon_todo.svg';
 import ScrapIcon from './src/assets/icon/bottomTab/icon_scrap.svg';
 import SettingIcon from './src/assets/icon/bottomTab/icon_setting.svg';
 
+import SearchSimilar from './src/components/search/SearchSimilar';
 import SearchCategory from './src/components/search/SearchCategory';
 import SearchHashTag from './src/components/search/SearchHashTag';
 import Content from './src/components/contentDetail/Content';
@@ -181,6 +182,7 @@ function RootStack() {
           name="OpenSourceModal"
           component={OpenSourceModalScreen}
         />
+        <Stack.Screen name="SearchSimilarModal" component={SearchSimilar} />
         <Stack.Screen name="SearchCategoryModal" component={SearchCategory} />
         <Stack.Screen name="ContentModal" component={Content} />
         <Stack.Screen name="SearchHashTagModal" component={SearchHashTag} />
