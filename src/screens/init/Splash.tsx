@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, StyleSheet, Alert, AlertButton} from 'react-native';
+import {View, StyleSheet, Alert, AlertButton, Linking} from 'react-native';
 
 import {AppText} from '@/components/common/AppText';
 
@@ -16,7 +16,7 @@ import Toast from 'react-native-toast-message';
 import {createData, fetchData} from '@/api/api';
 import {useIsFocused} from '@react-navigation/native';
 import {removeToken} from '@/api/axios';
-import AppVersionInfo, {compareVersions, getLatestVersion} from './AppVersion';
+import AppVersionInfo, {appStoreLink, compareVersions, getLatestVersion} from './AppVersion';
 import DeviceInfo from 'react-native-device-info';
 import {fetch} from '@react-native-community/netinfo';
 
@@ -44,7 +44,7 @@ export function Splash({navigation}: any): React.JSX.Element {
         {
           text: '업데이트',
           onPress: () => {
-            // TODO: go to appstore
+            Linking.openURL(appStoreLink)
           },
           style: 'destructive',
         },

@@ -29,4 +29,6 @@ export async function getLatestVersion() {
     return fetchData('/app-version/latest', null)
 }
 
+export const appStoreLink = "https://apps.apple.com/app/%EC%9D%B8%EC%83%9D%EB%B9%84%EC%84%9C/id6484271794"
+
 export default AppVersionInfo

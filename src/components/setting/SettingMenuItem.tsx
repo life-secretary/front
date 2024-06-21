@@ -1,13 +1,14 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 
-import {StyleSheet, View} from 'react-native';
+import {Linking, StyleSheet, View} from 'react-native';
 import AppButton from '@/components/common/AppButton';
 import {AppText} from '@/components/common/AppText';
 import {font} from '@/styles/font';
 import color from '@/styles/color';
 
 import {getFontSize} from '@/utils/font';
+import { appStoreLink } from '@/screens/init/AppVersion';
 
 type SettingMenuItemProps = {
   settingMenu: object;
@@ -49,6 +50,9 @@ export function SettingMenuItem({
             text="업데이트"
             textStyle={styles.infoText}
             buttonStyle={styles.updateButton}
+            onPressButton={() => {
+              Linking.openURL(appStoreLink)
+            }}
           />
         </View>
       )}
