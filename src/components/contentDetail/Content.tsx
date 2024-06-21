@@ -83,9 +83,8 @@ const Content = ({route, navigation}: any) => {
             visibilityTime: 2000,
             autoHide: true,
           });
+          return true;
         }  
-        
-        return data;
       })
       .catch(error => {
         console.log('스크랩 성공 에러', error);
@@ -145,33 +144,27 @@ const Content = ({route, navigation}: any) => {
   };
 
   const onPressContentBookMarkButton = () => {
-    setIsContentBookMarked((previousValue) => {
-      if (previousValue === false) {
-        postScrap({
-          title: content.title,
-          categoryId: content.categoryId,
-          contentId: content.id,
-        })
-        .then((res) => {
-          if (res) {
-            previousValue = true;
-          } else {
-            previousValue = false;
-          }
-        })
-      } else {
-        deleteScrap(content.id)
-        .then((res) => {
-          if (res) {
-            previousValue = false;
-          } else {
-            previousValue = true;
-          }
-        })
-      }
-
-      return previousValue;
-    });
+    if (isContentBookMarked === false) {
+      postScrap({
+        title: content.title,
+        categoryId: content.categoryId,
+        contentId: content.id,
+      })
+      .then((res) => {
+        if (res) {
+          setIsContentBookMarked(true);
+        } else {
+          setIsContentBookMarked(false);
+        }
+      })
+    } else {
+      deleteScrap(content.id)
+      .then((res) => {
+        if (res) {
+          setIsContentBookMarked(false);
+        }
+      })
+    }
   };
 
   const onPressContentUploadButton = async () => {
@@ -282,34 +275,36 @@ const Content = ({route, navigation}: any) => {
   const [relatedContent, setRelatedContent] = useState<any>([]);
 
   const onPressRelatedContentBookMarkButton = (item: any, index: number) => {
-    setRelatedContent((previousValue: any) => {
-      const newValue = [...previousValue];
-
-      if (previousValue[index].isBookMarked === false) {
-        postScrap({
-          title: item.title,
-          categoryId: item.categoryId,
-          contentId: item.id,
-        }).then((res) => {
-          if (res) {
-            newValue[index].isBookMarked = true;
-          } else {
-            newValue[index].isBookMarked = false;
-          }
-        });
-      } else {
-        deleteScrap(item.id)
-        .then((res) => {
-          if (res) {
-            newValue[index].isBookMarked = false;
-          } else {
-            newValue[index].isBookMarked = true;
-          }
-        });
-      }
-
-      return newValue;
-    });
+    if (relatedContent[index].isBookMarked === false) {
+      postScrap({
+        title: item.title,
+        categoryId: item.categoryId,
+        contentId: item.id,
+      })
+      .then((res) => {
+        if (res) {
+          setRelatedContent((prev: any) => prev.map((item: any, idx: number) => {
+            if (idx === index) { item.isBookMarked = true }
+            return item;
+          }));
+        } else {
+          setRelatedContent((prev: any) => prev.map((item: any, idx: number) => {
+            if (idx === index) { item.isBookMarked = false }
+            return item;
+          }));
+        }
+      });
+    } else {
+      deleteScrap(item.id)
+      .then((res) => {
+        if (res) {
+          setRelatedContent((prev: any) => prev.map((item: any, idx: number) => {
+            if (idx === index) { item.isBookMarked = false }
+            return item;
+          }));
+        }
+      });
+    }
   };
 
   const onPressAskQuestionButton = () => {
