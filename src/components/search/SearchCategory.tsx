@@ -84,7 +84,7 @@ const SearchCategory = ({
       categoryId: selectedCategory.id === 0 ? '' : selectedCategory.id,
       page: 0,
       size: 10,
-      sort: selectedSort ? selectedSort : 'viewCount,desc',
+      sort: selectedSort ? `${selectedSort},desc` : 'viewCount,desc',
     });
     const { data:content, isFetching:ContentIsFetching, isRefetching:ContentIsRefetching } = getCategoryContentListQuery(categoryConditionContent);
     const [contentData, setContentData] = useState<any>([]);
@@ -278,6 +278,23 @@ const SearchCategory = ({
 
     setCategory(selectedCategory);
   }, [selectedCategory]);
+
+  // selectedSort 있을 경우 조건 상태도 업데이트
+  useEffect(() => {
+    if (selectedSort) {
+      setSearchConditionContentData((prev) => (
+        prev.map((item) => {
+          if (item.type === selectedSort) {
+            item.isSelected = true;
+          } else {
+            item.isSelected = false;
+          }
+          
+          return item;
+        })
+      ))
+    }
+  }, [selectedSort])
 
     return (
         <View style={styles.container}>

@@ -1,6 +1,8 @@
 import { fetchData } from './api';
 import { useQuery } from '@tanstack/react-query';
 
+// API
+
 const getSearchContentList = (params: any) => {
     return fetchData('/content/search', params)
         .then((response) => {
@@ -47,14 +49,16 @@ const getPopularSearchWordList = () => {
     ;
 };
 
-const getPopularSearchWordListQuery = () => {
-    return useQuery({
-        queryKey: ['/popular-search-terms'],
-        queryFn: getPopularSearchWordList,
-        staleTime: 5 * 300,
-        retry: 0,
-    })
-};
+const getSimilarContentList = (params: any) => {
+    return fetchData('/content/similar-users/reads', params)
+        .then((response) => {
+            const { data: { data } } = response;
+
+            return data;
+        })
+}
+
+// Query
 
 const getSearchContentListQuery = (params: any) => {
     return useQuery({
@@ -85,6 +89,22 @@ const getCategoryToDoListQuery = (params: any) => {
     });
 };
 
+const getPopularSearchWordListQuery = () => {
+    return useQuery({
+        queryKey: ['/popular-search-terms'],
+        queryFn: getPopularSearchWordList,
+        staleTime: 5 * 300,
+        retry: 0,
+    })
+};
+
+const getSimilarContentListQuery = (params: any) => {
+    return useQuery({
+        queryKey: ['/content/similar-users/reads', params],
+        queryFn: () => getSimilarContentList(params),
+    })
+};
+
 export {
     getPopularSearchWordList,
     getPopularSearchWordListQuery,
@@ -95,5 +115,7 @@ export {
     getCategoryContentList,
     getCategoryContentListQuery,
     getCategoryToDoList,
-    getCategoryToDoListQuery
+    getCategoryToDoListQuery,
+    getSimilarContentList,
+    getSimilarContentListQuery,
 };

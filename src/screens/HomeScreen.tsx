@@ -169,7 +169,7 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
   const openCategoryModal = (category: CategoryObject) => {
     navigation.navigate('SearchCategoryModal', {
       selectedCategory: category,
-      selectedSort: 'viewCount,desc',
+      selectedSort: 'viewCount',
     });
   };
 
@@ -281,15 +281,15 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
           </View>
         </AppHeader>
         <View style={styles.section}>
-          <HomeCategoryList
+          {/* <HomeCategoryList
             isLoading={isLoading}
             openCategoryModal={openCategoryModal}
-          />
+          /> */}
           <HomeImageCarousel
             data={homeCarouselContentList}
             openContentModal={openContentModal}
           />
-          <HomeContentList
+          {/* <HomeContentList
             isLoading={isLoading}
             isUsernameUsed={true}
             title={'유사한 사용자가 읽고 있어요'}
@@ -300,7 +300,7 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
             isLoading={isLoading}
             title={'최근 업데이트 되었어요'}
             list={newestHomeContentList}
-          />
+          /> */}
         </View>
         <View style={styles.footer}>
           <AppTitle

@@ -18,25 +18,22 @@ export function ViewMoreButton({style, type}: Props): React.JSX.Element {
 
   const handlePress = () => {
     switch(type) {
-      // 유사한 사용자 콘텐츠 (임시)
+      // 유사한 사용자 콘텐츠
       case 'similar':
-        navigation.navigate('SearchCategoryModal', {
-          selectedCategory: {id: 0, category: 'all', title: '전체'},
-          selectedSort: 'viewCount,desc',
-        });
+        navigation.navigate('SearchSimilarModal');
       break;
       // 인기 많은 콘텐츠
       case 'popular': 
         navigation.navigate('SearchCategoryModal', {
           selectedCategory: homeContentFilter,
-          selectedSort: 'scrapCount,desc',
+          selectedSort: 'scrapCount',
         });
       break;
       // 최근 업데이트 콘텐츠
       case 'recent':
         navigation.navigate('SearchCategoryModal', {
           selectedCategory: {id: 0, category: 'all', title: '전체'},
-          selectedSort: 'createdAt,desc',
+          selectedSort: 'createdAt',
         });
       break;
       default:
