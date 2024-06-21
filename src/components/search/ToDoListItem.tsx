@@ -5,6 +5,7 @@ import {AppText} from '../common/AppText';
 import {getFontSize} from '../../utils/font';
 import AppIcon from '../common/AppIcon';
 import type Todo from '@/models/todo';
+import color from '@/styles/color';
 
 export type ToDoListItemProps = {
   /** 아이템 내 카테고리 존재 여부 */
@@ -16,6 +17,7 @@ export type ToDoListItemProps = {
 
 const ToDoListItem = ({
   hasMainCategory = true,
+  index,
   item,
   onPressAddItem,
 }: any): React.JSX.Element => {
@@ -44,12 +46,24 @@ const ToDoListItem = ({
 
       {/** NOTE TouchableHighlight + icon = Pressable Button 변경 가능성 있음 */}
       <View style={styles.toDoListItemButtonContainer}>
-        <AppIcon 
-          name="addCircle" 
-          width={42} 
-          height={42} 
-          onPress={() => onPressAddItem(item.id)}
-        />
+        {
+          item.isSaved ?
+          <AppIcon 
+            name="checkBoxCircle"
+            width={42} 
+            height={42} 
+            styles={{fill: color.grey.grey500, stroke: color.main.white}}
+            onPress={() => {}}
+            // TODO 더 추가하겠습니까? 안내 alert
+          />
+          :
+          <AppIcon 
+            name="addCircle" 
+            width={42} 
+            height={42} 
+            onPress={() => onPressAddItem(item.id, index)}
+          />
+        }
       </View>
     </View>
   );
