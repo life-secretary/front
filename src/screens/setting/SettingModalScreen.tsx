@@ -16,6 +16,8 @@ import spacing from '@/styles/spacing';
 
 import {getFontSize} from '@/utils/font';
 import {ServiceIntro} from '@/components/setting/ServiceIntro';
+import { Terms } from '@/components/setting/Terms';
+import { Privacy } from '@/components/setting/Privacy';
 
 export function SettingModalScreen({
   route,
@@ -35,6 +37,10 @@ export function SettingModalScreen({
         return <OpenSourceList />;
       case 'serviceIntro':
         return <ServiceIntro />;
+      case 'privacy':
+        return <Privacy />;
+      case 'service':
+        return <Terms />;
       default:
         return <Empty />;
     }
