@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useResetRecoilState} from 'recoil';
+import {userState} from '@/store/userState';
 
 import {createData, deleteData, fetchData} from '@/api/api';
 
@@ -20,10 +21,9 @@ import {removeItemAtIndex} from '@/utils';
 import {getFontSize} from '@/utils/font';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {PROVIDERS, clearAuth, providerKey} from '@/store/login';
+import {PROVIDERS, clearAuth, providerKey, userInfoState} from '@/store/login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {unlink} from '@react-native-seoul/kakao-login';
-import {userState} from '@/store/userState';
 
 type checkboxItemProps = {
   item: object;
@@ -67,6 +67,7 @@ type CheckboxItem = {
 */
 
 export function MyInfoWithdrawalForm(): React.JSX.Element {
+  const resetLoginedUserInfo = useResetRecoilState(userInfoState);
   const resetMyInfo = useResetRecoilState(userState);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
@@ -162,6 +163,7 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
         await unlink();
       }
       await clearAuth();
+      resetLoginedUserInfo();
       resetMyInfo();
     } catch (e) {
       console.log('e', e);
