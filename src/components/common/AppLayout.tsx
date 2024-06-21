@@ -21,13 +21,26 @@ export function AppLayout({
 
   const toastConfig = {
     success: ({ props }: any) => (
-      <View style={[styles.toast, {width: toastWidth}]}>
+      <View style={[styles.toast, {width: toastWidth}, props.style ? props.style : {}]}>
         <View style={styles.iconContainer}>
           <AppIcon
             name="checkBoxCircle"
             width={24}
             height={24}
             styles={{fill: color.main.secondary, stroke: color.main.white}}
+          />
+        </View>
+        <AppText style={styles.toastText}>{props?.text}</AppText>
+      </View>
+    ),
+    error: ({ props }: any) => (
+      <View style={[styles.toast, {width: toastWidth}, props.style ? props.style : {}]}>
+        <View style={styles.iconContainer}>
+          <AppIcon
+            name="closeFillDark"
+            width={24}
+            height={24}
+            styles={{fill: '#E44848', stroke: color.main.white}}
           />
         </View>
         <AppText style={styles.toastText}>{props?.text}</AppText>

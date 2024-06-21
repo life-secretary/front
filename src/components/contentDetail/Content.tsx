@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
+import {AppLayout} from '@/components/common/AppLayout';
 import {StyleSheet, View, VirtualizedList} from 'react-native';
 import {AppText} from '../common/AppText';
 import {AppHeader} from '../common/AppHeader';
@@ -55,7 +56,11 @@ const Content = ({route, navigation}: any) => {
   // bookMarkButton [Content]
   const [isContentBookMarked, setIsContentBookMarked] = useState(false);
 
-  const postScrap = ({title, categoryId, contentId}: any) => {
+  const postScrap = ({
+    title, 
+    categoryId, 
+    contentId,
+  }: any) => {
     return createData('/scrap', {
       title,
       categoryId,
@@ -69,16 +74,34 @@ const Content = ({route, navigation}: any) => {
         if (data) {
           Toast.show({
             type: 'success',
-            props: {text: '콘텐츠를 저장했어요'},
+            props: {
+              text: '콘텐츠를 저장했어요',
+              style: { marginBottom: 20 },
+            },
             position: 'bottom',
             bottomOffset: 20,
             visibilityTime: 2000,
             autoHide: true,
           });
-        }
+        }  
+        
+        return data;
       })
       .catch(error => {
         console.log('스크랩 성공 에러', error);
+        Toast.show({
+          type: 'error',
+          props: {
+            text: '콘텐츠 저장에 실패했어요',
+            style: { marginBottom: 20 },
+          },
+          position: 'bottom',
+          bottomOffset: 20,
+          visibilityTime: 2000,
+          autoHide: true,
+        });
+
+        return false;
       });
   };
 
@@ -86,35 +109,68 @@ const Content = ({route, navigation}: any) => {
     return deleteData('/scrap', {}, id)
       .then(response => {
         const {data} = response;
+
         if (data.status === 'SUCCESS') {
           Toast.show({
             type: 'success',
-            props: {text: '콘텐츠 저장을 취소했어요'},
+            props: {
+              text: '콘텐츠 저장을 취소했어요',
+              style: { marginBottom: 20 },
+            },
             position: 'bottom',
             bottomOffset: 20,
             visibilityTime: 2000,
             autoHide: true,
           });
+
+          return true;
         }
       })
       .catch(error => {
         console.log('스크랩 삭제 에러', error);
+        Toast.show({
+          type: 'error',
+          props: {
+            text: '콘텐츠 저장 취소에 실패했어요',
+            style: { marginBottom: 20 },
+          },
+          position: 'bottom',
+          bottomOffset: 20,
+          visibilityTime: 2000,
+          autoHide: true,
+        });
+
+        return false;
       });
   };
 
   const onPressContentBookMarkButton = () => {
-    setIsContentBookMarked(previousValue => {
+    setIsContentBookMarked((previousValue) => {
       if (previousValue === false) {
         postScrap({
           title: content.title,
           categoryId: content.categoryId,
           contentId: content.id,
-        });
+        })
+        .then((res) => {
+          if (res) {
+            previousValue = true;
+          } else {
+            previousValue = false;
+          }
+        })
       } else {
-        deleteScrap(content.id);
+        deleteScrap(content.id)
+        .then((res) => {
+          if (res) {
+            previousValue = false;
+          } else {
+            previousValue = true;
+          }
+        })
       }
 
-      return !previousValue;
+      return previousValue;
     });
   };
 
@@ -128,7 +184,7 @@ const Content = ({route, navigation}: any) => {
   };
 
   // addToDo [RelatedTodo]
-  const addToDoItem = (id: number) => {
+  const addToDoItem = (id: number, index: number) => {
     createData('/todo/save', {id})
       .then(response => {
         const {
@@ -138,11 +194,19 @@ const Content = ({route, navigation}: any) => {
         if (data) {
           Toast.show({
             type: 'success',
-            props: {text: '할일을 저장했어요'},
+            props: {
+              text: '할일을 저장했어요',
+              style: { marginBottom: 20 },
+            },
             position: 'bottom',
             bottomOffset: 20,
             visibilityTime: 2000,
             autoHide: true,
+          });
+          setTodos((prev: any) => {
+            const newValue = [...prev];
+            newValue[index].isSaved = true;
+            return newValue;
           });
         }
       })
@@ -150,7 +214,10 @@ const Content = ({route, navigation}: any) => {
         console.log('할 일 생성 에러', error);
         Toast.show({
           type: 'error',
-          props: {text: '할일 저장에 실패했어요'},
+          props: {
+            text: '할일 저장에 실패했어요',
+            style: { marginBottom: 20 },
+          },
           position: 'bottom',
           bottomOffset: 20,
           visibilityTime: 2000,
@@ -174,11 +241,20 @@ const Content = ({route, navigation}: any) => {
         if (data.status === 'SUCCESS') {
           Toast.show({
             type: 'success',
-            props: {text: '할일을 모두 저장했어요'},
+            props: {
+              text: '할일을 모두 저장했어요',
+              style: { marginBottom: 20 },
+            },
             position: 'bottom',
             bottomOffset: 20,
             visibilityTime: 2000,
             autoHide: true,
+          });
+          setTodos((prev: any) => {
+            return prev.map((item: any) => ({
+              ...item,
+              isSaved: true,
+            }));
           });
         }
       })
@@ -186,7 +262,10 @@ const Content = ({route, navigation}: any) => {
         console.log('할 일 생성 에러', error);
         Toast.show({
           type: 'error',
-          props: {text: '할일 모두 저장에 실패했어요'},
+          props: {
+            text: '할일 모두 저장에 실패했어요',
+            style: { marginBottom: 20 },
+          },
           position: 'bottom',
           bottomOffset: 20,
           visibilityTime: 2000,
@@ -195,23 +274,38 @@ const Content = ({route, navigation}: any) => {
       });
   };
 
+  const isAllSavedToDos = () => {
+    return todos.reduce((prev: any, curr: any) => (prev && curr.isSaved), true);
+  };
+
   // bookMarkButton [RelatedContent]
   const [relatedContent, setRelatedContent] = useState<any>([]);
 
   const onPressRelatedContentBookMarkButton = (item: any, index: number) => {
     setRelatedContent((previousValue: any) => {
       const newValue = [...previousValue];
-      const previousBookMarkStatus = previousValue[index].isBookMarked;
-      newValue[index].isBookMarked = !previousBookMarkStatus;
 
-      if (previousBookMarkStatus === false) {
+      if (previousValue[index].isBookMarked === false) {
         postScrap({
           title: item.title,
           categoryId: item.categoryId,
           contentId: item.id,
+        }).then((res) => {
+          if (res) {
+            newValue[index].isBookMarked = true;
+          } else {
+            newValue[index].isBookMarked = false;
+          }
         });
       } else {
-        deleteScrap(item.id);
+        deleteScrap(item.id)
+        .then((res) => {
+          if (res) {
+            newValue[index].isBookMarked = false;
+          } else {
+            newValue[index].isBookMarked = true;
+          }
+        });
       }
 
       return newValue;
@@ -261,7 +355,11 @@ const Content = ({route, navigation}: any) => {
         const todos: any = [];
 
         if (!todos.length) {
-          setTodos([...data.todos]);
+          const newData = data.todos.map((item: any) => ({
+            ...item,
+            isSaved: false,
+          }));
+          setTodos(newData);
         }
 
         const item = {
@@ -333,11 +431,12 @@ const Content = ({route, navigation}: any) => {
   }, [id]);
 
   return (
-    <View style={styles.container}>
+    <AppLayout style={styles.container}>
       <AppHeader
         style={[
           styles.header,
-          isScrollTop ? {} : {backgroundColor: 'rgba(170, 170, 170, 0.262)'},
+          // NOTE 레이아웃 변경하면서 임시로 주석처리 TODO 불투명하게 변경
+          // isScrollTop ? {} : {backgroundColor: 'rgba(170, 170, 170, 0.262)'},
         ]}>
         <View style={styles.headerWrapper}>
           <AppIcon
@@ -347,12 +446,13 @@ const Content = ({route, navigation}: any) => {
             onPress={() => navigation.goBack()}
           />
           <View style={styles.headerRight}>
-            <AppIcon
+            {/** TODO 추후 기능 추가 */}
+            {/* <AppIcon
               name="upload"
               width={36}
               height={36}
               onPress={onPressContentUploadButton}
-            />
+            /> */}
             <AppIcon
               name="bookmarkLarge"
               width={36}
@@ -411,14 +511,23 @@ const Content = ({route, navigation}: any) => {
                       연관된 할 일 추가하기
                     </AppText>
                     <View style={styles.allAddWrapper}>
-                      <AppIcon
-                        name="addDark"
-                        width={30}
-                        height={30}
-                        styles={{color: '#4681F6'}}
-                      />
+                      {
+                        isAllSavedToDos() ?
+                        <AppIcon 
+                          name="check"
+                          width={30}
+                          height={30}
+                        />
+                        :
+                        <AppIcon
+                          name="addDark"
+                          width={30}
+                          height={30}
+                          styles={{color: '#4681F6'}}
+                        />
+                      }
                       <AppButton
-                        text={'전체추가하기'}
+                        text={isAllSavedToDos() ? '전체 추가완료' : '전체 추가하기'}
                         textStyle={styles.todoListAddAllButton}
                         buttonStyle={{}}
                         onPressButton={addToDoItems}
@@ -437,6 +546,7 @@ const Content = ({route, navigation}: any) => {
                         }}>
                         <ToDoListItem
                           hasMainCategory={false}
+                          index={index}
                           item={item}
                           onPressAddItem={addToDoItem}
                         />
@@ -564,7 +674,7 @@ const Content = ({route, navigation}: any) => {
               }
         }
       />
-    </View>
+    </AppLayout>
   );
 };
 
@@ -577,7 +687,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'column',
     borderColor: 'transparent',
-    paddingTop: 55,
+    // paddingTop: 55,
     paddingBottom: 10,
   },
   headerWrapper: {

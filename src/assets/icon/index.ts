@@ -50,6 +50,7 @@ import {default as searchTab} from './bottomTab/icon_search.svg';
 import {default as todoTab} from './bottomTab/icon_todo.svg';
 import {default as scrapTab} from './bottomTab/icon_scrap.svg';
 import {default as settingTab} from './bottomTab/icon_setting.svg';
+import {default as check} from './icon_check.svg';
 
 import color from '@/styles/color';
 
@@ -361,6 +362,12 @@ const Icons: IconsData = {
     defaultStroke: color.grey.grey400,
     defaultFill: color.main.white,
   },
+  check: {
+    type: 'stroke',
+    file: check,
+    defaultStroke: color.main.secondary,
+    defaultFill: '',
+  }
 };
 
 export default Icons;
