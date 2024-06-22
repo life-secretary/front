@@ -45,7 +45,6 @@ const HeaderSearchResult = ({data, searchData, onPressButton}: any) => {
 };
 
 const SearchScreen = ({navigation}: any) => {
-  const scrollViewRef = useRef(null);
   const [recentSearchItemHeight, setRecentSearchItemHeight] = useState(38);
   const [recentSearchListHeight, setRecentSearchListHeight] = useState(0);
   const [isRecentSearchListOpen, setIsRecentSearchListOpen] = useState(false);
@@ -439,21 +438,6 @@ const SearchScreen = ({navigation}: any) => {
     isLoading.current = false;
   }, [TodoIsFetching, toDoIsRefetching, toDo]);
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const unsubscribe = navigation.addListener('tabPress', (e: any) => {
-  //       e.preventDefault();
-  //       if (!scrollViewRef?.current) {
-  //         return;
-  //       }
-
-  //       scrollViewRef?.current.scrollToOffset({offset: 0, animated: true});
-  //     });
-
-  //     return unsubscribe;
-  //   }, [navigation, isSearchResultPage]),
-  // );
-
   return (
     <View style={styles.container}>
       <AppHeader style={styles.header}>
@@ -497,7 +481,6 @@ const SearchScreen = ({navigation}: any) => {
       {!isSearchResultPage ? (
         // 검색어
         <SearchWordView
-          scrollViewRef={scrollViewRef}
           isRecentSearchListOpen={isRecentSearchListOpen}
           recentSearchData={recentSearchData}
           popularSearchData={popularSearchData}

@@ -1,4 +1,5 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useEffect, useCallback, useRef, useMemo} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import {AppLayout} from '@/components/common/AppLayout';
 import {Pressable, StyleSheet, View, VirtualizedList} from 'react-native';
 import {AppText} from '../common/AppText';
@@ -25,6 +26,8 @@ import {useRecoilValue} from 'recoil';
 const Content = ({route, navigation}: any) => {
   const {id} = route.params;
   const [content, setContent] = useState<any>({});
+
+  const scrollViewRef = useRef<any>(null);
 
   const categories = useRecoilValue(categoryListState);
   const [item, setItem] = useState<any>([]);
@@ -434,6 +437,19 @@ const Content = ({route, navigation}: any) => {
       });
   }, [id]);
 
+  // scrollTop
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        if (!scrollViewRef?.current) {
+          return;
+        }
+
+        scrollViewRef?.current.scrollToOffset({offset: 0, animated: true});
+      };
+    }, [navigation, id]),
+  );
+
   return (
     <AppLayout style={styles.container}>
       <AppHeader
@@ -469,6 +485,7 @@ const Content = ({route, navigation}: any) => {
       </AppHeader>
       {item.length ? (
         <VirtualizedList
+          ref={scrollViewRef}
           onScroll={onScroll}
           getItem={getItem}
           getItemCount={getItemCount}
@@ -586,7 +603,7 @@ const Content = ({route, navigation}: any) => {
                                   index === array.length - 1 ? 5 : 8,
                               },
                             ]}
-                            // onPress={() => navigation.navigate('ContentModal', { id: item.id })}
+                            onPress={() => navigation.navigate('ContentModal', { id: item.id })}
                             >
                             <View style={styles.contentTitleWrapper}>
                               <AppText style={styles.contentTitle}>
