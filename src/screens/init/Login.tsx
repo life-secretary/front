@@ -11,6 +11,7 @@ import {useRecoilState} from 'recoil';
 import {
   LoginInfo,
   PROVIDERS,
+  loginInfoState,
   providerKey,
   setTokens,
   userInfoState,
@@ -30,6 +31,7 @@ import Config from 'react-native-config';
 
 export function Login({navigation}: any): React.JSX.Element {
   const [isLogin, setIsLogin] = useState(false);
+  const [loginInfo, setLoginInfo] = useRecoilState(loginInfoState);
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const [kakaoToken, setKakaoToken] = useState<KakaoOAuthToken>();
@@ -67,11 +69,11 @@ export function Login({navigation}: any): React.JSX.Element {
         return newValue;
       });
       storeProvider(PROVIDERS.KAKAO);
-      const loginInfo: LoginInfo = {
+      setLoginInfo({
         provider: 'kakao',
         idToken: token.idToken!!,
-      };
-      signIn(loginInfo);
+      })
+      signIn();
     } catch (error) {
       console.log(error);
     }
@@ -94,18 +96,18 @@ export function Login({navigation}: any): React.JSX.Element {
         return newValue;
       });
       storeProvider(PROVIDERS.GOOGLE);
-      const loginInfo: LoginInfo = {
+      setLoginInfo({
         provider: 'google',
         idToken: userInfo.idToken!!,
-      };
-      signIn(loginInfo);
+      })
+      signIn();
     } catch (error) {
       console.log('error', error);
     }
   };
 
-  const signIn = async (info: LoginInfo): Promise<void> => {
-    await createData('/auth/login', info)
+  const signIn = async (): Promise<void> => {
+    await createData('/auth/login', loginInfo)
       .then(res => {
         return res.data.data;
       })

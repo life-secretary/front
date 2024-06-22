@@ -162,9 +162,6 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
       } else if (value === PROVIDERS.KAKAO) {
         await unlink();
       }
-      await clearAuth();
-      resetLoginedUserInfo();
-      resetMyInfo();
     } catch (e) {
       console.log('e', e);
     }
@@ -323,8 +320,15 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
             buttonStyle: styles.modalButton,
             onPressButton: () => {
               handleModalVisible(false);
-              handleLogout();
-              navigation.navigate('Splash');
+              handleLogout()
+              .then(() => {
+                clearAuth()
+              })
+              .then(() => {
+                resetLoginedUserInfo();
+                resetMyInfo();
+                navigation.navigate('Splash');
+              });
             },
           },
         }}
