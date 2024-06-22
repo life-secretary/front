@@ -8,12 +8,13 @@ import AppButton from '@/components/common/AppButton';
 
 import {styles} from '@/styles/survey';
 import {useRecoilValue} from 'recoil';
-import {UserInfo, userInfoState} from '@/store/login';
+import {UserInfo, loginInfoState, setTokens, userInfoState} from '@/store/login';
 import {createData} from '@/api/api';
 import Toast from 'react-native-toast-message';
 
 const Welcome = ({navigation}: any) => {
   const userInfo = useRecoilValue(userInfoState);
+  const loginInfo = useRecoilValue(loginInfoState);
   const convertStateToUser = (info: UserInfo) => {
     const {
       provider,
@@ -49,7 +50,7 @@ const Welcome = ({navigation}: any) => {
     const newInfo = convertStateToUser(userInfo);
     const res = await createData('/auth/signUp', newInfo)
       .then(res => {
-        navigation.navigate('Splash');
+        signIn()
       })
       .catch(error => {
         console.log(error);
@@ -57,6 +58,32 @@ const Welcome = ({navigation}: any) => {
           type: 'error',
           text1: 'sign up fail',
         });
+      });
+  };
+
+  const signIn = async (): Promise<void> => {
+    await createData('/auth/login', loginInfo)
+      .then(res => {
+        return res.data.data;
+      })
+      .then(data => {
+        let accessToken = data.data.accessToken;
+        let refreshToken = data.data.refreshToken;
+        if (accessToken === null) {
+          throw Error('no token');
+        }
+        setTokens(accessToken, refreshToken)
+        .then(() => {
+          navigation.navigate('Splash');
+        })
+      })
+      .catch(error => {
+        console.log(error);
+        Toast.show({
+          type: 'error',
+          text1: 'login fail',
+        });
+        navigation.navigate('Splash');
       });
   };
 

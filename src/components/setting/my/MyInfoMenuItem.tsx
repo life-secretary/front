@@ -39,8 +39,6 @@ export function MyInfoMenuItem({myInfoMenu}: Props): React.JSX.Element {
       } else if (value === PROVIDERS.KAKAO) {
         await logout();
       }
-      await clearAuth();
-      resetMyInfo();
     } catch (e) {
       console.log('e', e);
     }
@@ -49,6 +47,10 @@ export function MyInfoMenuItem({myInfoMenu}: Props): React.JSX.Element {
   const handleButtonPress = (menu: object) => {
     if (menu?.key === 'logout') {
       startLogout().then(() => {
+        clearAuth()
+      })
+      .then(() => {
+        resetMyInfo();
         navigation.navigate('Splash');
       });
       return;

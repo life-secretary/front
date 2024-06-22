@@ -19,7 +19,6 @@ export const userInfoState = atom<UserInfo>({
     hasChild: false,
   },
 });
-
 export interface UserInfo {
   provider: string;
   providerId: string;
@@ -35,7 +34,14 @@ export interface UserInfo {
   hasChild: boolean;
 }
 
-export interface LoginInfo {
+export const loginInfoState = atom<LoginInfo>({
+  key: 'LoginInfo',
+  default: {
+    provider: '',
+    idToken: '',
+  },
+});
+interface LoginInfo {
   provider: string;
   idToken: string;
 }
@@ -106,7 +112,7 @@ const removeRefreshToken = async () => {
 export async function clearAuth() {
   try {
     removeToken();
-    removeRefreshToken();
+    await removeRefreshToken();
     await AsyncStorage.removeItem(providerKey);
   } catch (error) {
     console.error('Error remove tokens:', error);
