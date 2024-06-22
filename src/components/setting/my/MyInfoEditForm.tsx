@@ -143,6 +143,7 @@ export function MyInfoEditForm(): React.JSX.Element {
               labelText="닉네임"
               placeholder="최대 6자 내로 입력 가능해요"
               text={nickname}
+              maxLength={6}
               error={isInvalid}
               errorMsg={errorMsg}
               onChangeText={onChangeNickname}
