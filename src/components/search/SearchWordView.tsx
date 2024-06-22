@@ -10,7 +10,6 @@ import { getFontSize } from '../../utils/font';
 import type { RecentSearchWord, PopularSearchWord } from '@/store/search';
 
 type SearchWordViewProps = {
-    scrollViewRef: any,
     isRecentSearchListOpen: boolean;
     recentSearchData: Array<RecentSearchWord>;
     popularSearchData: Array<PopularSearchWord>;
@@ -22,7 +21,6 @@ type SearchWordViewProps = {
 };
 
 const SearchWordView = ({ 
-    scrollViewRef,
     isRecentSearchListOpen = false,
     recentSearchData,
     popularSearchData,
@@ -52,7 +50,7 @@ const SearchWordView = ({
     };
 
     return (
-        <ScrollView ref={scrollViewRef}>
+        <ScrollView>
             <View style={styles.recentSearchContainer}>
                 <View style={styles.searchContainer}>
                     <AppText style={styles.searchMainTitle}>최근 검색어</AppText>
