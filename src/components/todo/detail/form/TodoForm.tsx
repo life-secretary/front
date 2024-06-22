@@ -69,12 +69,10 @@ export function TodoForm({
     }
   };
 
-  // ADD TODO
-  const addTodo = async () => {
+  const setCurrentCategory = () => {
     let currentCategoryId: any = '';
     let userTag: string = '';
 
-    // TODO: 리팩토링 필요
     if (selectedCategory?.key === 'none') {
       // 유저가 카테고리 선택 안 함
       currentCategoryId = null;
@@ -88,6 +86,13 @@ export function TodoForm({
       currentCategoryId = selectedCategory?.id;
       userTag = '';
     }
+
+    return {currentCategoryId, userTag};
+  };
+
+  // ADD TODO
+  const addTodo = async () => {
+    const {currentCategoryId, userTag} = setCurrentCategory();
 
     const newTodo = {
       title,
@@ -105,23 +110,7 @@ export function TodoForm({
 
   // EDIT TODO
   const editTodo = async () => {
-    let currentCategoryId: any = '';
-    let userTag: string = '';
-
-    // TODO: 리팩토링 필요
-    if (selectedCategory?.key === 'none') {
-      // 유저가 카테고리 선택 안 함
-      currentCategoryId = null;
-      userTag = '';
-    } else if (selectedCategory?.key === 'custom') {
-      // 유저가 카테고리 직접 입력
-      currentCategoryId = null;
-      userTag = selectedCategory?.title;
-    } else {
-      // 유저가 카테고리 선택
-      currentCategoryId = selectedCategory?.id;
-      userTag = '';
-    }
+    const {currentCategoryId, userTag} = setCurrentCategory();
 
     const editedTodo = {
       title,
@@ -185,27 +174,20 @@ export function TodoForm({
     return true;
   }, [title]);
 
-  // useEffect(() => {
-  //   if (!selectedCategory) {
-  //     setCategory('');
-  //     return;
-  //   }
-
-  //   if (typeof selectedCategory === 'object') {
-  //     setCategory(selectedCategory?.title);
-  //   } else {
-  //     setCategory(todoItem?.category);
-  //   }
-  // }, [selectedCategory, todoItem?.category]);
-
   useEffect(() => {
+    // TODO: 리팩토링 필요
+    if (isCustomCategory && selectedCategory.title !== '직접입력') {
+      setCustomCategory(selectedCategory.title);
+      selectedCategory.title = '직접입력';
+    }
+
     if (!title || !selectedCategory) {
       setIsEmpty(true);
     } else {
       setIsEmpty(false);
     }
 
-    if (selectedCategory.key === 'custom' && !customCategory) {
+    if (selectedCategory?.key === 'custom' && !customCategory) {
       setIsEmpty(true);
     } else {
       setIsEmpty(false);
@@ -223,6 +205,7 @@ export function TodoForm({
     checkTitleInputValidation,
     isCategoryInvalid,
     isTitleInvalid,
+    isCustomCategory,
   ]);
 
   return (
