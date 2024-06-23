@@ -29,7 +29,7 @@ const SearchToDoView = ({
   };
 
   const getToDoTabKeyExtractor = (item: any, index: any) => { // TODO 타입 구체화
-    const keyName = 'todo' + item.id;
+    const keyName = 'todo' + item.id + Math.random();
 
     return keyName;
   };

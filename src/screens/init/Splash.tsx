@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {View, StyleSheet, Alert, AlertButton, Linking} from 'react-native';
-
+import { AppLayout } from '@/components/common/AppLayout';
 import {AppText} from '@/components/common/AppText';
 
 import {getFontSize} from '@/utils/font';
@@ -181,7 +181,7 @@ export function Splash({navigation}: any): React.JSX.Element {
   }, [isFocused]);
 
   return (
-    <View style={styles.container}>
+    <AppLayout style={styles.container}>
       <View style={{flex: 1}} />
       <View style={styles.logoContainer}>
         <AppText style={styles.logoText}>
@@ -191,7 +191,7 @@ export function Splash({navigation}: any): React.JSX.Element {
         <AppText style={styles.title}>인생비서</AppText>
       </View>
       <Toast />
-    </View>
+    </AppLayout>
   );
 }
 
