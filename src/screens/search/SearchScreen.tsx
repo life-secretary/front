@@ -17,7 +17,7 @@ import SearchToDoView from '../../components/search/SearchToDoView';
 import {getFontSize} from '../../utils/font';
 import {getNewConditionData} from '@/utils/search';
 
-import {createData} from '@/api/api';
+import {createData, fetchData} from '@/api/api';
 
 import type {ConditionData} from '../../components/search/SearchCategory';
 
@@ -32,6 +32,7 @@ import {
   getSearchContentListQuery,
   getSearchToDoListQuery,
 } from '@/api/search';
+import { useQuery } from '@tanstack/react-query';
 
 const HeaderSearchResult = ({data, searchData, onPressButton}: any) => {
   return (
@@ -91,6 +92,22 @@ const SearchScreen = ({navigation}: any) => {
     isRefetching: toDoIsRefetching,
   } = getSearchToDoListQuery(searchConditionToDo);
   const [toDoData, setToDoData] = useState<any>([]);
+
+  // user data
+  const getUserToDo = () => {
+    return fetchData('/user-todos', {})
+    .then((res) => {
+      return res.data.data;
+    })
+  }
+  const { 
+    data: userToDo,
+    isFetching: userToDoIsFetching,
+    isRefetching: userToDoIsRefetching,
+  } = useQuery({
+    queryKey: ['/user-todos'],
+    queryFn: getUserToDo
+  }); // TODO 추후 리팩토링
 
   const isLoading = useRef<boolean>(false);
 
@@ -395,8 +412,8 @@ const SearchScreen = ({navigation}: any) => {
     navigation.navigate('ContentModal', {id});
   };
 
-  const onPressToDo = (id: number) => {
-    navigation.navigate('ToDoDetail', {id});
+  const onPressToDo = (item: any) => {
+    navigation.navigate('ToDoDetail', {id: item.id});
   };
 
   // 검색 결과 페이지 진입시 검색 조건 초기화
@@ -432,13 +449,39 @@ const SearchScreen = ({navigation}: any) => {
     }
 
     if (pageToDo.current === 0) {
-      setToDoData(toDo);
+      const newToDo = toDo
+      .map((item: any) => {
+        const savedToDo = userToDo.find((todo: any) => todo.origId === item.id);
+        
+        if (savedToDo) {
+          item.isSaved = true;
+        } else {
+          item.isSaved = false;
+        }
+
+        return item;
+      });
+      setToDoData(newToDo);
     } else {
-      setToDoData((prev: any) => [...prev, ...toDo]);
+      setToDoData((prev: any) => {
+        const newToDo = [...prev, ...toDo]
+        .map((item: any) => {
+          const savedToDo = userToDo.find((todo: any) => todo.origId === item.id);
+          
+          if (savedToDo) {
+            item.isSaved = true;
+          } else {
+            item.isSaved = false;
+          }
+  
+          return item;
+        });
+        return newToDo;
+      });
     }
 
     isLoading.current = false;
-  }, [TodoIsFetching, toDoIsRefetching, toDo]);
+  }, [TodoIsFetching, toDoIsRefetching, toDo, userToDoIsFetching, userToDoIsRefetching, userToDo]);
 
   return (
     <View style={styles.container}>
