@@ -242,7 +242,7 @@ const Content = ({route, navigation}: any) => {
     if (isAllSavedToDos()) {
       setConfirmData({
         title: '안내',
-        description: '이미 전체 추가된 할 일입니다',
+        description: '이미 추가된 할 일입니다',
         button: {
           first: {
             text: '확인',

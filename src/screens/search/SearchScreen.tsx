@@ -21,7 +21,8 @@ import {createData, fetchData} from '@/api/api';
 
 import type {ConditionData} from '../../components/search/SearchCategory';
 
-import {useRecoilState, useRecoilValue} from 'recoil';
+import {useRecoilState, useSetRecoilState} from 'recoil';
+import { userToDoState } from '@/store/userToDoState';
 import {
   recentSearchWordState,
   popularSearchWordState,
@@ -94,6 +95,7 @@ const SearchScreen = ({navigation}: any) => {
   const [toDoData, setToDoData] = useState<any>([]);
 
   // user data
+  const setUserToDo = useSetRecoilState(userToDoState);
   const getUserToDo = () => {
     return fetchData('/user-todos', {})
     .then((res) => {
@@ -444,9 +446,11 @@ const SearchScreen = ({navigation}: any) => {
 
   useEffect(() => {
     isLoading.current = true;
-    if (!toDo || !isSearchResultPage) {
+    if (!toDo || !userToDo || !isSearchResultPage) {
       return;
     }
+
+    setUserToDo(userToDo);
 
     if (pageToDo.current === 0) {
       const newToDo = toDo

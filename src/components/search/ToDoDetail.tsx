@@ -9,6 +9,8 @@ import {fetchData, createData} from '@/api/api';
 import {useRecoilValue} from 'recoil';
 import {categoryListState} from '@/store/categoryState';
 import AppConfirmModal from '../common/modal/AppConfirmModal';
+import { userToDoState } from '@/store/userToDoState';
+import { AppLayout } from '../common/AppLayout';
 
 const ToDoDetail = ({navigation, route}: any) => {
   const {id} = route.params;
@@ -17,19 +19,39 @@ const ToDoDetail = ({navigation, route}: any) => {
   const [toDo, setToDo] = useState([]);
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
   const [confirmData, setConfirmData] = useState<any>({});
+  const userToDo = useRecoilValue(userToDoState);
 
   const onPressCloseIcon = () => {
     navigation.goBack();
   };
 
   const onPressAddToDosButton = () => {
+    const savedToDo = userToDo.map((item: any) => item.origId);
+    const savedSubToDo = userToDo.map((item: any) => item.subs).flat().map((item) => item.id);
+    const isSavedToDo = savedToDo.find((item) => item === id);
+    const isSavedSubToDo = savedSubToDo.find((item) => item === id);
+
+    if (isSavedToDo || isSavedSubToDo) {
+      setConfirmData({
+        title: '안내',
+        description: '이미 추가된 할 일입니다',
+        button: {
+          first: {
+            text: '확인',
+            onPressButton: () => setIsConfirmOpen(false),
+          },
+        },
+      });
+      setIsConfirmOpen(true);
+      return;
+    }
+
     createData('/todo/save', {id}).then(response => {
       const {
         data: {data},
       } = response;
 
       if (data) {
-        // 추가완료 팝업 띄우기
         setConfirmData({
           title: '추가 완료',
           description: '할 일 목록에서 확인할 수 있어요',
@@ -61,25 +83,21 @@ const ToDoDetail = ({navigation, route}: any) => {
     }
 
     fetchData(`/todo/${id}/sub`, {}).then(response => {
-      const {
-        data: {data},
-      } = response;
+      const { data: {data} } = response;
 
       setToDo(data);
     });
 
     // testing
     fetchData(`/todo/${id}`, {}).then(response => {
-      const {
-        data: {data},
-      } = response;
+      const { data: {data} } = response;
 
       setData(data);
     });
   }, [id]);
 
   return (
-    <View style={styles.background}>
+    <AppLayout style={styles.background}>
       <View style={styles.content}>
         <View style={styles.titleWrapper}>
           <View style={styles.closeIconWrapper}>
@@ -153,7 +171,7 @@ const ToDoDetail = ({navigation, route}: any) => {
               }
         }
       />
-    </View>
+    </AppLayout>
   );
 };
 

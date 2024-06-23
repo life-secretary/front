@@ -10,7 +10,7 @@ type SearchToDoViewProps = {
   data: Array<{}>; // TODO 타입 구체화
   headerComponent: ReactNode;
   onEndReached: () => void;
-  onPressToDo: (id: number) => void;
+  onPressToDo: (item: any) => void;
 };
 
 const SearchToDoView = ({
@@ -41,7 +41,7 @@ const SearchToDoView = ({
         <VirtualizedList
         initialNumToRender={8}
         renderItem={({item}) => {
-          return <ToDoListItem hasMainCategory={true} item={item} onPressAddItem={onPressToDo} />;
+          return <ToDoListItem hasMainCategory={true} item={item} onPressAddItem={(item: any, index: number) => onPressToDo(item)} />;
         }}
         keyExtractor={getToDoTabKeyExtractor}
         getItemCount={getToDoTabItemCount}

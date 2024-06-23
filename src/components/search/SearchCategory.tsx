@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {View, StyleSheet, TouchableOpacity } from 'react-native';
 import type {CategoryObject} from '../../models/common';
-import { useRecoilValue } from 'recoil';
+import { useQuery } from '@tanstack/react-query';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { homeCategoryListState } from '@/store/categoryState';
+import { userToDoState } from '@/store/userToDoState';
 
 import {AppHeader} from '../common/AppHeader';
 import AppButton from '../common/AppButton';
@@ -103,6 +105,23 @@ const SearchCategory = ({
     })
     const { data:toDo, isFetching:TodoIsFetching, isRefetching:toDoIsRefetching } = getCategoryToDoListQuery(categoryConditionToDo);
     const [toDoData, setToDoData] = useState<any>([]);
+
+    // user data
+    const setUserToDo = useSetRecoilState(userToDoState);
+    const getUserToDo = () => {
+      return fetchData('/user-todos', {})
+      .then((res) => {
+        return res.data.data;
+      })
+    }
+    const { 
+      data: userToDo,
+      isFetching: userToDoIsFetching,
+      isRefetching: userToDoIsRefetching,
+    } = useQuery({
+      queryKey: ['/user-todos'],
+      queryFn: getUserToDo
+    }); // TODO 추후 리팩토링
 
     // 야매 드롭다운 리스트
     const [isCategoryDownModalVisible, setIsCategoryDownModalVisible] = useState(false);
@@ -235,8 +254,8 @@ const SearchCategory = ({
     navigation.navigate('ContentModal', { id });
   };
 
-  const onPressToDo = (id: number) => {
-    navigation.navigate('ToDoDetail', { id });
+  const onPressToDo = (item: any) => {
+    navigation.navigate('ToDoDetail', { id: item.id });
   };
 
   useEffect(() => {
@@ -256,20 +275,46 @@ const SearchCategory = ({
 
   useEffect(() => {
     isLoading.current = true;
-    if (!toDo) {
+    if (!toDo || !userToDo) {
       return;
     }
 
-    // NOTE 할 일 목록 불러온 다음 저장되어있는 여부 표기해야하나 ?
-    // api 네트워크 에러나서 뭘 할 수가 없네...
+    setUserToDo(userToDo);
+
     if (pageToDo.current === 0) {
-      setToDoData(toDo);
+      const newToDo = toDo
+      .map((item: any) => {
+        const savedToDo = userToDo.find((todo: any) => todo.origId === item.id);
+        
+        if (savedToDo) {
+          item.isSaved = true;
+        } else {
+          item.isSaved = false;
+        }
+
+        return item;
+      });
+      setToDoData(newToDo);
     } else {
-      setToDoData((prev: any) => [...prev, ...toDo]);
+      setToDoData((prev: any) => {
+        const newToDo = [...prev, ...toDo]
+        .map((item: any) => {
+          const savedToDo = userToDo.find((todo: any) => todo.origId === item.id);
+          
+          if (savedToDo) {
+            item.isSaved = true;
+          } else {
+            item.isSaved = false;
+          }
+  
+          return item;
+        });
+        return newToDo;
+      });
     }
 
     isLoading.current = false;
-  }, [TodoIsFetching, toDoIsRefetching, toDo]);
+  }, [TodoIsFetching, toDoIsRefetching, toDo, userToDoIsFetching, userToDoIsRefetching, userToDo]);
 
   useEffect(() => {
     if ((!selectedCategory.id && selectedCategory.id !== 0)) {
