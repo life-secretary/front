@@ -46,24 +46,13 @@ const ToDoListItem = ({
 
       {/** NOTE TouchableHighlight + icon = Pressable Button 변경 가능성 있음 */}
       <View style={styles.toDoListItemButtonContainer}>
-        {
-          item.isSaved ?
-          <AppIcon 
-            name="checkBoxCircle"
-            width={42} 
-            height={42} 
-            styles={{fill: color.grey.grey500, stroke: color.main.white}}
-            onPress={() => {}}
-            // TODO 더 추가하겠습니까? 안내 alert
-          />
-          :
-          <AppIcon 
-            name="addCircle" 
-            width={42} 
-            height={42} 
-            onPress={() => onPressAddItem(item.id, index)}
-          />
-        }
+        <AppIcon 
+          name={item.isSaved ? "checkBoxCircle" :"addCircle"}
+          width={42} 
+          height={42} 
+          styles={item.isSaved ? {fill: color.grey.grey500, stroke: color.main.white} : {}}
+          onPress={() => onPressAddItem(item, index)}
+        />
       </View>
     </View>
   );
