@@ -69,11 +69,11 @@ export function Login({navigation}: any): React.JSX.Element {
         return newValue;
       });
       storeProvider(PROVIDERS.KAKAO);
-      setLoginInfo({
+      const loginInfo: LoginInfo = {
         provider: 'kakao',
         idToken: token.idToken!!,
-      })
-      signIn();
+      };
+      signIn(loginInfo);
     } catch (error) {
       console.log(error);
     }
@@ -96,18 +96,19 @@ export function Login({navigation}: any): React.JSX.Element {
         return newValue;
       });
       storeProvider(PROVIDERS.GOOGLE);
-      setLoginInfo({
+      const loginInfo: LoginInfo = {
         provider: 'google',
         idToken: userInfo.idToken!!,
-      })
-      signIn();
+      };
+      signIn(loginInfo);
     } catch (error) {
       console.log('error', error);
     }
   };
 
-  const signIn = async (): Promise<void> => {
-    await createData('/auth/login', loginInfo)
+  const signIn = async (info: LoginInfo): Promise<void> => {
+    setLoginInfo(info)
+    await createData('/auth/login', info)
       .then(res => {
         return res.data.data;
       })
