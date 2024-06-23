@@ -180,8 +180,23 @@ const Content = ({route, navigation}: any) => {
   };
 
   // addToDo [RelatedTodo]
-  const addToDoItem = (id: number, index: number) => {
-    createData('/todo/save', {id})
+  const addToDoItem = (item: any, index: number) => {
+    if (item.isSaved) {
+      setConfirmData({
+        title: '안내',
+        description: '이미 추가된 할 일입니다',
+        button: {
+          first: {
+            text: '확인',
+            onPressButton: () => setIsConfirmOpen(false),
+          },
+        },
+      });
+      setIsConfirmOpen(true);
+      return;
+    }
+
+    createData('/todo/save', {id: item.id})
       .then(response => {
         const {
           data: {data},
@@ -224,6 +239,21 @@ const Content = ({route, navigation}: any) => {
 
   // addToDos [RelatedTodo]
   const addToDoItems = () => {
+    if (isAllSavedToDos()) {
+      setConfirmData({
+        title: '안내',
+        description: '이미 전체 추가된 할 일입니다',
+        button: {
+          first: {
+            text: '확인',
+            onPressButton: () => setIsConfirmOpen(false),
+          },
+        },
+      });
+      setIsConfirmOpen(true);
+      return;
+    }
+
     Promise.all(
       todos.map((item: any) =>
         createData('/todo/save', {
@@ -337,41 +367,57 @@ const Content = ({route, navigation}: any) => {
   useEffect(() => {
     // 사용자 스크랩 데이터
     fetchData('/scrap', {})
-      .then((res) => {
-        const { data: { data:scrapData } } = res;
-        
-        const isSavedContent = scrapData.find((item: any) => item.contentId === id);
+    .then((res) => {
+      const { data: { data:scrapData } } = res;
+      const scrappedContent = scrapData.find((item: any) => item.contentId === id);
 
-        // 현재 컨텐츠의 스크랩 현황
-        if (isSavedContent) {
-          setIsContentBookMarked(true);
-        } else {
-          setIsContentBookMarked(false);
-        }
+      // 현재 컨텐츠의 스크랩 현황
+      if (scrappedContent) {
+        setIsContentBookMarked(true);
+      } else {
+        setIsContentBookMarked(false);
+      }
+
+      // 사용자 저장 할일 데이터
+      fetchData('/user-todos', {})
+      .then((res) => {
+        const { data: { data:saveData } } = res;
+        // 컨텐츠 상세에는 상세 데이터만 있기 때문에 subs 추출
+        const subSavedData = saveData.map((item: any) => item.subs).flat();
 
         fetchData(`/content/${id}`, {})
         .then(response => {
           const { data: { data } } = response;
-  
+
           setContent(data);
-  
+
           if (!data || !data.todos) {
             return;
           }
-  
+
           const category: any = categories.find(
             (item: any) => item.id === Number(data.categoryId),
           );
           const todos: any = [];
-  
+
           if (!todos.length) {
-            const newData = data.todos.map((item: any) => ({
-              ...item,
-              isSaved: false,
-            }));
+            const newData = data.todos.map((item: any) => {
+              const savedToDo = saveData.find((todo: any) => todo.origId === item.id);
+              const savedSubToDo = subSavedData.find((sub: any) => sub.id === item.id);
+              
+              // 현재 할 일 저장 현황
+              if (savedToDo || savedSubToDo) {
+                item.isSaved = true;
+              } else {
+                item.isSaved = false;
+              }
+
+              return item;
+            });
+
             setTodos(newData);
           }
-  
+
           const item = {
             id: data.id,
             title: data.title,
@@ -384,7 +430,7 @@ const Content = ({route, navigation}: any) => {
               // {id: 10, title: '일부 콘텐츠는 예고없이 삭제될 수 있습니다.'},
             ],
           };
-  
+
           setItem([item]);
           // NOTE 임시 연관 컨텐츠 -> 카테고리 컨텐츠 검색
           fetchData('/content', {
@@ -395,13 +441,13 @@ const Content = ({route, navigation}: any) => {
           })
             .then(response => {
               const { data: { data } } = response;
-  
+
               setRelatedContent(
                 data.content
                   .map((item: any) => {
-                    const isSavedContent = scrapData.find((scrap: any) => scrap.contentId === item.id);
+                    const scrappedContent = scrapData.find((scrap: any) => scrap.contentId === item.id);
 
-                    if (isSavedContent) {
+                    if (scrappedContent) {
                       item.isBookMarked = true;
                     } else {
                       item.isBookMarked = false;
@@ -437,6 +483,8 @@ const Content = ({route, navigation}: any) => {
       .catch((error) => {
         console.log('사용자 스크랩 데이터 에러', error);
       })
+    })
+
   }, [id]);
 
   // scrollTop
