@@ -289,7 +289,9 @@ const SearchScreen = ({navigation}: any) => {
     updateRecentSearchItem(value, currData);
 
     // 검색 로그 기록
-    createData('/search-logs', {value});
+    if (value && value.length) {
+      createData('/search-logs', {value});
+    }
 
     // 최신 검색어 높이 업데이트
     const recentSearchListHeight = recentSearchItemHeight * currData.length;
