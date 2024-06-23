@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Image} from 'react-native';
-
+import { AppLayout } from '@/components/common/AppLayout';
 import {AppText} from '@/components/common/AppText';
 import {AppHeader} from '@/components/common/AppHeader';
 import AppIcon from '@/components/common/AppIcon';
@@ -56,7 +56,14 @@ const Welcome = ({navigation}: any) => {
         console.log(error);
         Toast.show({
           type: 'error',
-          text1: 'sign up fail',
+          props: {
+            text: '회원가입에 실패했어요',
+            style: { marginTop: 20 }
+          },
+          position: 'top',
+          topOffset: 40,
+          visibilityTime: 2000,
+          autoHide: true,
         });
       });
   };
@@ -81,15 +88,22 @@ const Welcome = ({navigation}: any) => {
         console.log(error);
         Toast.show({
           type: 'error',
-          text1: 'login fail',
+          props: {
+            text: '로그인에 실패했어요',
+            style: { marginTop: 20 }
+          },
+          position: 'top',
+          topOffset: 40,
+          visibilityTime: 2000,
+          autoHide: true,
         });
         navigation.navigate('Splash');
       });
   };
 
   return (
-    <View style={styles.container}>
-      <AppHeader style={styles.headerContainer}>
+    <AppLayout style={styles.container}>
+      <AppHeader style={[styles.headerContainer, { marginTop: 0, }]}>
         <AppIcon
           name="back"
           width={42}
@@ -107,7 +121,8 @@ const Welcome = ({navigation}: any) => {
         <View
           style={{
             position: 'absolute',
-            top: -30,
+            left: 10,
+            top: 30,
           }}>
           <Image
             source={require('@/assets/gif/happy_birthday.gif')}
@@ -117,8 +132,8 @@ const Welcome = ({navigation}: any) => {
         <View
           style={{
             position: 'absolute',
-            left: '-13%',
-            top: 150,
+            left: '-8%',
+            top: 200,
             zIndex: 1,
           }}>
           <Image
@@ -135,7 +150,7 @@ const Welcome = ({navigation}: any) => {
           onPressButton={signup}
         />
       </View>
-    </View>
+    </AppLayout>
   );
 };
 
