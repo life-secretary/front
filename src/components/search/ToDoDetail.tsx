@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   scrollView: {
-    height: 330,
+    height: 500,
   },
   todoWrapper: {
     gap: 20,
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     position: 'absolute',
-    bottom: 20,
+    bottom: 50,
   },
   buttonWrapper: {
     position: 'relative',
@@ -252,6 +252,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#000E24',
     paddingLeft: 20,
     paddingRight: 10,
     paddingVertical: 5,
