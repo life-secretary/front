@@ -335,106 +335,108 @@ const Content = ({route, navigation}: any) => {
   };
 
   useEffect(() => {
+    // 사용자 스크랩 데이터
     fetchData('/scrap', {})
       .then((res) => {
-        const { data: { data } } = res;
+        const { data: { data:scrapData } } = res;
+        
+        const isSavedContent = scrapData.find((item: any) => item.contentId === id);
 
-        const isSavedContent = data.find((item: any) => item.contentId === id);
-
+        // 현재 컨텐츠의 스크랩 현황
         if (isSavedContent) {
           setIsContentBookMarked(true);
         } else {
           setIsContentBookMarked(false);
         }
+
+        fetchData(`/content/${id}`, {})
+        .then(response => {
+          const { data: { data } } = response;
+  
+          setContent(data);
+  
+          if (!data || !data.todos) {
+            return;
+          }
+  
+          const category: any = categories.find(
+            (item: any) => item.id === Number(data.categoryId),
+          );
+          const todos: any = [];
+  
+          if (!todos.length) {
+            const newData = data.todos.map((item: any) => ({
+              ...item,
+              isSaved: false,
+            }));
+            setTodos(newData);
+          }
+  
+          const item = {
+            id: data.id,
+            title: data.title,
+            url: data.contentUrl,
+            content: String(data.content),
+            hashtags: data.hashtags,
+            createdTime: data.createdTime,
+            category: category ? category.title : '카테고리',
+            notification: [
+              // {id: 10, title: '일부 콘텐츠는 예고없이 삭제될 수 있습니다.'},
+            ],
+          };
+  
+          setItem([item]);
+          // NOTE 임시 연관 컨텐츠 -> 카테고리 컨텐츠 검색
+          fetchData('/content', {
+            categoryId: data.categoryId,
+            page: 0,
+            size: 5,
+            sort: 'viewCount,desc',
+          })
+            .then(response => {
+              const { data: { data } } = response;
+  
+              setRelatedContent(
+                data.content
+                  .map((item: any) => {
+                    const isSavedContent = scrapData.find((scrap: any) => scrap.contentId === item.id);
+
+                    if (isSavedContent) {
+                      item.isBookMarked = true;
+                    } else {
+                      item.isBookMarked = false;
+                    }
         
+                    return item;
+                  })
+                  .filter((item: any) => item.id !== id), // 현재 컨텐츠 제외하고 연관 컨텐츠 노출
+              );
+            })
+            .catch(error => {
+              console.log('연관된 컨텐츠 조회 에러', error);
+            });
+        })
+        .catch(error => {
+          setConfirmData({
+            title: '400 에러',
+            description: '해당 컨텐츠는 존재하지 않습니다',
+            button: {
+              first: {
+                text: '닫기',
+                onPressButton: () => {
+                  setIsConfirmOpen(false);
+                  navigation.goBack();
+                },
+              },
+            },
+          });
+          setIsConfirmOpen(true);
+        });
+
       })
       .catch((error) => {
         console.log('사용자 스크랩 데이터 에러', error);
       })
-  }, []);
-
-  useEffect(() => {
-    fetchData(`/content/${id}`, {})
-      .then(response => {
-        const {
-          data: {data},
-        } = response;
-
-        setContent(data);
-
-        if (!data || !data.todos) {
-          return;
-        }
-
-        const category: any = categories.find(
-          (item: any) => item.id === Number(data.categoryId),
-        );
-        const todos: any = [];
-
-        if (!todos.length) {
-          const newData = data.todos.map((item: any) => ({
-            ...item,
-            isSaved: false,
-          }));
-          setTodos(newData);
-        }
-
-        const item = {
-          id: data.id,
-          title: data.title,
-          url: data.contentUrl,
-          content: String(data.content),
-          hashtags: data.hashtags,
-          createdTime: data.createdTime,
-          category: category ? category.title : '카테고리',
-          notification: [
-            // {id: 10, title: '일부 콘텐츠는 예고없이 삭제될 수 있습니다.'},
-          ],
-        };
-
-        setItem([item]);
-        // NOTE 임시 연관 컨텐츠 -> 카테고리 컨텐츠 검색
-        fetchData('/content', {
-          categoryId: data.categoryId,
-          page: 0,
-          size: 5,
-          sort: 'viewCount,desc',
-        })
-          .then(response => {
-            const {
-              data: {data},
-            } = response;
-
-            setRelatedContent(
-              data.content
-                .map((item: any) => ({
-                  ...item,
-                  isBookMarked: false,
-                }))
-                .filter((item: any) => item.id !== data.id),
-              // 현재 컨텐츠 제외하고 연관 컨텐츠 노출
-            );
-          })
-          .catch(error => {
-            console.log('연관된 컨텐츠 조회 에러', error);
-          });
-      })
-      .catch(error => {
-        setConfirmData({
-          title: '400 에러',
-          description: '해당 컨텐츠는 존재하지 않습니다',
-          button: {
-            first: {
-              text: '닫기',
-              onPressButton: () => {
-                setIsConfirmOpen(false);
-                navigation.goBack();
-              },
-            },
-          },
-        });
-        setIsConfirmOpen(true);
-      });
   }, [id]);
 
   // scrollTop
