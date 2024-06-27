@@ -1,20 +1,25 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useSetRecoilState} from 'recoil';
 import {userState} from '@/store/userState';
+import {bottomSheetVisibleState} from '@/store/bottomSheetState';
 
 import {fetchData, updateData} from '@/api/api';
 
-import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import OutsidePressHandler from 'react-native-outside-press';
-import DatePicker from 'react-native-date-picker';
 import AppButton from '@/components/common/AppButton';
 import {AppInput} from '@/components/common/AppInput';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 import spacing from '@/styles/spacing';
 
-import {getFormattedDate} from '@/utils';
 import {
   // checkInappropriateKeyword,
   checkNumber,
@@ -23,18 +28,21 @@ import {
   formValidation,
 } from '@/utils/formValidation';
 
-export function MyInfoEditForm(): React.JSX.Element {
+type Props = {
+  selectedAgeRange: object | undefined;
+};
+
+export function MyInfoEditForm({selectedAgeRange}: Props): React.JSX.Element {
   const [myInfo, setMyInfo] = useRecoilState(userState);
+  const setIsVisible = useSetRecoilState(bottomSheetVisibleState);
 
   const [isInvalid, setIsInvalid] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
-  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [nickname, onChangeNickname] = useState(myInfo.nickname);
-  const [birthDate, onChangeBirthDate] = useState(myInfo.birthDate);
   const navigation = useNavigation();
   const nicknameInputRef = useRef(null);
-  const birthDateInputRef = useRef(null);
+  const ageRangeInputRef = useRef(null);
 
   const moveToBack = () => {
     navigation.goBack();
@@ -48,8 +56,8 @@ export function MyInfoEditForm(): React.JSX.Element {
     ref?.current.blur();
   };
 
-  const handleBirthdatePress = () => {
-    setIsDatePickerVisible(true);
+  const handleAgeRangePress = () => {
+    setIsVisible(true);
   };
 
   const handleSubmitButtonPress = () => {
@@ -69,7 +77,7 @@ export function MyInfoEditForm(): React.JSX.Element {
   const editMyInfo = async () => {
     const newMyInfo = {
       nickname,
-      birthDate,
+      ageRange: selectedAgeRange?.key,
     };
 
     const res = await updateData('/user', null, newMyInfo);
@@ -120,14 +128,14 @@ export function MyInfoEditForm(): React.JSX.Element {
   }, [nickname]);
 
   useEffect(() => {
-    if (!nickname || !birthDate) {
+    if (!nickname || !selectedAgeRange) {
       setIsEmpty(true);
     } else {
       setIsEmpty(false);
     }
 
     checkNicknameInputValidation();
-  }, [nickname, birthDate, checkNicknameInputValidation]);
+  }, [nickname, checkNicknameInputValidation, selectedAgeRange]);
 
   return (
     <>
@@ -149,26 +157,26 @@ export function MyInfoEditForm(): React.JSX.Element {
               onChangeText={onChangeNickname}
             />
           </OutsidePressHandler>
-          <OutsidePressHandler
-            onOutsidePress={() => handleInputOutsidePress(birthDateInputRef)}>
-            <AppInput
-              ref={birthDateInputRef}
-              hasLabel={true}
-              editable={false}
-              labelText="생년월일"
-              text={getFormattedDate(new Date(birthDate), 'kor')}
-              onChangeText={onChangeBirthDate}
-              icon={{
-                name: 'arrowDown',
-                width: 24,
-                height: 24,
-                styles: {color: color.grey.grey400},
-                onPress: () => {
-                  handleBirthdatePress();
-                },
-              }}
-            />
-          </OutsidePressHandler>
+          <Pressable onPress={() => handleAgeRangePress()}>
+            <View pointerEvents="none">
+              <AppInput
+                ref={ageRangeInputRef}
+                hasLabel={true}
+                editable={false}
+                labelText="연령층"
+                text={selectedAgeRange?.title}
+                icon={{
+                  name: 'arrowDown',
+                  width: 24,
+                  height: 24,
+                  styles: {color: color.grey.grey400},
+                  onPress: () => {
+                    handleAgeRangePress();
+                  },
+                }}
+              />
+            </View>
+          </Pressable>
         </View>
         <View style={styles.buttonContainer}>
           <AppButton
@@ -181,20 +189,6 @@ export function MyInfoEditForm(): React.JSX.Element {
           />
         </View>
       </KeyboardAvoidingView>
-      <DatePicker
-        modal
-        mode="date"
-        locale="kor"
-        open={isDatePickerVisible}
-        date={new Date(birthDate)}
-        onConfirm={date => {
-          setIsDatePickerVisible(false);
-          onChangeBirthDate(getFormattedDate(date, '-'));
-        }}
-        onCancel={() => {
-          setIsDatePickerVisible(false);
-        }}
-      />
     </>
   );
 }

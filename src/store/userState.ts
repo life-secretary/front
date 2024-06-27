@@ -2,7 +2,7 @@ import {atom} from 'recoil';
 
 type UserInfo = {
   nickname: string;
-  birthDate: string;
+  ageRange: 'TEEN' | 'YOUTH' | 'ADULT' | 'SENIOR' | null;
   jobIds: number[];
   interests: number[];
   gender: string;
@@ -14,7 +14,7 @@ const userState = atom<UserInfo | null>({
   key: 'UserState',
   default: {
     nickname: '',
-    birthDate: '',
+    ageRange: null,
     jobIds: [],
     interests: [],
     gender: '',

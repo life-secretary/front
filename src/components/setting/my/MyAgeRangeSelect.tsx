@@ -1,6 +1,5 @@
 import React from 'react';
-import {useRecoilValue, useSetRecoilState} from 'recoil';
-import {mainCategoryListState} from '@/store/categoryState';
+import {useSetRecoilState} from 'recoil';
 import {bottomSheetVisibleState} from '@/store/bottomSheetState';
 
 import {FlatList, Pressable, StyleSheet, View} from 'react-native';
@@ -11,33 +10,28 @@ import color from '@/styles/color';
 import {getFontSize} from '@/utils/font';
 
 type Props = {
-  handleSelectCategory: Function;
+  selectOptions: object[];
+  handleSelectAgeRange: Function;
 };
 
-export function TodoCategorySelect({
-  handleSelectCategory,
+export function MyAgeRangeSelect({
+  selectOptions,
+  handleSelectAgeRange,
 }: Props): React.JSX.Element {
   const setIsVisible = useSetRecoilState(bottomSheetVisibleState);
-  const categories = useRecoilValue(mainCategoryListState);
-
-  const CATEGORY_SELECT_OPTIONS = [
-    {id: 0, key: 'none', title: '선택안함'},
-    ...categories,
-    {id: null, key: 'custom', title: '직접입력'},
-  ];
 
   const handleSelectOption = (option: object) => {
-    handleSelectCategory(option);
+    handleSelectAgeRange(option);
     setIsVisible(false);
   };
 
   return (
     <View style={styles.selectContainer}>
-      <AppText style={styles.title}>할 일의 분야를 선택해주세요</AppText>
+      <AppText style={styles.title}>연령층을 선택해주세요</AppText>
       <FlatList
         showsVerticalScrollIndicator={false}
         alwaysBounceVertical={false}
-        data={CATEGORY_SELECT_OPTIONS}
+        data={selectOptions}
         renderItem={({item}) => (
           <View style={styles.optionContainer}>
             <Pressable
