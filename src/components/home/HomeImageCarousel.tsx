@@ -10,6 +10,7 @@ import {
   StyleSheet,
   PanResponder,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import Carousel, {ICarouselInstance} from 'react-native-reanimated-carousel';
 import {AppText} from '@/components/common/AppText';
 import spacing from '@/styles/spacing';
@@ -50,14 +51,20 @@ function Slide({
         source={setImageSource()}
         resizeMode="cover"
         style={styles.backgroundImage}>
-        <View style={styles.infoContainer}>
-          <View style={styles.tagContainer}>
-            <AppText style={styles.tag}>{tag || '카테고리'}</AppText>
+        <LinearGradient
+          start={{x: 0, y: 1}}
+          end={{x: 0, y: 0}}
+          colors={['rgba(0, 14, 36, 0.3)', 'rgba(0, 14, 36, 0)']}
+          style={styles.gradient}>
+          <View style={styles.infoContainer}>
+            <View style={styles.tagContainer}>
+              <AppText style={styles.tag}>{tag || '카테고리'}</AppText>
+            </View>
+            <View style={styles.titleContainer}>
+              <AppText style={styles.title}>{title}</AppText>
+            </View>
           </View>
-          <View style={styles.titleContainer}>
-            <AppText style={styles.title}>{title}</AppText>
-          </View>
-        </View>
+        </LinearGradient>
       </ImageBackground>
     </Pressable>
   );
@@ -230,5 +237,8 @@ const styles = StyleSheet.create({
   },
   slash: {
     color: '#FFFFFF66',
+  },
+  gradient: {
+    flex: 1,
   },
 });
