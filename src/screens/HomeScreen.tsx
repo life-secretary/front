@@ -91,7 +91,7 @@ export function HomeScreen({navigation}: any): React.JSX.Element {
 
   const fetchHomeContentsByNewest = async () => {
     const res = await fetchData('/content', {
-      sort: 'createdAt',
+      sort: 'createdAt,desc',
       size: HOME_CONTENT_SIZE,
     });
 
