@@ -166,10 +166,9 @@ export function MyInfoEditForm({selectedAgeRange}: Props): React.JSX.Element {
                 labelText="연령층"
                 text={selectedAgeRange?.title}
                 icon={{
-                  name: 'arrowDown',
+                  name: 'arrowDownLarge',
                   width: 24,
                   height: 24,
-                  styles: {color: color.grey.grey400},
                   onPress: () => {
                     handleAgeRangePress();
                   },
