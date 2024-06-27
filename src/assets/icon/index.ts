@@ -7,6 +7,7 @@ import {default as addLight} from './icon_add_light.svg';
 import {default as angleDown} from './icon_angle_down.svg';
 import {default as angleUp} from './icon_angle_up.svg';
 import {default as angleRight} from './icon_angle_right.svg';
+import {default as arrowDownLarge} from './icon_arrow_down_large.svg';
 import {default as arrowDown} from './icon_arrow_down.svg';
 import {default as arrowLeft} from './icon_arrow_left.svg';
 import {default as arrowRight} from './icon_arrow_right.svg';
@@ -104,6 +105,12 @@ const Icons: IconsData = {
   },
   // arrow icon dark color : #000E24
   // arrow icon light color: #A1ACB9
+  arrowDownLarge: {
+    type: 'stroke',
+    file: arrowDownLarge,
+    defaultStroke: '#A1ACB9',
+    defaultFill: '',
+  },
   arrowDown: {
     type: 'stroke',
     file: arrowDown,
@@ -367,7 +374,7 @@ const Icons: IconsData = {
     file: check,
     defaultStroke: color.main.secondary,
     defaultFill: '',
-  }
+  },
 };
 
 export default Icons;
