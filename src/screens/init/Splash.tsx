@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {View, StyleSheet, Alert, AlertButton, Linking} from 'react-native';
-import { AppLayout } from '@/components/common/AppLayout';
+import {AppLayout} from '@/components/common/AppLayout';
 import {AppText} from '@/components/common/AppText';
 
 import {getFontSize} from '@/utils/font';
@@ -16,7 +16,11 @@ import Toast from 'react-native-toast-message';
 import {createData, fetchData} from '@/api/api';
 import {useIsFocused} from '@react-navigation/native';
 import {removeToken} from '@/api/axios';
-import AppVersionInfo, {appStoreLink, compareVersions, getLatestVersion} from './AppVersion';
+import AppVersionInfo, {
+  appStoreLink,
+  compareVersions,
+  getLatestVersion,
+} from './AppVersion';
 import DeviceInfo from 'react-native-device-info';
 import {fetch} from '@react-native-community/netinfo';
 
@@ -44,7 +48,7 @@ export function Splash({navigation}: any): React.JSX.Element {
         {
           text: '업데이트',
           onPress: () => {
-            Linking.openURL(appStoreLink)
+            Linking.openURL(appStoreLink);
           },
           style: 'destructive',
         },
