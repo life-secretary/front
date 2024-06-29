@@ -26,6 +26,15 @@ const GetGender = ({navigation, route}: any) => {
   const margins = 25;
   const numColumns = 3;
 
+  const checkisSelected = () => {
+    return data.reduce((prev: any, curr: any) => {
+      if (curr.selected) {
+        return true;
+      } 
+      return prev || false;
+    }, false);
+  };
+
   const onPressGenderButton = (index: number) => {
     setData(previousValue => {
       const newValue = previousValue.map((item, idx) => {
@@ -34,7 +43,7 @@ const GetGender = ({navigation, route}: any) => {
       });
 
       if (modify) {
-        setEditedUserInfo(previousValue => {
+        setEditedUserInfo((previousValue: any) => {
           const gender = newValue.find(item => item.selected);
           return {
             ...previousValue,
@@ -42,7 +51,7 @@ const GetGender = ({navigation, route}: any) => {
           };
         });
       } else {
-        setUserInfo(previousValue => {
+        setUserInfo((previousValue: any) => {
           const gender = newValue.find(item => item.selected);
           return {
             ...previousValue,
@@ -79,7 +88,7 @@ const GetGender = ({navigation, route}: any) => {
           width={42}
           height={42}
           onPress={() =>
-            modify ? navigation.goBack() : navigation.navigate('GetBirthDate')
+            modify ? navigation.goBack() : navigation.navigate('GetAgeRange')
           }
         />
       </AppHeader>
@@ -124,8 +133,14 @@ const GetGender = ({navigation, route}: any) => {
         <AppButton
           text="다음"
           textStyle={styles.nextButtonText}
-          buttonStyle={styles.nextButton}
+          buttonStyle={[
+            styles.nextButton,
+            !checkisSelected() ? styles.nextButtonDisabled : {},
+          ]}
           onPressButton={() =>
+            !checkisSelected() ?
+            () => {} 
+            :
             modify
               ? navigation.navigate('GetCategory', {modify: true})
               : navigation.navigate('GetCategory', {modify: false})

@@ -41,7 +41,7 @@ import Content from './src/components/contentDetail/Content';
 import ToDoDetail from './src/components/search/ToDoDetail';
 import Agreement from './src/screens/init/Agreement';
 import GetNickName from './src/screens/survey/GetNickName';
-import GetBirthDate from './src/screens/survey/GetBirthDate';
+import GetAgeRange from './src/screens/survey/GetAgeRange';
 import GetGender from './src/screens/survey/GetGender';
 import GetCategory from './src/screens/survey/GetCategory';
 import GetOccupation from './src/screens/survey/GetOccupation';
@@ -156,7 +156,7 @@ function RootStack() {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Agreement" component={Agreement} />
         <Stack.Screen name="GetNickName" component={GetNickName} />
-        <Stack.Screen name="GetBirthDate" component={GetBirthDate} />
+        <Stack.Screen name="GetAgeRange" component={GetAgeRange} />
         <Stack.Screen name="GetGender" component={GetGender} />
         <Stack.Screen name="GetCategory" component={GetCategory} />
         <Stack.Screen name="GetOccupation" component={GetOccupation} />

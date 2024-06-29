@@ -88,7 +88,7 @@ const GetNickName = ({
                         textStyle={styles.nextButtonText}
                         buttonStyle={[styles.nextButton, (isError || !allTextInputFull()) ? styles.nextButtonDisabled : {}]}
                         disabled={(isError || !allTextInputFull())}
-                        onPressButton={(isError || !allTextInputFull()) ? () => {} : () => navigation.navigate('GetBirthDate')}
+                        onPressButton={(isError || !allTextInputFull()) ? () => {} : () => navigation.navigate('GetAgeRange')}
                     />
                 </View>
             </View>

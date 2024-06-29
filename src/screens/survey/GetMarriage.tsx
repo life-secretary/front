@@ -66,7 +66,7 @@ const GetMarriage = ({navigation, route}: any) => {
       });
 
       if (modify) {
-        setEditedUserInfo(previousValue => {
+        setEditedUserInfo((previousValue: any) => {
           const married = newValue.find(item => item.selected);
 
           if (married) {
@@ -116,7 +116,7 @@ const GetMarriage = ({navigation, route}: any) => {
       });
 
       if (modify) {
-        setEditedUserInfo(previousValue => {
+        setEditedUserInfo((previousValue: any) => {
           const hasChild = newValue.find(item => item.selected);
 
           if (hasChild) {
