@@ -50,7 +50,7 @@ const GetCategory = ({navigation, route}: any) => {
       });
 
       if (modify) {
-        setEditedUserInfo(previousValue => {
+        setEditedUserInfo((previousValue: any) => {
           const interests = newValue
             .filter(item => item.selected)
             .map(item => item.id);

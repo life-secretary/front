@@ -58,7 +58,7 @@ const GetOccupation = ({navigation, route}: any) => {
       });
 
       if (modify) {
-        setEditedUserInfo(previousValue => {
+        setEditedUserInfo((previousValue: any) => {
           const jobIds = newValue
             .filter(item => item.selected)
             .map(item => item.id);

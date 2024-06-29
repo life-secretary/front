@@ -8,10 +8,8 @@ export const userInfoState = atom<UserInfo>({
     provider: '',
     providerId: '',
     nickname: '',
+    ageRange: null,
     email: '',
-    year: '',
-    month: '',
-    day: '',
     gender: '',
     jobIds: [],
     interests: [],
@@ -23,10 +21,8 @@ export interface UserInfo {
   provider: string;
   providerId: string;
   nickname: string;
+  ageRange: string | null;
   email: string;
-  year: string;
-  month: string;
-  day: string;
   gender: string;
   jobIds: number[];
   interests: number[];
