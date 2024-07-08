@@ -150,8 +150,10 @@ function RootStack() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Group>
-        <Stack.Group>
+        <Stack.Group screenOptions={{presentation: 'fullScreenModal'}}>
           <Stack.Screen name="Splash" component={Splash} />
+        </Stack.Group>
+        <Stack.Group>
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Agreement" component={Agreement} />
         </Stack.Group>

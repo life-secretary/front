@@ -15,8 +15,6 @@ const GetNickName = ({navigation}: any) => {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const [isError, setIsError] = useState(true);
 
-  console.log(userInfo);
-
   const onChangeTextInput = ({nativeEvent}: any) => {
     const checkHasSpecialText = new RegExp(
       /[`~!@#$%^&*()_|+\-=?;:'"<>\{\}\[\]\\\/ ]/,
