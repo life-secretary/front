@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {View, StyleSheet, Alert, AlertButton, Linking} from 'react-native';
 import {AppLayout} from '@/components/common/AppLayout';
 import {AppText} from '@/components/common/AppText';
@@ -35,7 +35,71 @@ export function Splash({navigation}: any): React.JSX.Element {
     });
   }
 
-  async function hasVersionUpdate() {
+  const fetchNotice = async () => {
+    try {
+      const response = await fetchData('/notice/latest', null);
+      const notice = response.data.data;
+      const lastId = await getLastNoticeId();
+      if (lastId == null) {
+        throw new Error('Failed to retrieve last notice ID');
+      }
+      if (notice?.id > lastId) {
+        return notice;
+      } else {
+        return Promise.resolve();
+      }
+    } catch (error) {
+      console.error(error);
+      return Promise.resolve();
+    }
+  };
+
+  const authToken = useCallback(
+    async (token: string): Promise<void> => {
+      const req = {
+        refreshToken: token,
+      };
+      await createData('/auth/refresh-token', req)
+        .then(res => {
+          return res.data.data;
+        })
+        .then(data => {
+          if (data.accessToken === null) {
+            throw Error('no token');
+          }
+          let accessToken = data.accessToken;
+          let refreshToken = data.refreshToken;
+
+          setTokens(accessToken, refreshToken);
+          setTimeout(() => {
+            navigation.navigate('HomeTab');
+          }, 200);
+        })
+        .catch(error => {
+          console.log(error);
+          Toast.show({
+            type: 'error',
+            text1: '토큰이 만료되었습니다.',
+          });
+          setTimeout(() => {
+            navigation.navigate('Login');
+          }, 1000);
+        });
+    },
+    [navigation],
+  );
+
+  const startLogin = useCallback(async () => {
+    try {
+      removeToken();
+      const refreshToken = await getRefreshToken();
+      refreshToken ? authToken(refreshToken) : navigation.navigate('Login');
+    } catch (e) {
+      console.log('something wrong', e);
+    }
+  }, [authToken, navigation]);
+
+  const hasVersionUpdate = useCallback(async () => {
     let shouldUpdate = false;
     const res = await getLatestVersion();
     const latest = res.data.data as AppVersionInfo;
@@ -75,77 +139,13 @@ export function Splash({navigation}: any): React.JSX.Element {
       );
     }
     return shouldUpdate;
-  }
-
-  const fetchNotice = async () => {
-    try {
-      const response = await fetchData('/notice/latest', null);
-      const notice = response.data.data;
-      const lastId = await getLastNoticeId();
-      if (lastId == null) {
-        throw new Error('Failed to retrieve last notice ID');
-      }
-      if (notice.id > lastId) {
-        return notice;
-      } else {
-        return Promise.resolve();
-      }
-    } catch (error) {
-      console.error(error);
-      return Promise.resolve();
-    }
-  };
-
-  const authToken = async (token: string): Promise<void> => {
-    const req = {
-      refreshToken: token,
-    };
-    await createData('/auth/refresh-token', req)
-      .then(res => {
-        return res.data.data;
-      })
-      .then(data => {
-        if (data.accessToken === null) {
-          throw Error('no token');
-        }
-        let accessToken = data.accessToken;
-        let refreshToken = data.refreshToken;
-        setTokens(accessToken, refreshToken);
-        setTimeout(() => {
-          navigation.navigate('HomeTab');
-        }, 200);
-      })
-      .catch(error => {
-        console.log(error);
-        Toast.show({
-          type: 'error',
-          text1: '토큰이 만료되었습니다.',
-        });
-        setTimeout(() => {
-          navigation.navigate('Login');
-        }, 1000);
-      });
-  };
-
-  const startLogin = async () => {
-    try {
-      removeToken();
-      const refreshToken = await getRefreshToken();
-      if (refreshToken !== null) {
-        authToken(refreshToken);
-      } else {
-        navigation.navigate('Login');
-      }
-    } catch (e) {
-      console.log('something wrong', e);
-      navigation.navigate('Login');
-    }
-  };
+  }, []);
 
   useEffect(() => {
     if (!isFocused) {
       return;
     }
+
     fetch()
       .then(state => {
         if (!state.isConnected) {
@@ -173,7 +173,7 @@ export function Splash({navigation}: any): React.JSX.Element {
         }
         return notice;
       })
-      .then(notice => {
+      .then(() => {
         startLogin();
       })
       .catch(error => {
@@ -182,7 +182,7 @@ export function Splash({navigation}: any): React.JSX.Element {
           showAlert('', '현재 서비스를 이용할 수 없습니다.');
         }
       });
-  }, [isFocused]);
+  }, [hasVersionUpdate, isFocused, startLogin]);
 
   return (
     <AppLayout style={styles.container}>

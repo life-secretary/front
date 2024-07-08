@@ -7,7 +7,7 @@ import AppButton from '@/components/common/AppButton';
 import color from '@/styles/color';
 import {font} from '@/styles/font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {PROVIDERS, clearAuth, providerKey} from '@/store/login';
+import {PROVIDERS, clearAuth, providerKey, userInfoState} from '@/store/login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {logout} from '@react-native-seoul/kakao-login';
 import {useResetRecoilState} from 'recoil';
@@ -20,10 +20,11 @@ type Props = {
 };
 
 export function MyInfoMenuItem({myInfoMenu}: Props): React.JSX.Element {
+  const resetLoginedUserInfo = useResetRecoilState(userInfoState);
   const resetUserInfo = useResetRecoilState(userState);
   const resetTodoList = useResetRecoilState(todoListState);
   const resetScrapList = useResetRecoilState(scrapListState);
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
 
   const resetMyInfo = () => {
     resetUserInfo();
@@ -46,18 +47,20 @@ export function MyInfoMenuItem({myInfoMenu}: Props): React.JSX.Element {
 
   const handleButtonPress = (menu: object) => {
     if (menu?.key === 'logout') {
-      startLogout().then(() => {
-        clearAuth()
-      })
-      .then(() => {
-        resetMyInfo();
-        navigation.navigate('Splash');
-      });
+      startLogout()
+        .then(() => {
+          clearAuth();
+        })
+        .then(() => {
+          resetLoginedUserInfo();
+          resetMyInfo();
+          navigation.navigate('Splash');
+        });
       return;
     }
 
     if (menu?.key === 'resurvey') {
-      navigation.navigate('GetCategory', {modify: true, from: 'myInfo'});
+      navigation.navigate('EditCategory');
       return;
     }
 

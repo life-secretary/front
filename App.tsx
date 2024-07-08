@@ -20,7 +20,6 @@ import WrappedSettingScreen from './src/screens/setting/WrappedSettingScreen';
 import {SettingModalScreen} from './src/screens/setting/SettingModalScreen';
 import {MyInfoModalScreen} from './src/screens/setting/MyInfoModalScreen';
 import {OpenSourceModalScreen} from './src/screens/setting/OpenSourceModalScreen';
-import SearchScreen from './src/screens/search/SearchScreen';
 import {AppText} from './src/components/common/AppText';
 import {AppErrorFallback} from './src/components/common/AppErrorFallback';
 import color from './src/styles/color';
@@ -47,6 +46,7 @@ import GetCategory from './src/screens/survey/GetCategory';
 import GetOccupation from './src/screens/survey/GetOccupation';
 import GetMarriage from './src/screens/survey/GetMarriage';
 import Welcome from './src/screens/init/Welcome';
+import EditCategory from './src/screens/survey/EditCategory';
 
 import {getFontSize} from './src/utils/font';
 
@@ -149,26 +149,31 @@ function HomeTabs() {
 function RootStack() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Group screenOptions={{presentation: 'fullScreenModal'}}>
-        <Stack.Screen name="Splash" component={Splash} />
-      </Stack.Group>
-      <Stack.Group screenOptions={{presentation: 'fullScreenModal'}}>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Agreement" component={Agreement} />
-        <Stack.Screen name="GetNickName" component={GetNickName} />
-        <Stack.Screen name="GetAgeRange" component={GetAgeRange} />
-        <Stack.Screen name="GetGender" component={GetGender} />
-        <Stack.Screen name="GetCategory" component={GetCategory} />
-        <Stack.Screen name="GetOccupation" component={GetOccupation} />
-        <Stack.Screen name="GetMarriage" component={GetMarriage} />
-        <Stack.Screen name="Welcome" component={Welcome} />
+      <Stack.Group>
+        <Stack.Group>
+          <Stack.Screen name="Splash" component={Splash} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Agreement" component={Agreement} />
+        </Stack.Group>
+        <Stack.Group>
+          <Stack.Screen name="GetNickName" component={GetNickName} />
+          <Stack.Screen name="GetAgeRange" component={GetAgeRange} />
+          <Stack.Screen name="GetGender" component={GetGender} />
+          <Stack.Screen name="GetCategory" component={GetCategory} />
+          <Stack.Screen name="GetOccupation" component={GetOccupation} />
+          <Stack.Screen name="GetMarriage" component={GetMarriage} />
+          <Stack.Screen name="Welcome" component={Welcome} />
+        </Stack.Group>
       </Stack.Group>
       <Stack.Group>
-        <Stack.Screen name="HomeTab" component={HomeTabs}
+        <Stack.Screen
+          name="HomeTab"
+          component={HomeTabs}
           options={{
             headerShown: false,
             gestureEnabled: false, // 스와이프 백 동작 비활성화
-          }} />
+          }}
+        />
       </Stack.Group>
       <Stack.Group screenOptions={{presentation: 'fullScreenModal'}}>
         <Stack.Screen
@@ -182,6 +187,7 @@ function RootStack() {
           name="OpenSourceModal"
           component={OpenSourceModalScreen}
         />
+        <Stack.Screen name="EditCategory" component={EditCategory} />
         <Stack.Screen name="SearchSimilarModal" component={SearchSimilar} />
         <Stack.Screen name="SearchCategoryModal" component={SearchCategory} />
         <Stack.Screen name="ContentModal" component={Content} />

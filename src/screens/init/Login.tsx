@@ -30,7 +30,6 @@ import {createData} from '@/api/api';
 import Config from 'react-native-config';
 
 export function Login({navigation}: any): React.JSX.Element {
-  const [isLogin, setIsLogin] = useState(false);
   const [loginInfo, setLoginInfo] = useRecoilState(loginInfoState);
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
@@ -68,12 +67,14 @@ export function Login({navigation}: any): React.JSX.Element {
 
         return newValue;
       });
-      storeProvider(PROVIDERS.KAKAO);
+
+      await storeProvider(PROVIDERS.KAKAO);
       const loginInfo: LoginInfo = {
         provider: 'kakao',
         idToken: token.idToken!!,
       };
-      signIn(loginInfo);
+
+      await signIn(loginInfo);
     } catch (error) {
       console.log(error);
     }
@@ -95,40 +96,66 @@ export function Login({navigation}: any): React.JSX.Element {
 
         return newValue;
       });
-      storeProvider(PROVIDERS.GOOGLE);
+      await storeProvider(PROVIDERS.GOOGLE);
       const loginInfo: LoginInfo = {
         provider: 'google',
         idToken: userInfo.idToken!!,
       };
-      signIn(loginInfo);
+      await signIn(loginInfo);
     } catch (error) {
       console.log('error', error);
     }
   };
 
-  const signIn = async (info: LoginInfo): Promise<void> => {
-    setLoginInfo(info)
-    await createData('/auth/login', info)
-      .then(res => {
-        return res.data.data;
-      })
-      .then(data => {
-        let accessToken = data.data.accessToken;
-        let refreshToken = data.data.refreshToken;
-        if (accessToken === null) {
-          throw Error('no token');
-        }
-        setTokens(accessToken, refreshToken);
-        //전에 가입한 사용자
-        closeStartProcess();
-      })
-      .catch(error => {
-        //기존 가입된 유저가 아니면 회원가입으로 넘어갑니다.
-        console.log(error);
-        setIsLogin(true);
+  const signIn = async (info: LoginInfo) => {
+    try {
+      setLoginInfo(info);
+      const res = await createData('/auth/login', info);
+      const data = res.data.data.data;
+
+      if (!data) {
+        // 회원가입 유도
         navigation.navigate('Agreement');
-      });
+      } else {
+        let accessToken = data.accessToken;
+        let refreshToken = data.refreshToken;
+
+        if (!accessToken || !refreshToken) {
+          throw new Error('no token');
+        }
+
+        setTokens(accessToken, refreshToken);
+        navigation.navigate('Splash');
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  // const signIn = (info: LoginInfo) => {
+  // setLoginInfo(info);
+  //   await createData('/auth/login', info)
+  //     .then(res => {
+  //       return res.data.data;
+  //     })
+  //     .then(data => {
+  //       let accessToken = data.data.accessToken;
+  //       let refreshToken = data.data.refreshToken;
+
+  //       // if (accessToken === null) {
+  //       //   throw Error('no token');
+  //       // }
+  //       setTokens(accessToken, refreshToken);
+  //       //전에 가입한 사용자
+  //       closeStartProcess();
+  //     })
+  //     .catch(error => {
+  //       //기존 가입된 유저가 아니면 회원가입으로 넘어갑니다.
+  //       console.log(error);
+  //       setIsLogin(true);
+  //       navigation.navigate('Agreement');
+  //     });
+  // };
 
   const onPressKakaoLoginButton = () => {
     signInWithKakao();
@@ -136,10 +163,6 @@ export function Login({navigation}: any): React.JSX.Element {
 
   const onPressGoogleLoginButton = () => {
     signInWithGoogle();
-  };
-
-  const closeStartProcess = () => {
-    navigation.navigate('Splash');
   };
 
   return (

@@ -30,7 +30,7 @@ const GetGender = ({navigation, route}: any) => {
     return data.reduce((prev: any, curr: any) => {
       if (curr.selected) {
         return true;
-      } 
+      }
       return prev || false;
     }, false);
   };
@@ -138,10 +138,9 @@ const GetGender = ({navigation, route}: any) => {
             !checkisSelected() ? styles.nextButtonDisabled : {},
           ]}
           onPressButton={() =>
-            !checkisSelected() ?
-            () => {} 
-            :
-            modify
+            !checkisSelected()
+              ? () => {}
+              : modify
               ? navigation.navigate('GetCategory', {modify: true})
               : navigation.navigate('GetCategory', {modify: false})
           }

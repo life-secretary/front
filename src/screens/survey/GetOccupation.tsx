@@ -137,7 +137,11 @@ const GetOccupation = ({navigation, route}: any) => {
           text="건너뛰기"
           textStyle={styles.passButtonText}
           onPressButton={() => {
-            modify ? resurvey() : navigation.navigate('Welcome');
+            if (modify) {
+              resurvey();
+            } else {
+              navigation.navigate('Welcome');
+            }
           }}
         />
       </AppHeader>

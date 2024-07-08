@@ -321,14 +321,14 @@ export function MyInfoWithdrawalForm(): React.JSX.Element {
             onPressButton: () => {
               handleModalVisible(false);
               handleLogout()
-              .then(() => {
-                clearAuth()
-              })
-              .then(() => {
-                resetLoginedUserInfo();
-                resetMyInfo();
-                navigation.navigate('Splash');
-              });
+                .then(() => {
+                  clearAuth();
+                })
+                .then(() => {
+                  resetLoginedUserInfo();
+                  resetMyInfo();
+                  navigation.navigate('Splash');
+                });
             },
           },
         }}

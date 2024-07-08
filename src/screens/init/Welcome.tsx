@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Image} from 'react-native';
-import { AppLayout } from '@/components/common/AppLayout';
+import {AppLayout} from '@/components/common/AppLayout';
 import {AppText} from '@/components/common/AppText';
 import {AppHeader} from '@/components/common/AppHeader';
 import AppIcon from '@/components/common/AppIcon';
@@ -8,7 +8,12 @@ import AppButton from '@/components/common/AppButton';
 
 import {styles} from '@/styles/survey';
 import {useRecoilValue} from 'recoil';
-import {UserInfo, loginInfoState, setTokens, userInfoState} from '@/store/login';
+import {
+  UserInfo,
+  loginInfoState,
+  setTokens,
+  userInfoState,
+} from '@/store/login';
 import {createData} from '@/api/api';
 import Toast from 'react-native-toast-message';
 
@@ -48,7 +53,7 @@ const Welcome = ({navigation}: any) => {
     const newInfo = convertStateToUser(userInfo);
     const res = await createData('/auth/signUp', newInfo)
       .then(res => {
-        signIn()
+        signIn();
       })
       .catch(error => {
         console.log(error);
@@ -56,7 +61,7 @@ const Welcome = ({navigation}: any) => {
           type: 'error',
           props: {
             text: '회원가입에 실패했어요',
-            style: { marginTop: 20 }
+            style: {marginTop: 20},
           },
           position: 'top',
           topOffset: 40,
@@ -77,10 +82,9 @@ const Welcome = ({navigation}: any) => {
         if (accessToken === null) {
           throw Error('no token');
         }
-        setTokens(accessToken, refreshToken)
-        .then(() => {
+        setTokens(accessToken, refreshToken).then(() => {
           navigation.navigate('Splash');
-        })
+        });
       })
       .catch(error => {
         console.log(error);
@@ -88,7 +92,7 @@ const Welcome = ({navigation}: any) => {
           type: 'error',
           props: {
             text: '로그인에 실패했어요',
-            style: { marginTop: 20 }
+            style: {marginTop: 20},
           },
           position: 'top',
           topOffset: 40,
@@ -101,7 +105,7 @@ const Welcome = ({navigation}: any) => {
 
   return (
     <AppLayout style={styles.container}>
-      <AppHeader style={[styles.headerContainer, { marginTop: 0, }]}>
+      <AppHeader style={[styles.headerContainer, {marginTop: 0}]}>
         <AppIcon
           name="back"
           width={42}

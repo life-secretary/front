@@ -37,7 +37,8 @@ export const loginInfoState = atom<LoginInfo>({
     idToken: '',
   },
 });
-interface LoginInfo {
+
+export interface LoginInfo {
   provider: string;
   idToken: string;
 }

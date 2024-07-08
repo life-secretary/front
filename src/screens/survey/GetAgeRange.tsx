@@ -17,11 +17,11 @@ const GetAgeRange = ({navigation}: any) => {
   const numColumns = 2;
 
   const [data, setDate] = useState([
-    { key: 'TEEN', title: '청소년 (14 ~ 18세)', selected: false },
-    { key: 'YOUTH', title: '청년 (19 ~ 29세)', selected: false },
-    { key: 'ADULT', title: '성인 (30 ~ 59세)', selected: false },
-    { key: 'SENIOR', title: '중장년 (60세 ~ )', selected: false },
-    { key: null, title: '모두 알고 싶어요', selected: false },
+    {key: 'TEEN', title: '청소년 (14 ~ 18세)', selected: false},
+    {key: 'YOUTH', title: '청년 (19 ~ 29세)', selected: false},
+    {key: 'ADULT', title: '성인 (30 ~ 59세)', selected: false},
+    {key: 'SENIOR', title: '중장년 (60세 ~ )', selected: false},
+    {key: null, title: '모두 알고 싶어요', selected: false},
   ]);
 
   const [containerWidth, setContainerWidth] = useState(0);
@@ -31,7 +31,7 @@ const GetAgeRange = ({navigation}: any) => {
     return data.reduce((prev: any, curr: any) => {
       if (curr.selected) {
         return true;
-      } 
+      }
       return prev || false;
     }, false);
   };
@@ -39,7 +39,6 @@ const GetAgeRange = ({navigation}: any) => {
   const onChangeUserAgeRange = (rangeKey: null | String) => {
     setDate((prev: any) => {
       return prev.map((item: any) => {
-
         if (item.key === rangeKey) {
           item.selected = true;
         } else {
@@ -60,15 +59,17 @@ const GetAgeRange = ({navigation}: any) => {
 
   useEffect(() => {
     if (userInfo) {
-      setDate((prev: any) => prev.map((item: any) => {
-        if (item.key === userInfo.ageRange) {
-          item.selected = true;
-        } else {
-          item.selected = false;
-        }
+      setDate((prev: any) =>
+        prev.map((item: any) => {
+          if (item.key === userInfo.ageRange) {
+            item.selected = true;
+          } else {
+            item.selected = false;
+          }
 
-        return item;
-      }))
+          return item;
+        }),
+      );
     }
   }, []);
 
@@ -87,18 +88,20 @@ const GetAgeRange = ({navigation}: any) => {
           <AppButton
             text="건너뛰기"
             textStyle={styles.passButtonText}
-            onPressButton={() => navigation.navigate('GetGender', { modify: false })}
+            onPressButton={() =>
+              navigation.navigate('GetGender', {modify: false})
+            }
           />
         </AppHeader>
         <View style={styles.titleContainer}>
           <View style={styles.textContainer}>
             <AppText style={styles.titleText}>연령층을 선택해 주세요</AppText>
             <AppText style={styles.subTitleText}>
-              연령층에 적절한 정보를 제공해드리기 위해 필요해요 
+              연령층에 적절한 정보를 제공해드리기 위해 필요해요
             </AppText>
           </View>
         </View>
-        <FlatList 
+        <FlatList
           data={data}
           columnWrapperStyle={{
             justifyContent: 'space-between',
@@ -118,7 +121,9 @@ const GetAgeRange = ({navigation}: any) => {
                   {
                     width: (containerWidth - margins) / numColumns,
                   },
-                  item.selected ? styles.buttonSelected : styles.buttonUnselected,
+                  item.selected
+                    ? styles.buttonSelected
+                    : styles.buttonUnselected,
                 ]}
                 onPressButton={() => onChangeUserAgeRange(item.key)}
               />
@@ -136,7 +141,10 @@ const GetAgeRange = ({navigation}: any) => {
               !checkisSelected() ? styles.nextButtonDisabled : {},
             ]}
             onPressButton={
-              !checkisSelected() ? () => {} : () => navigation.navigate('GetGender', { modify: false })}
+              !checkisSelected()
+                ? () => {}
+                : () => navigation.navigate('GetGender', {modify: false})
+            }
           />
         </View>
       </View>
