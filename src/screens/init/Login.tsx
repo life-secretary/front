@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 
 import {AppText} from '@/components/common/AppText';
@@ -28,6 +28,7 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createData} from '@/api/api';
 import Config from 'react-native-config';
+import appleAuth from '@invertase/react-native-apple-authentication';
 
 export function Login({navigation}: any): React.JSX.Element {
   const [loginInfo, setLoginInfo] = useRecoilState(loginInfoState);
@@ -91,7 +92,6 @@ export function Login({navigation}: any): React.JSX.Element {
 
         newValue.provider = PROVIDERS.GOOGLE;
         newValue.nickname = userInfo.user.name;
-        newValue.email = userInfo.user.email;
         newValue.providerId = userInfo.user.id;
 
         return newValue;
@@ -106,6 +106,43 @@ export function Login({navigation}: any): React.JSX.Element {
       console.log('error', error);
     }
   };
+
+  async function onAppleButtonPress() {
+    try {
+      // performs login request
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        // Note: it appears putting FULL_NAME first is important, see issue #293
+        requestedScopes: [appleAuth.Scope.FULL_NAME],
+      });
+      console.log(appleAuthRequestResponse)
+      // get current authentication state for user
+      // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
+      const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+
+      console.log(credentialState)
+      // use credentialState response to ensure the user is authenticated
+      if (credentialState === appleAuth.State.AUTHORIZED) {
+        setUserInfo((previousValue: any) => {
+          const newValue = Object.assign({}, previousValue);
+
+          newValue.provider = PROVIDERS.APPLE;
+          newValue.nickname = appleAuthRequestResponse.fullName
+          newValue.providerId = appleAuthRequestResponse.user;
+
+          return newValue;
+        });
+        await storeProvider(PROVIDERS.APPLE);
+        const loginInfo: LoginInfo = {
+          provider: 'apple',
+          idToken: appleAuthRequestResponse.identityToken!!,
+        };
+        await signIn(loginInfo);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
 
   const signIn = async (info: LoginInfo) => {
     try {
@@ -165,6 +202,13 @@ export function Login({navigation}: any): React.JSX.Element {
     signInWithGoogle();
   };
 
+  useEffect(() => {
+    // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
+    return appleAuth.onCredentialRevoked(async () => {
+      console.warn('If this function executes, User Credentials have been Revoked');
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -196,6 +240,17 @@ export function Login({navigation}: any): React.JSX.Element {
             height: 19,
           }}
           onPressButton={onPressGoogleLoginButton}
+        />
+        <AppButton 
+            text='Apple 로그인'
+            textStyle={styles.buttonAppleText}
+            buttonStyle={styles.buttonApple}
+            startIcon={{
+                name: 'logoApple',
+                width: 15,
+                height: 16,
+            }}
+            onPressButton={onAppleButtonPress}
         />
       </View>
       <Toast />
@@ -273,4 +328,23 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: '#202020',
   },
+  buttonApple: {
+    width: '100%',
+    height: 51,
+
+    flexDirection: 'row',
+    gap: 12,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    backgroundColor: '#202020'
+  },
+  buttonAppleText: {
+      fontWeight: '500',
+      fontSize: getFontSize(16),
+      lineHeight: 20,
+      color: '#FFFFFF'
+  }, 
 });
+

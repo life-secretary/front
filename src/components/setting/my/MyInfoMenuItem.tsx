@@ -40,6 +40,9 @@ export function MyInfoMenuItem({myInfoMenu}: Props): React.JSX.Element {
       } else if (value === PROVIDERS.KAKAO) {
         await logout();
       }
+      //Apple Auth RN library said:
+      //https://github.com/invertase/react-native-apple-authentication?tab=readme-ov-file#4-implement-the-logout-process
+      //So it is recommended when logging out to just clear all data you have from a user, collected during appleAuth.Operation.LOGIN.
     } catch (e) {
       console.log('e', e);
     }
