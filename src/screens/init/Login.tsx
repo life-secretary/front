@@ -115,12 +115,10 @@ export function Login({navigation}: any): React.JSX.Element {
         // Note: it appears putting FULL_NAME first is important, see issue #293
         requestedScopes: [appleAuth.Scope.FULL_NAME],
       });
-      console.log(appleAuthRequestResponse)
       // get current authentication state for user
       // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
       const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
 
-      console.log(credentialState)
       // use credentialState response to ensure the user is authenticated
       if (credentialState === appleAuth.State.AUTHORIZED) {
         setUserInfo((previousValue: any) => {
