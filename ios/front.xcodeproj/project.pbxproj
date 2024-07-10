@@ -57,6 +57,7 @@
 		453C7DE6768145C799D8C827 /* Pretendard-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Light.ttf"; path = "../src/assets/fonts/Pretendard-1.3.9/Pretendard-Light.ttf"; sourceTree = "<group>"; };
 		4CC079AB82A340CC91F4CAF8 /* Pretendard-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-ExtraBold.ttf"; path = "../src/assets/fonts/Pretendard-1.3.9/Pretendard-ExtraBold.ttf"; sourceTree = "<group>"; };
 		53F90961EAEF458A101EE123 /* Pods-front.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-front.release.xcconfig"; path = "Target Support Files/Pods-front/Pods-front.release.xcconfig"; sourceTree = "<group>"; };
+		585D25CF2C3D434100574938 /* front.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = front.entitlements; path = front/front.entitlements; sourceTree = "<group>"; };
 		586AA6A22C08A5A500113BB6 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		7876F6C1772307369389A482 /* libPods-front.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-front.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D65AB39811641D79040194B /* Pretendard-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Black.ttf"; path = "../src/assets/fonts/Pretendard-1.3.9/Pretendard-Black.ttf"; sourceTree = "<group>"; };
@@ -113,6 +114,7 @@
 		13B07FAE1A68108700A75B9A /* front */ = {
 			isa = PBXGroup;
 			children = (
+				585D25CF2C3D434100574938 /* front.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -541,10 +543,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = front/front.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = XD7WXJTBY8;
 				ENABLE_BITCODE = NO;
@@ -566,7 +569,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.lifesecretary.app;
 				PRODUCT_NAME = lifesecretary;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = LifeSecConnectProfile;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = LifeSecProfile;
 				SWIFT_OBJC_BRIDGING_HEADER = "front-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -581,10 +584,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = front/front.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = XD7WXJTBY8;
 				INFOPLIST_FILE = front/Info.plist;
@@ -601,7 +605,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.lifesecretary.app;
 				PRODUCT_NAME = lifesecretary;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = LifeSecConnectProfile;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = LifeSecProfile;
 				SWIFT_OBJC_BRIDGING_HEADER = "front-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
