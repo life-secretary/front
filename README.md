@@ -116,9 +116,9 @@ npm run-ios --device "{device name}"
 <br/>
 
 ## 🧑‍💻 FE Contributor
-- [김지혜](https://github.com/bebe217) - 스플래시, 회원가입/로그인
-- [안 솔](https://github.com/devsoladev) - 홈, 할일, 저장, 관리
-- [이승연](https://github.com/ciocio97) - 콘텐츠, 검색
+- [김지혜(Jihye Kim)](https://github.com/bebe217) - 스플래시, 회원가입/로그인
+- [안 솔(Sol Ahn)](https://github.com/devsoladev) - 홈, 할일, 저장, 관리
+- [이승연(Seungyeon Lee)](https://github.com/ciocio97) - 콘텐츠, 검색
 
 <br/>
 
